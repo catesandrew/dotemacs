@@ -521,18 +521,9 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (setq backup-by-copying t)
 (setq create-lockfiles nil)
 
-;; Transparently open compressed files
-;; (auto-compression-mode t)
-
 ;; Opt out from the startup message in the echo area by simply disabling this
 ;; ridiculously bizarre thing entirely.
 ;; (fset 'display-startup-echo-area-message #'ignore)
-
-;; Show active region
-;; (transient-mark-mode 1)
-;; (make-variable-buffer-local 'transient-mark-mode)
-;; (put 'transient-mark-mode 'permanent-local t)
-;; (setq-default transient-mark-mode t)
 
 ;; Indicate empty lines at the end of a buffer in the fringe, but require a
 ;; final new line
@@ -546,81 +537,12 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 
 ;;; Evil
 (use-package module-evil)
-
-
-;;; Shell
-(use-package module-shell)
-(use-package module-eshell)
-
-
-;;; Buffer, Windows and Frames
-(use-package module-fringe)
-(use-package module-frame)
-(use-package module-buffer)
-(use-package module-ibuffer)
-(use-package module-window)
-(use-package module-desktop)
-(use-package module-popwin)
-(use-package popup :ensure t :defer t)
-(use-package module-diminish)
-
-
-;;; Files
-(use-package module-file            ; Personal file tools
-  :init
-  (dotemacs-declare-prefix "fp" "personal tools")
-  (dotemacs-set-leader-keys
-    "fpD" 'dotemacs-delete-file-and-buffer
-    "fpi" 'dotemacs-open-in-intellij
-    "fpo" 'dotemacs-launch-dwim
-    "fpR" 'dotemacs-rename-file-and-buffer
-    "fpw" 'dotemacs-copy-filename-as-kill
-    "fpu" 'dotemacs-find-user-init-file-other-window
-    "fpw" 'dotemacs-browse-feature-url))
-
-
-;;; Perspective, EyeBrowse, and Helm
-(use-package module-perspective)
-(use-package module-eyebrowse)
-(use-package module-helm)
-
-(use-package module-ignoramus)
-
-
-;;; Navigation and scrolling
-(use-package module-smooth-scrolling)
-(use-package module-jumping)
-
-
-;;; Editing
-(use-package module-editing           ; Personal editing helpers
-  ;; :bind (([remap kill-whole-line]        . dotemacs-smart-kill-whole-line)
-  ;;        ([remap move-beginning-of-line] . dotemacs-back-to-indentation-or-beginning-of-line)
-  ;;        ("C-<backspace>"                . dotemacs-smart-backward-kill-line)
-  ;;        ("C-S-j"                        . dotemacs-smart-open-line)
-  ;;        ;; Additional utilities
-  ;;        ("C-c e d"                      . dotemacs-insert-current-date))
-  )
-(use-package module-whitespace)
-
-
-;;; Evil Addons
 (use-package evil-evilified-state :load-path "evil/")
 (define-key evil-evilified-state-map (kbd dotemacs-leader-key)
   dotemacs-default-map)
 (evilified-state-evilify-map package-menu-mode-map
   :mode package-menu-mode)
 (evilified-state-evilify process-menu-mode process-menu-mode-map)
-(use-package module-evil-packages)
-
-
-;;; EMacs
-(use-package module-emacs) ; Customization, init file and package management
-
-
-;;; OSX support
-(use-package module-osx              ; Personal OS X tools
-  :if (eq system-type 'darwin))
 
 
 ;;; Key Bindings
@@ -646,32 +568,55 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-key-bindings
   :config (dotemacs//toggle-transparency-core))
 
+
+;;; Shell
+(use-package module-shell)
+(use-package module-eshell)
 
 
-;;; Text Mode
-
-;; `visual-line-mode` is so much better than `auto-fill-mode`. It doesn't
-;; actually break the text into multiple lines - it only looks that way.
-(remove-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-
-(use-package module-typography)
-(use-package writeroom-mode             ; Distraction-free editing
-  :ensure t
-  :defer t)
+;;; Buffer, Windows and Frames
+(use-package module-fringe)
+(use-package module-frame)
+(use-package module-buffer)
+(use-package module-ibuffer)
+(use-package module-window)
+(use-package module-desktop)
+(use-package popup :ensure t :defer t)
+(use-package module-diminish)
 
 
-;;; Markup Languages
-(use-package module-markup-languages)
-(use-package module-latex)
-(use-package module-markdown)
-(use-package module-pandoc)
-(use-package module-asciidoc)
-(use-package graphviz-dot-mode          ; Graphviz
-  :ensure t
-  :defer t
-  :config
-  (setq graphviz-dot-indent-width 4))
+;;; Files
+(use-package module-file            ; Personal file tools
+  :init
+  (dotemacs-declare-prefix "fp" "personal tools")
+  (dotemacs-set-leader-keys
+    "fpD" 'dotemacs-delete-file-and-buffer
+    "fpi" 'dotemacs-open-in-intellij
+    "fpo" 'dotemacs-launch-dwim
+    "fpR" 'dotemacs-rename-file-and-buffer
+    "fpw" 'dotemacs-copy-filename-as-kill
+    "fpu" 'dotemacs-find-user-init-file-other-window
+    "fpw" 'dotemacs-browse-feature-url))
+(use-package module-ignoramus)
+
+
+;;; Editing
+(use-package module-editing)
+(use-package module-whitespace)
+
+
+;;; IRC and IM
+(use-package module-irc-im)
+
+
+;;; Project Management
+(use-package module-projectile)
+(use-package module-neotree)
+
+
+;;; Navigation and scrolling
+(use-package module-smooth-scrolling)
+(use-package module-jumping)
 
 
 ;;; Programming Languages, Utils
@@ -691,12 +636,12 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
                   #'dotemacs-colorize-compilation-buffer))
 
 ;; Programming Languages
-(use-package module-elisp)
-(use-package module-clisp)
-(use-package module-csv)
-(use-package module-scala)
 (use-package module-python)
 (use-package module-ruby)
+(use-package module-react)
+(use-package module-javascript)
+(use-package module-web)
+(use-package module-elisp)
 (use-package module-rust)
 (use-package module-haskell)
 (use-package module-go)
@@ -704,22 +649,21 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-clojure)
 (use-package module-ocaml)
 (use-package module-purescript)
-(use-package module-react)
 (use-package module-elm)
-(use-package module-javascript)
-(use-package module-web)
 (use-package module-lua)
 (use-package module-php)
-(use-package module-stylus)
-(use-package module-skewer)
 (use-package module-racket)
 (use-package module-java)
 (use-package module-restclient)
-(use-package module-swift)
 (use-package module-scheme)
-(use-package module-shell-script)
-(use-package module-semantic)
 (use-package module-ycmd)
+(use-package module-clisp)
+(use-package module-csv)
+(use-package module-scala)
+(use-package module-stylus)
+(use-package module-skewer)
+(use-package module-swift)
+(use-package module-shell-script)
 
 ;; Misc programming languages
 (use-package arduino-mode :defer t :ensure t)
@@ -740,14 +684,26 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 
 ;; Source Code tags, and metadata
 ;; e.g. etags, ebrowse, exuberant ctags, cscope, GNU Global and GTags
+(use-package module-cscope)
+(use-package module-semantic)
 (use-package module-gtags)
 
 
-;;; Version control
-(use-package module-version-control)
-(use-package module-git)
-(use-package module-github)
-(use-package module-magit)
+;;; Markup Languages
+(use-package module-markup-languages)
+(use-package module-latex)
+(use-package module-markdown)
+(use-package module-pandoc)
+(use-package module-asciidoc)
+(use-package graphviz-dot-mode          ; Graphviz
+  :ensure t
+  :defer t
+  :config
+  (setq graphviz-dot-indent-width 4))
+
+
+;;; EMacs
+(use-package module-emacs) ; Customization, init file and package management
 
 
 ;; Databases
@@ -762,28 +718,8 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-ido)
 
 
-;;; Project Management
-(use-package module-projectile)
-(use-package module-neotree)
-
-
-;;; IRC and IM
-(use-package module-irc-im)
-
-
 ;;; Outline and TODOs
 (use-package module-org)
-
-
-;;; Online Help
-(use-package module-help)
-(use-package module-which-key)
-
-
-;;; File Navigation
-(use-package module-ranger)
-(use-package module-vinegar)
-(use-package module-unimpaired)
 
 
 ;;; Virtual Machine/SysOp
@@ -798,34 +734,6 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 
 ;;; Finance
 (use-package module-finance)
-
-
-;;; Highlight Symbols, Numbers, Parentheses, etc.
-(use-package module-auto-highlight-symbol)
-(use-package module-highlight)
-
-
-;;; Paired delimiters
-(use-package module-paired-delimiters)
-(use-package module-smartparens)
-
-
-;;; Syntax Checking
-(use-package module-flycheck)
-
-
-;;; Spell Checking
-(use-package module-spell-checking)
-
-
-;;; Skeletons, completion and expansion
-(use-package module-auto-complete)
-(use-package module-hippie-exp)
-(use-package module-yasnippet)
-
-
-;;; Space line
-(use-package module-spaceline)
 
 
 ;;; Date and time
@@ -851,9 +759,55 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-net)
 
 
-;;; Miscellaneous
-; (use-package module-location)
-(use-package module-emoji)
+;; Perspective and EyeBrowse
+(use-package module-perspective)
+(use-package module-eyebrowse)
+
+
+;;; OSX support
+(use-package module-osx              ; Personal OS X tools
+  :if (eq system-type 'darwin))
+
+
+;; Helm
+(use-package module-helm)
+
+
+;;; Space line
+(use-package module-spaceline)
+
+
+;;; Spell Checking
+(use-package module-spell-checking)
+
+
+;;; Skeletons, completion and expansion
+(use-package module-auto-complete)
+(use-package module-hippie-exp)
+(use-package module-yasnippet)
+
+
+;;; Paired delimiters
+(use-package module-paired-delimiters)
+(use-package module-smartparens)
+
+
+;;; Text Mode
+
+;; `visual-line-mode` is so much better than `auto-fill-mode`. It doesn't
+;; actually break the text into multiple lines - it only looks that way.
+(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
+(use-package module-typography)
+(use-package writeroom-mode             ; Distraction-free editing
+  :ensure t
+  :defer t)
+
+
+;; Miscellaneous
+;; (use-package module-location)
+(use-package module-speed-reading)
 
 (use-package google-translate
   :ensure t
@@ -881,40 +835,51 @@ For instance pass En as source for English."
   (setq google-translate-default-source-language "en")
   (setq google-translate-default-target-language "sp"))
 
-(use-package spray          ; Speed Reading
-  :commands spray-mode
-  :ensure t
-  :init
-  (progn
-    (defun speed-reading/start-spray ()
-      "Start spray speed reading on current buffer at current point."
-      (interactive)
-      (evil-insert-state)
-      (spray-mode t)
-      (internal-show-cursor (selected-window) nil))
-    (dotemacs-set-leader-keys "aR" 'speed-reading/start-spray)
-
-    (defadvice spray-quit (after speed-reading//quit-spray activate)
-      "Correctly quit spray."
-      (internal-show-cursor (selected-window) t)
-      (evil-normal-state)))
-  :config
-  (progn
-    (define-key spray-mode-map (kbd "h") 'spray-backward-word)
-    (define-key spray-mode-map (kbd "l") 'spray-forward-word)
-    (define-key spray-mode-map (kbd "q") 'spray-quit)))
-
-(dotemacs-use-package-add-hook which-key
-  :post-init
-  (push '("\\`speed-reading/\\(.+\\)\\'" . "\\1")
-        which-key-description-replacement-alist))
-
 (use-package module-firestarter
   :disabled t
   :commands (dotemacs-firestarter-mode-line)
   :init (with-eval-after-load 'firestarter
           (setq firestarter-lighter
                 '(:eval (dotemacs-firestarter-mode-line)))))
+
+
+;;; Miscellaneous
+(use-package module-emoji)
+
+
+;;; Online Help
+(use-package module-help)
+(use-package module-which-key)
+
+
+;;; Syntax Checking
+(use-package module-flycheck)
+
+
+;;; Highlight Symbols, Numbers, Parentheses, etc.
+(use-package module-auto-highlight-symbol)
+(use-package module-highlight)
+
+
+;; popwin
+(use-package module-popwin)
+
+
+;;; File Navigation
+(use-package module-ranger)
+(use-package module-vinegar)
+(use-package module-unimpaired)
+
+
+;;; Evil Addons
+(use-package module-evil-packages)
+
+
+;;; Version control
+(use-package module-version-control)
+(use-package module-git)
+(use-package module-github)
+(use-package module-magit)
 
 ;; Local Variables:
 ;; coding: utf-8

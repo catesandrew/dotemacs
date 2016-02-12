@@ -159,59 +159,72 @@ function main() {
   ns.setEdge('evil', [])
 
   // Shell
-  ns.setEdge('eshell', ['company'])
-  ns.setEdge('shell', ['smooth-scrolling', 'magit'])
+  ns.setEdge('shell', ['projectile', 'smooth-scrolling', 'magit'])
+  ns.setEdge('eshell', ['auto-complete', 'helm'])
 
   // Buffer, Windows and Frames
-  ns.setEdge('fringe', [])
-  ns.setEdge('frame', [])
-  ns.setEdge('buffer', []) // requires helm
-  ns.setEdge('ibuffer', [])
-  ns.setEdge('window', [])
   ns.setEdge('desktop', ['ignoramus'])
-  ns.setEdge('popwin', [])
-  ns.setEdge('smooth-scrolling', [])
-  ns.setEdge('diminish', [])
 
   // Perspective, EyeBrowse, and Helm
-  ns.setEdge('perspective', ['spaceline', 'eyebrowse', 'helm', 'swiper'])
-  ns.setEdge('eyebrowse', [])
-  ns.setEdge('helm', [])
+  ns.setEdge('perspective', ['spaceline', 'eyebrowse', 'helm'])
 
   // files
   ns.setEdge('file', ['ignoramus'])
-  ns.setEdge('ignoramus', [])
+
+  // evil packages
+  ns.setEdge('evil-packages', ['magit'])
+
+  // osx
+  ns.setEdge('osx', ['dired', 'helm'])
+
+  // markup
+  ns.setEdge('markup-languages', ['flycheck'])
+  ns.setEdge('latex', ['auto-complete', 'evil-packages', 'flycheck', 'flyspell',
+                       'smartparens', 'typo', 'yasnippet', 'which-key'])
+  ns.setEdge('markdown', ['emoji', 'smartparens', 'auto-complete', 'flyspell'])
 
   // programming languages
-  ns.setEdge('ruby', ['smartparens', 'company', 'popwin', 'flycheck', 'evil-matchit'])
-  ns.setEdge('latex', ['which-key', 'yasnippet', 'typo', 'smartparens', 'flyspell', 'flycheck', 'evil-matchit', 'company'])
-  ns.setEdge('cmake-mode', 'company')
-  ns.setEdge(['c-mode', 'c++-mode'], 'flycheck')
-  ns.setEdge(['c-mode', 'c++-mode'], 'helm-gtags')
-  ns.setEdge(['c-mode', 'c++-mode'], 'semantic')
-  ns.setEdge(['c-mode', 'c++-mode'], 'stickyfunc-enhance')
-  ns.setEdge('c++-mode', 'ycmd')
-  ns.setEdge('c-mode', 'company-ycmd')
+  ns.setEdge('elisp', ['auto-complete', 'help'])
+  ns.setEdge('clisp', ['auto-highlight-symbol'])
+  ns.setEdge('python', ['auto-complete', 'help', 'evil-packages',
+                        'flycheck', 'cscope', 'semantic', 'smartparens'])
+  ns.setEdge('ruby', ['smartparens', 'auto-complete', 'popwin', 'flycheck',
+                      'evil-packages'])
+  ns.setEdge('rust', ['flycheck', 'auto-complete', 'smartparens'])
+  ns.setEdge('haskell', ['flycheck', 'auto-complete',])
+  ns.setEdge('go', ['flycheck', 'auto-complete'])
+  ns.setEdge('c-c++', ['auto-complete', 'flycheck', 'gtags', 'semantic',
+                       'ycmd', 'cscope'])
+  ns.setEdge('clojure', ['popwin', 'highlight', 'auto-complete'])
+  ns.setEdge('ocaml', ['auto-complete', 'flycheck', 'smartparens'])
+  ns.setEdge('purescript', ['auto-complete'])
+  ns.setEdge('react', ['auto-complete', 'javascript', 'flycheck', 'web'])
+  ns.setEdge('elm', ['auto-complete', 'flycheck', 'popwin', 'smartparens'])
+  ns.setEdge('javascript', ['auto-complete', 'flycheck', 'evil-packages'])
+  ns.setEdge('web', ['auto-complete', 'evil-packages', 'flycheck',
+                     'smartparens', 'highlight', 'yasnippet'])
+  ns.setEdge('lua', ['flycheck', 'auto-complete'])
+  ns.setEdge('php', ['auto-complete', 'help', 'flycheck', 'gtags'])
+  ns.setEdge('racket', ['auto-complete'])
+  ns.setEdge('java', ['auto-complete'])
+  ns.setEdge('restclient', ['auto-complete'])
+  ns.setEdge('swift', ['flycheck'])
+  ns.setEdge('scheme', ['auto-complete'])
+  ns.setEdge('ycmd', ['auto-complete'])
 
-  // clojure
-  ns.setEdge(['cider-mode', 'cider-repl-mode'], 'company')
+  ns.setEdge('github', ['magit'])
+  ns.setEdge('irc-im', ['auto-complete', 'emoji', 'perspective', 'smooth-scrolling'])
+  ns.setEdge('org', ['perspective', 'evil-packages', 'auto-complete', 'emoji'])
+  ns.setEdge('vinegar', ['version-control'])
+  ns.setEdge('puppet', ['auto-complete', 'flycheck'])
+  ns.setEdge('nixos', ['auto-complete'])
+  ns.setEdge('finance', ['auto-complete'])
+  ns.setEdge('flycheck', ['popwin'])
+  ns.setEdge('yasnippet', ['smartparens'])
+  ns.setEdge('spray-mode', ['which-key'])
 
-  // elisp
-  ns.setEdge('flycheck-package', 'flycheck')
-  ns.setEdge(['emacs-lisp-mode', 'ielm-mode'], 'company')
-  ns.setEdge(['emacs-lisp-mode', 'lisp-mode'], 'flycheck')
-  ns.setEdge(['emacs-lisp-mode'], 'semantic')
-  ns.setEdge(['emacs-lisp-mode'], 'srefactor')
-
-  // elm
-  ns.setEdge('elm-mode', 'flycheck')
-  ns.setEdge('elm-mode', 'smartparens')
-
-  // github
-  ns.setEdge('github-mode', 'magit')
 
   console.log(ns.topsort())
-
 }
 
 main()

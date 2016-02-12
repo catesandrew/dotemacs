@@ -561,10 +561,5 @@ current perspective."
   (dotemacs-set-leader-keys
     "pl" 'dotemacs/helm-persp-switch-project))
 
-(dotemacs-use-package-add-hook swiper
-  :post-init
-  (dotemacs-set-leader-keys
-    "pl" 'dotemacs/ivy-persp-switch-project))
-
 (provide 'module-perspective)
 ;;; module-perspective.el ends here

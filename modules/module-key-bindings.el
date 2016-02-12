@@ -19,8 +19,6 @@
 
 ;;; Code:
 
-(declare-function dotemacs-home "module-utils")
-
 ;; instantly display current keystrokes in mini buffer
 (setq echo-keystrokes 0.02)
 

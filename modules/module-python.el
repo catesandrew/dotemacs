@@ -156,7 +156,7 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
   :pre-init
   (dotemacs-use-package-add-hook xcscope
     :post-init
-    (dotemacs-setup-helm-cscope 'python-mode)))
+    (dotemacs/setup-helm-cscope 'python-mode)))
 
 (use-package helm-pydoc
   :defer t
@@ -467,7 +467,7 @@ fix this issue."
   (dotemacs-use-package-add-hook xcscope
     :post-init
     (dolist (mode '(c-mode c++-mode))
-      (dotemacs-setup-helm-cscope mode)
+      (dotemacs/setup-helm-cscope mode)
       (dotemacs-set-leader-keys-for-major-mode mode "gi" 'cscope-index-files))))
 
 ;; We can safely declare this function, since we'll only call it in Python Mode,

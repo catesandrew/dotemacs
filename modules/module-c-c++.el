@@ -199,7 +199,7 @@
   (dotemacs-use-package-add-hook xcscope
     :post-init
     (dolist (mode '(c-mode c++-mode))
-      (dotemacs-setup-helm-cscope mode)
+      (dotemacs/setup-helm-cscope mode)
       (dotemacs-set-leader-keys-for-major-mode mode "gi" 'cscope-index-files))))
 
 (provide 'module-c-c++)
