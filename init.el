@@ -523,7 +523,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 
 ;; Opt out from the startup message in the echo area by simply disabling this
 ;; ridiculously bizarre thing entirely.
-;; (fset 'display-startup-echo-area-message #'ignore)
+(fset 'display-startup-echo-area-message #'ignore)
 
 ;; Indicate empty lines at the end of a buffer in the fringe, but require a
 ;; final new line
