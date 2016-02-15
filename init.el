@@ -811,6 +811,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 
 (use-package google-translate
   :ensure t
+  :defer t
   :init
   (progn
     (defun dotemacs/set-google-translate-languages (source target)
