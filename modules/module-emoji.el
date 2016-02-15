@@ -41,6 +41,7 @@
 
 (use-package company-emoji
   :if (eq dotemacs-completion-engine 'company)
+  :ensure t
   :defer t
   :init
   (setq company-emoji-insert-unicode nil))
