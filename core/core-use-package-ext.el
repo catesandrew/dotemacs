@@ -9,6 +9,10 @@
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; License: GPLv3
+;;
+;;; Code:
+(require 'core-funcs)
+
 (defconst dotemacs--use-package-add-hook-keywords '(:pre-init
                                                      :post-init
                                                      :pre-config
