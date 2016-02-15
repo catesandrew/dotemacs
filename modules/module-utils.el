@@ -69,7 +69,7 @@ Useful for making the home buffer the only visible buffer in the frame."
   (string-equal system-type "windows-nt"))
 
 (defun dotemacs-useless-buffer-p (buffer)
-  "Determines if a buffer is useful."
+  "Determines if a BUFFER is useful."
   (let ((buf-paren-major-mode (get (with-current-buffer buffer
                                      major-mode)
                                    'derived-mode-parent))
