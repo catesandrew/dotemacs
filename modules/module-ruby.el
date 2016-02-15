@@ -50,7 +50,8 @@ Possible values are `rbenv', `rvm' or `chruby'.)")
       "bi" 'bundle-install
       "bs" 'bundle-console
       "bu" 'bundle-update
-      "bx" 'bundle-exec)))
+      "bx" 'bundle-exec
+      "bo" 'bundle-open)))
 
 (when (eq dotemacs-completion-engine 'company)
   (dotemacs-use-package-add-hook company
