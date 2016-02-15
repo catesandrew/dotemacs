@@ -341,20 +341,26 @@
 (defalias 'count-region 'count-words-region)
 
 (dotemacs-set-leader-keys
-  "xaa" 'align
-  "xar" 'dotemacs/align-repeat
-  "xam" 'dotemacs/align-repeat-math-oper
-  "xa." 'dotemacs/align-repeat-decimal
-  "xa," 'dotemacs/align-repeat-comma
-  "xa;" 'dotemacs/align-repeat-semicolon
-  "xa:" 'dotemacs/align-repeat-colon
-  "xa=" 'dotemacs/align-repeat-equal
   "xa&" 'dotemacs/align-repeat-ampersand
-  "xa|" 'dotemacs/align-repeat-bar
   "xa(" 'dotemacs/align-repeat-left-paren
   "xa)" 'dotemacs/align-repeat-right-paren
+  "xa," 'dotemacs/align-repeat-comma
+  "xa." 'dotemacs/align-repeat-decimal
+  "xa:" 'dotemacs/align-repeat-colon
+  "xa;" 'dotemacs/align-repeat-semicolon
+  "xa=" 'dotemacs/align-repeat-equal
+  "xaa" 'align
+  "xac" 'align-current
+  "xam" 'dotemacs/align-repeat-math-oper
+  "xar" 'dotemacs/align-repeat
+  "xa|" 'dotemacs/align-repeat-bar
   "xc"  'count-region
   "xdw" 'delete-trailing-whitespace
+  "xjc" 'set-justification-center
+  "xjf" 'set-justification-full
+  "xjl" 'set-justification-left
+  "xjn" 'set-justification-none
+  "xjr" 'set-justification-right
   "xls" 'dotemacs/sort-lines
   "xlu" 'dotemacs/uniquify-lines
   "xtc" 'transpose-chars
