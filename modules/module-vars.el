@@ -10,7 +10,7 @@
 
 (require 'core-vars)
 
-(defvar ycmd-server-command '("python" "/usr/local/src/ycmdycmd")
+(defvar ycmd-server-command '("python" "/usr/local/src/ycmd/ycmd")
   "The path to the ycmd server.")
 
 ;; Regexp for useful and useless buffers for smarter buffer switching
