@@ -39,7 +39,7 @@
 
 ;;; Code:
 
-(defvar vinegar-reuse-dired-buffer nil
+(defvar vinegar-reuse-dired-buffer t
   "If non-nil, reuses one dired buffer for navigation.")
 
 ;; funcs
@@ -203,6 +203,51 @@
   :post-init
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode))
 
+(use-package dired-open
+  :ensure t
+  :commands (dired-open-file)
+  :init
+  (progn
+    (defun dotemacs-dired-open-file ()
+      "Hook dired to translate to projectile and neotree."
+      (interactive)
+      (let ((file (ignore-errors (dired-get-file-for-visit))))
+        (when (and file
+                   (not (file-directory-p file)))
+          (when-let (dotemacs-project-root (ignore-errors (projectile-project-root)))
+            (find-file (expand-file-name file dotemacs-project-root))
+            (message "Projectile root found: %s" dotemacs-project-root)
+            (run-hooks 'projectile-find-file-hook)
+            (when (fboundp 'neotree-dir)
+              (if (neo-global--window-exists-p)
+                  (neotree-dir (projectile-project-root))
+                (progn
+                  (neotree-dir (projectile-project-root))
+                  (neotree-hide)
+                  (let ((origin-buffer-file-name (buffer-file-name)))
+                    (neotree-find (projectile-project-root))
+                    (neotree-find origin-buffer-file-name))
+                  (neotree-hide))))
+            ))))
+
+    (with-eval-after-load 'projectile
+      (evilified-state-evilify dired-mode dired-mode-map
+        (kbd "RET") 'dired-open-file)
+
+      (if vinegar-reuse-dired-buffer
+          (setq dired-open-find-file-function 'dired-find-alternate-file)
+        (setq dired-open-find-file-function 'dired-find-file))
+      (setq dired-open-functions '(dotemacs-dired-open-file
+                                   dired-open-by-extension
+                                   dired-open-subdir
+                                   )))
+    ))
+
+(dotemacs-use-package-add-hook dired
+  :post-config
+  (evilified-state-evilify dired-mode dired-mode-map
+    (kbd "RET") 'dired-open-file))
+
 (use-package dired                      ; Edit directories
   :defer t
   :config
@@ -238,42 +283,7 @@
       "r"         'revert-buffer
       (kbd "C-r") 'dired-do-redisplay
       "gg"        'vinegar/back-to-top
-      "G"         'vinegar/jump-to-bottom)
-
-    ;; (evilified-state-evilify dired-mode dired-mode-map
-    ;;   (kbd "RET") 'dired-open-file)
-
-    (with-eval-after-load 'projectile
-      (evilified-state-evilify dired-mode dired-mode-map
-        (kbd "RET") 'dired-open-file))
-
-    ))
-
-(use-package dired-open
-  :ensure t
-  :defer t
-  :init
-  (progn
-    (defun dotemacs-dired-open-file ()
-      "Hook dired to translate to projectile and neotree."
-      (interactive)
-      (let ((file (ignore-errors (dired-get-file-for-visit))))
-        (when file
-          (find-file (expand-file-name file (projectile-project-root)))
-          (run-hooks 'projectile-find-file-hook)
-          (message "Projectile root found: %s" (projectile-project-root))
-          (when (fboundp 'neotree-dir)
-            (if (neo-global--window-exists-p)
-                (neotree-dir (projectile-project-root))
-              (progn
-                (neotree-dir (projectile-project-root))
-                (neotree-hide)
-                (let ((origin-buffer-file-name (buffer-file-name)))
-                  (neotree-find (projectile-project-root))
-                  (neotree-find origin-buffer-file-name))
-                (neotree-hide)))))))
-    (with-eval-after-load 'projectile
-      (setq dired-open-functions 'dotemacs-dired-open-file))))
+      "G"         'vinegar/jump-to-bottom)))
 
 (provide 'module-vinegar)
 ;;; module-vinegar.el ends here
