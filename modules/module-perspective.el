@@ -310,8 +310,8 @@ FRAME defaults to the current frame."
   [_A_]^^^^       add all buffers from another layout
   [_a_]^^^^       add all the buffers from another layout in the current one
   [_b_]^^^^       select a buffer in the current layout
-  [_c_]^^^^       close the current layout and keep its buffers
-  [_C_]^^^^       close the other layouts and keep their buffers
+  [_d_]^^^^       close the current layout and keep its buffers
+  [_D_]^^^^       close the other layouts and keep their buffers
   [_h_]^^^^       go to default layout
   [_l_]^^^^       select/create a layout with helm
   [_L_]^^^^       load layouts from file
@@ -346,8 +346,8 @@ FRAME defaults to the current frame."
         ("a" persp-add-buffer :exit t)
         ("A" persp-import-buffers :exit t)
         ("b" dotemacs/persp-helm-mini :exit t)
-        ("c" dotemacs/layouts-ms-close)
-        ("C" dotemacs/layouts-ms-close-other :exit t)
+        ("d" dotemacs/layouts-ms-close)
+        ("D" dotemacs/layouts-ms-close-other :exit t)
         ("h" dotemacs/layout-goto-default :exit t)
         ("l" dotemacs/helm-perspectives :exit t)
         ("L" persp-load-state-from-file :exit t)
