@@ -99,7 +99,7 @@
 (dotemacs-use-package-add-hook ycmd
   :post-init
   (progn
-    (add-hook hook 'js2-mode-hook)
+    (add-hook 'js2-mode-hook 'ycmd-mode)
     (dotemacs-set-leader-keys-for-major-mode 'js2-mode
       "gy" 'ycmd-goto
       "gY" 'ycmd-goto-imprecise)))
