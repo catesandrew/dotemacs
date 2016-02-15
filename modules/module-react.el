@@ -27,8 +27,8 @@
   (unless (bound-and-true-p my-react-mh-ran)
     (set (make-local-variable 'my-react-mh-ran) t)))
 
-(setq dotemacs-react-mode-hook #'dotemacs-react-mode-defaults)
-(add-hook 'react-mode-hook (lambda () (run-hooks #'dotemacs-react-mode-hook)))
+(setq dotemacs-react-mode-hook 'dotemacs-react-mode-defaults)
+(add-hook 'react-mode-hook (lambda () (run-hooks 'dotemacs-react-mode-hook)))
 
 (when (eq dotemacs-completion-engine 'company)
   (dotemacs-use-package-add-hook company
@@ -42,18 +42,15 @@
       (push 'company-capf company-backends-react-mode))))
 
 (dotemacs-use-package-add-hook flycheck
-  :post-config
-  (progn
-    (dotemacs-flycheck-executables-search)
-    (when (bound-and-true-p dotemacs//flycheck-executables-searched)
-      (when dotemacs//flycheck-executable-eslint
-        (flycheck-add-mode 'javascript-eslint 'react-mode)))))
-
-(dotemacs-use-package-add-hook flycheck
   :post-init
   (progn
     (dotemacs/add-flycheck-hook 'react-mode)
-    (add-hook 'react-mode-hook 'dotemacs-flycheck-init-react)))
+    (add-hook 'react-mode-hook 'dotemacs-flycheck-init-react))
+  :post-config
+  (progn
+    (when (bound-and-true-p dotemacs//flycheck-executables-searched)
+      (when dotemacs//flycheck-executable-eslint
+        (flycheck-add-mode 'javascript-eslint 'react-mode)))))
 
 (dotemacs-use-package-add-hook js-doc
   :post-init

@@ -87,25 +87,14 @@
   (progn
     (dolist (mode '(coffee-mode js2-mode json-mode))
       (dotemacs/add-flycheck-hook mode))
-    (add-hook 'js2-mode-hook 'dotemacs-flycheck-init-javascript)
 
     (defun dotemacs/disable-js2-checks-if-flycheck-active ()
       (unless (flycheck-get-checker-for-buffer)
         (set (make-local-variable 'js2-mode-show-parse-errors) t)
         (set (make-local-variable 'js2-mode-show-strict-warnings) t)))
-    (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active))
-  :post-config
-  (progn
-    (dotemacs-flycheck-executables-search)
-    (with-eval-after-load 'projectile
-      (progn
-        (add-hook 'projectile-after-switch-project-hook
-                  (lambda ()
-                    (dotemacs-eslint-set-local-eslint-from-projectile)
-                    (dotemacs-flycheck-executables-updated)))
+    (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active)
 
-        (dotemacs-eslint-set-local-eslint-from-projectile)
-        (dotemacs-flycheck-executables-updated)))))
+    (add-hook 'js2-mode-hook 'dotemacs-flycheck-init-javascript)))
 
 (use-package js-doc
   :defer t

@@ -6,6 +6,8 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
+(require 'use-package)
 (require 'core-vars)
 ;; (require 'core-funcs)
 (require 'core-keybindings)
@@ -14,9 +16,17 @@
 ;; (require 'module-common)
 ;; (require 'module-core)
 (require 'module-utils)
-(require 'use-package)
 
-;;; Code:
+(dotemacs-use-package-add-hook projectile
+  :post-config
+  (progn
+    (add-hook 'projectile-after-switch-project-hook
+              (lambda ()
+                (dotemacs-eslint-set-local-eslint-from-projectile)
+                (dotemacs-flycheck-executables-updated)))
+
+    (dotemacs-eslint-set-local-eslint-from-projectile)
+    (dotemacs-flycheck-executables-updated)))
 
 (use-package projectile
   :ensure t
