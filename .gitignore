@@ -49,6 +49,8 @@
 /company-statistics-cache.el
 /eshell/
 
+# Flycheck
+flycheck_*.el
 
 .cache
 el-get

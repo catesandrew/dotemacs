@@ -12,7 +12,7 @@
 ;; (require 'core-funcs)
 (require 'core-keybindings)
 ;; (require 'core-display-init)
-;; (require 'module-vars)
+(require 'module-vars)
 ;; (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
@@ -31,7 +31,7 @@
     (evilified-state-evilify emoji-cheat-sheet-plus-buffer-mode
       emoji-cheat-sheet-plus-buffer-mode-map
       "<RET>" 'emoji-cheat-sheet-plus-echo-and-copy)
-    (defun dotemacs-delay-emoji-cheat-sheet-hook ()
+    (defun dotemacs/delay-emoji-cheat-sheet-hook ()
       "Work-around for org buffers."
       ;; we need to wait for org buffer to be fully loaded before
       ;; calling the emoji mode.

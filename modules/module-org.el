@@ -6,50 +6,69 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
 (require 'use-package)
 (require 'core-vars)
 (require 'core-funcs)
+(require 'core-auto-completion)
 (require 'core-keybindings)
 (require 'module-vars)
 (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
 
-;;; Code:
-
 (defvar org-enable-github-support t
   "If non-nil Github related packages are configured.")
 
 (dotemacs-defvar-company-backends org-mode)
 
-;; Insert key for org-mode and markdown a la C-h k
-;; from SE endless http://emacs.stackexchange.com/questions/2206/
-(defun dotemacs-insert-keybinding-org (key)
-  "Ask for a key then insert its description.
-Will work on both org-mode and any mode that accepts plain html."
-  (interactive "kType key sequence: ")
-  (let* ((tag "@@html:<kbd>@@ %s @@html:</kbd>@@"))
-    (if (null (equal key "\r"))
-        (insert
-         (format tag (help-key-description key nil)))
-      (insert (format tag ""))
-      (forward-char -8))))
+(when (eq dotemacs-completion-engine 'company)
+  (dotemacs-use-package-add-hook company
+    :post-init
+    (progn
+      (dotemacs-add-company-hook org-mode)
+      (push 'company-capf company-backends-org-mode)))
+  (dotemacs-use-package-add-hook company-emoji
+    :post-init
+    (progn
+      (push 'company-emoji company-backends-org-mode))))
 
-(defun dotemacs-org-present-start ()
-  "Initiate `org-present' mode."
-  (org-present-big)
-  (org-display-inline-images)
-  (org-present-hide-cursor)
-  (org-present-read-only)
-  (evil-evilified-state))
+(dotemacs-use-package-add-hook emoji-cheat-sheet-plus
+  :post-init
+  (add-hook 'org-mode-hook 'dotemacs/delay-emoji-cheat-sheet-hook))
 
-(defun dotemacs-org-present-end ()
-  "Terminate `org-present' mode."
-  (org-present-small)
-  (org-remove-inline-images)
-  (org-present-show-cursor)
-  (org-present-read-write)
-  (evil-normal-state))
+(use-package evil-org
+  :load-path "evil/"
+  :commands evil-org-mode
+  :init
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  :config
+  (progn
+    (dotemacs-set-leader-keys-for-major-mode 'org-mode
+      "C" 'evil-org-recompute-clocks)
+    (evil-define-key 'normal evil-org-mode-map
+      "O" 'evil-open-above)
+    (dotemacs-diminish evil-org-mode " ⓔ" " e")))
+
+(dotemacs-use-package-add-hook evil-surround
+  :post-init
+  (defun dotemacs/add-org-surrounds ()
+    (push '(?: . dotemacs//surround-drawer) evil-surround-pairs-alist))
+  (add-hook 'org-mode-hook 'dotemacs/add-org-surrounds)
+  (defun dotemacs//surround-drawer ()
+    (let ((dname (read-from-minibuffer "" "")))
+      (cons (format ":%s:" (or dname "")) ":END:"))))
+
+
+(dotemacs-use-package-add-hook flyspell
+  :post-init
+  (spell-checking/add-flyspell-hook 'org-mode-hook))
+
+(use-package gnuplot
+  :defer t
+  :ensure t
+  :init (dotemacs-set-leader-keys-for-major-mode 'org-mode
+          "tp" 'org-plot/gnuplot))
 
 (use-package org-plus-contrib
   :mode ("\\.org$" . org-mode)
@@ -58,27 +77,55 @@ Will work on both org-mode and any mode that accepts plain html."
   :defer t
   :init
   (progn
-    ;; (when (featurep 'org)
-    ;;   (dotemacs-buffer/append
-    ;;    (concat
-    ;;     "Org features were loaded before the `org' layer initialized.\n") t))
 
-    (setq org-replace-disputed-keys t ;; Don't ruin S-arrow to switch windows please (use M-+ and M-- instead to toggle)
-          org-src-fontify-natively t ;; Fontify org-mode code blocks
-          org-clock-persist-file (concat dotemacs-cache-directory "org-clock-save.el")
+    (setq org-startup-indented t
+          org-clock-persist-file
+          (concat dotemacs-cache-directory "org-clock-save.el")
           org-id-locations-file
           (concat dotemacs-cache-directory ".org-id-locations")
           org-log-done t
           org-startup-with-inline-images t
-          org-startup-indented t)
+          org-src-fontify-natively t ;; Fontify org-mode code blocks
+          ;; this is consistent with the value of `helm-org-headings-max-depth'.
+          org-imenu-depth 8)
 
     (with-eval-after-load 'org-indent
       (dotemacs-hide-lighter org-indent-mode))
-
+    (let ((dir (concat user-emacs-directory "etc/")))
+      (setq org-export-async-init-file (concat dir "org-async-init.el")))
     (defmacro dotemacs-org-emphasize (fname char)
       "Make function for setting the emphasis in org mode"
       `(defun ,fname () (interactive)
               (org-emphasize ,char)))
+
+    ;; Follow the confirm and abort conventions
+    (with-eval-after-load 'org-capture
+      (dotemacs-set-leader-keys-for-minor-mode 'org-capture-mode
+        dotemacs-major-mode-leader-key 'org-capture-finalize
+        "c" 'org-capture-finalize
+        "k" 'org-capture-kill
+        "a" 'org-capture-kill
+        "r" 'org-capture-refile))
+
+    (with-eval-after-load 'org-src
+      (dotemacs-set-leader-keys-for-minor-mode 'org-src-mode
+        "'" 'org-edit-src-exit
+        "c" 'org-edit-src-exit
+        "a" 'org-edit-src-abort
+        "k" 'org-edit-src-abort))
+
+    ;; Insert key for org-mode and markdown a la C-h k
+    ;; from SE endless http://emacs.stackexchange.com/questions/2206/
+    (defun dotemacs/insert-keybinding-org (key)
+      "Ask for a key then insert its description.
+Will work on both org-mode and any mode that accepts plain html."
+      (interactive "kType key sequence: ")
+      (let* ((tag "@@html:<kbd>@@ %s @@html:</kbd>@@"))
+        (if (null (equal key "\r"))
+            (insert
+             (format tag (help-key-description key nil)))
+          (insert (format tag ""))
+          (forward-char -8))))
 
     (dotemacs-set-leader-keys-for-major-mode 'org-mode
       "'" 'org-edit-special
@@ -87,6 +134,7 @@ Will work on both org-mode and any mode that accepts plain html."
       "e" 'org-export-dispatch
       "f" 'org-set-effort
       "P" 'org-set-property
+      ":" 'org-set-tags
 
       "a" 'org-agenda
       "b" 'org-tree-to-indirect-buffer
@@ -95,6 +143,7 @@ Will work on both org-mode and any mode that accepts plain html."
       "T" 'org-show-todo-tree
 
       "." 'org-time-stamp
+      "!" 'org-time-stamp-inactive
 
       ;; headings
       "hi" 'org-insert-heading-after-current
@@ -165,7 +214,7 @@ Will work on both org-mode and any mode that accepts plain html."
       ;; insertion of common elements
       "il" 'org-insert-link
       "if" 'org-footnote-new
-      "ik" 'dotemacs-insert-keybinding-org
+      "ik" 'dotemacs/insert-keybinding-org
 
       ;; images and other link types have no commands in org mode-line
       ;; could be inserted using yasnippet?
@@ -178,23 +227,10 @@ Will work on both org-mode and any mode that accepts plain html."
       "xu" (dotemacs-org-emphasize dotemacs-org-underline ?_)
       "xv" (dotemacs-org-emphasize dotemacs-org-verbose ?=))
 
-    (require 'ox-md)
-    (require 'ox-ascii)
-    (require 'ox-confluence)
-    (require 'ox-html)
-    (require 'org-bullets)
-
-    (with-eval-after-load 'org-agenda
-       ;; Since we could override SPC with <leader>, let's make RET do that
-       ;; functionality
-      (when (equal dotemacs-leader-key "SPC")
-       (define-key org-agenda-mode-map
-         (kbd "RET") 'org-agenda-show-and-scroll-up)
-       (define-key org-agenda-mode-map
-         (kbd "SPC") dotemacs-default-map))
-
-      (define-key org-agenda-mode-map "j" 'org-agenda-next-line)
-      (define-key org-agenda-mode-map "k" 'org-agenda-previous-line))
+    ;; (require 'ox-md)
+    ;; (require 'ox-ascii)
+    ;; (require 'ox-confluence)
+    ;; (require 'ox-html)
 
     ;; Add global evil-leader mappings. Used to access org-agenda
     ;; functionalities – and a few others commands – from any other mode.
@@ -257,18 +293,25 @@ Will work on both org-mode and any mode that accepts plain html."
              ("NEXT" ("WAITING") ("CANCELLED"))
              ("DONE" ("WAITING") ("CANCELLED"))))
 
+    (setq org-default-notes-file "notes.org")
     (font-lock-add-keywords
      'org-mode '(("\\(@@html:<kbd>@@\\) \\(.*\\) \\(@@html:</kbd>@@\\)"
                   (1 font-lock-comment-face prepend)
                   (2 font-lock-function-name-face)
                   (3 font-lock-comment-face prepend))))
 
-    (require 'org-indent)
     (define-key global-map "\C-cl" 'org-store-link)
     (define-key global-map "\C-ca" 'org-agenda)
+    (define-key global-map "\C-cc" 'org-capture)
 
     ;; Open links and files with RET in normal state
     (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point)
+
+    ;; We add this key mapping because an Emacs user can change
+    ;; `dotemacs-major-mode-emacs-leader-key' to `C-c' and the key binding
+    ;; C-c ' is shadowed by `dotemacs/default-pop-shell', effectively making
+    ;; the Emacs user unable to exit src block editing.
+    (define-key org-src-mode-map (kbd (concat dotemacs-major-mode-emacs-leader-key " '")) 'org-edit-src-exit)
 
     (dotemacs-set-leader-keys
       "Cc" 'org-capture)
@@ -295,7 +338,19 @@ Will work on both org-mode and any mode that accepts plain html."
 (use-package org-agenda
   :defer t
   :init
-  (setq org-agenda-restore-windows-after-quit t)
+  (progn
+    (setq org-agenda-restore-windows-after-quit t)
+    (dotemacs-set-leader-keys-for-major-mode 'org-agenda-mode
+      ":" 'org-agenda-set-tags
+      "a" 'org-agenda
+      "d" 'org-agenda-deadline
+      "f" 'org-agenda-set-effort
+      "I" 'org-agenda-clock-in
+      "O" 'org-agenda-clock-out
+      "P" 'org-agenda-set-property
+      "q" 'org-agenda-refile
+      "Q" 'org-agenda-clock-cancel
+      "s" 'org-agenda-schedule))
   :config
   (evilified-state-evilify-map org-agenda-mode-map
     :mode org-agenda-mode
@@ -307,7 +362,9 @@ Will work on both org-mode and any mode that accepts plain html."
     (kbd "M-h") 'org-agenda-earlier
     (kbd "M-l") 'org-agenda-later
     (kbd "gd") 'org-agenda-toggle-time-grid
-    (kbd "gr") 'org-agenda-redo))
+    (kbd "gr") 'org-agenda-redo
+    (kbd "M-RET") 'org-agenda-show-and-scroll-up
+    (kbd "RET") 'org-agenda-goto))
 
 (use-package org-bullets
   :ensure t
@@ -316,52 +373,6 @@ Will work on both org-mode and any mode that accepts plain html."
   (progn
     (setq org-bullets-bullet-list '("✿" "❀" "☢" "☯" "✸" ))
     (add-hook 'org-mode-hook 'org-bullets-mode)))
-
-(use-package org-repo-todo
-  :ensure t
-  :defer t
-  :init
-  (progn
-    (dotemacs-set-leader-keys
-      "Ct"  'ort/capture-todo
-      "CT"  'ort/capture-checkitem)
-    (dotemacs-set-leader-keys-for-major-mode 'org-mode
-      "gt" 'ort/goto-todos)))
-
-(dotemacs-use-package-add-hook persp-mode
-  :post-init
-  (dotemacs-define-custom-layout "@Org"
-                                  :binding "o"
-                                  :body
-                                  (find-file (first org-agenda-files))))
-
-(use-package gnuplot
-  :defer t
-  :ensure t
-  :init (dotemacs-set-leader-keys-for-major-mode 'org-mode
-          "tp" 'org-plot/gnuplot))
-
-(use-package evil-org
-  :load-path "evil/"
-  :commands evil-org-mode
-  :init
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  :config
-  (progn
-    (dotemacs-set-leader-keys-for-major-mode 'org-mode
-      "C" 'evil-org-recompute-clocks)
-    (evil-define-key 'normal evil-org-mode-map
-      "O" 'evil-open-above)
-    (dotemacs-diminish evil-org-mode " ⓔ" " e")))
-
-(dotemacs-use-package-add-hook evil-surround
-  :post-init
-  (defun dotemacs/add-org-surrounds ()
-    (push '(?: . dotemacs//surround-drawer) evil-surround-pairs-alist))
-  (add-hook 'org-mode-hook 'dotemacs/add-org-surrounds)
-  (defun dotemacs//surround-drawer ()
-    (let ((dname (read-from-minibuffer "" "")))
-      (cons (format ":%s:" (or dname "")) ":END:"))))
 
 (use-package org-mime
   :defer t
@@ -392,8 +403,82 @@ Will work on both org-mode and any mode that accepts plain html."
       "h" 'org-present-prev
       "l" 'org-present-next
       "q" 'org-present-quit)
-    (add-hook 'org-present-mode-hook 'dotemacs-org-present-start)
-    (add-hook 'org-present-mode-quit-hook 'dotemacs-org-present-end)))
+    (defun dotemacs//org-present-start ()
+      "Initiate `org-present' mode."
+      (org-present-big)
+      (org-display-inline-images)
+      (org-present-hide-cursor)
+      (org-present-read-only)
+      (evil-evilified-state))
+    (defun dotemacs//org-present-end ()
+      "Terminate `org-present' mode."
+      (org-present-small)
+      (org-remove-inline-images)
+      (org-present-show-cursor)
+      (org-present-read-write)
+      (evil-normal-state))
+    (add-hook 'org-present-mode-hook 'dotemacs//org-present-start)
+    (add-hook 'org-present-mode-quit-hook 'dotemacs//org-present-end)))
+
+(use-package org-repo-todo
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (dotemacs-set-leader-keys
+      "Ct"  'ort/capture-todo
+      "CT"  'ort/capture-checkitem)
+    (dotemacs-set-leader-keys-for-major-mode 'org-mode
+      "gt" 'ort/goto-todos)))
+
+(use-package ox-gfm
+  :if org-enable-github-support
+  :defer t
+  :ensure t
+  :init
+  (progn
+    ;; seems to be required otherwise the extension is not
+    ;; loaded properly by org
+    (with-eval-after-load 'org (require 'ox-gfm))
+    (autoload 'org-gfm-export-as-markdown "ox-gfm" "\
+ Export current buffer to a Github Flavored Markdown buffer.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting buffer should be accessible
+through the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+Export is done in a buffer named \"*Org GFM Export*\", which will
+be displayed when `org-export-show-temporary-export-buffer' is
+non-nil.
+
+\(fn &optional ASYNC SUBTREEP VISIBLE-ONLY)" t nil)
+
+      (autoload 'org-gfm-convert-region-to-md "ox-gfm" "\
+Assume the current region has org-mode syntax, and convert it
+to Github Flavored Markdown.  This can be used in any buffer.
+For example, you can write an itemized list in org-mode syntax in
+a Markdown buffer and use this command to convert it.
+
+\(fn)" t nil)))
+
+(dotemacs-use-package-add-hook persp-mode
+  :post-init
+  (dotemacs-define-custom-layout "@Org"
+    :binding "o"
+    :body
+    (find-file (first org-agenda-files))))
 
 (use-package toc-org
   :ensure t
@@ -405,27 +490,6 @@ Will work on both org-mode and any mode that accepts plain html."
 (use-package htmlize
   :ensure t
   :defer t)
-
-(use-package ox-pandoc
-  :defer t
-  :ensure t
-  :init
-  (with-eval-after-load 'org (require 'ox-pandoc)))
-
-(dotemacs-use-package-add-hook emoji-cheat-sheet-plus
-  :post-init
-  (add-hook 'org-mode-hook 'dotemacs-delay-emoji-cheat-sheet-hook))
-
-(when (eq dotemacs-completion-engine 'company)
-  (dotemacs-use-package-add-hook company
-    :post-init
-    (progn
-      (dotemacs-add-company-hook org-mode)
-      (push 'company-capf company-backends-org-mode)))
-  (dotemacs-use-package-add-hook company-emoji
-    :post-init
-    (progn
-      (push 'company-emoji company-backends-org-mode))))
 
 (provide 'module-org)
 ;;; module-org.el ends here
