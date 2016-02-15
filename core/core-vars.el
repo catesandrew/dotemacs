@@ -81,6 +81,7 @@ pressing `<leader> m`. Set it to `nil` to disable it.")
                           jbeans
                           light-soap
                           lush
+                          majapahit
                           material
                           minimal
                           molokai
