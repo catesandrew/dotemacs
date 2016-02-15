@@ -59,6 +59,7 @@ el-get
 *.elc
 *.orig
 *~
+*.pyc
 .places
 .mc-lists.el
 ac-comphist.dat
