@@ -20,6 +20,10 @@
 
 ;;; Code:
 
+;; variables
+(dotemacs-defvar-company-backends sh-mode)
+(dotemacs-defvar-company-backends fish-mode)
+
 (use-package sh-script                  ; Shell scripts
   :defer t
   :init
@@ -46,6 +50,21 @@
                  (string-match-p "\\.zsh\\'" buffer-file-name))
         (sh-set-shell "zsh")))
     (add-hook 'sh-mode-hook 'dotemacs//setup-shell)))
+
+(when (eq dotemacs-completion-engine 'company)
+  (dotemacs-use-package-add-hook company
+    :post-init
+    (progn
+      (dotemacs-add-company-hook sh-mode)
+      (dotemacs-add-company-hook fish-mode)))
+
+  (use-package company-shell
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (push 'company-tern company-backends-sh-mode)
+      (push 'company-tern company-backends-fish-mode))))
 
 (provide 'module-shell-script)
 ;;; module-shell-script.el ends here
