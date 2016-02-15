@@ -99,12 +99,16 @@
 (dotemacs-use-package-add-hook ycmd
   :post-init
   (progn
-    (dolist (hook '(coffee-mode-hook js2-mode-hook json-mode-hook))
-      (add-hook hook 'ycmd-mode))
-    (add-hook 'c++-mode-hook 'ycmd-mode)
+    (add-hook hook 'js2-mode-hook)
     (dotemacs-set-leader-keys-for-major-mode 'js2-mode
       "gy" 'ycmd-goto
       "gY" 'ycmd-goto-imprecise)))
+
+(dotemacs-use-package-add-hook company-ycmd
+  :post-init
+  (progn
+    ;; (push 'flycheck-ycmd company-backends-js2-mode)
+    (push 'company-ycmd company-backends-js2-mode)))
 
 (use-package js-doc
   :defer t
