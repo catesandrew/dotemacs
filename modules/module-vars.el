@@ -127,6 +127,10 @@ Default is `changed' (cleanup whitespace on changed lines)")
   "If non nil then the last auto saved layouts are resume automatically upon
 start.")
 
+(defvar dotemacs-force-resume-layouts nil
+  "If non-nil force the current Emacs instance to resume layouts
+at start time despite the value of `dotemacs-auto-resume-layouts'.")
+
 (defvar git-enable-magit-svn-plugin nil
   "If non nil `magit-svn' plugin is enabled.")
 

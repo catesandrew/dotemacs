@@ -11,10 +11,6 @@
 ;;
 ;;; Code:
 
-(defvar dotemacs-force-resume-layouts nil
-  "If non-nil force the current Emacs instance to resume layouts
-  at start time despite the value of `dotemacs-auto-resume-layouts'.")
-
 (defun dotemacs//parse-command-line (args)
   "Handle Dotemacs specific command line arguments.
 The reason why we don't use the Emacs hooks for processing user defined

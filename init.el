@@ -106,17 +106,22 @@
 (defconst emacs-start-time (current-time))
 
 (require 'subr-x nil 'noerror)
+(require 'core-command-line)
 (require 'core-auto-completion)
 (require 'core-display-init)
 (require 'core-themes-support)
 (require 'core-fonts-support)
+(require 'core-buffers)
+(require 'core-keybindings)
 (require 'core-toggle)
+(require 'core-funcs)
 (require 'core-micro-state)
 (require 'core-transient-state)
 (require 'core-use-package-ext)
+(require 'cl-lib)
+(require 'eieio)
 (require 'package)
-(require 'core-funcs)
-(require 'core-buffers)
+(require 'warnings)
 
 (defvar dotemacs-elpa-https t
   "If non nil ELPA repositories are contacted via HTTPS whenever it's
@@ -217,7 +222,6 @@ environment, otherwise it is strongly recommended to let it set to t.")
 (setq use-package-verbose init-file-debug)
 ;; package-build is required by quelpa
 (dotemacs-load-or-install-package 'package-build t)
-
 (setq quelpa-verbose init-file-debug
       quelpa-dir dotemacs-quelpa-directory
       quelpa-build-dir dotemacs-quelpa-build-directory
@@ -231,7 +235,6 @@ environment, otherwise it is strongly recommended to let it set to t.")
 ;; inject use-package hooks for easy customization of
 ;; stock package configuration
 (setq use-package-inject-hooks t)
-(require 'core-keybindings)
 (require 'use-package)
 (require 'module-vars)
 
