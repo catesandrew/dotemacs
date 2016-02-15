@@ -80,7 +80,7 @@
 (use-package smartparens                ; Parenthesis editing and balancing
   :ensure t
   :defer t
-  :commands (sp-split-sexp sp-newline)
+  :commands (sp-split-sexp sp-newline sp-up-sexp)
   :init
   (progn
     ;; TODO move these hooks into their layers
@@ -146,6 +146,23 @@
     (sp-pair "[" nil :post-handlers
              '(:add (dotemacs/smartparens-pair-newline-and-indent "RET")))
 
+    (defun dotemacs/smart-closing-parenthesis ()
+      (interactive)
+      (let* ((sp-navigate-close-if-unbalanced t)
+             (current-pos (point))
+             (current-line (line-number-at-pos current-pos))
+             (next-pos (save-excursion
+                         (sp-up-sexp)
+                         (point)))
+             (next-line (line-number-at-pos next-pos)))
+        (cond
+         ((and (= current-line next-line)
+               (not (= current-pos next-pos)))
+          (sp-up-sexp))
+         (t
+          (insert-char ?\))))))
+    (when dotemacs-smart-closing-parenthesis
+      (define-key evil-insert-state-map ")" 'dotemacs/smart-closing-parenthesis))
 
     ;;; TODO: Move these additional pairs for various modes into their modules
     (sp-with-modes '(php-mode)

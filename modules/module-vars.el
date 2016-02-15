@@ -58,6 +58,11 @@ can be toggled through `toggle-transparency'.")
 (defvar dotemacs-smartparens-strict-mode nil
   "If non-nil smartparens-strict-mode will be enabled in programming modes.")
 
+(defvar dotemacs-smart-closing-parenthesis t
+  "If non-nil pressing the closing parenthesis `)' key in insert mode passes
+  over any automatically added closing parenthesis, bracket, quote, etc…
+  This can be temporary disabled by pressing `C-q' before `)'. (default nil)")
+
 (defvar dotemacs-completion-engine 'company
   "The completion engine the use.  Use either `company` or `auto-complete`.")
 
