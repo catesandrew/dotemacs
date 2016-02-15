@@ -6,8 +6,11 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
+(require 'use-package)
 ;; (require 'core-funcs)
 ;; (require 'core-keybindings)
+(require 'core-fonts-support)
 (require 'core-display-init)
 (require 'module-vars)
 ;; (require 'module-common)
@@ -15,8 +18,6 @@
 ;; (require 'module-utils)
 ;; (require 'linum)
 ;; (require 'linum-relative)
-
-;;; Code:
 
 (use-package linum-relative
   :ensure t
@@ -28,6 +29,7 @@
     (dotemacs-set-leader-keys "tr" 'linum-relative-toggle))
   :config
   (progn
+    (dotemacs-hide-lighter linum-relative-mode)
     (setq linum-relative-current-symbol "→")))
 
 (provide 'module-fringe)
