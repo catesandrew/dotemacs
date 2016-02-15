@@ -25,6 +25,9 @@
 (defvar syntax-checking-enable-by-default t
   "Enable syntax-checking by default.")
 
+;; Add flycheck to useless buffers list
+(push "^\\*Flycheck.+\\*$" dotemacs-useless-buffers-regexp)
+
 
 ;; funcs
 (defun dotemacs/add-flycheck-hook (mode)
