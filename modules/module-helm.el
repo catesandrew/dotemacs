@@ -113,7 +113,7 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
 ;; with: (helm-mode 1)
 (use-package helm
   :ensure t
-  :defer 1
+  :defer
   :commands (dotemacs/helm-find-files)
   :init
   (progn
