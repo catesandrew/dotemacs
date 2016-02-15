@@ -91,6 +91,7 @@ pressing `<leader> m`. Set it to `nil` to disable it.")
                           noctilux
                           obsidian
                           occidental
+                          omtose-phellack
                           oldlace
                           organic-green
                           pastels-on-dark
