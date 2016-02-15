@@ -52,11 +52,16 @@
 (use-package restart-emacs
   :defer t
   :init
-  (dotemacs-set-leader-keys "qr" 'dotemacs/restart-emacs)
-  (defun dotemacs/restart-emacs ()
+  (defun dotemacs/restart-emacs (&optional args)
     (interactive)
     (setq dotemacs-really-kill-emacs t)
-    (restart-emacs)))
+    (restart-emacs args))
+  (defun dotemacs/restart-emacs-resume-layouts (&optional args)
+    (interactive)
+    (dotemacs/restart-emacs (cons "--resume-layouts" args)))
+  (dotemacs-set-leader-keys
+   "qr" 'dotemacs/restart-emacs-resume-layouts
+   "qR" 'dotemacs/restart-emacs))
 
 (use-package savehist                   ; Save minibuffer history
   :init

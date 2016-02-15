@@ -231,7 +231,9 @@ FRAME defaults to the current frame."
   :ensure t
   :init
   (progn
-    (setq persp-auto-resume-time (if dotemacs-auto-resume-layouts 1 -1)
+    (setq persp-auto-resume-time (if (or dotemacs-auto-resume-layouts
+                                         dotemacs-force-resume-layouts)
+                                     1 -1)
           persp-nil-name dotemacs-default-layout-name
           persp-reset-windows-on-nil-window-conf nil
           persp-set-last-persp-for-new-frames nil

@@ -8,6 +8,12 @@
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; License: GPLv3
+;;
+;;; Code:
+
+(defvar dotemacs-force-resume-layouts nil
+  "If non-nil force the current Emacs instance to resume layouts
+  at start time despite the value of `dotemacs-auto-resume-layouts'.")
 
 (defun dotemacs//parse-command-line (args)
   "Handle Dotemacs specific command line arguments.
@@ -39,6 +45,8 @@ arguments is that we want to process these arguments as soon as possible."
            (setq dotemacs-debugp t))
           ("--insecure"
            (setq dotemacs-elpa-https nil))
+          ("--resume-layouts"
+           (setq dotemacs-force-resume-layouts t))
           (_ (push arg new-args))))
       (setq i (1+ i)))
     (nreverse new-args)))
