@@ -29,9 +29,13 @@
       (dotemacs-add-company-hook elm-mode)
       (add-hook 'elm-mode-hook 'elm-oracle-setup-completion))))
 
+(defun dotemacs//elm-find-root ()
+  (setq default-directory (elm--find-dependency-file-path)))
+
 (dotemacs-use-package-add-hook flycheck
   :post-init
-  (dotemacs/add-flycheck-hook 'elm-mode))
+  (add-hook 'elm-mode-hook 'flycheck-mode)
+  (add-hook 'elm-mode-hook 'dotemacs//elm-find-root))
 
 (use-package flycheck-elm
   :ensure t
