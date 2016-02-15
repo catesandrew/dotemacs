@@ -131,7 +131,10 @@ If the error list is visible, hide it.  Otherwise, show it."
       "eL" 'dotemacs/goto-flycheck-error-list
       "es" 'flycheck-select-checker
       "eS" 'flycheck-set-checker-executable
-      "ev" 'flycheck-verify-setup)))
+      "ev" 'flycheck-verify-setup))
+  :config
+  (progn
+    (dotemacs-flycheck-executables-search)))
 
 (use-package flycheck-pos-tip
   :ensure t
