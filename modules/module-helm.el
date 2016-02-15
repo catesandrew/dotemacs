@@ -617,10 +617,8 @@ ARG non nil means that the editing style is `vim'."
 (use-package helm-ls-git
   :defer t
   :ensure t
+  :commands (helm-ls-git-ls helm-browse-project)
   :init
-  (progn
-    (require 'helm-ls-git))
-  :config
   (progn
     (setq helm-ls-git-show-abs-or-relative 'relative) ))
 
