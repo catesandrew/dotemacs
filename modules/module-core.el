@@ -340,10 +340,10 @@ point reaches the beginning or end of the buffer, stop there."
   "Maximize buffer"
   (interactive)
   (if (and (= 1 (length (window-list)))
-           (assoc'_ register-alist))
-      (jump-to-register '_)
+           (assoc ?_ register-alist))
+      (jump-to-register ?_)
     (progn
-      (window-configuration-to-register '_)
+      (window-configuration-to-register ?_)
       (delete-other-windows))))
 
 ;; A small minor mode to use a big fringe
