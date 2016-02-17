@@ -134,7 +134,9 @@
   (use-package company-go
     :ensure t
     :defer t
-    :init (push 'company-go company-backends-go-mode)))
+    (progn
+      (setq company-go-show-annotation t)
+      (push 'company-go company-backends-go-mode))))
 
 (defun go/init-go-oracle()
   (let ((go-path (getenv "GOPATH")))
