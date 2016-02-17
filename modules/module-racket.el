@@ -32,7 +32,8 @@
     :post-init
     (add-hook 'company-mode-hook
               '(lambda ()
-                 (when (equal major-mode 'racket-mode)
+                 (when (and (equal major-mode 'racket-mode)
+                            (bound-and-true-p company-quickhelp-mode))
                    (company-quickhelp-mode -1))) t)))
 
 (use-package racket-mode
