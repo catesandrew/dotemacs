@@ -202,7 +202,8 @@ the automatic filling of the current paragraph."
       "xr"  'latex/font-clear
       "xfa" 'latex/font-calligraphic
       "xfn" 'latex/font-normal
-      "xfu" 'latex/font-upright)))
+      "xfu" 'latex/font-upright)
+    (dotemacs-declare-prefix-for-mode 'latex-mode "mp"  "preview")))
 
 (use-package tex-site                   ; AUCTeX initialization
   :ensure auctex)
