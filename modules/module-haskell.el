@@ -50,11 +50,14 @@
   :ensure t
   :defer t)
 
+(setq haskell-modes '(haskell-mode literate-haskell-mode))
+
 (use-package helm-hoogle
   :ensure t
   :defer t
   :init
-  (dotemacs-set-leader-keys-for-major-mode 'haskell-mode "hf" 'helm-hoogle))
+  (dolist (mode haskell-modes)
+    (dotemacs-set-leader-keys-for-major-mode mode "hf" 'helm-hoogle)))
 
 (dotemacs-use-package-add-hook flycheck
   :post-init
@@ -72,17 +75,18 @@
   :init (add-hook 'haskell-mode-hook 'ghc-init)
   :config
   (progn
-    (dotemacs-declare-prefix-for-mode 'haskell-mode "mm" "haskell/ghc-mod")
-    (dotemacs-set-leader-keys-for-major-mode 'haskell-mode
-      "mt" 'ghc-insert-template-or-signature
-      "mu" 'ghc-initial-code-from-signature
-      "ma" 'ghc-auto
-      "mf" 'ghc-refine
-      "me" 'ghc-expand-th
-      "mn" 'ghc-goto-next-hole
-      "mp" 'ghc-goto-prev-hole
-      "m>"  'ghc-make-indent-deeper
-      "m<"  'ghc-make-indent-shallower)))
+    (dolist (mode haskell-modes)
+      (dotemacs-declare-prefix-for-mode mode "mm" "haskell/ghc-mod")
+      (dotemacs-set-leader-keys-for-major-mode mode
+        "mt" 'ghc-insert-template-or-signature
+        "mu" 'ghc-initial-code-from-signature
+        "ma" 'ghc-auto
+        "mf" 'ghc-refine
+        "me" 'ghc-expand-th
+        "mn" 'ghc-goto-next-hole
+        "mp" 'ghc-goto-prev-hole
+        "m>"  'ghc-make-indent-deeper
+        "m<"  'ghc-make-indent-shallower))))
 
 (dotemacs-use-package-add-hook flycheck
   :post-config
@@ -150,11 +154,12 @@
       (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
 
     ;; prefixes
-    (dotemacs-declare-prefix-for-mode 'haskell-mode "mg" "haskell/navigation")
-    (dotemacs-declare-prefix-for-mode 'haskell-mode "ms" "haskell/repl")
-    (dotemacs-declare-prefix-for-mode 'haskell-mode "mc" "haskell/cabal")
-    (dotemacs-declare-prefix-for-mode 'haskell-mode "mh" "haskell/documentation")
-    (dotemacs-declare-prefix-for-mode 'haskell-mode "md" "haskell/debug")
+    (dolist (mode haskell-modes)
+      (dotemacs-declare-prefix-for-mode mode "mg" "haskell/navigation")
+      (dotemacs-declare-prefix-for-mode mode "ms" "haskell/repl")
+      (dotemacs-declare-prefix-for-mode mode "mc" "haskell/cabal")
+      (dotemacs-declare-prefix-for-mode mode "mh" "haskell/documentation")
+      (dotemacs-declare-prefix-for-mode mode "md" "haskell/debug"))
     (dotemacs-declare-prefix-for-mode 'haskell-interactive-mode "ms" "haskell/repl")
     (dotemacs-declare-prefix-for-mode 'haskell-cabal-mode "ms" "haskell/repl")
 
@@ -165,37 +170,38 @@
           (haskell-mode-show-type-at 1)
         (haskell-process-do-type 1)))
 
-    (dotemacs-set-leader-keys-for-major-mode 'haskell-mode
-      "gg"  'haskell-mode-jump-to-def-or-tag
-      "gi"  'haskell-navigate-imports
-      "f"   'haskell-mode-stylish-buffer
+    (dolist (mode haskell-modes)
+      (dotemacs-set-leader-keys-for-major-mode mode
+        "gg"  'haskell-mode-jump-to-def-or-tag
+        "gi"  'haskell-navigate-imports
+        "f"   'haskell-mode-stylish-buffer
 
-      "sb"  'haskell-process-load-or-reload
-      "sc"  'haskell-interactive-mode-clear
-      "ss"  'dotemacs/haskell-interactive-bring
-      "sS"  'haskell-interactive-switch
+        "sb"  'haskell-process-load-or-reload
+        "sc"  'haskell-interactive-mode-clear
+        "ss"  'dotemacs/haskell-interactive-bring
+        "sS"  'haskell-interactive-switch
 
-      "ca"  'haskell-process-cabal
-      "cb"  'haskell-process-cabal-build
-      "cc"  'haskell-compile
-      "cv"  'haskell-cabal-visit-file
+        "ca"  'haskell-process-cabal
+        "cb"  'haskell-process-cabal-build
+        "cc"  'haskell-compile
+        "cv"  'haskell-cabal-visit-file
 
-      "hd"  'inferior-haskell-find-haddock
-      "hh"  'hoogle
-      "hH"  'haskell-hoogle-lookup-from-local
-      "hi"  (lookup-key haskell-mode-map (kbd "C-c C-i"))
-      "ht"  (lookup-key haskell-mode-map (kbd "C-c C-t"))
-      "hT"  'dotemacs-haskell-process-do-type-on-prev-line
-      "hy"  'hayoo
+        "hd"  'inferior-haskell-find-haddock
+        "hh"  'hoogle
+        "hH"  'haskell-hoogle-lookup-from-local
+        "hi"  (lookup-key haskell-mode-map (kbd "C-c C-i"))
+        "ht"  (lookup-key haskell-mode-map (kbd "C-c C-t"))
+        "hT"  'dotemacs-haskell-process-do-type-on-prev-line
+        "hy"  'hayoo
 
-      "dd"  'haskell-debug
-      "db"  'haskell-debug/break-on-function
-      "dn"  'haskell-debug/next
-      "dN"  'haskell-debug/previous
-      "dB"  'haskell-debug/delete
-      "dc"  'haskell-debug/continue
-      "da"  'haskell-debug/abandon
-      "dr"  'haskell-debug/refresh)
+        "dd"  'haskell-debug
+        "db"  'haskell-debug/break-on-function
+        "dn"  'haskell-debug/next
+        "dN"  'haskell-debug/previous
+        "dB"  'haskell-debug/delete
+        "dc"  'haskell-debug/continue
+        "da"  'haskell-debug/abandon
+        "dr"  'haskell-debug/refresh))
 
     ;; configure C-c C-l so it doesn't throw any errors
     (bind-key "C-c C-l" 'haskell-process-load-or-reload haskell-mode-map)
@@ -247,12 +253,13 @@
             (lambda (args)
               (append args (list "--with-ghc" "ghci-ng"))))
 
-      (dotemacs-set-leader-keys-for-major-mode 'haskell-mode
-        ;; function suggested in
-        ;; https://github.com/chrisdone/ghci-ng#using-with-haskell-mode
-        "u"   'haskell-mode-find-uses
-        "ht"  'haskell-mode-show-type-at
-        "gg"  'haskell-mode-goto-loc))
+      (dolist (mode haskell-modes)
+        (dotemacs-set-leader-keys-for-major-mode mode
+          ;; function suggested in
+          ;; https://github.com/chrisdone/ghci-ng#using-with-haskell-mode
+          "u"   'haskell-mode-find-uses
+          "ht"  'haskell-mode-show-type-at
+          "gg"  'haskell-mode-goto-loc)))
 
     ;; Useful to have these keybindings for .cabal files, too.
     (with-eval-after-load 'haskell-cabal-mode-map
@@ -264,19 +271,19 @@
       (add-to-list 'align-rules-list
                    '(haskell-types
                      (regexp . "\\(\\s-+\\)\\(::\\|?\\)\\s-+")
-                     (modes . '(haskell-mode literate-haskell-mode))))
+                     (modes . haskell-modes)))
       (add-to-list 'align-rules-list
                    '(haskell-assignment
                      (regexp . "\\(\\s-+\\)=\\s-+")
-                     (modes . '(haskell-mode literate-haskell-mode))))
+                     (modes . haskell-modes)))
       (add-to-list 'align-rules-list
                    '(haskell-arrows
                      (regexp . "\\(\\s-+\\)\\(->\\|?\\)\\s-+")
-                     (modes . '(haskell-mode literate-haskell-mode))))
+                     (modes . haskell-modes)))
       (add-to-list 'align-rules-list
                    '(haskell-left-arrows
                      (regexp . "\\(\\s-+\\)\\(<-\\|?\\)\\s-+")
-                     (modes . '(haskell-mode literate-haskell-mode)))))))
+                     (modes . haskell-modes))))))
 
 (use-package haskell-snippets
   :ensure t
@@ -295,6 +302,7 @@
 
     (with-eval-after-load 'yasnippet (haskell-snippets-initialize))))
 
+;; doesn't support literate-haskell-mode :(
 (use-package hindent                    ; Automated Haskell indentation
   :defer t
   :ensure t
