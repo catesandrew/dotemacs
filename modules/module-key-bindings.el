@@ -126,7 +126,6 @@
 (dotemacs-set-leader-keys
  "hdb" 'describe-bindings
  "hdc" 'describe-char
- "hdd" 'helm-apropos
  "hdf" 'describe-function
  "hdk" 'describe-key
  "hdl" 'dotemacs/describe-last-keys

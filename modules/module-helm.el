@@ -289,6 +289,7 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
       "fL"   'helm-locate
       "fr"   'helm-recentf
       "fb"   'helm-filtered-bookmarks
+      "hdd"  'helm-apropos
       "hdF"  'dotemacs/helm-faces
       "hi"   'helm-info-at-point
       "hm"   'helm-man-woman
