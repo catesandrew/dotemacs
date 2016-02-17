@@ -305,5 +305,29 @@
   :after (ediff)
   :ensure t)
 
+(dotemacs|do-after-display-system-init
+ (use-package vi-tilde-fringe
+   :ensure t
+   :init
+   (progn
+     (global-vi-tilde-fringe-mode)
+     (dotemacs-add-toggle vi-tilde-fringe
+       :status vi-tilde-fringe-mode
+       :on (global-vi-tilde-fringe-mode)
+       :off (global-vi-tilde-fringe-mode -1)
+       :documentation
+       "Globally display a ~ on empty lines in the fringe."
+       :evil-leader "T~")
+     ;; don't enable it on dotemacs home buffer
+     (with-current-buffer  "*dotemacs*"
+       (vi-tilde-fringe-mode -1))
+     ;; after a major mode is loaded, check if the buffer is read only
+     ;; if so, disable vi-tilde-fringe-mode
+     (add-hook 'after-change-major-mode-hook (lambda ()
+                                               (when buffer-read-only
+                                                 (vi-tilde-fringe-mode -1)))))
+   :config
+   (dotemacs-hide-lighter vi-tilde-fringe-mode)))
+
 (provide 'module-evil-packages)
 ;;; module-evil-packages.el ends here

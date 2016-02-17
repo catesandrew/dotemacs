@@ -49,6 +49,9 @@
 ;; this is only applicable to GUI mode
 (dotemacs|do-after-display-system-init
  (when (display-graphic-p)
+   ;; reduce the linum font size
+   (custom-set-faces
+    '(linum ((t (:height 0.9 :family "Bebas Neue")))))
    (setq ns-pop-up-frames nil)
    (setq mac-control-modifier 'control)
    (setq mac-function-modifier 'hyper)

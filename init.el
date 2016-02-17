@@ -416,10 +416,8 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 ;; fringes
 (dotemacs|do-after-display-system-init
  (when (display-graphic-p)
-   (custom-set-variables
-    '(fringe-mode (quote (4 . 4)) nil (fringe)))
-   (custom-set-faces
-    '(linum ((t (:height 0.9 :family "Bebas Neue")))))
+   ;; (custom-set-variables
+   ;;  '(fringe-mode (quote (4 . 4)) nil (fringe)))
    (setq-default fringe-indicator-alist
                  '((truncation . nil) (continuation . nil)))))
 
