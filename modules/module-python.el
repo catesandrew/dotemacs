@@ -139,7 +139,10 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 
 (dotemacs-use-package-add-hook eldoc
   :post-init
-  (add-hook 'python-mode-hook 'eldoc-mode))
+  (defun dotemacs//init-eldoc-python-mode ()
+    (eldoc-mode)
+    (anaconda-eldoc-mode))
+  (add-hook 'python-mode-hook 'dotemacs//init-eldoc-python-mode))
 
 (dotemacs-use-package-add-hook evil-matchit
   :post-init
