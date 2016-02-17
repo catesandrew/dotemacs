@@ -484,9 +484,8 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
       eval-expression-print-level nil)
 
 ;; cache files
-(setq url-configuration-directory (concat dotemacs-cache-directory "url")
-      eshell-directory-name (concat dotemacs-cache-directory "eshell" )
-      tramp-persistency-file-name (concat dotemacs-cache-directory "tramp"))
+(setq url-configuration-directory (concat dotemacs-cache-directory "url/")
+      tramp-persistency-file-name (concat dotemacs-cache-directory "tramp/"))
 
 ;; Give us narrowing back! Seems pointless to warn. There's always undo.
 (put 'narrow-to-region 'disabled nil)
