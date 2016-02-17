@@ -500,17 +500,21 @@ ARG non nil means that the editing style is `vim'."
         (define-key helm-map (kbd "C-h") 'helm-next-source)
         (define-key helm-map (kbd "C-S-h") 'describe-key)
         (define-key helm-map (kbd "C-l") (kbd "RET"))
-        (dolist (keymap (list helm-find-files-map helm-read-file-map))
-          (define-key keymap (kbd "C-l") 'helm-execute-persistent-action)
-          (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)
-          (define-key keymap (kbd "C-S-h") 'describe-key)))
+        (with-eval-after-load 'helm-files
+          (dolist (keymap (list helm-find-files-map helm-read-file-map))
+            (define-key keymap (kbd "C-l") 'helm-execute-persistent-action)
+            (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)
+            (define-key keymap (kbd "C-S-h") 'describe-key))))
        (t
         (define-key helm-map (kbd "C-j") 'helm-execute-persistent-action)
         (define-key helm-map (kbd "C-k") 'helm-delete-minibuffer-contents)
         (define-key helm-map (kbd "C-h") nil)
         (define-key helm-map (kbd "C-l") 'helm-recenter-top-bottom-other-window))))
-    (dotemacs//helm-hjkl-navigation
-     (member dotemacs-editing-style '(vim hybrid)))
+
+    (add-hook 'dotemacs--hjkl-completion-navigation-functions
+              'dotemacs//helm-hjkl-navigation)
+    (run-hook-with-args 'dotemacs--hjkl-completion-navigation-functions
+                        (member dotemacs-editing-style '(vim hybrid)))
 
     (defun dotemacs/helm-edit ()
       "Switch in edit mode depending on the current helm buffer."
