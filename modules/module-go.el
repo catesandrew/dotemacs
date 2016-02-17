@@ -134,6 +134,7 @@
   (use-package company-go
     :ensure t
     :defer t
+    :init
     (progn
       (setq company-go-show-annotation t)
       (push 'company-go company-backends-go-mode))))
