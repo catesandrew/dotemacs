@@ -163,14 +163,14 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
     (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
 
     ;; fuzzy matching setting
-    (setq helm-M-x-fuzzy-match t
-          helm-apropos-fuzzy-match t
-          helm-file-cache-fuzzy-match t
-          helm-imenu-fuzzy-match t
-          helm-lisp-fuzzy-completion t
-          helm-recentf-fuzzy-match t
-          helm-semantic-fuzzy-match t
-          helm-buffers-fuzzy-matching t)
+    (with-eval-after-load 'helm-source
+      (defun dotemacs//helm-make-source (f &rest args)
+        (let ((source-type (cadr args))
+              (props (cddr args)))
+          (unless (eq source-type 'helm-source-async)
+            (plist-put props :fuzzy-match t)))
+        (apply f args))
+      (advice-add 'helm-make-source :around #'dotemacs//helm-make-source))
 
     ;; Use helm to provide :ls, unless ibuffer is used
     ;; (unless 'ibuffer
