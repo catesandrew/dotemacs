@@ -814,7 +814,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 
 (use-package google-translate
   :ensure t
-  :defer t
+  :commands (dotemacs/set-google-translate-languages)
   :init
   (progn
     (defun dotemacs/set-google-translate-languages (source target)
@@ -833,11 +833,11 @@ For instance pass En as source for English."
      "xgQ" 'google-translate-query-translate-reverse
      "xgq" 'google-translate-query-translate
      "xgT" 'google-translate-at-point-reverse
-     "xgt" 'google-translate-at-point))
+     "xgt" 'google-translate-at-point)
   (setq google-translate-enable-ido-completion t)
   (setq google-translate-show-phonetic t)
   (setq google-translate-default-source-language "en")
-  (setq google-translate-default-target-language "sp"))
+  (setq google-translate-default-target-language "sp")))
 
 (use-package module-firestarter
   :disabled t
