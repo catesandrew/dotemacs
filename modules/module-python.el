@@ -107,7 +107,9 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
       "gu" 'anaconda-mode-find-references)
     (evilified-state-evilify anaconda-mode-view-mode anaconda-mode-view-mode-map
       (kbd "q") 'quit-window)
-    (dotemacs-hide-lighter anaconda-mode)))
+    (dotemacs-hide-lighter anaconda-mode)
+    (defadvice anaconda-mode-goto (before python/anaconda-mode-goto activate)
+      (evil-jumper--push))))
 
 (when (eq dotemacs-completion-engine 'company)
   (dotemacs-use-package-add-hook company
@@ -138,11 +140,6 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 (dotemacs-use-package-add-hook eldoc
   :post-init
   (add-hook 'python-mode-hook 'eldoc-mode))
-
-(dotemacs-use-package-add-hook evil-jumper
-  :post-init
-  (defadvice anaconda-mode-goto (before python/anaconda-mode-goto activate)
-    (evil-jumper--push)))
 
 (dotemacs-use-package-add-hook evil-matchit
   :post-init

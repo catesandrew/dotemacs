@@ -186,6 +186,9 @@ current major mode."
     ;; (setq evil-search-module 'evil-search)
     ;; (setq evil-magic 'very-magic)
 
+    (setq evil-jumper-post-jump-hook 'recenter
+          evil-jumper-auto-save-interval 600)
+
     (evil-mode 1))
   :config
   (progn

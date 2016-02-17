@@ -80,14 +80,6 @@
   (define-key evil-iedit-state-map
     (kbd dotemacs-leader-key) dotemacs-default-map))
 
-(use-package evil-jumper
-  :ensure t
-  :init
-  (progn
-    (setq evil-jumper-post-jump-hook 'recenter
-          evil-jumper-auto-save-interval 600)
-    (evil-jumper-mode t)))
-
 (use-package evil-lisp-state
   :ensure t
   :init (setq evil-lisp-state-global t)

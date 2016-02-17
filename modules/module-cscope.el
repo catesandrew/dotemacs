@@ -20,8 +20,7 @@
 
 (dotemacs-use-package-add-hook evil-jump
   :post-init
-  (defadvice helm-cscope-find-this-symbol (before cscope/goto activate)
-    (evil-jumper--push)))
+  )
 
 (use-package xcscope
   :ensure t
@@ -62,7 +61,9 @@
       "gf" 'helm-cscope-find-this-file
       "gF" 'helm-cscope-find-files-including-file
       "gr" 'helm-cscope-find-this-symbol
-      "gx" 'helm-cscope-find-this-text-string)))
+      "gx" 'helm-cscope-find-this-text-string)
+    (defadvice helm-cscope-find-this-symbol (before cscope/goto activate)
+      (evil-jumper--push))))
 
 (provide 'module-cscope)
 ;;; module-cscope ends here
