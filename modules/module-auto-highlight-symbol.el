@@ -213,7 +213,9 @@
 
     (defun ahs-to-iedit ()
       (interactive)
-      (evil-iedit-state/iedit-mode)
+      (if (eq dotemacs-editing-style 'emacs)
+          (iedit-mode)
+        (evil-iedit-state/iedit-mode))
       (ahs-edit-mode t))
 
     (dotemacs-define-transient-state symbol-highlight
