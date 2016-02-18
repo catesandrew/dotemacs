@@ -73,6 +73,28 @@ Otherwise insert the date as Mar 04, 2014."
   (interactive "P")
   (insert (format-time-string (if iso "%F" "%b %d, %Y"))))
 
+;; uuidgen
+
+(defun dotemacs/uuidgen-1 (arg)
+  "Return a time based UUID (UUIDv1).
+ If ARG is non nil then use CID format."
+  (interactive "P")
+  (let ((uuid (uuidgen-1)))
+    (if arg
+        (insert-uuid-cid uuid)
+      (insert uuid))))
+
+(defun dotemacs/uuidgen-4 (arg)
+  "Return an UUID from random numbers (UUIDv4).
+ If ARG is non nil then use CID format."
+  (interactive "P")
+  (let ((uuid (uuidgen-4)))
+    (if arg
+        (insert-uuid-cid uuid)
+      (insert uuid))))
+
+;; packages
+
 ;; Keeps track of the last auto-indent operation and trims down white space
 (use-package clean-aindent-mode
   :ensure t
@@ -261,6 +283,17 @@ It will toggle the overlay under point or create an overlay of one character."
       "$" 'hexl-end-of-line
       "^" 'hexl-beginning-of-line
       "0" 'hexl-beginning-of-line)))
+
+(use-package uuidgen
+  :commands (uuidgen-1 uuidgen-4)
+  :ensure t
+  :init
+  (progn
+    (dotemacs-declare-prefix "iU" "uuid")
+    (dotemacs-set-leader-keys
+     "iU1" 'dotemacs/uuidgen-1
+     "iU4" 'dotemacs/uuidgen-4
+     "iUU" 'dotemacs/uuidgen-4)))
 
 (provide 'module-editing)
 ;;; module-editing.el ends here
