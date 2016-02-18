@@ -211,7 +211,7 @@ environment, otherwise it is strongly recommended to let it set to t.")
 ;; dependencies
 ; (dotemacs-load-or-install-package 'dash t)
 (dotemacs-load-or-install-package 's t)
-;; (dotemacs-load-or-install-package 'f t)
+(dotemacs-load-or-install-package 'f t)
 (setq evil-want-Y-yank-to-eol dotemacs-remap-Y-to-y$
       evil-ex-substitute-global dotemacs-ex-substitute-global)
 (dotemacs-load-or-install-package 'evil t)
