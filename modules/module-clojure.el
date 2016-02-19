@@ -178,7 +178,7 @@
     (defun dotemacs/cider-test-run-all-tests ()
       (interactive)
       (cider-load-buffer)
-      (dotemacs//cider-eval-in-repl-no-focus (cider-test-run-tests nil)))
+      (dotemacs//cider-eval-in-repl-no-focus (cider-test-run-ns-tests nil)))
 
     (defun dotemacs/cider-test-rerun-tests ()
       (interactive)
