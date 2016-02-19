@@ -153,6 +153,14 @@ Otherwise insert the date as Mar 04, 2014."
     (setq expand-region-contract-fast-key "V"
           expand-region-reset-fast-key "r")))
 
+(use-package change-inner
+  :ensure t
+  :defer t
+  :commands (change-inner change-outer)
+  :init
+  (progn
+    ))
+
 (use-package lorem-ipsum
   :ensure t
   :commands (lorem-ipsum-insert-list
