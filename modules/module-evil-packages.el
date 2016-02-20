@@ -283,10 +283,12 @@
   :init
   (progn
     (setq evil-cleverparens-use-regular-insert t)
+    (setq evil-cp-regular-bindings nil)
     (dotemacs-add-toggle evil-cleverparens
       :status evil-cleverparens-mode
       :on  (evil-cleverparens-mode)
       :off (evil-cleverparens-mode -1)
+      :evil-leader "Tc"
       :documentation "Enable evil-cleverparens.")))
 
 (use-package evil-visual-mark-mode
@@ -299,6 +301,7 @@
       :status evil-visual-mark-mode
       :on (evil-visual-mark-mode)
       :off (evil-visual-mark-mode -1)
+      :evil-leader "Tv"
       :documentation "Show evil marks")))
 
 (use-package evil-ediff
