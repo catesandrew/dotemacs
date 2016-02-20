@@ -250,6 +250,15 @@ It will toggle the overlay under point or create an overlay of one character."
   :config
   (dotemacs-hide-lighter undo-tree-mode))
 
+;; Add UndoHist Package to have persistent undo history
+;; https://github.com/syl20bnr/spacemacs/pull/4366
+(use-package undohist
+  :ensure t
+  :init
+  (setq undohist-directory (expand-file-name "undo-history" dotemacs-cache-directory))
+  :config
+  (undohist-initialize))
+
 (use-package copyright                  ; Deal with copyright notices
   ;; Update copyright when visiting files
   :init (add-hook 'find-file-hook 'copyright-update)
