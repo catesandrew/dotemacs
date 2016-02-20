@@ -117,6 +117,8 @@
     ;   (hs-minor-mode t))
     (dotemacs-enable-hs-minor-mode)
     (auto-fill-comments-mode)
+    (subword-mode +1) ;; camelCase
+    (evil-visual-mark-mode)
     (dotemacs-highlight-TODO-words)))
 
 ;; (use-package outline                    ; Navigate outlines in buffers
