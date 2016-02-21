@@ -6,6 +6,7 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
 (require 'use-package)
 ;; (require 'core-vars)
 ;; (require 'core-funcs)
@@ -18,7 +19,14 @@
 ;; (require 'module-core)
 ;; (require 'module-utils)
 
-;;; Code:
+;; variables
+
+(defvar dotemacs/prog-syntax-table
+  (let ((table (make-syntax-table prog-mode-syntax-table)))
+    ;; dash "-" is now a word character in programming mode
+    (modify-syntax-entry ?- "w" table)
+    (modify-syntax-entry ?_ "w" table)
+    table))
 
 (define-minor-mode auto-fill-comments-mode
   "Toggle `auto-fill-mode` to auto-fill comments."
@@ -38,6 +46,8 @@
   :off (auto-fill-comments-mode -1)
   :documentation "Break line beyond `current-fill-column` in comments only, while editing."
   :evil-leader "tg")
+
+;; funcs
 
 (defun dotemacs-disable-electric-indent-mode ()
   (if (fboundp 'electric-indent-local-mode)
@@ -85,13 +95,11 @@
   (when spell-checking-enable-by-default
     (flyspell-prog-mode))
 
-  ;; Underscore "_" is now a word character in programming mode
-  (modify-syntax-entry ?_ "w")
   (unless (bound-and-true-p my-pmh-ran)
     ;; add buffer-local indicator for whether prog-mode-hook has run.
     (set (make-local-variable 'my-pmh-ran) t)
 
-        ;; disable line wrap
+    ;; disable line wrap
     (unless (bound-and-true-p truncate-lines)
       ; (set (make-local-variable 'truncate-lines) t)
       (setq truncate-lines t))
@@ -116,6 +124,7 @@
     ; (unless (bound-and-true-p hs-minor-mode)
     ;   (hs-minor-mode t))
     (dotemacs-enable-hs-minor-mode)
+    ;; (set-syntax-table dotemacs/prog-syntax-table)
     (auto-fill-comments-mode)
     (subword-mode +1) ;; camelCase
     (evil-visual-mark-mode)

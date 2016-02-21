@@ -6,6 +6,7 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
 (require 'use-package)
 (require 'evil-evilified-state)
 ;; (require 'core-vars)
@@ -16,8 +17,11 @@
 ;; (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
+(require 'module-cwd)
 
-;;; Code:
+;; funcs
+
+;; packages
 
 (use-package neotree
   :ensure t
