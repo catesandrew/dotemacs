@@ -39,7 +39,7 @@
 
 ;;; Code:
 
-(defvar vinegar-reuse-dired-buffer t
+(defvar vinegar-reuse-dired-buffer nil
   "If non-nil, reuses one dired buffer for navigation.")
 
 ;; funcs
