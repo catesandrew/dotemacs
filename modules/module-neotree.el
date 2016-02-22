@@ -17,7 +17,6 @@
 ;; (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
-(require 'module-cwd)
 
 ;; funcs
 
