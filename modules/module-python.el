@@ -109,7 +109,7 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
       (kbd "q") 'quit-window)
     (dotemacs-hide-lighter anaconda-mode)
     (defadvice anaconda-mode-goto (before python/anaconda-mode-goto activate)
-      (evil-jumper--push))))
+      (evil--jumps-push))))
 
 (when (eq dotemacs-completion-engine 'company)
   (dotemacs-use-package-add-hook company

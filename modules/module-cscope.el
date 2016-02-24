@@ -63,7 +63,7 @@
       "gr" 'helm-cscope-find-this-symbol
       "gx" 'helm-cscope-find-this-text-string)
     (defadvice helm-cscope-find-this-symbol (before cscope/goto activate)
-      (evil-jumper--push))))
+      (evil--jumps-push))))
 
 (provide 'module-cscope)
 ;;; module-cscope ends here
