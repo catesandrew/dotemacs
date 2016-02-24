@@ -241,9 +241,128 @@
     (add-to-list 'auto-mode-alist '("\\.jscsrc$" . json-mode))
     (add-to-list 'auto-mode-alist '("\\.eslintrc$" . js2-mode))
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-    (add-hook 'js2-mode-hook 'js2-highlight-unused-variables-mode))
+    (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
+    (add-hook 'js2-mode-hook 'js2-highlight-unused-variables-mode)
+
+    (defun dotemacs/add-builtin-externs()
+      (interactive)
+      (dolist (s '("Array" "ArrayBuffer" "Boolean" "constructor"
+                   "DataView" "Date" "decodeURI" "decodeURIComponent"
+                   "encodeURI" "encodeURIComponent" "Error"
+                   "escape" "eval" "EvalError" "Float32Array"
+                   "Float64Array" "Function" "hasOwnProperty" "Infinity"
+                   "Int16Array" "Int32Array" "Int8Array" "isFinite"
+                   "isNaN" "isPrototypeOf" "JSON" "Map" "Math"
+                   "NaN" "Number" "Object" "parseFloat" "parseInt"
+                   "Promise" "propertyIsEnumerable" "Proxy" "RangeError"
+                   "ReferenceError" "Reflect" "RegExp" "Set" "String"
+                   "Symbol" "SyntaxError" "System" "toLocaleString"
+                   "toString" "TypeError" "Uint16Array" "Uint32Array"
+                   "Uint8Array" "Uint8ClampedArray" "undefined" "unescape"
+                   "URIError" "valueOf" "WeakMap" "WeakSet"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-es5-externs()
+      (interactive)
+      (dolist (s '("Array" "Boolean" "constructor" "Date" "decodeURI"
+                   "decodeURIComponent" "encodeURI" "encodeURIComponent"
+                   "Error" "escape" "eval" "EvalError" "Function"
+                   "hasOwnProperty" "Infinity" "isFinite" "isNaN"
+                   "isPrototypeOf" "JSON" "Math" "NaN" "Number" "Object"
+                   "parseFloat" "parseInt" "propertyIsEnumerable"
+                   "RangeError" "ReferenceError" "RegExp" "String"
+                   "SyntaxError" "toLocaleString" "toString" "TypeError"
+                   "undefined" "unescape" "URIError" "valueOf"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-es6-externs()
+      (interactive)
+      (dolist (s '("Array" "ArrayBuffer" "Boolean" "constructor"
+                   "DataView" "Date" "decodeURI" "decodeURIComponent"
+                   "encodeURI" "encodeURIComponent" "Error" "escape"
+                   "eval" "EvalError" "Float32Array" "Float64Array"
+                   "Function" "hasOwnProperty" "Infinity" "Int16Array"
+                   "Int32Array" "Int8Array" "isFinite" "isNaN" "isPrototypeOf"
+                   "JSON" "Map" "Math" "NaN" "Number" "Object" "parseFloat"
+                   "parseInt" "Promise" "propertyIsEnumerable" "Proxy"
+                   "RangeError" "ReferenceError" "Reflect" "RegExp"
+                   "Set" "String" "Symbol" "SyntaxError" "System"
+                   "toLocaleString" "toString" "TypeError" "Uint16Array"
+                   "Uint32Array" "Uint8Array" "Uint8ClampedArray"
+                   "undefined" "unescape" "URIError" "valueOf"
+                   "WeakMap" "WeakSet"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs-add-node-externs()
+      (interactive)
+      (dolist (s '("__dirname" "__filename" "arguments" "Buffer"
+                   "clearImmediate" "clearInterval" "clearTimeout"
+                   "console" "exports" "GLOBAL" "global" "module"
+                   "process" "require" "root" "setImmediate"
+                   "setInterval" "setTimeout"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-commonjs-externs()
+      (interactive)
+      (dolist (s '("exports" "module" "require" "global"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-amd-externs()
+      (interactive)
+      (dolist (s '("define" "require"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-mocha-externs()
+      (interactive)
+      (dolist (s '("after" "afterEach" "before" "beforeEach" "context"
+                   "describe" "it" "mocha" "setup" "specify" "suite"
+                   "suiteSetup" "suiteTeardown" "teardown" "test" "xcontext"
+                   "xdescribe" "xit" "xspecify"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-chai-externs()
+      (interactive)
+      (dolist (s '("assert" "expect"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-phantomjs-externs()
+      (interactive)
+      (dolist (s '("console" "exports" "phantom" "require" "WebPage"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-jquery-externs()
+      (interactive)
+      (dolist (s '("$" "jQuery"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-shelljs-externs()
+      (interactive)
+      (dolist (s '("cat" "cd" "chmod" "config" "cp" "dirs" "echo"
+                   "env" "error" "exec" "exit" "find" "grep" "ls"
+                   "ln" "mkdir" "mv" "popd" "pushd" "pwd" "rm"
+                   "sed" "target" "tempdir" "test" "which"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-embertest-externs()
+      (interactive)
+      (dolist (s '("andThen" "click" "currentPath" "currentRouteName"
+                   "currentURL" "fillIn" "find" "findWithAssert"
+                   "keyEvent" "pauseTest" "triggerEvent" "visit"))
+        (add-to-list 'js2-additional-externs s)))
+
+    (defun dotemacs/add-jasmine-externs()
+      (interactive)
+      (when (string-match "_spec.js" (buffer-file-name))
+        (dolist (s '("afterAll" "afterEach" "beforeAll" "beforeEach"
+                     "describe" "expect" "fail" "fdescribe" "fit"
+                     "it" "jasmine" "pending" "runs" "spyOn" "waits"
+                     "waitsFor" "xdescribe" "xit"))
+          (add-to-list 'js2-additional-externs s))))
+    ;; (add-hook 'js2-mode-hook 'dotemacs/add-jasmine-externs)
+    )
   :config
   (progn
+    (setq-default js2-jslint-globals t)
     (setq-default js2-basic-offset 2)
     (setq-default js-indent-level 2)
     (setq-default js2-use-font-lock-faces t)
@@ -265,6 +384,7 @@
     (setq-default js2-rebind-eol-bol-keys nil)
     (setq-default js2-bounce-indent nil)
     (setq-default js2-indent-switch-body t)
+
     (setq-default js2-global-externs '("__dirname"
                                        "_"
                                        "describe"
@@ -376,11 +496,10 @@
   :init
   (progn
     (require 'js2-imenu-extras)
-    (setq js2-imenu-enabled-frameworks 'nil)
     (js2-imenu-extras-mode)
-    ;; required to make `<LEADER> s l' to work correctly
+    ;; required to make `<leader> s j' or `<leacer> ij` to work correctly
+    ;; it is tied to `dotemacs/jump-in-buffer`
     (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-
     (defun js2-imenu-make-index ()
       (interactive)
       (save-excursion
