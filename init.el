@@ -209,7 +209,7 @@ environment, otherwise it is strongly recommended to let it set to t.")
 (setq initial-buffer-choice nil)
 (setq inhibit-startup-screen t)
 ;; dependencies
-; (dotemacs-load-or-install-package 'dash t)
+(dotemacs-load-or-install-package 'dash t)
 (dotemacs-load-or-install-package 's t)
 (dotemacs-load-or-install-package 'f t)
 (setq evil-want-Y-yank-to-eol dotemacs-remap-Y-to-y$
