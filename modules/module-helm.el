@@ -293,7 +293,6 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
       "hdF"  'dotemacs/helm-faces
       "hi"   'helm-info-at-point
       "hm"   'helm-man-woman
-      "hu"   'helm-unicode
       "iu"   'helm-ucs
       "jI"   'helm-imenu-in-all-buffers
       "rm"   'helm-all-mark-rings
@@ -301,7 +300,7 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
       "rr"   'helm-register
       "rs"   'dotemacs/resume-last-search-buffer
       "ry"   'helm-show-kill-ring
-      "sL"   'dotemacs/resume-last-search-buffer
+      "sl"   'dotemacs/resume-last-search-buffer
       "sj"   'dotemacs-jump-in-buffer)
 
     ;; search with grep
