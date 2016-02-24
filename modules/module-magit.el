@@ -77,7 +77,7 @@
     (dotemacs-declare-prefix "gd" "diff")
     (dotemacs-set-leader-keys
      "gA" 'magit-cherry-pick-popup
-     "gb" 'dotemacs/git-blame-micro-state
+     "gb" 'dotemacs/git-blame-transient-state/body
      "gc" 'magit-commit-popup
      "gC" 'magit-checkout
      "gd" 'magit-diff-popup
