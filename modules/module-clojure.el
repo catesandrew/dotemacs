@@ -289,6 +289,7 @@
         "sI" 'cider-jack-in-clojurescript
         "sn" 'dotemacs/cider-send-ns-form-to-repl
         "sN" 'dotemacs/cider-send-ns-form-to-repl-focus
+        "so" 'cider-repl-switch-to-other
         "sq" 'cider-quit
         "sr" 'dotemacs/cider-send-region-to-repl
         "sR" 'dotemacs/cider-send-region-to-repl-focus
@@ -323,6 +324,7 @@
 
       "sc" 'cider-repl-clear-buffer
       "sn" 'cider-repl-set-ns
+      "so" 'cider-repl-switch-to-other
       "sq" 'cider-quit
       "ss" 'cider-switch-to-last-clojure-buffer
       "sx" 'cider-refresh
