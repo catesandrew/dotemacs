@@ -199,12 +199,12 @@ is achieved by adding the relevant text properties."
       "Correctly revert to insert state after selection."
       (interactive)
       (helm-eshell-history)
-      (evil-insert-state))
+      (dotemacs/normal-to-insert-state))
     (defun dotemacs/helm-shell-history ()
       "Correctly revert to insert state after selection."
       (interactive)
       (helm-comint-input-ring)
-      (evil-insert-state))
+      (dotemacs/normal-to-insert-state))
     (defun dotemacs/init-helm-eshell ()
       "Initialize helm-eshell."
       ;; this is buggy for now

@@ -175,6 +175,12 @@ current major mode."
     (defun evil-insert-state-cursor-hide ()
       (setq evil-insert-state-cursor '((hbar . 0))))
 
+    (defun dotemacs/normal-to-insert-state ()
+      "Switches to evil-insert-state if the current state is
+evil-normal state."
+      (when (evil-normal-state-p)
+        (dotemacs/normal-to-insert-state)))
+
     ;; https://bitbucket.org/lyro/evil/issues/444/evils-undo-granularity-is-too-coarse
     (setq evil-want-fine-undo t)
 

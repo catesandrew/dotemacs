@@ -145,7 +145,7 @@
         (interactive)
         (utop-eval-phrase)
         (utop)
-        (evil-insert-state))
+        (dotemacs/normal-to-insert-state))
 
       (defun dotemacs/utop-eval-buffer-and-go ()
         "Send buffer to REPL and evaluate it and switch to the REPL in
@@ -153,7 +153,7 @@
         (interactive)
         (utop-eval-buffer)
         (utop)
-        (evil-insert-state))
+        (dotemacs/normal-to-insert-state))
 
       (defun dotemacs/utop-eval-region-and-go (start end)
         "Send region to REPL and evaluate it and switch to the REPL in
@@ -161,7 +161,7 @@
         (interactive "r")
         (utop-eval-region start end)
         (utop)
-        (evil-insert-state))
+        (dotemacs/normal-to-insert-state))
 
       (dotemacs-set-leader-keys-for-major-mode 'tuareg-mode
         "'"  'utop
