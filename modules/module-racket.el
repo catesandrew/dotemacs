@@ -84,6 +84,13 @@
       (racket-repl)
       (dotemacs/normal-to-insert-state))
 
+    (dolist (prefix '(("mg" . "navigation")
+                      ("mh" . "doc")
+                      ("mi" . "insert")
+                      ("ms" . "repl")
+                      ("mt" . "tests")))
+      (dotemacs-declare-prefix-for-mode 'racket-mode (car prefix) (cdr prefix)))
+
     (dotemacs-set-leader-keys-for-major-mode 'racket-mode
       ;; navigation
       "g`" 'racket-unvisit
