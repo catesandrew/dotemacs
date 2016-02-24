@@ -290,35 +290,20 @@ Example: (evil-map visual \"<\" \"<gv\")"
     (define-key evil-normal-state-map
       (kbd "gd") 'dotemacs/evil-smart-goto-definition)
 
-    (defun dotemacs/scroll-half-page-up ()
-      "Scroll half a page up while keeping cursor in middle of page."
-      (interactive)
-      (evil-window-top)
-      (let ((recenter-redisplay nil))
-        (recenter nil)))
-    (defun dotemacs/scroll-half-page-down ()
-      "Scroll half a page down while keeping cursor in middle of page."
-      (interactive)
-      (evil-window-bottom)
-      ;; required to make repeated presses idempotent
-      (evil-next-visual-line)
-      (let ((recenter-redisplay nil))
-        (recenter nil)))
-
+    ;; scrolling transient state
     (dotemacs-define-transient-state scroll
       :title "Scrolling Transient State"
       :bindings
       ("," evil-scroll-page-up "page up")
       ("." evil-scroll-page-down "page down")
       ;; half page
-      ("<" dotemacs/scroll-half-page-up "half page up")
-      (">" dotemacs/scroll-half-page-down "half page down"))
-
+      ("<" evil-scroll-up "half page up")
+      (">" evil-scroll-down "half page down"))
     (dotemacs-set-leader-keys
      "n," 'dotemacs/scroll-transient-state/evil-scroll-page-up
      "n." 'dotemacs/scroll-transient-state/evil-scroll-page-down
-     "n<" 'dotemacs/scroll-transient-state/dotemacs/scroll-half-page-up
-     "n>" 'dotemacs/scroll-transient-state/dotemacs/scroll-half-page-down)
+     "n<" 'dotemacs/scroll-transient-state/scroll-half-page-up
+     "n>" 'dotemacs/scroll-transient-state/scroll-half-page-down)
 
     ;; pasting transient-state
     (evil-define-command dotemacs//transient-state-0 ()
