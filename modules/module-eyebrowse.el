@@ -36,10 +36,10 @@
     (define-key evil-motion-state-map "gT" 'eyebrowse-prev-window-config)
 
     (defun dotemacs/workspaces-ms-rename ()
-      "Rename a workspace and get back to micro-state."
+      "Rename a workspace and get back to transient-state."
       (interactive)
-      (eyebrowse-rename-window-config (eyebrowse--get 'current-slot))
-      (dotemacs/workspaces-micro-state))
+      (eyebrowse-rename-window-config (eyebrowse--get 'current-slot) nil)
+      (dotemacs/workspaces-transient-state/body))
 
     (defun dotemacs//workspaces-ms-get-slot-name (window-config)
       "Return the name for the given window-config"
@@ -73,7 +73,7 @@
         ("9" eyebrowse-switch-to-window-config-9)
         ("<tab>" eyebrowse-last-window-config)
         ("C-i" eyebrowse-last-window-config)
-        ("c" eyebrowse-close-window-config)
+        ("c" eyebrowse-close-window-config :exit t)
         ("h" eyebrowse-prev-window-config)
         ("l" eyebrowse-next-window-config)
         ("n" eyebrowse-next-window-config)
@@ -98,8 +98,9 @@
                 (neotree-find origin-buffer-file-name))
               (neotree-hide))))))
 
-    (with-eval-after-load 'projectile
-      (add-hook 'eyebrowse-post-window-switch-hook 'dotemacs-eyebrowse-switch))))
+    ;; (with-eval-after-load 'projectile
+    ;;   (add-hook 'eyebrowse-post-window-switch-hook 'dotemacs-eyebrowse-switch))
+))
 
 (provide 'module-eyebrowse)
 ;;; module-eyebrowse.el ends here

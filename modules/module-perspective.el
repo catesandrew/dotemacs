@@ -183,10 +183,10 @@ If the perspective doesn't have a workspace, create one."
       (eyebrowse-init frame)
       (dotemacs/save-eyebrowse-for-perspective frame))))
 
-(defun dotemacs/update-eyebrowse-for-perspective (_new-persp-name)
+(defun dotemacs/update-eyebrowse-for-perspective (_new-persp-name _frame-or-window)
   "Update and save current frame's eyebrowse workspace to its perspective.
-Parameter _NEW-PERSP-NAME is ignored, and exists only for compatibility with
-`persp-before-switch-functions'."
+Parameters _NEW-PERSP-NAME and _FRAME-OR-WINDOW are ignored, and
+exists only for compatibility with `persp-before-switch-functions'."
   (let* ((current-slot (eyebrowse--get 'current-slot))
          (current-tag (nth 2 (assoc current-slot (eyebrowse--get 'window-configs)))))
     (eyebrowse--update-window-config-element
@@ -310,6 +310,7 @@ FRAME defaults to the current frame."
  [_t_]^^   show a buffer without adding it to current layout
  [_w_]^^   workspaces micro-state
  [_?_]^^   toggle help
+ [_q_]^^   quit
 ")
         :bindings
         ;; need to exit in case number doesn't exist
@@ -340,6 +341,7 @@ FRAME defaults to the current frame."
         ("N" persp-prev)
         ("o" dotemacs/select-custom-layout :exit t)
         ("p" persp-prev)
+        ("q" nil :exit t)
         ("r" persp-remove-buffer :exit t)
         ("R" dotemacs/layouts-ms-rename :exit t)
         ("s" persp-save-state-to-file :exit t)
