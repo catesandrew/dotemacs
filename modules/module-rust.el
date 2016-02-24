@@ -23,9 +23,6 @@
 ;; Define the buffer local company backend variable
 (dotemacs-defvar-company-backends rust-mode)
 
-(defvar rust-enable-rustfmt-on-save nil
-  "If non-nil, automatically format code with rustfmt on save.")
-
 ;; funcs
 
 ;; http://doc.crates.io/guide.html
@@ -67,6 +64,7 @@
   (progn
     (dotemacs-declare-prefix-for-mode 'rust-mode "mc" "cargo")
     (dotemacs-set-leader-keys-for-major-mode 'rust-mode
+      "="  'rust-format-buffer
       "cc" 'dotemacs/rust-cargo-build
       "ct" 'dotemacs/rust-cargo-test
       "cd" 'dotemacs/rust-cargo-doc
@@ -102,18 +100,6 @@
     (dotemacs-declare-prefix-for-mode 'rust-mode "mg" "goto")
     (dotemacs-set-leader-keys-for-major-mode 'rust-mode
       "gg" 'racer-find-definition)))
-
-(use-package rustfmt
-  :defer t
-  :ensure t
-  :init
-  (progn
-    (when rust-enable-rustfmt-on-save
-      (dotemacs/add-to-hook 'rust-mode-hook
-                             '(rustfmt-enable-on-save)))
-
-    (dotemacs-set-leader-keys-for-major-mode 'rust-mode
-      "=" 'rustfmt-format-buffer)))
 
 (provide 'module-rust)
 ;;; module-rust.el ends here
