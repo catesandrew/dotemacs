@@ -315,6 +315,18 @@ Example: (evil-map visual \"<\" \"<gv\")"
      "n>" 'dotemacs/scroll-transient-state/dotemacs/scroll-half-page-down)
 
     ;; pasting transient-state
+    (evil-define-command dotemacs//transient-state-0 ()
+      :keep-visual t
+      :repeat nil
+      (interactive)
+      (if current-prefix-arg
+          (progn
+            (setq this-command #'digit-argument)
+            (call-interactively #'digit-argument))
+        (setq this-command #'evil-beginning-of-line
+              hydra-deactivate t)
+        (call-interactively #'evil-beginning-of-line)))
+
     (dotemacs-define-transient-state paste
       :title "Pasting Transient State"
       :doc "\n[%s(length kill-ring-yank-pointer)/%s(length kill-ring)] \
@@ -324,7 +336,8 @@ below. Anything else exits."
         ("C-j" evil-paste-pop)
         ("C-k" evil-paste-pop-next)
         ("p" evil-paste-after)
-        ("P" evil-paste-before))
+        ("P" evil-paste-before)
+        ("0" dotemacs//transient-state-0))
       (when dotemacs-enable-paste-transient-state
         (define-key evil-normal-state-map "p" 'dotemacs/paste-transient-state/evil-paste-after)
         (define-key evil-normal-state-map "P" 'dotemacs/paste-transient-state/evil-paste-before))
