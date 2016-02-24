@@ -72,7 +72,7 @@
 
 (use-package org-plus-contrib
   :mode ("\\.org$" . org-mode)
-  :commands (org-clock-out org-occur-in-agenda-files)
+  :commands (org-clock-out org-occur-in-agenda-files org-agenda-files)
   :ensure t
   :defer t
   :init
@@ -478,7 +478,7 @@ a Markdown buffer and use this command to convert it.
   (dotemacs-define-custom-layout "@Org"
     :binding "o"
     :body
-    (find-file (first org-agenda-files))))
+    (find-file (first (org-agenda-files)))))
 
 (use-package toc-org
   :ensure t
