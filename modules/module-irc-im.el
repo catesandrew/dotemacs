@@ -227,8 +227,8 @@
   :post-init
   (add-hook 'erc-mode-hook 'emoji-cheat-sheet-plus-display-mode))
 
-(dotemacs-use-package-add-hook persp-mode
-  :post-init
+;; (dotemacs-use-package-add-hook persp-mode
+;;   :post-init
   (dotemacs-define-custom-layout "@ERC"
     :binding "E"
     :body
@@ -239,7 +239,8 @@
   :post-config
   ;; do not save erc buffers
   (push (lambda (b) (with-current-buffer b (eq major-mode 'erc-mode)))
-        persp-filter-save-buffers-functions))
+        persp-filter-save-buffers-functions)
+  ;; )
 
 (dotemacs-use-package-add-hook smooth-scrolling
   :post-init

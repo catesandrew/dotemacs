@@ -12,6 +12,10 @@
 
 (defvar dotemacs-repl-list '()
   "List of all registered REPLs.")
+(defvar dotemacs-post-user-config-hook nil
+  "Hook run after dotemacs/user-config")
+(defvar dotemacs-post-user-config-hook-run nil
+  "Whether `dotemacs-post-user-config-hook' has been run")
 
 (defun dotemacs-mplist-get (plist prop)
   "Get the values associated to PROP in PLIST, a modified plist.
@@ -76,7 +80,7 @@ and its values are removed."
   (setq dotemacs--init-redisplay-count (1+ dotemacs--init-redisplay-count))
   (redisplay))
 
-(defun dotemacs-create-key-binding-form (props func)
+(defun dotemacs//create-key-binding-form (props func)
   "Helper which returns a from to bind FUNC to a key according to PROPS.
 
 Supported properties:
@@ -238,6 +242,31 @@ buffer."
   (push `(,(or tag (symbol-name repl-func))
           . (,feature . ,repl-func))
         dotemacs-repl-list))
+
+(defun dotemacs/defer-until-after-user-config (func)
+  "Call FUNC if dotemacs/user-config has been called. Otherwise,
+defer call using `dotemacs-post-user-config-hook'."
+  (if dotemacs-post-user-config-hook-run
+      (funcall func)
+    (add-hook 'dotemacs-post-user-config-hook func)))
+
+(defun dotemacs/setup-startup-hook ()
+  "Add post init processing."
+  (add-hook
+   'emacs-startup-hook
+   (lambda ()
+     (run-hooks 'dotemacs-post-user-config-hook)
+     (setq dotemacs-post-user-config-hook-run t)
+     (when (fboundp dotemacs-scratch-mode)
+       (with-current-buffer "*scratch*"
+         (funcall dotemacs-scratch-mode)))
+     ;; from jwiegley
+     ;; https://github.com/jwiegley/dot-emacs/blob/master/init.el
+     (let ((elapsed (float-time
+                     (time-subtract (current-time) emacs-start-time))))
+       (dotemacs-buffer/append
+        (format "\n[Emacs packages loaded in %.3fs]\n"
+                elapsed))))))
 
 (provide 'core-funcs)
 ;;; core-funcs.el ends here

@@ -97,7 +97,7 @@ Available PROPS:
       Important note: due to inner working of transient-maps in Emacs
       the `:exit' keyword is evaluate *before* the actual execution
       of the bound command.
-All properties supported by `dotemacs-create-key-binding-form' can be
+All properties supported by `dotemacs//create-key-binding-form' can be
 used."
   (declare (indent 1))
   (let* ((func (dotemacs//transient-state-func-name name))
@@ -117,51 +117,53 @@ used."
          (hint (plist-get props :hint))
          (additional-docs (dotemacs-mplist-get props :additional-docs))
          (foreign-keys (plist-get props :foreign-keys))
-         (bindkeys (dotemacs-create-key-binding-form props body-func)))
+         (bindkeys (dotemacs//create-key-binding-form props body-func)))
     `(progn
-       (eval
-        (append
-         '(defhydra ,func
-            (,(car entry-binding) ,(cadr entry-binding)
-             :hint ,hint
-             :columns ,columns
-             :foreign-keys ,foreign-keys
-             :body-pre ,entry-sexp
-             :before-exit ,exit-sexp)
-            ,doc)
-         (dotemacs//transient-state-adjust-bindings
-          ',bindings ',remove-bindings ',add-bindings)))
-       (when ,title
-         (let ((guide (concat "[" (propertize "KEY" 'face 'hydra-face-blue)
-                              "] exits state  ["
-                              (if ',foreign-keys
-                                  (propertize "KEY" 'face 'hydra-face-pink)
-                                (propertize "KEY" 'face 'hydra-face-red))
-                              "] will not exit")))
-           ;; (add-face-text-property 0 (length guide) '(:height 0.9) t guide)
-           (add-face-text-property 0 (length guide) 'italic t guide)
-           (setq ,hint-var
-                 (list 'concat
-                       (when dotemacs-show-transient-state-title
-                         (concat
-                          (propertize
-                           ,title
-                           'face 'dotemacs-transient-state-title-face)
-                          "\n")) ,hint-var
-                          (when dotemacs-show-transient-state-color-guide
-                            (concat "\n" guide))))))
-       (dolist (add-doc ',additional-docs)
-         (unless (boundp (car add-doc))
-           (set (car add-doc)
-                (dotemacs//transient-state-make-doc
-                 ',name (cdr add-doc) '(,(car entry-binding)
-                                        ,(cadr entry-binding)
-                                        :hint ,hint
-                                        :columns ,columns
-                                        :foreign-keys ,foreign-keys
-                                        :body-pre ,entry-sexp
-                                        :before-exit ,exit-sexp)))))
-           ,@bindkeys)))
+       (dotemacs/defer-until-after-user-config
+        '(lambda ()
+           (eval
+            (append
+             '(defhydra ,func
+                (,(car entry-binding) ,(cadr entry-binding)
+                 :hint ,hint
+                 :columns ,columns
+                 :foreign-keys ,foreign-keys
+                 :body-pre ,entry-sexp
+                 :before-exit ,exit-sexp)
+                ,doc)
+             (dotemacs//transient-state-adjust-bindings
+              ',bindings ',remove-bindings ',add-bindings)))
+           (when ,title
+             (let ((guide (concat "[" (propertize "KEY" 'face 'hydra-face-blue)
+                                  "] exits state  ["
+                                  (if ',foreign-keys
+                                      (propertize "KEY" 'face 'hydra-face-pink)
+                                    (propertize "KEY" 'face 'hydra-face-red))
+                                  "] will not exit")))
+               ;; (add-face-text-property 0 (length guide) '(:height 0.9) t guide)
+               (add-face-text-property 0 (length guide) 'italic t guide)
+               (setq ,hint-var
+                     (list 'concat
+                           (when dotemacs-show-transient-state-title
+                             (concat
+                              (propertize
+                               ,title
+                               'face 'dotemacs-transient-state-title-face)
+                              "\n")) ,hint-var
+                              (when dotemacs-show-transient-state-color-guide
+                                (concat "\n" guide))))))
+           (dolist (add-doc ',additional-docs)
+             (unless (boundp (car add-doc))
+               (set (car add-doc)
+                    (dotemacs//transient-state-make-doc
+                     ',name (cdr add-doc) '(,(car entry-binding)
+                                            ,(cadr entry-binding)
+                                            :hint ,hint
+                                            :columns ,columns
+                                            :foreign-keys ,foreign-keys
+                                            :body-pre ,entry-sexp
+                                            :before-exit ,exit-sexp)))))
+           ,@bindkeys)))))
 
 (provide 'core-transient-state)
 ;;; core-transient-state.el ends here

@@ -36,7 +36,7 @@ Avaiblabe PROPS:
 `:documentation STRING'
     STRING describes what the toggle does.
 
-All properties supported by `dotemacs-create-key-binding-form' can be
+All properties supported by `dotemacs//create-key-binding-form' can be
 used."
   (declare (indent 1))
   (let* ((wrapper-func (intern (format "dotemacs-toggle-%s"
@@ -48,7 +48,7 @@ used."
          (doc (plist-get props :documentation))
          (on-body (dotemacs-mplist-get props :on))
          (off-body (dotemacs-mplist-get props :off))
-         (bindkeys (dotemacs-create-key-binding-form props wrapper-func))
+         (bindkeys (dotemacs//create-key-binding-form props wrapper-func))
          ;; we evaluate condition and status only if they are a list or
          ;; a bound symbol
          (status-eval `(and (or (and (symbolp ',status) (boundp ',status))

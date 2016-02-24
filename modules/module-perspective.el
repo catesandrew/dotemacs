@@ -27,7 +27,7 @@
   (expand-file-name (concat dotemacs-cache-directory "layouts/"))
   "Save layouts in this directory.")
 
-(defvar layouts-enable-autosave nil
+(defvar layouts-enable-autosave t
   "If true, saves perspectives to file per `layouts-autosave-delay'.")
 
 (defvar layouts-autosave-delay 900
@@ -187,9 +187,10 @@ If the perspective doesn't have a workspace, create one."
   "Update and save current frame's eyebrowse workspace to its perspective.
 Parameter _NEW-PERSP-NAME is ignored, and exists only for compatibility with
 `persp-before-switch-functions'."
-  (eyebrowse--update-window-config-element
-   (eyebrowse--current-window-config (eyebrowse--get 'current-slot)
-                                     (eyebrowse--get 'current-tag)))
+  (let* ((current-slot (eyebrowse--get 'current-slot))
+         (current-tag (nth 2 (assoc current-slot (eyebrowse--get 'window-configs)))))
+    (eyebrowse--update-window-config-element
+     (eyebrowse--current-window-config current-slot current-tag)))
   (dotemacs/save-eyebrowse-for-perspective))
 
 (defun dotemacs/save-eyebrowse-for-perspective (&optional frame)
@@ -209,6 +210,8 @@ FRAME defaults to the current frame."
   (if (fboundp 'dotemacs/workspaces-transient-state/body)
       (call-interactively 'dotemacs/workspaces-transient-state/body)
     (message "You need the eyebrowse layer to use this feature.")))
+
+;; packages
 
 (use-package persp-mode
   :diminish persp-mode
@@ -471,7 +474,7 @@ Available PROPS:
       (dotemacs/find-dotfile))
 
     (defun dotemacs/select-custom-layout ()
-      "Update the custom-perspectives microstate and then activate it."
+      "Update the custom-perspectives  transient-stat and then activate it."
       (interactive)
       (dotemacs//update-custom-layouts)
       (dotemacs/custom-layouts-transient-state/body))
@@ -540,7 +543,7 @@ current perspective."
   (add-hook 'eyebrowse-post-window-switch-hook #'dotemacs/save-eyebrowse-for-perspective)
   (add-hook 'persp-activated-hook #'dotemacs/load-eyebrowse-for-perspective))
 
-(dotemacs-use-package-add-hook helm
+(dotemacs-use-package-add-hook helm-projectile
   :post-init
   (dotemacs-set-leader-keys
     "pl" 'dotemacs/helm-persp-switch-project))

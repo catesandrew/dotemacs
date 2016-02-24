@@ -238,19 +238,7 @@ environment, otherwise it is strongly recommended to let it set to t.")
 (require 'use-package)
 (require 'module-vars)
 
-(add-hook
- 'emacs-startup-hook
- (lambda ()
-   (when (fboundp dotemacs-scratch-mode)
-     (with-current-buffer "*scratch*"
-       (funcall dotemacs-scratch-mode)))
-   ;; from jwiegley
-   ;; https://github.com/jwiegley/dot-emacs/blob/master/init.el
-   (let ((elapsed (float-time
-                   (time-subtract (current-time) emacs-start-time))))
-     (dotemacs-buffer/append
-      (format "\n[Emacs loaded in %.3fs]\n"
-              elapsed)))))
+(dotemacs/setup-startup-hook)
 
 
 ;;; Prefixes
@@ -605,6 +593,10 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-whitespace)
 
 
+;; Perspective
+(use-package module-perspective)
+
+
 ;;; IRC and IM
 (use-package module-irc-im)
 
@@ -759,8 +751,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-net)
 
 
-;; Perspective and EyeBrowse
-(use-package module-perspective)
+;; EyeBrowse
 (use-package module-eyebrowse)
 
 

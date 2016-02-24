@@ -554,12 +554,13 @@ a Markdown buffer and use this command to convert it.
 
 \(fn)" t nil)))
 
-(dotemacs-use-package-add-hook persp-mode
-  :post-init
+;; (dotemacs-use-package-add-hook persp-mode
+;;   :post-init
   (dotemacs-define-custom-layout "@Org"
     :binding "o"
     :body
-    (find-file (first (org-agenda-files)))))
+    (find-file (first (org-agenda-files))))
+  ;; )
 
 (use-package toc-org
   :ensure t

@@ -104,7 +104,7 @@ Available PROPS:
       the `:exit' keyword is evaluate *before* the actual execution
       of the bound command.
 
-All properties supported by `dotemacs-create-key-binding-form' can be
+All properties supported by `dotemacs//create-key-binding-form' can be
 used."
   (declare (indent 1))
   (let* ((func (dotemacs//micro-state-func-name name))
@@ -121,7 +121,7 @@ used."
          (wrappers (dotemacs//micro-state-create-wrappers
                     name doc msg-func disable-leader bindings))
          (keymap-body (dotemacs//micro-state-fill-map-sexps wrappers))
-         (bindkeys (dotemacs-create-key-binding-form props func)))
+         (bindkeys (dotemacs//create-key-binding-form props func)))
     (progn (defun ,func ()
              ,(format "%S micro-state." name)
              (interactive)
