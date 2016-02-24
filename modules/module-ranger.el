@@ -11,6 +11,7 @@
 (require 'core-funcs)
 (require 'core-keybindings)
 (require 'core-display-init)
+(require 'core-use-package-ext)
 (require 'module-vars)
 (require 'module-common)
 ;; (require 'module-core)
@@ -41,6 +42,13 @@
           ranger-max-preview-size 10))
   :config
   (define-key ranger-mode-map (kbd "-") 'ranger-up-directory))
+
+(dotemacs-use-package-add-hook evil-snipe
+  :post-init
+  (if evil-snipe-enable-alternate-f-and-t-behaviors
+      (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-override-mode)
+    (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-mode)))
+
 
 (provide 'module-ranger)
 ;;; module-ranger.el ends here
