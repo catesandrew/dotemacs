@@ -384,11 +384,11 @@ below. Anything else exits."
 
       ;; Define history commands for comint
       (evil-define-key 'insert comint-mode-map
-        (kbd "C-k") 'comint-next-input
-        (kbd "C-j") 'comint-previous-input)
+        (kbd "C-k") 'comint-previous-input
+        (kbd "C-j") 'comint-next-input)
       (evil-define-key 'normal comint-mode-map
-        (kbd "C-k") 'comint-next-input
-        (kbd "C-j") 'comint-previous-input)))
+        (kbd "C-k") 'comint-previous-input
+        (kbd "C-j") 'comint-next-input)))
 
 (provide 'module-evil)
 ;;; module-evil.el ends here
