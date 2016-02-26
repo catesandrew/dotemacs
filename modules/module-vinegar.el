@@ -216,7 +216,6 @@
                    (not (file-directory-p file)))
           (when-let (dotemacs-project-root (ignore-errors (projectile-project-root)))
             (find-file (expand-file-name file dotemacs-project-root))
-            (message "Projectile root found: %s" dotemacs-project-root)
             (run-hooks 'projectile-find-file-hook)
             (when (fboundp 'neotree-dir)
               (if (neo-global--window-exists-p)

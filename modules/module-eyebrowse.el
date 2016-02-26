@@ -86,7 +86,6 @@
       "Hook eyebrowse to projectile and neotree."
       (interactive)
       (when (projectile-project-p)
-        (message "eyebrowse switching to: %s" (projectile-project-root))
         (when (fboundp 'neotree-dir)
           (if (neo-global--window-exists-p)
               (neotree-dir (projectile-project-root))
