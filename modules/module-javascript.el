@@ -549,6 +549,14 @@
 (use-package nodejs-repl
   :ensure t
   :defer t
+  :init
+  (dotemacs-declare-prefix-for-mode 'js2-mode "msn" "nodejs-repl")
+  (dotemacs-set-leader-keys-for-major-mode 'js2-mode
+    "sni" 'nodejs-repl
+    "snb" 'nodejs-repl-send-buffer
+    "snr" 'nodejs-repl-send-region
+    "nee" 'nodejs-repl-send-last-sexp)
+
   :config
   (progn
     ;; nodejs-repl-eval.el --- Summary
