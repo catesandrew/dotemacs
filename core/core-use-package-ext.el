@@ -14,9 +14,9 @@
 (require 'core-funcs)
 
 (defconst dotemacs--use-package-add-hook-keywords '(:pre-init
-                                                     :post-init
-                                                     :pre-config
-                                                     :post-config))
+                                                    :post-init
+                                                    :pre-config
+                                                    :post-config))
 
 (defmacro dotemacs-use-package-add-hook (name &rest plist)
   "Add post hooks to `:init' or `:config' arguments of an existing
