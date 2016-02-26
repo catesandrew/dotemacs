@@ -704,5 +704,24 @@ change what is evaluated to the statement on the current line."
     (let ((babel-repl-pop-to-buffer t))
       (babel-repl-send-buffer))))
 
+(use-package mocha
+  :ensure t
+  :init
+  (progn
+    (when-let (node (executable-find "node"))
+      (setq mocha-which-node node))
+
+    ;; (when-let (mocha (executable-find "mocha"))
+    ;;   (setq mocha-command mocha))
+
+    (setq mocha-environment-variables "NODE_ENV=test"
+          mocha-options "--recursive --reporter dot -t 5000"
+          mocha-project-test-directory "test")))
+
+(dotemacs-use-package-add-hook popwin
+  :post-config
+  (push '("* Mocha Test Output *" :dedicated t :position bottom :stick tc-state :noselect nil :height 0.4)
+        popwin:special-display-config))
+
 (provide 'module-javascript)
 ;;; module-javascript.el ends here
