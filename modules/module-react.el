@@ -27,6 +27,35 @@
   (unless (bound-and-true-p my-react-mh-ran)
     (set (make-local-variable 'my-react-mh-ran) t)))
 
+(defun dotemacs/toggle-web-js2-mode ()
+  (interactive)
+  (if (eq major-mode 'js2-mode)
+      (progn
+        (web-mode)
+        (setq web-mode-content-type "html"))
+    (js2-mode)))
+
+(defun js-state-toggle-js-state ()
+  "Toggle the javascript state."
+  (interactive)
+  (if (eq major-mode 'js2-mode)
+      (progn
+        (message "state: js2 -> web")
+        (web-mode)
+        (setq web-mode-content-type "html"))
+    (message "state: web -> js2")
+    (js2-mode)))
+
+(dotemacs-use-package-add-hook web-mode
+  :post-init
+  (dotemacs-set-leader-keys-for-major-mode 'web-mode
+    "," 'js-state-toggle-js-state))
+
+(dotemacs-use-package-add-hook js2-mode
+  :post-init
+  (dotemacs-set-leader-keys-for-major-mode 'js2-mode
+    "," 'js-state-toggle-js-state))
+
 (setq dotemacs-react-mode-hook 'dotemacs-react-mode-defaults)
 (add-hook 'react-mode-hook (lambda () (run-hooks 'dotemacs-react-mode-hook)))
 
