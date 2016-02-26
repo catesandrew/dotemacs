@@ -152,7 +152,27 @@
     (setq user-full-name    "Andrew Cates"
           user-mail-address "catesandrew@gmail.com")
 
+    ;; (dotemacs-define-custom-layout "NixOS Configuration"
+    ;;   :binding "N"
+    ;;   :body
+    ;;   (dired "~/Projects/nixpkgs/pkgs/")
+    ;;   (split-window-right)
+    ;;   (find-file "~/nixos-config/common/desktop.nix"))
 
+    ;; (dotemacs-define-custom-layout "Blog"
+    ;;   :binding "b"
+    ;;   :body
+    ;;   (when (y-or-n-p "Hi, do you want to create a new post?")
+    ;;     (call-interactively 'op/new-post)))
+
+    ;; (dotemacs-define-custom-layout "@bspwm"
+    ;;   :binding "B"
+    ;;   :body
+    ;;   (find-file "~/dotbspwm/.config/sxhkd/sxhkdrc")
+    ;;   (split-window-right-and-focus)
+    ;;   (find-file "~/dotbspwm/.config/bspwm/bspwmrc")
+    ;;   (split-window-below-and-focus)
+    ;;   (find-file "~/dotbspwm/.config/bspwm/autostart"))
     ))
 
 (provide 'module-common)
