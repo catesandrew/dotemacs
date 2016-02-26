@@ -35,6 +35,7 @@
 
 ;; packages
 (use-package semantic
+  :disabled t
   :ensure t
   :defer t
   :init
