@@ -190,11 +190,11 @@ don't want to fix with `SPC', and you can abort completely with
   :defer t
   :config
   (progn
+    (setq ispell-extra-args '("--sug-mode=ultra" "--run-together" "--run-together-limit=5" "--run-together-min=2"))
     (setq ispell-program-name
           (or (executable-find "aspell")
               (executable-find "hunspell"))
 
-          ; ispell-extra-args '("--sug-mode=ultra")
           ispell-dictionary "en_US"     ; Default dictionnary
           ispell-silently-savep t       ; Don't ask when saving the private dict
           ;; Increase the height of the choices window to take our header line
