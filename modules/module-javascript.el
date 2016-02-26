@@ -497,7 +497,7 @@
   (progn
     (require 'js2-imenu-extras)
     (js2-imenu-extras-mode)
-    ;; required to make `<leader> s j' or `<leacer> ij` to work correctly
+    ;; required to make `<leader> sj' or `<leader> ij` to work correctly
     ;; it is tied to `dotemacs/jump-in-buffer`
     (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
     (defun js2-imenu-make-index ()
