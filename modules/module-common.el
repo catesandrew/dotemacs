@@ -133,5 +133,18 @@
   (when dotemacs//flycheck-executable-jscs
     (dotemacs//flycheck-disable 'javascript-jscs)))
 
+(defun dotemacs/user-full-name ()
+  "Guess the user's full name. Returns nil if no likely name could be found."
+  (or (replace-regexp-in-string
+       "\n$" "" (shell-command-to-string "git config --get user.name"))
+      (user-full-name)
+      (getenv "USER")))
+
+(defun dotemacs/user-email ()
+  "Guess the user's email address. Returns nil if none could be found."
+  (or (replace-regexp-in-string
+       "\n$" "" (shell-command-to-string "git config --get user.email"))
+      user-mail-address
+      (getenv "EMAIL")))
 (provide 'module-common)
 ;;; module-common.el ends here
