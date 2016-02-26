@@ -663,5 +663,46 @@ change what is evaluated to the statement on the current line."
           :documentation "Live evaluation of JS buffer change."
           :evil-leader-for-mode (js2-mode . "sa")))
 
+(use-package babel-repl
+  :ensure t
+  :defer t
+  :init
+  (setq babel-repl-cli-arguments '())
+  (dotemacs-declare-prefix-for-mode 'js2-mode "msB" "babel-repl")
+  (dotemacs-set-leader-keys-for-major-mode 'js2-mode
+    "sBr" 'dotemacs/babel-repl-send-dwi
+    "sBb" 'dotemacs/babel-repl-send-buffer
+    "sBB" 'dotemacs/babel-repl-send-buffer-and-switch)
+
+  (defun dotemacs/babel-repl-send-dwim ()
+    (interactive)
+    (unless (comint-check-proc "*babel-shell*")
+      (with-selected-window (selected-window)
+        (babel-repl)))
+    (babel-repl-send-dwim))
+
+  (defun dotemacs/babel-repl-send-dwim-and-switch ()
+    (interactive)
+    (unless (comint-check-proc "*babel-shell*")
+      (with-selected-window (selected-window)
+        (babel-repl)))
+    (let ((babel-repl-pop-to-buffer t))
+      (babel-repl-send-dwim)))
+
+  (defun dotemacs/babel-repl-send-buffer ()
+    (interactive)
+    (unless (comint-check-proc "*babel-shell*")
+      (with-selected-window (selected-window)
+        (babel-repl)))
+    (babel-repl-send-buffer))
+
+  (defun dotemacs/babel-repl-send-buffer-and-switch ()
+    (interactive)
+    (unless (comint-check-proc "*babel-shell*")
+      (with-selected-window (selected-window)
+        (babel-repl)))
+    (let ((babel-repl-pop-to-buffer t))
+      (babel-repl-send-buffer))))
+
 (provide 'module-javascript)
 ;;; module-javascript.el ends here
