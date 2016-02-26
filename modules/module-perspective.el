@@ -183,10 +183,10 @@ If the perspective doesn't have a workspace, create one."
       (eyebrowse-init frame)
       (dotemacs/save-eyebrowse-for-perspective frame))))
 
-(defun dotemacs/update-eyebrowse-for-perspective (_new-persp-name _frame-or-window)
+(defun dotemacs/update-eyebrowse-for-perspective (&rest _args)
   "Update and save current frame's eyebrowse workspace to its perspective.
-Parameters _NEW-PERSP-NAME and _FRAME-OR-WINDOW are ignored, and
-exists only for compatibility with `persp-before-switch-functions'."
+Parameters are ignored, and exists only for compatibility with
+`persp-before-switch-functions'."
   (let* ((current-slot (eyebrowse--get 'current-slot))
          (current-tag (nth 2 (assoc current-slot (eyebrowse--get 'window-configs)))))
     (eyebrowse--update-window-config-element
