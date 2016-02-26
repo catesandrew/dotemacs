@@ -236,9 +236,7 @@
     (add-hook 'js2-mode-hook
               (lambda () (run-hooks 'dotemacs-js2-mode-hook)))
 
-    (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-mode))
     (add-to-list 'auto-mode-alist '("\\.jshintrc$" . js2-mode))
-    (add-to-list 'auto-mode-alist '("\\.jscsrc$" . json-mode))
     (add-to-list 'auto-mode-alist '("\\.eslintrc$" . js2-mode))
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
     (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
@@ -537,7 +535,12 @@
 
 (use-package json-mode                  ; JSON files
   :ensure t
-  :defer t)
+  :defer t
+  :init
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.tern-config\\'" . json-mode))
+    (add-to-list 'auto-mode-alist '("\\.jscsrc$" . json-mode))
+    (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-mode))))
 
 (use-package json-snatcher
   :defer t
