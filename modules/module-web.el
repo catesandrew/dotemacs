@@ -67,6 +67,7 @@
 
     ;; Mark `css-indent-offset' as safe-local variable
     (put 'css-indent-offset 'safe-local-variable #'integerp)
+    (setq css-indent-offset 2)
 
     ;; Run Prog Mode hooks, because for whatever reason CSS Mode derives from
     ;; `fundamental-mode'.
