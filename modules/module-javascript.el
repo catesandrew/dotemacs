@@ -485,8 +485,10 @@
 
       (dotemacs-declare-prefix-for-mode mode "mx" "text")
       (dotemacs-declare-prefix-for-mode mode "mxm" "move")
-      (dotemacs-set-leader-keys-for-major-mode 'js2-mode "mj" 'js2r-move-line-down)
-      (dotemacs-set-leader-keys-for-major-mode 'js2-mode "mk" 'js2r-move-line-up))
+
+      (dotemacs-declare-prefix-for-mode 'js2-mode "me" "editing")
+      (dotemacs-set-leader-keys-for-major-mode 'js2-mode "ej" 'js2r-move-line-down)
+      (dotemacs-set-leader-keys-for-major-mode 'js2-mode "ek" 'js2r-move-line-up))
 
     (dotemacs/js2-refactor-set-key-bindings 'js2-mode)))
 
@@ -536,13 +538,14 @@
   :ensure t
   :defer t
   :init
-  (dotemacs-declare-prefix-for-mode 'js2-mode "msn" "nodejs-repl")
-  (dotemacs-set-leader-keys-for-major-mode 'js2-mode
-    "sni" 'nodejs-repl
-    "snb" 'nodejs-repl-send-buffer
-    "snr" 'nodejs-repl-send-region
-    "nee" 'nodejs-repl-send-last-sexp)
-
+  (progn
+    (dolist (mode '(js2-mode web-mode))
+      (dotemacs-declare-prefix-for-mode mode "mn" "nodejs")
+      (dotemacs-set-leader-keys-for-major-mode mode
+        "n'" 'nodejs-repl
+        "nb" 'nodejs-repl-send-buffer
+        "nr" 'nodejs-repl-send-region
+        "ne" 'nodejs-repl-send-last-sexp)))
   :config
   (progn
     ;; nodejs-repl-eval.el --- Summary
@@ -656,23 +659,34 @@ change what is evaluated to the statement on the current line."
 (use-package livid-mode
   :ensure t
   :defer t
-  :init (dotemacs-add-toggle javascript-repl-live-evaluation
-          :status livid-mode
-          :on (livid-mode)
-          :off (livid-mode -1)
-          :documentation "Live evaluation of JS buffer change."
-          :evil-leader-for-mode (js2-mode . "sa")))
+  :init
+  (progn
+    (defalias 'js-live-eval 'livid-mode
+      "Minor mode for automatic evaluation of a JavaScript buffer on every change")
+
+    (dolist (mode '(js2-mode))
+      (dotemacs-declare-prefix-for-mode mode "ml" "livid")
+      (dotemacs-set-leader-keys-for-major-mode mode
+        "le" 'js-live-eval))
+
+    (dotemacs-add-toggle javascript-repl-live-evaluation
+      :status livid-mode
+      :on (livid-mode)
+      :off (livid-mode -1)
+      :documentation "Live evaluation of JS buffer change."
+      :evil-leader-for-mode (js2-mode . "sa"))))
 
 (use-package babel-repl
   :ensure t
   :defer t
   :init
   (setq babel-repl-cli-arguments '())
-  (dotemacs-declare-prefix-for-mode 'js2-mode "msB" "babel-repl")
-  (dotemacs-set-leader-keys-for-major-mode 'js2-mode
-    "sBr" 'dotemacs/babel-repl-send-dwi
-    "sBb" 'dotemacs/babel-repl-send-buffer
-    "sBB" 'dotemacs/babel-repl-send-buffer-and-switch)
+  (dolist (mode '(js2-mode web-mode))
+    (dotemacs-declare-prefix-for-mode mode "mb" "babel")
+    (dotemacs-set-leader-keys-for-major-mode mode
+      "br" 'dotemacs/babel-repl-send-dwi
+      "bb" 'dotemacs/babel-repl-send-buffer
+      "bB" 'dotemacs/babel-repl-send-buffer-and-switch))
 
   (defun dotemacs/babel-repl-send-dwim ()
     (interactive)
@@ -708,6 +722,11 @@ change what is evaluated to the statement on the current line."
   :ensure t
   :init
   (progn
+    (dolist (mode '(js2-mode web-mode))
+      (dotemacs-declare-prefix-for-mode mode "mm" "mocha")
+      (dotemacs-set-leader-keys-for-major-mode mode
+        "m'" 'mocha-repl))
+
     (when-let (node (executable-find "node"))
       (setq mocha-which-node node))
 
