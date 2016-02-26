@@ -840,6 +840,12 @@ For instance pass En as source for English."
           (setq firestarter-lighter
                 '(:eval (dotemacs-firestarter-mode-line)))))
 
+(use-package encourage-mode
+  :ensure t
+  :config
+  ;; Activate encourage-mode
+  (encourage-mode t))
+
 
 ;;; Miscellaneous
 (use-package module-emoji)
