@@ -60,7 +60,6 @@
     (let ((dname (read-from-minibuffer "" "")))
       (cons (format ":%s:" (or dname "")) ":END:"))))
 
-
 (dotemacs-use-package-add-hook flyspell
   :post-init
   (spell-checking/add-flyspell-hook 'org-mode-hook))
