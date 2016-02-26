@@ -78,18 +78,20 @@
         (skewer-repl)
         (dotemacs/normal-to-insert-state))
 
-      (dotemacs-set-leader-keys-for-major-mode 'js2-mode
-        "'" 'dotemacs/skewer-start-repl
-        "ee" 'skewer-eval-last-expression
-        "eE" 'skewer-eval-print-last-expression
-        "sb" 'skewer-load-buffer
-        "sB" 'dotemacs/skewer-load-buffer-and-focus
-        "si" 'dotemacs/skewer-start-repl
-        "sf" 'skewer-eval-defun
-        "sF" 'dotemacs/skewer-eval-defun-and-focus
-        "sr" 'dotemacs/skewer-eval-region
-        "sR" 'dotemacs/skewer-eval-region-and-focus
-        "ss" 'skewer-repl)))
+      (dolist (mode '(js2-mode web-mode react-mode css-mode html-mode))
+        (dotemacs-declare-prefix-for-mode mode "ms" "skewer")
+        (dotemacs-set-leader-keys-for-major-mode mode
+          "s'" 'dotemacs/skewer-start-repl
+          "se" 'skewer-eval-last-expression
+          "sE" 'skewer-eval-print-last-expression
+          "sb" 'skewer-load-buffer
+          "sB" 'dotemacs/skewer-load-buffer-and-focus
+          "si" 'dotemacs/skewer-start-repl
+          "sf" 'skewer-eval-defun
+          "sF" 'dotemacs/skewer-eval-defun-and-focus
+          "sr" 'dotemacs/skewer-eval-region
+          "sR" 'dotemacs/skewer-eval-region-and-focus
+          "ss" 'skewer-repl))))
 
 (provide 'module-skewer)
 ;;; module-skewer.el ends here
