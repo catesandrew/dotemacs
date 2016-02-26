@@ -173,7 +173,13 @@ environment, otherwise it is strongly recommended to let it set to t.")
 (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
   (tooltip-mode -1))
 
-(prefer-coding-system 'utf-8) ; with sugar on top
+;; UTF-8 please
+(setq locale-coding-system    'utf-8) ; pretty
+(set-terminal-coding-system   'utf-8) ; pretty
+(set-keyboard-coding-system   'utf-8) ; pretty
+(set-selection-coding-system  'utf-8) ; pretty
+(prefer-coding-system         'utf-8) ; please
+(set-language-environment     'utf-8) ; with sugar on top
 
 (setq-default ;; evil-want-C-u-scroll t
               ;; evil-want-C-w-in-emacs-state t
