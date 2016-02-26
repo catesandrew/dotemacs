@@ -49,6 +49,11 @@
 
 ;; funcs
 
+(defun dotemacs/pretty-symbols (new-pretty-symbols)
+  (mapcar (lambda (item)
+            (push item prettify-symbols-alist))
+          new-pretty-symbols))
+
 (defun dotemacs-disable-electric-indent-mode ()
   (if (fboundp 'electric-indent-local-mode)
       ;; for 24.4
@@ -125,6 +130,11 @@
     ;   (hs-minor-mode t))
     (dotemacs-enable-hs-minor-mode)
     ;; (set-syntax-table dotemacs/prog-syntax-table)
+    ;; (defadvice evil-inner-word (around bars-as-word activate)
+    ;;   (let ((table dotemacs/prog-syntax-table))
+    ;;     (with-syntax-table table
+    ;;       ad-do-it)))
+
     (auto-fill-comments-mode)
     (subword-mode +1) ;; camelCase
     (dotemacs-highlight-TODO-words)))
@@ -164,35 +174,45 @@
 (use-package prog-mode                  ; Prog Mode
   :defer
   :init
-  (add-hook 'js2-mode-hook
-            (lambda ()
-              (push '("not" . 172) prettify-symbols-alist) ;
-              (push '("!" . 172) prettify-symbols-alist) ;
-              (push '("forall" . 8704) prettify-symbols-alist) ;
-              (push '("::" . 8759) prettify-symbols-alist) ;
-              ; (push '("." . 8728) prettify-symbols-alist) ;
-              (push '("~>" . 8669) prettify-symbols-alist) ;
-              ; (push '("()" . #X2205) prettify-symbols-alist) ;
-              (push '("==" . #X225F) prettify-symbols-alist) ;
-              (push '("!=" . #X2260) prettify-symbols-alist) ;
-              (push '("===" . #X2261) prettify-symbols-alist) ;
-              (push '("!==" . #X2262) prettify-symbols-alist) ;
-              (push '(">=" . #X2265) prettify-symbols-alist) ;
-              (push '("<=" . #X2264) prettify-symbols-alist) ;
-              (push '("!!" . #X203C) prettify-symbols-alist) ;
-              (push '("&&" . #X2227) prettify-symbols-alist) ;
-              (push '("||" . #X2228) prettify-symbols-alist) ;
-              ; (push '("null" . 00D8) prettify-symbols-alist) ;
-              (push '("sqrt" . #X221A) prettify-symbols-alist) ;
-              (push '("undefined" . #X22A5) prettify-symbols-alist) ;
-              (push '("pi" . #X3C0) prettify-symbols-alist) ;
-              (push '("function" . 955) prettify-symbols-alist) ; λ
-              (push '("->" . 8594) prettify-symbols-alist) ; →
-              (push '("-<" . 8610) prettify-symbols-alist) ;
-              (push '("<-" . 8592) prettify-symbols-alist) ;
-              (push '("=>" . 8658) prettify-symbols-alist) ; ⇒
-              ; (push '("map" . 8614) prettify-symbols-alist) ; ↦
-              (push '("return" . 8592) prettify-symbols-alist))))
+  (dotemacs/add-to-hooks
+   (lambda ()
+     (dotemacs/pretty-symbols
+      '(("add-hook" . ?)
+        ("lambda" . 955)
+        ("=>" . 8658)
+        )))
+   '(emacs-lisp-mode-hook))
+
+  (defun dotemacs/js2--setup-pretty-symbols ()
+    (dotemacs/pretty-symbols
+     '(("not" . 172)
+       ("!" . 172)
+       ("forall" . 8704)
+       ("::" . 8759)
+       ;; ("." . 8728)
+       ("~>" . 8669)
+       ;; ("()" . #X2205)
+       ("==" . #X225F)
+       ("!=" . #X2260)
+       ("===" . #X2261)
+       ("!==" . #X2262)
+       (">=" . #X2265)
+       ("<=" . #X2264)
+       ("!!" . #X203C)
+       ("&&" . #X2227)
+       ("||" . #X2228)
+       ;; ("null" . 00D8)
+       ("sqrt" . #X221A)
+       ("undefined" . #X22A5)
+       ("pi" . #X3C0)
+       ("function" . 955)
+       ("->" . 8594)
+       ("-<" . 8610)
+       ("<-" . 8592)
+       ("=>" . 8658)
+       ;; ("map" . 8614)
+       ("return" . 8592))))
+  (add-hook 'js2-mode-hook 'dotemacs/js2--setup-pretty-symbols))
 
 ; http://stackoverflow.com/questions/1085170
 (use-package hs-minor-mode
