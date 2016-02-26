@@ -146,5 +146,14 @@
        "\n$" "" (shell-command-to-string "git config --get user.email"))
       user-mail-address
       (getenv "EMAIL")))
+
+(dotemacs/defer-until-after-user-config
+ '(lambda ()
+    (setq user-full-name    "Andrew Cates"
+          user-mail-address "catesandrew@gmail.com")
+
+
+    ))
+
 (provide 'module-common)
 ;;; module-common.el ends here
