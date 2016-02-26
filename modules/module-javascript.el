@@ -360,6 +360,8 @@
     )
   :config
   (progn
+    (setq-default javascript-indent-lever 2)
+    (setq-default js-switch-indent-offset 2)
     (setq-default js2-jslint-globals t)
     (setq-default js2-basic-offset 2)
     (setq-default js-indent-level 2)
@@ -381,7 +383,7 @@
     (setq-default js2-concat-multiline-strings 'eol)
     (setq-default js2-rebind-eol-bol-keys nil)
     (setq-default js2-bounce-indent nil)
-    (setq-default js2-indent-switch-body t)
+    (setq-default js2-indent-switch-body 2)
 
     (setq-default js2-global-externs '("__dirname"
                                        "_"
