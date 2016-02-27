@@ -22,6 +22,32 @@
 
 ;; packages
 
+(dotemacs-use-package-add-hook neotree
+  :post-config
+  (progn
+    (defun dotemacs//neotree-dir-from-projectile-root ()
+      "Use ."
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//neotree-dir-from-projectile-root"))
+      (when (and (fboundp 'projectile-project-root) (fboundp 'neotree-dir))
+        (let ((project-root
+               (condition-case nil
+                   (projectile-project-root)
+                 (error nil))))
+          (when project-root
+            (when dotemacs/verbose
+              (message "Switched to project: %s" project-root))
+            (if (neo-global--window-exists-p)
+                (neotree-dir project-root)
+              (progn
+                (neotree-dir project-root)
+                (neotree-hide)
+                (let ((origin-buffer-file-name (buffer-file-name)))
+                  (neotree-find project-root)
+                  (neotree-find origin-buffer-file-name))
+                (neotree-hide)))))))
+    (add-hook 'dotemacs/project-hook 'dotemacs//neotree-dir-from-projectile-root)))
+
 (use-package neotree
   :ensure t
   :defer t

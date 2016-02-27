@@ -10,6 +10,8 @@
 
 (require 'core-vars)
 
+(defvar dotemacs/verbose t)
+
 (defvar ycmd-server-command '("python" "/usr/local/src/ycmd/ycmd")
   "The path to the ycmd server.")
 
@@ -136,12 +138,6 @@ at start time despite the value of `dotemacs-auto-resume-layouts'.")
 
 (defvar git-magit-status-fullscreen t
   "If non nil magit-status buffer is displayed in fullscreen.")
-
-(defvar dotemacs//flycheck-executables-searched nil)
-(defvar dotemacs//flycheck-executable-eslint nil)
-(defvar dotemacs//flycheck-executable-jscs nil)
-(defvar dotemacs//flycheck-executable-jshint nil)
-(defvar dotemacs//flycheck-executable-tidy5 nil)
 
 (defvar dotemacs-use-ido nil
   "If non nil then `ido' replaces `helm' for some commands. For now only

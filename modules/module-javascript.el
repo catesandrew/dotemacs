@@ -92,9 +92,7 @@
       (unless (flycheck-get-checker-for-buffer)
         (set (make-local-variable 'js2-mode-show-parse-errors) t)
         (set (make-local-variable 'js2-mode-show-strict-warnings) t)))
-    (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active)
-
-    (add-hook 'js2-mode-hook 'dotemacs-flycheck-init-javascript)))
+    (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active)))
 
 (dotemacs-use-package-add-hook ycmd
   :post-init

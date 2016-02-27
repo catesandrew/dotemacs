@@ -6,9 +6,30 @@
 
 ;;; Commentary:
 
+;;; Code:
+
+(require 'module-vars)
 (require 'module-common)
 
-;;; Code:
+
+;; vars
+
+(defvar dotemacs/project-hook nil
+  "Hooks run when a dotemacs/project is fired.")
+
+(defun dotemacs/run-project-hook ()
+  (when dotemacs/verbose
+    (message "!!! Running dotemacs/project hook."))
+  (run-hooks 'dotemacs/project-hook))
+
+
+;; funcs
+
+(defun dotemacs/executable-find (command directory)
+  "Search for COMMAND in DIRECTORY and return the absolute file name.
+Return nil if COMMAND is not found anywhere in DIRECTORY."
+  (let ((default-directory directory))
+    (executable-find command)))
 
 (defun dotemacs/sort-lines ()
   "Sort lines in region or current buffer."

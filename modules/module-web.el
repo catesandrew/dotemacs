@@ -144,13 +144,7 @@
                   slim-mode
                   ;; css-mode
                   web-mode))
-    (dotemacs/add-flycheck-hook mode))
-  :post-config
-  (progn
-    (dotemacs-flycheck-executables-search)
-    (when (bound-and-true-p dotemacs//flycheck-executables-searched)
-      (when dotemacs//flycheck-executable-tidy5
-        (flycheck-add-mode 'html-tidy 'web-mode)))))
+    (dotemacs/add-flycheck-hook mode)))
 
 (use-package haml-mode
   :ensure t

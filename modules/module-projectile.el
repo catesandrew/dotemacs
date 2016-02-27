@@ -12,21 +12,122 @@
 ;; (require 'core-funcs)
 (require 'core-keybindings)
 ;; (require 'core-display-init)
-;; (require 'module-vars)
-;; (require 'module-common)
-;; (require 'module-core)
+(require 'module-vars)
+(require 'module-common)
+(require 'module-core)
 (require 'module-utils)
 
 (dotemacs-use-package-add-hook projectile
   :post-config
   (progn
-    (add-hook 'projectile-after-switch-project-hook
-              (lambda ()
-                (dotemacs-eslint-set-local-eslint-from-projectile)
-                (dotemacs-flycheck-executables-updated)))
+    (projectile-register-project-type 'npm '("package.json") "npm" "npm test")
+    (add-to-list 'projectile-globally-ignored-directories "node_modules")
 
-    (dotemacs-eslint-set-local-eslint-from-projectile)
-    (dotemacs-flycheck-executables-updated)))
+    (defun dotemacs//locate-mocha-from-projectile ()
+      "Use local mocha from `./node_modules` if available."
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//locate-mocha-from-projectile"))
+      (let ((project-root
+             (condition-case nil
+                 (projectile-project-root)
+               (error nil))))
+        (when project-root
+          (when dotemacs/verbose
+            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+          (let ((mocha (dotemacs/executable-find "mocha" project-root)))
+            (if mocha
+                (dotemacs/set-executable-mocha mocha)
+              (dotemacs/set-executable-mocha nil))))))
+    (add-hook 'dotemacs/project-hook 'dotemacs//locate-mocha-from-projectile)
+
+    (defun dotemacs//locate-jshint-from-projectile ()
+      "Use local jshint from `./node_modules` if available."
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//locate-jshint-from-projectile"))
+      (let ((project-root
+             (condition-case nil
+                 (projectile-project-root)
+               (error nil))))
+        (when project-root
+          (when dotemacs/verbose
+            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+          (let ((jshint (dotemacs/executable-find "jshint" project-root)))
+            (if jshint
+                (dotemacs/set-executable-jshint jshint)
+              (dotemacs/set-executable-jshint nil))))))
+    (add-hook 'dotemacs/project-hook 'dotemacs//locate-jshint-from-projectile)
+
+    (defun dotemacs//locate-jscs-from-projectile ()
+      "Use local jscs from `./node_modules` if available."
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//locate-jscs-from-projectile"))
+      (let ((project-root
+             (condition-case nil
+                 (projectile-project-root)
+               (error nil))))
+        (when project-root
+          (when dotemacs/verbose
+            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+          (let ((jscs (dotemacs/executable-find "jscs" project-root)))
+            (if jscs
+                (dotemacs/set-executable-jscs jscs)
+              (dotemacs/set-executable-jscs nil))))))
+    (add-hook 'dotemacs/project-hook 'dotemacs//locate-jscs-from-projectile)
+
+    (defun dotemacs//locate-eslint-from-projectile ()
+      "Use local eslint from `./node_modules` if available."
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//locate-eslint-from-projectile"))
+      (let ((project-root
+             (condition-case nil
+                 (projectile-project-root)
+               (error nil))))
+        (when project-root
+          (when dotemacs/verbose
+            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+          (let ((eslint (dotemacs/executable-find "eslint" project-root)))
+            (if eslint
+                (dotemacs/set-executable-eslint eslint)
+              (dotemacs/set-executable-eslint nil))))))
+    (add-hook 'dotemacs/project-hook 'dotemacs//locate-eslint-from-projectile)
+
+    ;; make-variable-frame-local is obsolete according to the docs, but I don't
+    ;; want to have to manually munge frame-parameters all the time so I'm using
+    ;; it anyway.
+    (dotemacs|do-after-display-system-init
+     (make-variable-frame-local
+      (defvar dotemacs/projectile-curr nil
+        "The current projectile project.")))
+
+    (defun dotemacs//find-file-hook-to-project ()
+      "Use ."
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//find-file-hook-to-project"))
+      (defun dotemacs/do-nothing ())
+      (let ((projectile-require-project-root nil)
+            (project-root
+             (condition-case nil
+                 (projectile-project-root)
+               (error nil))))
+        (when (and project-root
+                   (not (string= project-root dotemacs/projectile-curr)))
+          ;; target directory is in a project
+          (let ((projectile-switch-project-action 'dotemacs/do-nothing))
+            (when dotemacs/verbose
+              (message "!!! Project Root %s" project-root)
+              (message "!!! Buffer Name %s" buffer-file-name))
+            (projectile-switch-project-by-name project-root)
+            (setq dotemacs/projectile-curr project-root)))))
+    (add-hook 'find-file-hook 'dotemacs//find-file-hook-to-project)
+
+    (add-hook 'projectile-after-switch-project-hook 'dotemacs/run-project-hook)
+
+    (defun dotemacs//locate-executables-from-projectile ()
+      (dotemacs//locate-eslint-from-projectile)
+      (dotemacs//locate-mocha-from-projectile)
+      (dotemacs//locate-jshint-from-projectile)
+      (dotemacs//locate-jscs-from-projectile))
+    (dotemacs//locate-executables-from-projectile)))
 
 (use-package projectile
   :ensure t
@@ -93,35 +194,6 @@
                    default-directory))
         (setq-local projectile-enable-caching t)))
 
-    (setq projectile-project-root-files '(
-            ; "rebar.config"       ; Rebar project file
-            "project.clj"        ; Leiningen project file
-            ; "SConstruct"         ; Scons project file
-            "pom.xml"            ; Maven project file
-            ; "build.sbt"          ; SBT project file
-            ; "build.gradle"       ; Gradle project file
-            "Gemfile"            ; Bundler file
-            ; "requirements.txt"   ; Pip file
-            ; "setup.py"           ; Setuptools file
-            ; "tox.ini"            ; Tox file
-            "package.json"       ; npm package file
-            "gulpfile.js"        ; Gulp build file
-            "Gruntfile.js"       ; Grunt project file
-            "bower.json"         ; Bower project file
-            "composer.json"      ; Composer project file
-            "Cargo.toml"         ; Cargo project file
-            ; "mix.exs"            ; Elixir mix project file
-            ))
-
-    (setq projectile-project-root-files-bottom-up '(
-            ".projectile" ; projectile project marker
-            ".git"        ; Git VCS root dir
-            ".hg"         ; Mercurial VCS root dir
-            ; ".fslckout"   ; Fossil VCS root dir
-            ; ".bzr"        ; Bazaar VCS root dir
-            ; "_darcs"      ; Darcs VCS root dir
-            ))
-
     (setq projectile-globally-ignored-file-suffixes
           '("class"
             "elc"))
@@ -150,23 +222,6 @@
       "py" 'projectile-find-tag))
   :config
   (progn
-    (defun dotemacs//projectile-switch-project-by-name (fcn project-to-switch &optional args)
-      (apply fcn project-to-switch args)
-      (when (projectile-project-p)
-        (message "Switching to project: %s" (projectile-project-root))
-        (when (fboundp 'neotree-dir)
-          (if (neo-global--window-exists-p)
-              (neotree-dir (projectile-project-root))
-            (progn
-              (neotree-dir (projectile-project-root))
-              (neotree-hide)
-              (let ((origin-buffer-file-name (buffer-file-name)))
-                (neotree-find (projectile-project-root))
-                (neotree-find origin-buffer-file-name))
-              (neotree-hide))))))
-    (advice-add 'projectile-switch-project-by-name
-                :around 'dotemacs//projectile-switch-project-by-name)
-
     ;; Remove dead projects when Emacs is idle
     (run-with-idle-timer 10 nil 'projectile-cleanup-known-projects)
     (projectile-global-mode)

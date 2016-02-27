@@ -7,10 +7,12 @@
 ;;; Commentary:
 ;;
 ;; This can never require `module-utils` or `module-core`
-
+;;
+;;; Code:
 (require 'module-vars)
 
-;;; Code:
+
+;; funcs
 
 (defun current//buffer-remote-p ()
   (--any? (and it (file-remote-p it))
@@ -39,100 +41,6 @@
   (dolist (fun funs)
     (add-hook hook fun)))
 
-(defun dotemacs-eslint-set-local-eslint-from-projectile ()
-  "Use local eslint CLI from `./node_modules` if available."
-  (when-let (eslint (executable-find "eslint"))
-            (setq flycheck-javascript-eslint-executable eslint)
-            (setq dotemacs//flycheck-executable-eslint eslint)))
-
-(defun dotemacs-flycheck-executables-search ()
-  "Lazy locate javascript executables."
-  (unless dotemacs//flycheck-executables-searched
-    (when-let (eslint (executable-find "eslint"))
-              (setq flycheck-javascript-eslint-executable eslint)
-              (setq dotemacs//flycheck-executable-eslint eslint))
-    (when-let (jscs (executable-find "jscs"))
-              (setq flycheck-javascript-jscs-executable jscs)
-              (setq dotemacs//flycheck-executable-jscs jscs))
-    (when-let (jshint (executable-find "jshint"))
-              (setq flycheck-javascript-jshint-executable jshint)
-              (setq dotemacs//flycheck-executable-jshint jshint))
-    (when-let (tidy5 (executable-find "tidy5"))
-              (setq flycheck-html-tidy-executable tidy5)
-              (setq dotemacs//flycheck-executable-tidy5 tidy5))
-    (setq dotemacs//flycheck-executables-searched t)))
-
-(defun dotemacs//flycheck-disable (checker)
-  (interactive)
-  (add-to-list 'flycheck-disabled-checkers checker))
-
-(defun dotemacs//flycheck-enable (checker)
-  (interactive)
-  (setq flycheck-disabled-checkers (remove checker flycheck-disabled-checkers)))
-
-(defun dotemacs-flycheck-executables-updated ()
-  (when (bound-and-true-p dotemacs//flycheck-executables-searched)
-    (when dotemacs//flycheck-executable-eslint
-      (dotemacs-set-leader-keys
-        "tee" 'flycheck-eslint-enable
-        "teE" 'flycheck-eslint-disable))
-
-    (when dotemacs//flycheck-executable-jscs
-      (dotemacs-set-leader-keys
-        "tec" 'flycheck-jscs-enable
-        "teC" 'flycheck-jscs-disable))
-
-    (when dotemacs//flycheck-executable-jshint
-      (dotemacs-set-leader-keys
-        "teh" 'flycheck-jshint-enable
-        "teH" 'flycheck-jshint-disable))
-
-    ;; (when (equal major-mode 'js2-mode)
-    ;;   (dotemacs-flycheck-init-javascript))
-    ))
-
-(defun dotemacs-flycheck-init-react ()
-  "Init flycheck settings for react-mode."
-  (when (bound-and-true-p dotemacs//flycheck-executables-searched)
-    (if dotemacs//flycheck-executable-eslint
-        (progn
-          (dotemacs//flycheck-enable 'javascript-eslint)
-          ;; disable jshint since we prefer eslint checking
-          (when dotemacs//flycheck-executable-jshint
-            (dotemacs//flycheck-disable 'javascript-jshint)))
-      (progn
-        ;; otherwise enable jshint if eslint is not found
-        (when dotemacs//flycheck-executable-jshint
-          (dotemacs//flycheck-enable 'javascript-jshint))))
-
-    ;; disable html-tidy
-    (when dotemacs//flycheck-executable-tidy5
-      (dotemacs//flycheck-disable 'html-tidy))
-
-    ;; disable jscs
-    (when dotemacs//flycheck-executable-jscs
-      (dotemacs//flycheck-disable 'javascript-jscs))
-
-    ;; disable json-jsonlist checking for json files
-    (dotemacs//flycheck-disable 'json-jsonlist)))
-
-(defun dotemacs-flycheck-init-javascript ()
-  "Use flycheck settings for a js2-mode."
-  (if dotemacs//flycheck-executable-eslint
-      (progn
-        (dotemacs//flycheck-enable 'javascript-eslint)
-        ;; disable jshint since we prefer eslint checking
-        (when dotemacs//flycheck-executable-jshint
-          (dotemacs//flycheck-disable 'javascript-jshint)))
-    (progn
-      ;; otherwise enable jshint if eslint is not found
-      (when dotemacs//flycheck-executable-jshint
-        (dotemacs//flycheck-enable 'javascript-jshint))))
-
-  ;; disable jscs
-  (when dotemacs//flycheck-executable-jscs
-    (dotemacs//flycheck-disable 'javascript-jscs)))
-
 (defun dotemacs/user-full-name ()
   "Guess the user's full name. Returns nil if no likely name could be found."
   (or (replace-regexp-in-string
@@ -147,10 +55,95 @@
       user-mail-address
       (getenv "EMAIL")))
 
+
+;; eslint
+(defvar dotemacs//executable-eslint nil)
+(defvar dotemacs/eslint-executable-hook nil
+  "Hooks run when dotemacs//executable-eslint is changed.")
+
+(defun dotemacs/set-executable-eslint (eslint)
+  "Set dotemacs//executable-eslint to ESLINT."
+  (unless (string= eslint dotemacs//executable-eslint)
+    (when dotemacs/verbose
+      (message "eslint %s updated." eslint))
+    (setq dotemacs//executable-eslint eslint)
+    (ignore-errors (run-hooks 'dotemacs/eslint-executable-hook))))
+
+
+;; jscs
+(defvar dotemacs//executable-jscs nil)
+(defvar dotemacs/jscs-executable-hook nil
+  "Hooks run when dotemacs//executable-jscs is changed.")
+
+(defun dotemacs/set-executable-jscs (jscs)
+  "Set dotemacs//executable-jscs to JSCS."
+  (unless (string= jscs dotemacs//executable-jscs)
+    (when dotemacs/verbose
+      (message "jscs %s updated." jscs))
+    (setq dotemacs//executable-jscs jscs)
+    (ignore-errors (run-hooks 'dotemacs/jscs-executable-hook))))
+
+
+;; jshint
+(defvar dotemacs//executable-jshint nil)
+(defvar dotemacs/jshint-executable-hook nil
+  "Hooks run when dotemacs//executable-jshint is changed.")
+
+(defun dotemacs/set-executable-jshint (jshint)
+  "Set dotemacs//executable-jshint to JSHINT."
+  (unless (string= jshint dotemacs//executable-jshint)
+    (when dotemacs/verbose
+      (message "jshint %s updated." jshint))
+    (setq dotemacs//executable-jshint jshint)
+    (ignore-errors (run-hooks 'dotemacs/jshint-executable-hook))))
+
+
+;; tidy5
+(defvar dotemacs//executable-tidy nil)
+(defvar dotemacs/tidy-executable-hook nil
+  "Hooks run when dotemacs//executable-tidy is changed.")
+
+(defun dotemacs/set-executable-tidy (tidy)
+  "Set dotemacs//executable-tidy to TIDY."
+  (unless (string= tidy dotemacs//executable-tidy)
+    (when dotemacs/verbose
+      (message "tidy %s updated." tidy))
+    (setq dotemacs//executable-tidy tidy)
+    (ignore-errors (run-hooks 'dotemacs/tidy-executable-hook))))
+
+
+;; mocha
+(defvar dotemacs//executable-mocha nil)
+(defvar dotemacs/mocha-executable-hook nil
+  "Hooks run when dotemacs//executable-mocha is changed.")
+
+(defun dotemacs/set-executable-mocha (mocha)
+  "Set dotemacs//executable-mocha to MOCHA."
+  (unless (string= mocha dotemacs//executable-mocha)
+    (when dotemacs/verbose
+      (message "mocha %s updated." mocha))
+    (setq dotemacs//executable-mocha mocha)
+    (ignore-errors (run-hooks 'dotemacs/mocha-executable-hook))))
+
+
+;; csslint
+
+
+;; stylus
+
+
+;; handlebars
+
+
+;; after emacs startup
+
 (dotemacs/defer-until-after-user-config
  '(lambda ()
     (setq user-full-name    "Andrew Cates"
           user-mail-address "catesandrew@gmail.com")
+
+    (when-let (tidy5 (executable-find "tidy5"))
+      (dotemacs/set-executable-tidy tidy5))
 
     ;; (dotemacs-define-custom-layout "NixOS Configuration"
     ;;   :binding "N"

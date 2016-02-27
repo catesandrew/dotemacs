@@ -40,6 +40,109 @@ true."
 
 
 ;; packages
+
+(dotemacs-use-package-add-hook flycheck
+  :post-config
+  (progn
+    (defun dotemacs//flycheck-disable (checker)
+      (add-to-list 'flycheck-disabled-checkers checker))
+
+    (defun dotemacs//flycheck-enable (checker)
+      (setq flycheck-disabled-checkers (remove checker flycheck-disabled-checkers)))
+
+    (defun dotemacs-flycheck-react-mode ()
+      "Init flycheck settings for react-mode."
+      (let* ((eslint dotemacs//executable-eslint)
+             (jshint dotemacs//executable-jshint)
+             (jscs dotemacs//executable-jscs)
+             (tidy dotemacs//executable-tidy))
+        (if eslint
+            (progn
+              (dotemacs//flycheck-enable 'javascript-eslint)
+              (when jshint      ; disable jshint since we prefer eslint checking
+                (dotemacs//flycheck-disable 'javascript-jshint)))
+          (progn
+            ;; otherwise enable jshint if eslint is not found
+            (when jshint
+              (dotemacs//flycheck-enable 'javascript-jshint))))
+        (when tidy                      ; disable html-tidy
+          (dotemacs//flycheck-disable 'html-tidy))
+        (when jscs                      ; disable jscs
+          (dotemacs//flycheck-disable 'javascript-jscs)))
+
+      ;; disable json-jsonlist checking for json files
+      (dotemacs//flycheck-disable 'json-jsonlist))
+    (dolist (hook '(react-mode-hook))
+      (add-hook hook 'dotemacs//flycheck-react-mode t t))
+
+    (defun dotemacs//flycheck-js2-mode ()
+      "Use flycheck settings for a js2-mode."
+      (let* ((eslint dotemacs//executable-eslint)
+             (jshint dotemacs//executable-jshint)
+             (jscs dotemacs//executable-jscs))
+        (if eslint
+            (progn
+              (flycheck-add-mode 'javascript-eslint 'react-mode)
+              (dotemacs//flycheck-enable 'javascript-eslint)
+              (when jshint          ; disable jshint since we prefer eslint checking
+                (dotemacs//flycheck-disable 'javascript-jshint)))
+          (when jshint            ; otherwise enable jshint if eslint is not found
+            (dotemacs//flycheck-enable 'javascript-jshint)))
+        (when jscs                      ; disable jscs
+          (dotemacs//flycheck-disable 'javascript-jscs))))
+    (dolist (hook '(js2-mode-hook))
+      (add-hook hook 'dotemacs//flycheck-js2-mode t t))
+
+    (defun dotemacs//flycheck-executable-eslint ()
+      (let ((eslint dotemacs//executable-eslint))
+        (setq flycheck-javascript-eslint-executable eslint)))
+    (add-hook 'dotemacs/eslint-executable-hook 'dotemacs//flycheck-executable-eslint)
+
+    (defun dotemacs//flycheck-executable-jscs ()
+      (let ((jscs dotemacs//executable-jscs))
+        (setq flycheck-javascript-jscs-executable jscs)))
+    (add-hook 'dotemacs/jscs-executable-hook 'dotemacs//flycheck-executable-jscs)
+
+    (defun dotemacs//flycheck-executable-jshint ()
+      (let ((jshint dotemacs//executable-jshint))
+        (setq flycheck-javascript-jshint-executable jshint)))
+    (add-hook 'dotemacs/jshint-executable-hook 'dotemacs//flycheck-executable-jshint)
+
+    (defun dotemacs//flycheck-executable-tidy ()
+      (let ((tidy dotemacs//executable-tidy))
+        (flycheck-add-mode 'html-tidy 'web-mode)
+        (setq flycheck-html-tidy-executable tidy)))
+    (add-hook 'dotemacs/tidy-executable-hook
+       'dotemacs//flycheck-executable-tidy)
+
+    (add-hook 'js2-mode-hook '(lambda ()
+      (add-hook 'dotemacs/eslint-executable-hook
+         'dotemacs//flycheck-js2-mode nil t)))
+    (add-hook 'react-mode-hook '(lambda ()
+      (add-hook 'dotemacs/eslint-executable-hook
+         'dotemacs//flycheck-react-mode nil t)))
+
+    (add-hook 'js2-mode-hook '(lambda ()
+      (add-hook 'dotemacs/jshint-executable-hook
+         'dotemacs//flycheck-js2-mode nil t)))
+    (add-hook 'react-mode-hook '(lambda ()
+      (add-hook 'dotemacs/jshint-executable-hook
+         'dotemacs//flycheck-react-mode nil t)))
+
+    (add-hook 'js2-mode-hook '(lambda ()
+      (add-hook 'dotemacs/jscs-executable-hook
+         'dotemacs//flycheck-js2-mode nil t)))
+    (add-hook 'react-mode-hook '(lambda ()
+      (add-hook 'dotemacs/jscs-executable-hook
+         'dotemacs//flycheck-react-mode nil t)))
+
+    (defun dotemacs//flycheck-executable-hooks ()
+      (dotemacs//flycheck-executable-eslint)
+      (dotemacs//flycheck-executable-jscs)
+      (dotemacs//flycheck-executable-jshint)
+      (dotemacs//flycheck-executable-tidy))
+    (dotemacs//flycheck-executable-hooks)))
+
 (use-package flycheck                   ; On-the-fly syntax checking
   :ensure t
   :defer t
@@ -133,8 +236,7 @@ If the error list is visible, hide it.  Otherwise, show it."
       "eS" 'flycheck-set-checker-executable
       "ev" 'flycheck-verify-setup))
   :config
-  (progn
-    (dotemacs-flycheck-executables-search)))
+  (progn))
 
 (use-package flycheck-pos-tip
   :ensure t

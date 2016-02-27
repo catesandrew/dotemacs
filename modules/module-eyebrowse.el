@@ -21,6 +21,16 @@
 
 (dotemacs-declare-prefix "W" "workspaces")
 
+;; (dotemacs-use-package-add-hook eyebrowse
+;;   :post-config
+;;   (progn
+;;     (defun dotemacs//eyebrowse-dir-switch ()
+;;       "Hook eyebrowse to projectile and neotree."
+;;       (when dotemacs/verbose
+;;         (message "!!! Running dotemacs//eyebrowse-dir-from-projectile-root")))
+;;     (add-hook 'dotemacs/project-hook 'dotemacs//eyebrowse-dir-switch)
+;;     (add-hook 'eyebrowse-post-window-switch-hook 'dotemacs/run-project-hook)))
+
 (use-package eyebrowse
   :ensure t
   :defer t
@@ -80,26 +90,9 @@
         ("N" eyebrowse-prev-window-config)
         ("p" eyebrowse-prev-window-config)
         ("r" dotemacs/workspaces-ms-rename :exit t)
-        ("w" eyebrowse-switch-to-window-config :exit t))
-
-    (defun dotemacs-eyebrowse-switch ()
-      "Hook eyebrowse to projectile and neotree."
-      (interactive)
-      (when (projectile-project-p)
-        (when (fboundp 'neotree-dir)
-          (if (neo-global--window-exists-p)
-              (neotree-dir (projectile-project-root))
-            (progn
-              (neotree-dir (projectile-project-root))
-              (neotree-hide)
-              (let ((origin-buffer-file-name (buffer-file-name)))
-                (neotree-find (projectile-project-root))
-                (neotree-find origin-buffer-file-name))
-              (neotree-hide))))))
-
-    ;; (with-eval-after-load 'projectile
-    ;;   (add-hook 'eyebrowse-post-window-switch-hook 'dotemacs-eyebrowse-switch))
-))
+        ("w" eyebrowse-switch-to-window-config :exit t)))
+  :config
+  (progn))
 
 (provide 'module-eyebrowse)
 ;;; module-eyebrowse.el ends here
