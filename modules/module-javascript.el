@@ -358,6 +358,8 @@
     )
   :config
   (progn
+    ;; (add-hook 'js2-mode-hook (lambda () (setq mode-name "")))
+
     (setq-default javascript-indent-lever 2)
     (setq-default js-switch-indent-offset 2)
     (setq-default js2-jslint-globals t)
