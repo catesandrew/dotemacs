@@ -367,32 +367,24 @@ point reaches the beginning or end of the buffer, stop there."
       (window-configuration-to-register ?_)
       (delete-other-windows))))
 
-;; A small minor mode to use a big fringe
-;; from http://bzg.fr/emacs-strip-tease.html
-(defvar bzg-big-fringe-mode nil)
-(define-minor-mode bzg-big-fringe-mode
+;; A small minor mode to use a big fringe adapted from
+;; http://bzg.fr/emacs-strip-tease.html
+(define-minor-mode dotemacs-centered-buffer-mode
   "Minor mode to use big fringe in the current buffer."
-  :init-value nil
   :global t
-  :variable bzg-big-fringe-mode
+  :init-value nil
   :group 'editing-basics
-  (if (not bzg-big-fringe-mode)
-      (set-fringe-style nil)
-    (set-fringe-mode
-     (/ (- (frame-pixel-width)
-           (* 100 (frame-char-width)))
-        2))))
-
-(defun dotemacs/toggle-maximize-centered-buffer ()
-  "Maximize buffer and center it on the screen"
-  (interactive)
-  (if (= 1 (length (window-list)))
-      (progn  (bzg-big-fringe-mode 0)
-              (jump-to-register '_))
-    (progn
-      (set-register '_ (list (current-window-configuration)))
-      (delete-other-windows)
-      (bzg-big-fringe-mode 1))))
+  (if dotemacs-centered-buffer-mode
+      (progn
+        (window-configuration-to-register ?_)
+        (delete-other-windows)
+        (set-fringe-mode
+         (/ (- (frame-pixel-width)
+               (* 100 (frame-char-width)))
+            2)))
+    (set-fringe-style nil)
+    (when (assoc ?_ register-alist)
+      (jump-to-register ?_))))
 
 ;; from magnars modified by ffevotte for dedicated windows support
 (defun dotemacs/rotate-windows (count)

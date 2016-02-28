@@ -323,7 +323,7 @@
   "wl"  'evil-window-right
   "w <right>"  'evil-window-right
   "wm"  'dotemacs/toggle-maximize-buffer
-  "wM"  'dotemacs/toggle-maximize-centered-buffer
+  "wM"  'dotemacs-centered-buffer-mode
   "wo"  'other-frame
   "wR"  'dotemacs/rotate-windows
   "ws"  'split-window-below
