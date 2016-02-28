@@ -260,6 +260,7 @@
 
     (dolist (m '(clojure-mode clojurec-mode clojurescript-mode clojurex-mode))
       (dotemacs-set-leader-keys-for-major-mode m
+        "ha" 'cider-apropos
         "hh" 'cider-doc
         "hg" 'cider-grimoire
         "hj" 'cider-javadoc
