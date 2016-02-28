@@ -244,7 +244,7 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
   (progn
     (evilified-state-evilify pylookup-mode pylookup-mode-map)
     (dotemacs-set-leader-keys-for-major-mode 'python-mode
-      "mhH" 'pylookup-lookup))
+      "hH" 'pylookup-lookup))
   :config
   (progn
     (let ((dir (concat user-emacs-directory "etc/")))
