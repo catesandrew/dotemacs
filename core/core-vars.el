@@ -101,6 +101,7 @@ pressing `<leader> m`. Set it to `nil` to disable it.")
                           planet
                           professional
                           purple-haze
+                          railscasts
                           seti
                           smyx
                           soft-charcoal
