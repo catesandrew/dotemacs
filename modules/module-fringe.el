@@ -30,7 +30,7 @@
   :config
   (progn
     (dotemacs-hide-lighter linum-relative-mode)
-    (setq linum-relative-current-symbol "→")))
+    (setq linum-relative-current-symbol "")))
 
 (provide 'module-fringe)
 ;;; module-fringe.el ends here

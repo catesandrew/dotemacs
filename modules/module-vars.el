@@ -39,7 +39,7 @@
 (defconst dotemacs-editing-style 'vim
   "Always `vim', Evil is always enabled.")
 
-(defvar dotemacs-line-numbers 'relative
+(defvar dotemacs-line-numbers nil
   "If non nil line numbers are turned on in all `prog-mode' and `text-mode'.
 derivatives.  If set to `relative', also turns on relative line numbers.")
 

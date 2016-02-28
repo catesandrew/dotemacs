@@ -158,6 +158,7 @@ environment, otherwise it is strongly recommended to let it set to t.")
 
 ;; this is for a smoother UX at startup (i.e. less graphical glitches)
 (hidden-mode-line-mode)
+(setq ns-use-srgb-colorspace nil)
 
 ;; Get rid of tool bar, menu bar and scroll bars.  On OS X we preserve the menu
 ;; bar, since the top menu bar is always visible anyway, and we'd just empty it

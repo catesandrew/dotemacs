@@ -12,8 +12,10 @@
 ;;
 ;;; Commentary:
 
+(require 'core-vars)
 (require 'core-funcs)
 (require 'core-buffers)
+(require 'core-display-init)
 
 ;;; Code:
 
@@ -97,7 +99,7 @@ the mode will not show in the mode line."
 
 (defmacro dotemacs-hide-lighter (mode)
   "Diminish MODE name in mode line to LIGHTER."
-  `(eval-after-load 'diminish '(diminish ',mode)))
+  `(with-eval-after-load 'diminish '(diminish ',mode)))
 
 (provide 'core-fonts-support)
 ;;; core-fonts-support.el ends here
