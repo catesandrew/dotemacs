@@ -29,7 +29,6 @@ If SYMBOL value is `display-graphic-p' then return the result of
   :pre-config
   (progn
     (defun dotemacs/vc-strip-backend (orig-fun &rest args)
-      (message "!! vc-modeline")
       (when (stringp vc-mode)
         (let ((noback (replace-regexp-in-string
                        (format "^ %s:" (vc-backend buffer-file-name))
@@ -130,7 +129,6 @@ ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
   :config
   (progn
     (spaceline-toggle-battery-off)
-    ;; (spaceline-toggle-version-control-off)
     (spaceline-toggle-minor-modes-off)
     (spaceline-toggle-major-mode-off)
     (spaceline-toggle-org-clock-off)
