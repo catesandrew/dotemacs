@@ -25,15 +25,11 @@
 
     (defun dotemacs//locate-mocha-from-projectile ()
       "Use local mocha from `./node_modules` if available."
-      (when dotemacs/verbose
-        (message "!!! Running dotemacs//locate-mocha-from-projectile"))
       (let ((project-root
              (condition-case nil
                  (projectile-project-root)
                (error nil))))
-        (when project-root
-          (when dotemacs/verbose
-            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+        (when (and project-root (string= (projectile-detect-project-type) "npm"))
           (let ((mocha (dotemacs/executable-find "mocha" project-root)))
             (if mocha
                 (dotemacs/set-executable-mocha mocha)
@@ -42,15 +38,11 @@
 
     (defun dotemacs//locate-jshint-from-projectile ()
       "Use local jshint from `./node_modules` if available."
-      (when dotemacs/verbose
-        (message "!!! Running dotemacs//locate-jshint-from-projectile"))
       (let ((project-root
              (condition-case nil
                  (projectile-project-root)
                (error nil))))
-        (when project-root
-          (when dotemacs/verbose
-            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+        (when (and project-root (string= (projectile-detect-project-type) "npm"))
           (let ((jshint (dotemacs/executable-find "jshint" project-root)))
             (if jshint
                 (dotemacs/set-executable-jshint jshint)
@@ -59,15 +51,11 @@
 
     (defun dotemacs//locate-jscs-from-projectile ()
       "Use local jscs from `./node_modules` if available."
-      (when dotemacs/verbose
-        (message "!!! Running dotemacs//locate-jscs-from-projectile"))
       (let ((project-root
              (condition-case nil
                  (projectile-project-root)
                (error nil))))
-        (when project-root
-          (when dotemacs/verbose
-            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+        (when (and project-root (string= (projectile-detect-project-type) "npm"))
           (let ((jscs (dotemacs/executable-find "jscs" project-root)))
             (if jscs
                 (dotemacs/set-executable-jscs jscs)
@@ -76,15 +64,11 @@
 
     (defun dotemacs//locate-eslint-from-projectile ()
       "Use local eslint from `./node_modules` if available."
-      (when dotemacs/verbose
-        (message "!!! Running dotemacs//locate-eslint-from-projectile"))
       (let ((project-root
              (condition-case nil
                  (projectile-project-root)
                (error nil))))
-        (when project-root
-          (when dotemacs/verbose
-            (message "!!! Project Type: %s" (projectile-detect-project-type)))
+        (when (and project-root (string= (projectile-detect-project-type) "npm"))
           (let ((eslint (dotemacs/executable-find "eslint" project-root)))
             (if eslint
                 (dotemacs/set-executable-eslint eslint)
@@ -175,7 +159,7 @@
             projectile-generic-command "find . -type f"))
     (when-let (gnu-find (and (dotemacs/system-is-mac)
                              (executable-find "gfind")))
-      (setq projectile-generic-command "gfind . -type f"))
+      (setq projectile-generic-command "gfind . -type f print0"))
 
     (setq projectile-sort-order 'recentf
           projectile-use-git-grep t
