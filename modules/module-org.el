@@ -488,7 +488,7 @@ Headline^^            Visit entry^^               Filter^^                    Da
     (kbd "gd") 'org-agenda-toggle-time-grid
     (kbd "gr") 'org-agenda-redo
     (kbd "M-RET") 'org-agenda-show-and-scroll-up
-    (kbd "M-SPC") 'dotemacs/org-agenda-transient-state/body
+    ( kbd "M-SPC") 'dotemacs/org-agenda-transient-state/body
     (kbd "s-M-SPC") 'dotemacs/org-agenda-transient-state/body))
 
 (use-package org-bullets
