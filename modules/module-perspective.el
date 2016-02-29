@@ -500,7 +500,7 @@ format so they are supported by the
           (let* ((binding (car custom-persp))
                  (name (cdr custom-persp))
                  (func-name (dotemacs//custom-layout-func-name name)))
-            (push (list binding func-name) bindings)))
+            (push (list binding func-name :exit t) bindings)))
         (eval `(dotemacs-define-transient-state custom-layouts
                  :doc (concat (dotemacs//custom-layouts-ms-documentation))
                  :bindings
