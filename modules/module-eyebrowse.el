@@ -169,8 +169,9 @@ current workspace, preferably in the current window."
 
     (dotemacs-define-transient-state workspaces
         :title "Workspaces Transient State"
-        :doc "
-[_0_.._9_] switch to workspace  [_n_/_p_] next/prev  [_<tab>_] last  [_c_] close  [_r_] rename"
+        :additional-docs
+        (dotemacs--workspaces-ms-documentation .
+         "\n\n[_0_.._9_] switch to workspace  [_n_/_p_] next/prev  [_<tab>_] last  [_c_] close  [_r_] rename")
         :bindings
         ("0" eyebrowse-switch-to-window-config-0)
         ("1" eyebrowse-switch-to-window-config-1)
@@ -191,7 +192,33 @@ current workspace, preferably in the current window."
         ("N" eyebrowse-prev-window-config)
         ("p" eyebrowse-prev-window-config)
         ("r" dotemacs/workspaces-ms-rename :exit t)
-        ("w" eyebrowse-switch-to-window-config :exit t)))
+        ("w" eyebrowse-switch-to-window-config :exit t))
+
+    (defun dotemacs//workspace-format-name (workspace)
+      (let ((current (eq (eyebrowse--get 'current-slot) (car workspace)))
+            (name (nth 2 workspace))
+            (number (car workspace)))
+        (concat
+         (if current "[" "")
+         (if (< 0 (length name)) name (int-to-string number))
+         (if current "]" ""))))
+
+    (defun dotemacs//workspaces-ms-list ()
+      "Return the list of workspaces for the workspacae transient state."
+      (mapconcat 'dotemacs//workspace-format-name (eyebrowse--get 'window-configs) " | "))
+
+    (add-hook 'dotemacs-post-user-config-hook
+       (lambda ()
+         (setq dotemacs/workspaces-transient-state/hint
+               `(concat
+                 ,(when dotpacemacs-show-transient-state-title
+                    (concat
+                     (propertize "Workspaces Transient State"
+                                 'face 'dotemacs-transient-state-title-face)
+                     "\n"))
+                 (dotemacs//workspaces-ms-list)
+                 dotemacs--workspaces-ms-documentation)))
+       t))
   :config
   (progn))
 
