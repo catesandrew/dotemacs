@@ -114,7 +114,7 @@ STATE is a window-state object as returned by `window-state-get'."
     (define-key evil-motion-state-map "gt" 'eyebrowse-next-window-config)
     (define-key evil-motion-state-map "gT" 'eyebrowse-prev-window-config)
 
-    (dotemacs/set-leader-keys "bW" 'dotemacs/goto-buffer-workspace)
+    (dotemacs-set-leader-keys "bW" 'dotemacs/goto-buffer-workspace)
 
     (defun dotemacs/find-workspace (buffer)
       "Find Eyebrowse workspace containing BUFFER.
@@ -211,7 +211,7 @@ current workspace, preferably in the current window."
        (lambda ()
          (setq dotemacs/workspaces-transient-state/hint
                `(concat
-                 ,(when dotpacemacs-show-transient-state-title
+                 ,(when dotemacs-show-transient-state-title
                     (concat
                      (propertize "Workspaces Transient State"
                                  'face 'dotemacs-transient-state-title-face)
