@@ -27,8 +27,6 @@
   (progn
     (defun dotemacs//neotree-dir-from-projectile-root ()
       "Use ."
-      (when dotemacs/verbose
-        (message "!!! Running dotemacs//neotree-dir-from-projectile-root"))
       (when (and (fboundp 'projectile-project-root) (fboundp 'neotree-dir))
         (let ((project-root
                (condition-case nil
