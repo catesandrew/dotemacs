@@ -106,6 +106,11 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
     (setq helm-flx-for-helm-find-files nil)
     (helm-flx-mode)))
 
+(dotemacs-use-package-add-hook projectile
+  :post-config
+  (progn
+    (setq projectile-completion-system 'helm)))
+
 ;; Helm: Unite/CtrlP style fuzzy file/buffer/anything searcher on steroids
 ;;
 ;; Helm does the same thing as Unite/CtrlP on Vim and does it really well. You
