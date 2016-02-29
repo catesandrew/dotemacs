@@ -28,10 +28,12 @@ If SYMBOL value is `display-graphic-p' then return the result of
 (dotemacs-use-package-add-hook spaceline-config
   :pre-config
   (progn
+    ;; customize-vc-mode-appearance-in-mode-line
+    ;; http://emacs.stackexchange.com/questions/10955/
     (defun dotemacs/vc-strip-backend (orig-fun &rest args)
       (when (stringp vc-mode)
         (let ((noback (replace-regexp-in-string
-                       (format "^ %s:" (vc-backend buffer-file-name))
+                       (format "^ %s[-:]" (vc-backend buffer-file-name))
                        "" vc-mode)))
           (setq vc-mode noback))))
     (advice-add 'vc-mode-line :after 'dotemacs/vc-strip-backend)
