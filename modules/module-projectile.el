@@ -173,6 +173,10 @@
     (when (and (dotemacs/system-is-mswindows) (executable-find "find"))
       (setq projectile-indexing-method 'alien
             projectile-generic-command "find . -type f"))
+    (when-let (gnu-find (and (dotemacs/system-is-mac)
+                             (executable-find "gfind")))
+      (setq projectile-generic-command "gfind . -type f"))
+
     (setq projectile-sort-order 'recentf
           projectile-use-git-grep t
           projectile-switch-project-action 'projectile-dired
@@ -193,10 +197,6 @@
                    list-buffers-directory
                    default-directory))
         (setq-local projectile-enable-caching t)))
-
-    (setq projectile-globally-ignored-file-suffixes
-          '("class"
-            "elc"))
 
     (unless (boundp 'dotemacs-use-helm-projectile)
       (dotemacs-set-leader-keys
