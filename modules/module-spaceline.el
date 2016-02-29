@@ -25,6 +25,93 @@ If SYMBOL value is `display-graphic-p' then return the result of
  `(display-graphic-p)', otherwise return the value of the symbol."
   `(if (eq 'display-graphic-p ,symbol) (display-graphic-p) ,symbol))
 
+(dotemacs-use-package-add-hook spaceline-config
+  :pre-config
+  (progn
+    (defun dotemacs/vc-strip-backend (orig-fun &rest args)
+      (message "!! vc-modeline")
+      (when (stringp vc-mode)
+        (let ((noback (replace-regexp-in-string
+                       (format "^ %s:" (vc-backend buffer-file-name))
+                       "" vc-mode)))
+          (setq vc-mode noback))))
+    (advice-add 'vc-mode-line :after 'dotemacs/vc-strip-backend)
+
+    (spaceline-define-segment version-control
+      "Version control information."
+      (powerline-raw
+       (when (buffer-file-name)
+         (let ((backend (vc-backend buffer-file-name))
+               (state (vc-state (buffer-file-name))))
+           (s-trim (concat
+                    (pcase backend
+                      (`Git " ")
+                      (`Svn " ")
+                      (`Hg " "))
+                    (format "(%s)" vc-mode)
+                    (pcase state
+                      (`up-to-date " ")
+                      (`edited " ")
+                      (`added " ")
+                      (`unregistered " ")
+                      (`removed " ")
+                      (`needs-merge " ")
+                      (`needs-update " ")
+                      (`ignored " Ign")
+                      (_ " "))))
+           )))
+      :when vc-mode)
+
+    (defun spaceline--dotemacs-theme (left second-left &rest additional-segments)
+      "Convenience function for the spacemacs and emacs themes."
+      (spaceline-install
+
+       `(,left
+         anzu
+         auto-compile
+         ,second-left
+         major-mode
+         ((flycheck-error flycheck-warning flycheck-info)
+          :when active)
+         (((minor-modes :separator spaceline-minor-modes-separator)
+           process)
+          :when active)
+         (erc-track :when active)
+         (version-control :when active)
+         (org-pomodoro :when active)
+         (org-clock :when active)
+         nyan-cat)
+
+       `(which-function
+         ;; (python-pyvenv :fallback python-pyenv)
+         ;; (battery :when active)
+         selection-info
+         input-method
+         ((;; buffer-encoding-abbrev
+           point-position
+           line-column)
+          :separator "")
+         (global :when active)
+         ,@additional-segments
+         buffer-position
+         hud)))
+
+    (defun spaceline-dotemacs-theme (&rest additional-segments)
+      "Install the modeline used by dotemacs.
+
+ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
+`buffer-position'."
+      (apply 'spaceline--dotemacs-theme
+             '((persp-name
+                workspace-number
+                window-number)
+               :fallback evil-state
+               :separator "|"
+               :face highlight-face)
+             '(buffer-modified buffer-size buffer-id remote-host)
+             additional-segments))
+    (spaceline-dotemacs-theme)))
+
 (use-package spaceline-config
   :ensure spaceline
   :init
@@ -43,7 +130,7 @@ If SYMBOL value is `display-graphic-p' then return the result of
   :config
   (progn
     (spaceline-toggle-battery-off)
-    (spaceline-toggle-version-control-off)
+    ;; (spaceline-toggle-version-control-off)
     (spaceline-toggle-minor-modes-off)
     (spaceline-toggle-major-mode-off)
     (spaceline-toggle-org-clock-off)
@@ -82,7 +169,6 @@ If SYMBOL value is `display-graphic-p' then return the result of
       (setq spaceline-window-numbers-unicode unicodep)
       (setq spaceline-workspace-numbers-unicode unicodep))
 
-    (spaceline-spacemacs-theme)
     (spaceline-helm-mode t)
     (spaceline-info-mode t)
 
