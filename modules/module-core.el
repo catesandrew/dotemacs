@@ -124,6 +124,7 @@ the right."
 (dotemacs/create-align-repeat-x "bar" "|")
 (dotemacs/create-align-repeat-x "left-paren" "(")
 (dotemacs/create-align-repeat-x "right-paren" ")" t)
+(dotemacs/create-align-repeat-x "backslash" "\\\\")
 
 (defun dotemacs/copy-clipboard-to-whole-buffer ()
   "Copy clipboard and replace buffer"

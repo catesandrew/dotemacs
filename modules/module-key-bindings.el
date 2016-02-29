@@ -348,6 +348,7 @@
   "xa:" 'dotemacs/align-repeat-colon
   "xa;" 'dotemacs/align-repeat-semicolon
   "xa=" 'dotemacs/align-repeat-equal
+  "xa\\" 'dotemacs/align-repeat-backslash
   "xaa" 'align
   "xac" 'align-current
   "xam" 'dotemacs/align-repeat-math-oper
