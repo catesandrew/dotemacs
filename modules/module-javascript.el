@@ -727,15 +727,18 @@ change what is evaluated to the statement on the current line."
       (dotemacs-set-leader-keys-for-major-mode mode
         "m'" 'mocha-repl))
 
-    (when-let (node (executable-find "node"))
-      (setq mocha-which-node node))
-
-    ;; (when-let (mocha (executable-find "mocha"))
-    ;;   (setq mocha-command mocha))
+    ;; (when-let (node (executable-find "node"))
+    ;;   (setq mocha-which-node node))
 
     (setq mocha-environment-variables "NODE_ENV=test"
           mocha-options "--recursive --reporter dot -t 5000"
-          mocha-project-test-directory "test")))
+          mocha-project-test-directory "test"))
+  :config
+  (progn
+    (defun dotemacs//mocha-executable-mocha ()
+      (let ((mocha dotemacs//executable-mocha))
+        (setq mocha-command mocha)))
+    (add-hook 'dotemacs/mocha-executable-hook 'dotemacs//mocha-executable-mocha)))
 
 (dotemacs-use-package-add-hook popwin
   :post-config
