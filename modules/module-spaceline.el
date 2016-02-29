@@ -57,8 +57,7 @@ If SYMBOL value is `display-graphic-p' then return the result of
                       (`needs-merge " ")
                       (`needs-update " ")
                       (`ignored " Ign")
-                      (_ " "))))
-           )))
+                      (_ " ")))))))
       :when vc-mode)
 
     (defun spaceline--dotemacs-theme (left second-left &rest additional-segments)
@@ -108,8 +107,7 @@ ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
                :separator "|"
                :face highlight-face)
              '(buffer-modified buffer-size buffer-id remote-host)
-             additional-segments))
-    (spaceline-dotemacs-theme)))
+             additional-segments))))
 
 (use-package spaceline-config
   :ensure spaceline
@@ -167,6 +165,7 @@ ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
       (setq spaceline-window-numbers-unicode unicodep)
       (setq spaceline-workspace-numbers-unicode unicodep))
 
+    (spaceline-dotemacs-theme)
     (spaceline-helm-mode t)
     (spaceline-info-mode t)
 
