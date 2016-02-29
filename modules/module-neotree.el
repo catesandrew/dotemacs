@@ -60,7 +60,7 @@
           neo-create-file-auto-open t
           neo-banner-message nil
           neo-show-updir-line nil
-          neo-mode-line-type 'neotree
+          neo-mode-line-type 'none
           neo-smart-open nil       ; if t, every time when the neotree window is
                                    ; opened, it will try to find current file
                                    ; and jump to node.
