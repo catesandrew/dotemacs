@@ -18,11 +18,11 @@
 (require 'module-utils)
 
 (dotemacs-use-package-add-hook projectile
-  :post-config
+  :pre-config
   (progn
-    (projectile-register-project-type 'npm '("package.json") "npm" "npm test")
-    (add-to-list 'projectile-globally-ignored-directories "node_modules")
-
+    (projectile-register-project-type 'npm '("package.json") "npm" "npm test"))
+  :post-init
+  (progn
     (defun dotemacs//locate-mocha-from-projectile ()
       "Use local mocha from `./node_modules` if available."
       (let ((project-root
@@ -83,12 +83,12 @@
       (defvar dotemacs/projectile-curr nil
         "The current projectile project.")))
 
-    (defun dotemacs//find-file-hook-to-project ()
+    (defun dotemacs/find-file-hook-to-project ()
       "Use ."
-      (when dotemacs/verbose
-        (message "!!! Running dotemacs//find-file-hook-to-project"))
+      ;; (when dotemacs/verbose
+      ;;   (message "!!! Running dotemacs//find-file-hook-to-project"))
       (defun dotemacs/do-nothing ())
-      (let ((projectile-require-project-root nil)
+      (let (;;(projectile-require-project-root nil)
             (project-root
              (condition-case nil
                  (projectile-project-root)
@@ -97,21 +97,28 @@
                    (not (string= project-root dotemacs/projectile-curr)))
           ;; target directory is in a project
           (let ((projectile-switch-project-action 'dotemacs/do-nothing))
-            (when dotemacs/verbose
-              (message "!!! Project Root %s" project-root)
-              (message "!!! Buffer Name %s" buffer-file-name))
+            ;; (when dotemacs/verbose
+            ;;   (message "!!! Project Root %s" project-root)
+            ;;   (message "!!! Buffer Name %s" buffer-file-name))
             (projectile-switch-project-by-name project-root)
             (setq dotemacs/projectile-curr project-root)))))
-    (add-hook 'find-file-hook 'dotemacs//find-file-hook-to-project)
-
-    (add-hook 'projectile-after-switch-project-hook 'dotemacs/run-project-hook)
 
     (defun dotemacs//locate-executables-from-projectile ()
       (dotemacs//locate-eslint-from-projectile)
       (dotemacs//locate-mocha-from-projectile)
       (dotemacs//locate-jshint-from-projectile)
       (dotemacs//locate-jscs-from-projectile))
-    (dotemacs//locate-executables-from-projectile)))
+
+    (defun dotemacs/projectile-mode-hook ()
+      (cond
+       (projectile-mode
+        ;; (dotemacs//locate-executables-from-projectile)
+        (add-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t t)
+        (add-hook 'projectile-after-switch-project-hook #'dotemacs/run-project-hook t t))
+       (t
+        (remove-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t)
+        (remove-hook 'projectile-after-switch-project-hook #'dotemacs/run-project-hook t))))
+    (add-hook 'projectile-mode-hook 'dotemacs/projectile-mode-hook)))
 
 (use-package projectile
   :ensure t
