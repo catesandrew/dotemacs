@@ -33,6 +33,7 @@
     (setq mark-ring (nbutlast mark-ring))
     (goto-char (marker-position (car (last mark-ring))))))
 
+
 ;;; Code:
 
 (use-package simple
@@ -40,10 +41,9 @@
   (progn
     ;; Handy way of getting back to previous places.
     (dotemacs-set-leader-keys
-      ;; "mn" 'dotemacs-delete-file-and-buffer
-      ;; "m}" 'dotemacs-delete-file-and-buffer
-      "m{" 'pop-to-mark-command
-      "mp" 'pop-to-mark-command))
+      ;; "m{" 'pop-to-mark-command
+      "jp" 'pop-to-mark-command
+      "jP" 'dotemacs/unpop-to-mark-command))
   :config
   (progn
     ;; ensures we can quickly pop the mark several times by typing
