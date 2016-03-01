@@ -14,6 +14,7 @@
 (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
+(require 'cl) ;; cl-loop
 
 ;;; Code:
 
