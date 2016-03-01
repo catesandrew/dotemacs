@@ -30,13 +30,12 @@ If SYMBOL value is `display-graphic-p' then return the result of
   (progn
     ;; customize-vc-mode-appearance-in-mode-line
     ;; http://emacs.stackexchange.com/questions/10955/
-    (defun dotemacs/vc-strip-backend (orig-fun &rest args)
+    (defadvice vc-mode-line (after strip-backend () activate)
       (when (stringp vc-mode)
         (let ((noback (replace-regexp-in-string
                        (format "^ %s[-:]" (vc-backend buffer-file-name))
                        "" vc-mode)))
           (setq vc-mode noback))))
-    (advice-add 'vc-mode-line :after 'dotemacs/vc-strip-backend)
 
     (spaceline-define-segment version-control
       "Version control information."
