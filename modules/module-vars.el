@@ -19,7 +19,7 @@
 (defvar dotemacs-useless-buffers-regexp '("^\\*[^\\*]+\\*$")
   "Regexp used to determine if a buffer is not useful.")
 
-(defvar dotemacs-useful-buffers-regexp '("\\*scratch\\*")
+(defvar dotemacs-useful-buffers-regexp '("\\*scratch\\*" "\\*dotemacs\\*")
   "Regexp used to define buffers that are useful despite matching
 `emacs-useless-buffers-regexp'.")
 
