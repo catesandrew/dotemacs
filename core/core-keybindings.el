@@ -14,6 +14,7 @@
 
 (require 'core-vars)
 (require 'core-funcs)
+(require 'cl)
 
 (defvar dotemacs/prefix-titles nil
   "A `alist` for mapping command prefixes to long names.")

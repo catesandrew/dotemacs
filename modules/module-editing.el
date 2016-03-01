@@ -14,10 +14,11 @@
 (require 'core-keybindings)
 (require 'core-fonts-support)
 (require 'core-toggle)
-;; (require 'module-vars)
+(require 'module-vars)
 (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
+(require 'cl)
 
 ;;; Code:
 

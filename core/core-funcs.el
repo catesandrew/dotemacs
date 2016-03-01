@@ -10,6 +10,8 @@
 ;;
 ;;; License: GPLv3
 
+(require 'cl)
+
 (defvar dotemacs-repl-list '()
   "List of all registered REPLs.")
 (defvar dotemacs-post-user-config-hook nil

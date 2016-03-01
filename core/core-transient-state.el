@@ -12,6 +12,7 @@
 
 (require 'core-vars)
 (require 'core-funcs)
+(require 'cl)
 
 (defun dotemacs//transient-state-func-name (name)
   "Return the name of the transient state function."

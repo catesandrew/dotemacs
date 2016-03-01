@@ -14,8 +14,9 @@
 (require 'module-common)
 ;; (require 'module-core)
 ;; (require 'module-utils)
-;; (require 'ibuffer)
-;; (require 'evil-ex)
+(require 'ibuffer)
+(require 'evil-ex)
+(require 'cl)
 
 ;;; Code:
 
@@ -61,7 +62,6 @@ group by projectile projects.")
     (ibuffer-switch-to-saved-filter-groups "Home")))
 
 (use-package ibuffer                    ; Better buffer list
-  :defer t
   :init
   (progn
     (dotemacs-set-leader-keys "bB" 'ibuffer)
@@ -91,7 +91,6 @@ group by projectile projects.")
 
 (use-package ibuffer-projectile         ; Group buffers by Projectile project
   :ensure t
-  :defer t
   :init
   (progn
     (defun dotemacs//ibuffer-group-by-projects ()

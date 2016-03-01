@@ -20,6 +20,7 @@
 ;; (require 'module-core)
 ;; (require 'module-utils)
 (require 'evil)
+(require 'cl)
 
 ;;; Code:
 
