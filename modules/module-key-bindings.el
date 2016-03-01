@@ -90,7 +90,11 @@
   "bP"  'dotemacs/copy-clipboard-to-whole-buffer
   "bn"  'dotemacs-next-useful-buffer
   "bp"  'dotemacs-previous-useful-buffer
+  ;; Revert the current buffer (re-read the contents from disk)
   "bR"  'dotemacs-safe-revert-buffer
+  ;; Burying a buffer (removing it from the current window and sending it to the
+  ;; bottom of the stack) is very common for dismissing buffers.
+  "by"  'bury-buffer
   "bs"  'dotemacs/switch-to-scratch-buffer
   "bY"  'dotemacs/copy-whole-buffer-to-clipboard
   "bw"  'read-only-mode)

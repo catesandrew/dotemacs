@@ -196,11 +196,6 @@ none."
       (make-directory parent-directory t))))
 
 (use-package files
-  ;; Revert the current buffer (re-read the contents from disk). Burying a
-  ;; buffer (removing it from the current window and sending it to the bottom of
-  ;; the stack) is very common for dismissing buffers.
-  :bind (("C-c e u" . revert-buffer)
-         ("C-c e y" . bury-buffer))
   :init
   (progn
     (setq view-read-only t) ; View read-only files
