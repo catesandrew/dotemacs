@@ -65,10 +65,10 @@
 
 ;; Universal argument ---------------------------------------------------------
 (dotemacs-set-leader-keys "u" 'universal-argument)
-; (when (memq dotemacs-editing-style '(vim hybrid))
-;   (define-key universal-argument-map
-;     (kbd (concat dotemacs-leader-key " u"))
-;     'universal-argument-more))
+(when (memq dotemacs-editing-style '(vim hybrid))
+  (define-key universal-argument-map
+    (kbd (concat dotemacs-leader-key " u"))
+    'universal-argument-more))
 ;; shell command  -------------------------------------------------------------
 (dotemacs-set-leader-keys "!" 'shell-command)
 ;; applications ---------------------------------------------------------------
