@@ -93,7 +93,7 @@ STATE is a window-state object as returned by `window-state-get'."
 ;; (dotemacs-use-package-add-hook eyebrowse
 ;;   :post-config
 ;;   (progn
-;;     (defun dotemacs//eyebrowse-dir-switch ()
+;;     (defun dotemacs//eyebrowse-dir-switch (&optional str)
 ;;       "Hook eyebrowse to projectile and neotree."
 ;;       (when dotemacs/verbose
 ;;         (message "!!! Running dotemacs//eyebrowse-dir-from-projectile-root")))

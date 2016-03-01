@@ -11,7 +11,6 @@
 (require 'core-vars)
 ;; (require 'core-funcs)
 (require 'core-keybindings)
-;; (require 'core-display-init)
 (require 'module-vars)
 (require 'module-common)
 (require 'module-core)
@@ -23,9 +22,9 @@
     (projectile-register-project-type 'npm '("package.json") "npm" "npm test"))
   :post-init
   (progn
-    (defun dotemacs//locate-mocha-from-projectile ()
+    (defun dotemacs//locate-mocha-from-projectile (&optional dir)
       "Use local mocha from `./node_modules` if available."
-      (let ((proj-root (projectile-project-root))
+      (let ((proj-root (or dir (projectile-project-root)))
             (proj-type (projectile-detect-project-type)))
         (when (string= proj-type "npm")
           (async-start
@@ -37,9 +36,9 @@
              (dotemacs/set-executable-mocha result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-mocha-from-projectile)
 
-    (defun dotemacs//locate-jshint-from-projectile ()
+    (defun dotemacs//locate-jshint-from-projectile (&optional dir)
       "Use local jshint from `./node_modules` if available."
-      (let ((proj-root (projectile-project-root))
+      (let ((proj-root (or dir (projectile-project-root)))
             (proj-type (projectile-detect-project-type)))
         (when (string= proj-type "npm")
           (async-start
@@ -51,9 +50,9 @@
              (dotemacs/set-executable-jshint result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-jshint-from-projectile)
 
-    (defun dotemacs//locate-jscs-from-projectile ()
+    (defun dotemacs//locate-jscs-from-projectile (&optional dir)
       "Use local jscs from `./node_modules` if available."
-      (let ((proj-root (projectile-project-root))
+      (let ((proj-root (or dir (projectile-project-root)))
             (proj-type (projectile-detect-project-type)))
         (when (string= proj-type "npm")
           (async-start
@@ -65,9 +64,9 @@
              (dotemacs/set-executable-jscs result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-jscs-from-projectile)
 
-    (defun dotemacs//locate-eslint-from-projectile ()
+    (defun dotemacs//locate-eslint-from-projectile (&optional dir)
       "Use local eslint from `./node_modules` if available."
-      (let ((proj-root (projectile-project-root))
+      (let ((proj-root (or dir (projectile-project-root)))
             (proj-type (projectile-detect-project-type)))
         (when (string= proj-type "npm")
           (async-start
@@ -82,47 +81,36 @@
     ;; make-variable-frame-local is obsolete according to the docs, but I don't
     ;; want to have to manually munge frame-parameters all the time so I'm using
     ;; it anyway.
-    (dotemacs|do-after-display-system-init
-     (make-variable-frame-local
-      (defvar dotemacs/projectile-curr nil
-        "The current projectile project.")))
+    (make-variable-frame-local
+     (defvar dotemacs/projectile-curr nil
+       "The current projectile project."))
 
     (defun dotemacs/find-file-hook-to-project ()
       "Use ."
-      ;; (when dotemacs/verbose
-      ;;   (message "!!! Running dotemacs//find-file-hook-to-project"))
+      (when dotemacs/verbose
+        (message "!!! Running dotemacs//find-file-hook-to-project"))
       (defun dotemacs/do-nothing ())
-      (let (;;(projectile-require-project-root nil)
-            (project-root
-             (condition-case nil
-                 (projectile-project-root)
-               (error nil))))
-        (when (and project-root
-                   (not (string= project-root dotemacs/projectile-curr)))
-          ;; target directory is in a project
-          (let ((projectile-switch-project-action 'dotemacs/do-nothing))
-            ;; (when dotemacs/verbose
-            ;;   (message "!!! Project Root %s" project-root)
-            ;;   (message "!!! Buffer Name %s" buffer-file-name))
-            (projectile-switch-project-by-name project-root)
-            (setq dotemacs/projectile-curr project-root)))))
+      (let ((projectile-require-project-root t))
+        (when (projectile-project-p)
+          (let ((project-root (projectile-project-root)))
+            (when (and project-root
+                       (not (string= project-root dotemacs/projectile-curr)))
+              (let ((projectile-switch-project-action 'dotemacs/do-nothing))
+                (when dotemacs/verbose
+                  (message "!!! Project Root %s" project-root)
+                  (message "!!! Buffer Name %s" buffer-file-name))
+                (projectile-switch-project-by-name project-root)
+                (setq dotemacs/projectile-curr project-root)
+                (dotemacs/run-project-hook project-root)))))))
 
-    (defun dotemacs//locate-executables-from-projectile ()
-      (dotemacs//locate-eslint-from-projectile)
-      (dotemacs//locate-mocha-from-projectile)
-      (dotemacs//locate-jshint-from-projectile)
-      (dotemacs//locate-jscs-from-projectile))
-
+    (add-hook 'projectile-mode-hook 'dotemacs/projectile-mode-hook)
     (defun dotemacs/projectile-mode-hook ()
       (cond
        (projectile-mode
-        ;; (dotemacs//locate-executables-from-projectile)
-        (add-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t t)
-        (add-hook 'projectile-after-switch-project-hook #'dotemacs/run-project-hook t t))
+        (add-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t t))
        (t
         (remove-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t)
-        (remove-hook 'projectile-after-switch-project-hook #'dotemacs/run-project-hook t))))
-    (add-hook 'projectile-mode-hook 'dotemacs/projectile-mode-hook)))
+        )))))
 
 (use-package projectile
   :ensure t

@@ -17,10 +17,10 @@
 (defvar dotemacs/project-hook nil
   "Hooks run when a dotemacs/project is fired.")
 
-(defun dotemacs/run-project-hook ()
+(defun dotemacs/run-project-hook (&optional str)
   (when dotemacs/verbose
-    (message "!!! Running dotemacs/project hook."))
-  (run-hooks 'dotemacs/project-hook))
+    (message "!!! Running dotemacs/project hook: %s" str))
+  (run-hook-with-args 'dotemacs/project-hook str))
 
 
 ;; funcs

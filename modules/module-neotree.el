@@ -25,26 +25,26 @@
 (dotemacs-use-package-add-hook neotree
   :post-config
   (progn
-    (defun dotemacs//neotree-dir-from-projectile-root ()
+    (defun dotemacs//neotree-dir-from-projectile-root (&optional dir)
       "Use ."
-      (when (and (fboundp 'projectile-project-root) (fboundp 'neotree-dir))
-        (let ((project-root
-               (condition-case nil
-                   (projectile-project-root)
-                 (error nil))))
-          (when project-root
-            (when dotemacs/verbose
-              (message "Switched to project: %s" project-root))
-            (if (neo-global--window-exists-p)
-                (neotree-dir project-root)
-              (progn
-                (neotree-dir project-root)
-                (neotree-hide)
-                (let ((origin-buffer-file-name (buffer-file-name)))
-                  (neotree-find project-root)
-                  (neotree-find origin-buffer-file-name))
-                (neotree-hide)))))))
-    (add-hook 'dotemacs/project-hook 'dotemacs//neotree-dir-from-projectile-root)))
+      (when (and (fboundp 'projectile-project-root)
+                 (fboundp 'neotree-dir))
+        (let ((proj-root (or dir (projectile-project-root)))
+              (neo-open (neo-global--window-exists-p)))
+          (when dotemacs/verbose
+            (message "Neotree switching to project: %s" proj-root))
+
+          (neo-global--open-dir proj-root)
+          (let ((origin-buffer-file-name buffer-file-name))
+            (neotree-find proj-root)
+            (neotree-find origin-buffer-file-name)
+            (call-interactively 'neotree-enter))
+          (unless neo-open
+            (neotree-hide))
+          )
+        )
+      )
+    (add-hook 'dotemacs/project-hook 'dotemacs//neotree-dir-from-projectile-root t nil)))
 
 (use-package neotree
   :ensure t
