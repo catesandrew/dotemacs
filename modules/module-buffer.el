@@ -72,8 +72,7 @@
 
 (use-package helm-buffers
   :ensure helm
-  :defer t
-  :config (setq helm-buffers-fuzzy-matching t))
+  :defer t)
 
 (when buffer-do-not-kill-important-buffers
   (defun dotemacs-do-not-kill-important-buffers ()
