@@ -10,7 +10,7 @@
 
 (require 'core-vars)
 
-(defvar dotemacs/verbose t)
+(defvar dotemacs/verbose nil)
 
 (defvar ycmd-server-command '("python" "/usr/local/src/ycmd/ycmd")
   "The path to the ycmd server.")
