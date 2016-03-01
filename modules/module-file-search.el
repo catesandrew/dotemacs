@@ -57,10 +57,9 @@
 
 (use-package fasd
   :ensure t
+  :commands (fasd-find-file fasd-find-file-only fasd-find-directory-only)
   :init
   (progn
-    (global-fasd-mode 1)
-
     (defun fasd-find-file-only ()
       (interactive)
       (fasd-find-file -1))
@@ -75,7 +74,9 @@
     (dotemacs-set-leader-keys "fas" 'fasd-find-file)
 
     ;; we will fall back to using the default completing-read function, which is helm once helm is loaded.
-    (setq fasd-completing-read-function 'nil)))
+    (setq fasd-completing-read-function 'nil))
+  :config
+  (global-fasd-mode 1))
 
 (use-package helm-ag
   :ensure t
