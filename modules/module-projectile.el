@@ -25,54 +25,58 @@
   (progn
     (defun dotemacs//locate-mocha-from-projectile ()
       "Use local mocha from `./node_modules` if available."
-      (let ((project-root
-             (condition-case nil
-                 (projectile-project-root)
-               (error nil))))
-        (when (and project-root (string= (projectile-detect-project-type) "npm"))
-          (let ((mocha (dotemacs/executable-find "mocha" project-root)))
-            (if mocha
-                (dotemacs/set-executable-mocha mocha)
-              (dotemacs/set-executable-mocha nil))))))
+      (let ((proj-root (projectile-project-root))
+            (proj-type (projectile-detect-project-type)))
+        (when (string= proj-type "npm")
+          (async-start
+           `(lambda ()
+              (set  'proj-root ,proj-root)
+              (let ((default-directory proj-root))
+                (executable-find "mocha")))
+           (lambda (result)
+             (dotemacs/set-executable-mocha result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-mocha-from-projectile)
 
     (defun dotemacs//locate-jshint-from-projectile ()
       "Use local jshint from `./node_modules` if available."
-      (let ((project-root
-             (condition-case nil
-                 (projectile-project-root)
-               (error nil))))
-        (when (and project-root (string= (projectile-detect-project-type) "npm"))
-          (let ((jshint (dotemacs/executable-find "jshint" project-root)))
-            (if jshint
-                (dotemacs/set-executable-jshint jshint)
-              (dotemacs/set-executable-jshint nil))))))
+      (let ((proj-root (projectile-project-root))
+            (proj-type (projectile-detect-project-type)))
+        (when (string= proj-type "npm")
+          (async-start
+           `(lambda ()
+              (set  'proj-root ,proj-root)
+              (let ((default-directory proj-root))
+                (executable-find "jshint")))
+           (lambda (result)
+             (dotemacs/set-executable-jshint result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-jshint-from-projectile)
 
     (defun dotemacs//locate-jscs-from-projectile ()
       "Use local jscs from `./node_modules` if available."
-      (let ((project-root
-             (condition-case nil
-                 (projectile-project-root)
-               (error nil))))
-        (when (and project-root (string= (projectile-detect-project-type) "npm"))
-          (let ((jscs (dotemacs/executable-find "jscs" project-root)))
-            (if jscs
-                (dotemacs/set-executable-jscs jscs)
-              (dotemacs/set-executable-jscs nil))))))
+      (let ((proj-root (projectile-project-root))
+            (proj-type (projectile-detect-project-type)))
+        (when (string= proj-type "npm")
+          (async-start
+           `(lambda ()
+              (set  'proj-root ,proj-root)
+              (let ((default-directory proj-root))
+                (executable-find "jscs")))
+           (lambda (result)
+             (dotemacs/set-executable-jscs result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-jscs-from-projectile)
 
     (defun dotemacs//locate-eslint-from-projectile ()
       "Use local eslint from `./node_modules` if available."
-      (let ((project-root
-             (condition-case nil
-                 (projectile-project-root)
-               (error nil))))
-        (when (and project-root (string= (projectile-detect-project-type) "npm"))
-          (let ((eslint (dotemacs/executable-find "eslint" project-root)))
-            (if eslint
-                (dotemacs/set-executable-eslint eslint)
-              (dotemacs/set-executable-eslint nil))))))
+      (let ((proj-root (projectile-project-root))
+            (proj-type (projectile-detect-project-type)))
+        (when (string= proj-type "npm")
+          (async-start
+           `(lambda ()
+              (set  'proj-root ,proj-root)
+              (let ((default-directory proj-root))
+                (executable-find "eslint")))
+           (lambda (result)
+             (dotemacs/set-executable-eslint result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-eslint-from-projectile)
 
     ;; make-variable-frame-local is obsolete according to the docs, but I don't
