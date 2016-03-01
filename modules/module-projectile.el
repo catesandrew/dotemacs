@@ -103,14 +103,32 @@
                 (setq dotemacs/projectile-curr project-root)
                 (dotemacs/run-project-hook project-root)))))))
 
+    ;; does not attach to any c-level calls but is best we got
+    (defadvice switch-to-buffer (after dotemacs/projectile-switch activate)
+      (when buffer-file-name
+        (when dotemacs/verbose
+          (message "!!! Switch to buffer: %s" buffer-file-name))
+        (dotemacs/find-file-hook-to-project)))
+
+    (defadvice switch-to-prev-buffer (after dotemacs/projectile-switch-prev activate)
+      (when buffer-file-name
+        (when dotemacs/verbose
+          (message "!!! Switch prev buffer: %s" buffer-file-name))
+        (dotemacs/find-file-hook-to-project)))
+
+    (defadvice switch-to-next-buffer (after dotemacs/projectile-switch-next activate)
+      (when buffer-file-name
+        (when dotemacs/verbose
+          (message "!!! Switch next buffer: %s" buffer-file-name))
+        (dotemacs/find-file-hook-to-project)))
+
     (add-hook 'projectile-mode-hook 'dotemacs/projectile-mode-hook)
     (defun dotemacs/projectile-mode-hook ()
       (cond
        (projectile-mode
         (add-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t t))
        (t
-        (remove-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t)
-        )))))
+        (remove-hook 'find-file-hook #'dotemacs/find-file-hook-to-project t))))))
 
 (use-package projectile
   :ensure t
