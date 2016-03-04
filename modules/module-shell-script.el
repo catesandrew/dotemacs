@@ -24,6 +24,10 @@
 (dotemacs-defvar-company-backends sh-mode)
 (dotemacs-defvar-company-backends fish-mode)
 
+(dotemacs-use-package-add-hook flycheck
+  :post-init
+  (dotemacs/add-flycheck-hook 'sh-mode))
+
 (use-package sh-script                  ; Shell scripts
   :defer t
   :init
