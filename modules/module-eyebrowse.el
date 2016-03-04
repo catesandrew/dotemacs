@@ -209,7 +209,7 @@ current workspace, preferably in the current window."
              (name (nth 2 workspace))
              (number (car workspace))
              (caption (if (< 0 (length name))
-                          name
+                          (concat (int-to-string number) ":" name)
                         (int-to-string number))))
         (if current
             (propertize (concat "[" caption "]") 'face 'warning)
