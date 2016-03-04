@@ -273,15 +273,14 @@ Possible values are `rbenv', `rvm' or `chruby'.)")
 (use-package rake
   :defer t
   :ensure t
+  :init (setq rake-cache-file (concat dotemacs-cache-directory "rake.cache"))
   :config
-  (progn
-    (setq rake-cache-file (concat dotemacs-cache-directory "rake.cache"))
-    (dolist (mode '(ruby-mode enh-ruby-mode))
-      (dotemacs-set-leader-keys-for-major-mode mode
-        "kk"    'rake
-        "kr"    'rake-rerun
-        "kR"    'rake-regenerate-cache
-        "kf"    'rake-find-task))))
+  (dolist (mode '(ruby-mode enh-ruby-mode))
+    (dotemacs-set-leader-keys-for-major-mode mode
+      "kk"    'rake
+      "kr"    'rake-rerun
+      "kR"    'rake-regenerate-cache
+      "kf"    'rake-find-task)))
 
 (provide 'module-ruby)
 ;;; module-ruby.el ends here
