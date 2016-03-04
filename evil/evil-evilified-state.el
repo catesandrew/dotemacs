@@ -161,11 +161,6 @@ Needed to bypass keymaps set as text properties."
 (define-key evil-evilified-state-map (kbd "C-k") 'evil-scroll-up)
 (define-key evil-evilified-state-map (kbd "C-u") 'evil-scroll-up)
 (define-key evil-evilified-state-map (kbd "C-z") 'evil-emacs-state)
-(bind-map dotemacs-default-map
-  :prefix-cmd dotemacs-cmds
-  :evil-states (evilified)
-  :evil-keys (dotemacs-leader-key)
-  :evil-use-local t)
 (setq evil-evilified-state-map-original (copy-keymap evil-evilified-state-map))
 
 ;; old macro
