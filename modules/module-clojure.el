@@ -451,5 +451,9 @@
       (push 'company-capf company-backends-cider-repl-mode)
       (dotemacs-add-company-hook cider-repl-mode))))
 
+(use-package clojure-snippets
+  :ensure t
+  :defer t)
+
 (provide 'module-clojure)
 ;;; module-clojure.el ends here
