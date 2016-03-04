@@ -383,8 +383,7 @@ FRAME defaults to the current frame."
        (eval `(defun ,(intern (format "dotemacs/persp-switch-to-%s" i)) nil
                 ,(format "Switch to layout %s." i)
                 (interactive)
-                (dotemacs/layout-switch-by-pos ,(if (eq 0 i) 9 (1- i)))
-                (dotemacs/layouts-transient-state/body))))
+                (dotemacs/layout-switch-by-pos ,(if (eq 0 i) 9 (1- i))))))
 
      (defun dotemacs/layout-goto-default ()
        "Go to `dotemacs-default-layout-name` layout"
