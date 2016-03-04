@@ -142,7 +142,7 @@ Try the repeated popping up to 10 times."
     (defun dotemacs-ace-buffer-links ()
       "Ace jump to links in `emacs' buffer."
       (interactive)
-      (let ((res (avy--with-avy-keys dotemacs-ace-buffer-links
+      (let ((res (avy-with dotemacs-ace-buffer-links
                     (avy--process
                         (dotemacs-collect-buffer-links)
                         #'avy--overlay-pre))))
