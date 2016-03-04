@@ -70,6 +70,13 @@
     (progn
       (push 'company-capf company-backends-react-mode))))
 
+
+(dotemacs-use-package-add-hook evil-matchit
+  :post-config
+  (plist-put evilmi-plugins 'react-mode '((evilmi-simple-get-tag evilmi-simple-jump)
+                                          (evilmi-javascript-get-tag evilmi-javascript-jump)
+                                          (evilmi-html-get-tag evilmi-html-jump))))
+
 (dotemacs-use-package-add-hook flycheck
   :post-init
   (progn

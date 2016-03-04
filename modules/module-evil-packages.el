@@ -169,7 +169,11 @@
 ;;   (add-hook hook 'turn-on-evil-matchit-mode))
 (use-package evil-matchit
   :ensure t
-  :defer t)
+  :defer t
+  :post-init
+  (progn)
+  :post-config
+  (progn))
 
 (use-package evil-indent-plus
   :ensure t
