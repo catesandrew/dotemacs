@@ -36,6 +36,10 @@
 
 ;; variables
 
+(defvar osx-use-option-as-meta t
+  "If non nil the option key is mapped to meta. Set to `nil` if you need the
+  option key to type common characters.")
+
 ;; Use the OS X Emoji font for Emoticons
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default"
@@ -59,7 +63,7 @@
 
    ;; Treat option as meta
    (setq mac-option-key-is-meta t)
-   (setq mac-option-modifier 'meta)
+   (setq mac-option-modifier (if osx-use-option-as-meta 'meta nil))
 
    ;; Keybindings
    (global-set-key (kbd "s-=") 'dotemacs/scale-up-font)
