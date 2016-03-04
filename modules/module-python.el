@@ -250,7 +250,8 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
     (let ((dir (concat user-emacs-directory "etc/")))
       (setq pylookup-dir (concat dir "pylookup/")
             pylookup-program (concat pylookup-dir "pylookup.py")
-            pylookup-db-file (concat pylookup-dir "pylookup.db")))))
+            pylookup-db-file (concat pylookup-dir "pylookup.db"))
+      (setq pylookup-completing-read 'completing-read))))
 
 (use-package pytest
   :if (eq 'pytest python-test-runner)
