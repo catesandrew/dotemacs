@@ -112,10 +112,6 @@ Useful for making the home buffer the only visible buffer in the frame."
   (interactive)
   (find-file-existing (dotemacs-location)))
 
-(defun dotemacs//unset-scroll-margin ()
-  "Set `scroll-margin` to zero."
-  (setq-local scroll-margin 0))
-
 (defun dotemacs-expand-private-file (file-name)
   "Get the absolute path for a private file with FILE-NAME."
   (expand-file-name file-name dotemacs-private-dir))
