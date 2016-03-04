@@ -270,5 +270,18 @@ Possible values are `rbenv', `rvm' or `chruby'.)")
                       (dotemacs/smartparens-pair-newline-and-indent "RET"))
      :suffix "")))
 
+(use-package rake
+  :defer t
+  :ensure t
+  :config
+  (progn
+    (setq rake-cache-file (concat dotemacs-cache-directory "rake.cache"))
+    (dolist (mode '(ruby-mode enh-ruby-mode))
+      (dotemacs-set-leader-keys-for-major-mode mode
+        "kk"    'rake
+        "kr"    'rake-rerun
+        "kR"    'rake-regenerate-cache
+        "kf"    'rake-find-task))))
+
 (provide 'module-ruby)
 ;;; module-ruby.el ends here
