@@ -53,12 +53,10 @@ screen.")
 
 (unless dotemacs-smooth-scrolling
   ;; deactivate smooth-scrolling advices
-  (ad-disable-advice 'previous-line 'after 'smooth-scroll-down)
-  (ad-activate 'previous-line)
-  (ad-disable-advice 'next-line 'after 'smooth-scroll-up)
-  (ad-activate 'next-line)
-  (ad-disable-advice 'isearch-repeat 'after 'isearch-smooth-scroll)
-  (ad-activate 'isearch-repeat))
+  (when (featurep 'smooth-scrolling)
+    (disable-smooth-scroll-for-function previous-line)
+    (disable-smooth-scroll-for-function next-line)
+    (disable-smooth-scroll-for-function isearch-repeat)))
 
 (provide 'module-smooth-scrolling)
 ;;; module-smooth-scrolling.el ends here
