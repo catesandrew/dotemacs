@@ -273,7 +273,7 @@ Example: (evil-map visual \"<\" \"<gv\")"
         i.e. `SPC m h h`, to lookup the source of the definition,
         while falling back to `evil-lookup'"
       (interactive)
-      (condition-case nil
+      (condition-case-unless-debug nil
           (execute-kbd-macro (kbd (concat dotemacs-leader-key " mhh")))
         (error (evil-lookup))))
     (define-key evil-normal-state-map (kbd "K") 'dotemacs/evil-smart-doc-lookup)
@@ -284,7 +284,7 @@ Example: (evil-map visual \"<\" \"<gv\")"
         i.e. `SPC m g g`, to lookup the source of the definition,
         while falling back to `evil-goto-definition'"
       (interactive)
-      (condition-case nil
+      (condition-case-unless-debug nil
           (execute-kbd-macro (kbd (concat dotemacs-leader-key " mgg")))
         (error (evil-goto-definition))))
     (define-key evil-normal-state-map

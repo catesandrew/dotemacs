@@ -47,7 +47,7 @@
 (defun tmux-navigate (direction)
   (let
     ((cmd (concat "windmove-" direction)))
-      (condition-case nil
+      (condition-case-unless-debug nil
           (funcall (read cmd))
         (error
           (tmux-command direction)))))

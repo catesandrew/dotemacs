@@ -202,7 +202,7 @@ toggling fullscreen."
 (defun dotemacs-frame-killer ()
   "Kill server buffer and hide the main Emacs window"
   (interactive)
-  (condition-case nil
+  (condition-case-unless-debug nil
       (delete-frame nil 1)
     (error
      (make-frame-invisible nil 1))))

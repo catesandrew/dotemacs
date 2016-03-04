@@ -270,7 +270,7 @@ a display strng and the value is the actual value to return."
 ;;   "Replace the preceding sexp with its value."
 ;;   (interactive)
 ;;   (backward-kill-sexp)
-;;   (condition-case nil
+;;   (condition-case-unless-debug nil
 ;;       (prin1 (eval (read (current-kill 0)))
 ;;              (current-buffer))
 ;;     (error (message "Invalid expression")

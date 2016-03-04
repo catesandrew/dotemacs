@@ -444,7 +444,7 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 paths for Python then prevent the buffer to be switched. This
 issue might be fixed in Emacs 25. Until then, we need it here to
 fix this issue."
-      (condition-case nil
+      (condition-case-unless-debug nil
           ad-do-it
         (error nil)))))
 
