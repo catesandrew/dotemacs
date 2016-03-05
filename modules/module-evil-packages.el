@@ -170,9 +170,9 @@
 (use-package evil-matchit
   :ensure t
   :defer t
-  :post-init
+  :init
   (progn)
-  :post-config
+  :config
   (progn))
 
 (use-package evil-indent-plus
