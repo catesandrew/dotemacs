@@ -18,6 +18,10 @@
   "Return the name of the transient state function."
   (intern (format "dotemacs/%S-transient-state" name)))
 
+(defun dotemacs//transient-state-props-var-name (name)
+  "Return the name of the variable use to store the transient state properties."
+  (intern (format "dotemacs--%S-transient-state-props" name)))
+
 (defun dotemacs//transient-state-body-func-name (name)
   "Return the name of the transient state function."
   (intern (format "dotemacs/%S-transient-state/body" name)))
@@ -41,19 +45,35 @@ holds the key bindings."
 
 (defun dotemacs//transient-state-make-doc
     (transient-state docstring &optional body)
+  "Use `hydra' internal function to format and apply DOCSTRING."
   (let ((heads (dotemacs//transient-state-heads-name transient-state)))
     (setq body (if body body '(nil nil :hint nil :foreign-keys nil)))
     (eval
      (hydra--format nil body docstring (symbol-value heads)))))
 
-;; (defface dotemacs-transient-state-title-face
-;;   `((t :background "DarkGoldenrod2"
-;;        :foreground "black"
-;;        :bold t
-;;        :box (:line-width -1 (plist-get
-;;                              (face-attribute 'mode-line :box)
-;;                              :color))))
-;;   "Face for title of transient states.")
+(defmacro dotemacs|transient-state-format-hint (name var hint)
+  "Format HINT and store the result in VAR for transient state NAME."
+  (declare (indent 1))
+  `(add-hook 'dotemacs-post-user-config-hook
+      (lambda ()
+        (let* ((props-var ,(dotemacs//transient-state-props-var-name
+                            name))
+               (prop-hint (cadr (assq 'hint props-var)))
+               (prop-columns (cadr (assq 'columns props-var)))
+               (prop-foreign-keys (cadr (assq 'foreign-keys props-var)))
+               (prop-entry-sexp (cadr (assq 'entry-sexp props-var)))
+               (prop-exit-sexp (cadr (assq 'exit-sexp props-var))))
+          (setq ,var (dotemacs//transient-state-make-doc
+                      ',name
+                      ,hint
+                      `(nil
+                        nil
+                        :hint ,prop-hint
+                        :columns ,prop-columns
+                        :foreign-keys ,prop-foreign-keys
+                        :body-pre ,prop-entry-sexp
+                        :before-exit ,prop-exit-sexp)))
+          'append))))
 
 (defface dotemacs-transient-state-title-face
   `((t :inherit mode-line))
@@ -92,8 +112,6 @@ Available PROPS:
     which means to not exit but warn the user that the key is not part
     of the transient state, or run, which means to try to run the key binding
     without exiting.
-`:entry-binding MAP KEY'
-    Key binding to use for entering the transient state.
 `:bindings EXPRESSIONS'
     One or several EXPRESSIONS with the form
     (STRING1 SYMBOL1 DOCSTRING
@@ -110,12 +128,12 @@ All properties supported by `dotemacs//create-key-binding-form' can be
 used."
   (declare (indent 1))
   (let* ((func (dotemacs//transient-state-func-name name))
+         (props-var (dotemacs//transient-state-props-var-name name))
          (body-func (dotemacs//transient-state-body-func-name name))
-         (entry-binding (dotemacs-mplist-get props :entry-binding))
-         (add-bindings (intern (format "dotemacs-%s-transient-state-add-bindings"
-                                       name)))
-         (remove-bindings (intern (format "dotemacs-%s-transient-state-remove-bindings"
-                                       name)))
+         (add-bindings
+          (intern (format "dotemacs-%s-transient-state-add-bindings" name)))
+         (remove-bindings
+          (intern (format "dotemacs-%s-transient-state-remove-bindings" name)))
          (bindings (dotemacs-mplist-get props :bindings))
          (doc (or (plist-get props :doc) "\n"))
          (title (plist-get props :title))
@@ -130,12 +148,22 @@ used."
          (foreign-keys (plist-get props :foreign-keys))
          (bindkeys (dotemacs//create-key-binding-form props body-func)))
     `(progn
+       (defvar ,props-var nil
+         ,(format (concat "Association list containing a copy of some "
+                          "properties of the transient state %S. Those "
+                          "properties are used in macro "
+                          "`dotemacs|transient-state-format-hint'.") name))
+       (add-to-list ',props-var '(hint ,hint))
+       (add-to-list ',props-var '(columns ,columns))
+       (add-to-list ',props-var '(foreign-keys ,foreign-keys))
+       (add-to-list ',props-var '(entry-sexp ,entry-sexp))
+       (add-to-list ',props-var '(exit-sexp ,exit-sexp))
        (dotemacs/defer-until-after-user-config
         '(lambda ()
            (eval
             (append
              '(defhydra ,func
-                (,(car entry-binding) ,(cadr entry-binding)
+                (nil nil
                  :hint ,hint
                  :columns ,columns
                  :foreign-keys ,foreign-keys
@@ -164,17 +192,6 @@ used."
                               ',dyn-hint
                               (when dotemacs-show-transient-state-color-guide
                                 (concat "\n" guide))))))
-           (dolist (add-doc ',additional-docs)
-             (unless (boundp (car add-doc))
-               (set (car add-doc)
-                    (dotemacs//transient-state-make-doc
-                     ',name (cdr add-doc) '(,(car entry-binding)
-                                            ,(cadr entry-binding)
-                                            :hint ,hint
-                                            :columns ,columns
-                                            :foreign-keys ,foreign-keys
-                                            :body-pre ,entry-sexp
-                                            :before-exit ,exit-sexp)))))
            ,@bindkeys)))))
 
 (provide 'core-transient-state)
