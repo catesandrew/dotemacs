@@ -452,6 +452,7 @@
       (dotemacs-add-company-hook cider-repl-mode))))
 
 (use-package clojure-snippets
+  :disabled t
   :ensure t
   :defer t)
 
