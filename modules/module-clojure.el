@@ -273,7 +273,7 @@
 
         "fb" 'cider-format-buffer
 
-        "gb" 'cider-jump-back
+        "gb" 'cider-pop-back
         "ge" 'cider-jump-to-compilation-error
         "gg" 'cider-find-var
         "gr" 'cider-jump-to-resource
