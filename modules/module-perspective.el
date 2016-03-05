@@ -229,7 +229,7 @@ FRAME defaults to the current frame."
     ;; always activate persp-mode
     (persp-mode)
 
-    (defvar dotemacs--layouts-ms-doc-toggle 0
+    (defvar dotemacs--layouts-layouts-ts-full-hint-toggle 0
       "Display a short doc when nil, full doc otherwise.")
 
     (defvar dotemacs--last-selected-layout persp-nil-name
@@ -252,11 +252,11 @@ FRAME defaults to the current frame."
 
     ;; Perspectives transient-state -------------------------------------------
 
-    (defun dotemacs//layouts-ms-toggle-doc ()
-      "Toggle the full documenation for the layouts transient-state."
+    (defun dotemacs//layouts-ts-toggle-doc ()
+      "Toggle the full hint docstring for the layouts transient-state."
       (interactive)
-      (setq dotemacs--layouts-ms-doc-toggle
-            (logxor dotemacs--layouts-ms-doc-toggle 1)))
+      (setq dotemacs--layouts-ts-full-hint-toggle
+            (logxor dotemacs--layouts-ts-full-hint-toggle 1)))
 
     (defun dotemacs//layout-format-name (name pos)
       "Format the layout name given by NAME for display in mode-line."
@@ -271,47 +271,49 @@ FRAME defaults to the current frame."
             (propertize (concat "[" caption "]") 'face 'warning)
           caption)))
 
-    (defun dotemacs//layouts-ms-doc ()
-      "Return the docstring for the layouts transient-state."
+    (defun dotemacs//layouts-ts-hint ()
+      "Return a one liner string containing all the layout names."
       (let* ((persp-list (or (persp-names-current-frame-fast-ordered)
                              (list persp-nil-name)))
              (formatted-persp-list
-              (concat
-               (mapconcat
-                (lambda (persp)
-                  (dotemacs//layout-format-name
-                   persp (position persp persp-list))) persp-list " | "))))
-        (concat formatted-persp-list
-                (if (equal 1 dotemacs--layouts-ms-doc-toggle)
-                    dotemacs--layouts-ms-documentation
-                  (concat
-                   "\n ["
+              (concat " "
+                      (mapconcat (lambda (persp)
+                                   (dotemacs//layout-format-name
+                                    persp (position persp persp-list)))
+                                 persp-list " | "))))
+        (concat
+         formatted-persp-list
+         (if (equal 1 dotemacs--layouts-ts-full-hint-toggle)
+             dotemacs--layouts-ts-full-hint
+           (concat "  (["
                    (propertize "?" 'face 'hydra-face-red)
-                   "]   toggle help")))))
+                   "] help)")))))
 
-    (dotemacs-define-transient-state layouts
-        :title "Layouts Transient State"
-        :additional-docs
-        (dotemacs--layouts-ms-documentation .
-                                            "\n
- Go to^^^^^^                         Add/Remove/Rename^^
+    (dotemacs|transient-state-format-hint layouts
+      dotemacs--layouts-ts-full-hint
+      "\n\n
+ Go to^^^^^^                         Add/Remove/Rename...^^
 --^-^--^^^^-----------------------  --^-^---------------------------
  [_b_]^^^^       buffer in layout    [_a_] add buffer
  [_h_]^^^^       default layout      [_A_] add all from layout
  [_o_]^^^^       custom layout       [_r_] remove current buffer
  [_l_]^^^^       layout w/helm/ivy   [_d_] close current layout
  [_L_]^^^^       layouts in file     [_D_] close other layout
- [_0_,_9_]^^     nth layout          [_x_] kill current w/buffers
- [_n_/_C-l_]^^   next layout         [_X_] kill other w/buffers
- [_N_/_p_/_C-h_] prev layout         [_R_] rename current layout
+ [_0_,_9_]^^     nth/new layout      [_x_] kill current w/buffers
+ [_C-0_,_C-9_]^^ nth/new layout      [_X_] kill other w/buffers
+ [_n_/_C-l_]^^   next layout         [_R_] rename current layout
+ [_N_/_p_/_C-h_] prev layout
  [_<tab>_]^^^^   last layout
 --^^^^^^^^----------------------------------------------------------
  [_s_/_S_] save all layouts/save by names
  [_t_]^^   show a buffer without adding it to current layout
  [_w_]^^   workspaces micro-state
- [_?_]^^   toggle help
- [_q_]^^   quit
-")
+ [_?_]^^   toggle help\n")
+
+    (dotemacs-define-transient-state layouts
+      :title "Layouts Transient State"
+      :hint-is-doc t
+      :dynamic-hint (dotemacs//layouts-ts-hint)
         :bindings
         ;; need to exit in case number doesn't exist
         ("?" dotemacs//layouts-ms-toggle-doc)
@@ -342,8 +344,8 @@ FRAME defaults to the current frame."
         ("a" persp-add-buffer :exit t)
         ("A" persp-import-buffers :exit t)
         ("b" dotemacs/persp-helm-mini :exit t)
-        ("d" dotemacs/layouts-ms-close)
-        ("D" dotemacs/layouts-ms-close-other :exit t)
+        ("d" dotemacs/layouts-ts-close)
+        ("D" dotemacs/layouts-ts-close-other :exit t)
         ("h" dotemacs/layout-goto-default :exit t)
         ("l" dotemacs/helm-perspectives :exit t)
         ("L" persp-load-state-from-file :exit t)
@@ -353,40 +355,27 @@ FRAME defaults to the current frame."
         ("p" persp-prev)
         ("q" nil :exit t)
         ("r" persp-remove-buffer :exit t)
-        ("R" dotemacs/layouts-ms-rename :exit t)
+        ("R" dotemacs/layouts-ts-rename :exit t)
         ("s" persp-save-state-to-file :exit t)
         ("S" persp-save-to-file-by-names :exit t)
         ("t" persp-temporarily-display-buffer :exit t)
         ("w" dotemacs/layout-workspaces-transient-state :exit t)
-        ("x" dotemacs/layouts-ms-kill)
-        ("X" dotemacs/layouts-ms-kill-other :exit t))
+        ("x" dotemacs/layouts-ts-kill)
+        ("X" dotemacs/layouts-ts-kill-other :exit t))
     (dotemacs-set-leader-keys "l" 'dotemacs/layouts-transient-state/body)
 
-    ;; This enables the dynamic behavior from micro-states using ?
-    (add-hook 'dotemacs-post-user-config-hook
-              (lambda ()
-                (setq dotemacs/layouts-transient-state/hint
-                      `(concat
-                        ,(when dotemacs-show-transient-state-title
-                           (concat
-                            (propertize "Layouts Transient State"
-                                        'face 'dotemacs-transient-state-title-face)
-                            "\n"))
-                        (dotemacs//layouts-ms-doc))))
-              t)
-
-     (defun dotemacs/layout-switch-by-pos (pos)
-       "Switch to perspective of position POS."
-       (let ((persp-to-switch
-              (nth pos (persp-names-current-frame-fast-ordered))))
-         (if persp-to-switch
-             (persp-switch persp-to-switch)
-           (when (y-or-n-p
-                  (concat "Perspective in this position doesn't exist.\n"
-                          "Do you want to create one? "))
-             (let ((persp-reset-windows-on-nil-window-conf t))
-               (persp-switch nil)
-               (dotemacs-home-delete-other-windows))))))
+    (defun dotemacs/layout-switch-by-pos (pos)
+      "Switch to perspective of position POS."
+      (let ((persp-to-switch
+             (nth pos (persp-names-current-frame-fast-ordered))))
+        (if persp-to-switch
+            (persp-switch persp-to-switch)
+          (when (y-or-n-p
+                 (concat "Perspective in this position doesn't exist.\n"
+                         "Do you want to create one? "))
+            (let ((persp-reset-windows-on-nil-window-conf t))
+              (persp-switch nil)
+              (dotemacs-home-delete-other-windows))))))
 
      ;; Define all `dotemacs/persp-switch-to-X' functions
      (dolist (i (number-sequence 9 0 -1))
@@ -401,36 +390,31 @@ FRAME defaults to the current frame."
        (when dotemacs-default-layout-name
          (persp-switch dotemacs-default-layout-name)))
 
-     (defun dotemacs/layouts-ms-rename ()
+     (defun dotemacs/layouts-ts-rename ()
        "Rename a layout and get back to the perspectives transient-state."
        (interactive)
        (call-interactively 'persp-rename)
        (spacemacs/layouts-transient-state/body))
 
-     (defun dotemacs/layouts-ms-close ()
+     (defun dotemacs/layouts-ts-close ()
        "Kill current perspective"
        (interactive)
        (persp-kill-without-buffers (dotemacs//current-layout-name)))
 
-     (defun dotemacs/layouts-ms-close-other ()
+     (defun dotemacs/layouts-ts-close-other ()
        (interactive)
        (call-interactively 'dotemacs/helm-persp-close)
        (spacemacs/layouts-transient-state/body))
 
-     (defun dotemacs/layouts-ms-kill ()
+     (defun dotemacs/layouts-ts-kill ()
        "Kill current perspective"
        (interactive)
        (persp-kill (dotemacs//current-layout-name)))
 
-     (defun dotemacs/layouts-ms-kill-other ()
+     (defun dotemacs/layouts-ts-kill-other ()
        (interactive)
        (call-interactively 'dotemacs/helm-persp-kill)
        (spacemacs/layouts-transient-state/body))
-
-     (defun dotemacs/layouts-ms-last ()
-       "Switch to the last active perspective"
-       (interactive)
-       (persp-switch persp-last-persp-name))
 
      ;; Custom perspectives transient-state -------------------------------------
 
