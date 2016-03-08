@@ -35,6 +35,10 @@
     ;; prompt.
     (setq magit-repo-dirs (mapcar 'directory-file-name project-dirs))))
 
+(dotemacs-use-package-add-hook magit
+  :post-init
+  (push "^\\*magit\.\+\$" dotemacs-useless-buffers-regexp))
+
 (use-package magit                      ; The one and only Git frontend
   :ensure t
   :commands (magit-blame-mode
