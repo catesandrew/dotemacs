@@ -170,8 +170,7 @@ and the arguments for flyckeck-clang based on a project-specific text file."
 (dotemacs-use-package-add-hook semantic
   :post-init
   (progn
-    (semantic/enable-semantic-mode 'c-mode)
-    (semantic/enable-semantic-mode 'c++-mode)))
+    (dotemacs/add-to-hooks 'semantic-mode '(c-mode-hook c++-mode-hook))))
 
 (dotemacs-use-package-add-hook srefactor
   :post-init

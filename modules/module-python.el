@@ -439,7 +439,7 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 (dotemacs-use-package-add-hook semantic
   :post-init
   (progn
-    (semantic/enable-semantic-mode 'python-mode)
+    (add-hook 'python-mode-hook 'semantic-mode)
     (defadvice semantic-python-get-system-include-path (around semantic-python-skip-error-advice activate)
       "Don't cause error when Semantic cannot retrieve include
 paths for Python then prevent the buffer to be switched. This

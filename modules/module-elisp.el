@@ -158,7 +158,7 @@
 (dotemacs-use-package-add-hook semantic
   :post-init
   (progn
-    (semantic/enable-semantic-mode 'emacs-lisp-mode)
+    (add-hook 'emacs-lisp-mode-hook 'semantic-mode)
     (with-eval-after-load 'semantic
       (semantic-default-elisp-setup))))
 
