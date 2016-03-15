@@ -123,27 +123,16 @@
 
     ; (smartparens-mode +1)
 
-    ; how-to-check-whether-a-minor-mode-e-g-flymake-mode-is-on
-    ; http://stackoverflow.com/questions/10088168/
-    ; however, hs-minor-mode already set in `init.el`
-    ; (unless (bound-and-true-p hs-minor-mode)
-    ;   (hs-minor-mode t))
     (dotemacs-enable-hs-minor-mode)
-    ;; (set-syntax-table dotemacs/prog-syntax-table)
-    ;; (defadvice evil-inner-word (around bars-as-word activate)
-    ;;   (let ((table dotemacs/prog-syntax-table))
-    ;;     (with-syntax-table table
-    ;;       ad-do-it)))
+    (set-syntax-table dotemacs/prog-syntax-table)
+    (defadvice evil-inner-word (around bars-as-word activate)
+      (let ((table dotemacs/prog-syntax-table))
+        (with-syntax-table table
+          ad-do-it)))
 
     (auto-fill-comments-mode)
-    (subword-mode +1) ;; camelCase
+    ;; (subword-mode +1) ;; camelCase
     (dotemacs-highlight-TODO-words)))
-
-;; (use-package outline                    ; Navigate outlines in buffers
-;;   :defer t
-;;   :init (dolist (hook '(text-mode-hook prog-mode-hook))
-;;           (add-hook hook #'outline-minor-mode))
-;;   :diminish (outline-minor-mode . "📑"))
 
 (use-package aggressive-indent
   :defer t
