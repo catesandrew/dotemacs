@@ -224,7 +224,6 @@ evil-normal state."
     (define-key evil-window-map (kbd "<up>") 'evil-window-up)
     (define-key evil-window-map (kbd "<down>") 'evil-window-down)
     (dotemacs-set-leader-keys "re" 'evil-show-registers)
-    (define-key evil-visual-state-map (kbd "<escape>") 'keyboard-quit)
     ;; motions keys for help buffers
     (evil-define-key 'motion help-mode-map (kbd "<escape>") 'quit-window)
     (evil-define-key 'motion help-mode-map (kbd "<tab>") 'forward-button)
