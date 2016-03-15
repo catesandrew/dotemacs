@@ -26,6 +26,9 @@
 
 ;; config
 
+(defvar-local auto-completion-front-end 'company
+  "Which auto-completion front end to use.")
+
 (defvar auto-completion-return-key-behavior 'complete
   "What the RET key should do when auto-completion menu is active.
 Possible values are `complete' or `nil'.")
@@ -63,13 +66,9 @@ to complet without blocking common line endings.")
 
 (dotemacs-add-toggle auto-completion
   :status
-  (if (boundp 'auto-completion-front-end)
-      (if (eq 'company auto-completion-front-end)
-          company-mode
-        auto-complete-mode)
-    ;; default completion hardcoded to be company for now
-    (setq auto-completion-front-end 'company)
-    nil)
+  (if (eq 'company auto-completion-front-end)
+      (bound-and-true-p company-mode)
+    (bound-and-true-p auto-complete-mode))
   :on
   (progn
     (if (eq 'company auto-completion-front-end)
