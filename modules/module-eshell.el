@@ -60,7 +60,7 @@ the user activate the completion manually."
         "Sets the company frontend to `company-preview-frontend' in e-shell mode."
         (setq-local company-frontends '(company-preview-frontend)))
       (add-hook 'eshell-mode-hook
-                'dotemacs//eshell-switch-company-frontend))))
+         'dotemacs//eshell-switch-company-frontend))))
 
 (use-package esh-help
   :defer t
@@ -144,7 +144,8 @@ is achieved by adding the relevant text properties."
         (erase-buffer))
       (eshell-send-input))
 
-    (add-hook 'eshell-mode-hook 'dotemacs//init-eshell))
+    (add-hook 'eshell-mode-hook 'dotemacs//init-eshell)
+    (add-hook 'eshell-mode-hook 'dotemacs/disable-hl-line-mode))
   :config
   (progn
     (require 'esh-opt)

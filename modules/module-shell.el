@@ -51,11 +51,17 @@
   (let ((default-directory (projectile-project-root)))
     (call-interactively 'dotemacs/default-pop-shell)))
 
+(defun dotemacs/disable-hl-line-mode ()
+  "Locally disable global-hl-line-mode"
+  (interactive)
+  (setq-local global-hl-line-mode nil))
+
 
 ;; packages
 (use-package comint
   :init
-  (setq comint-prompt-read-only t))
+  (setq comint-prompt-read-only t)
+  (add-hook 'comint-mode-hook 'dotemacs/disable-hl-line-mode))
 
 (dotemacs-use-package-add-hook magit
   :post-init
@@ -118,7 +124,8 @@ Executes the appropriate behavior for certain commands."
                 (funcall 'man command))
                ;; Send other commands to the default handler.
                (t (comint-simple-send proc command))))))
-    (add-hook 'shell-mode-hook 'shell-comint-input-sender-hook)))
+    (add-hook 'shell-mode-hook 'shell-comint-input-sender-hook)
+    (add-hook 'shell-mode-hook 'dotemacs/disable-hl-line-mode)))
 
 (use-package shell-pop
   :defer t
@@ -201,7 +208,8 @@ Executes the appropriate behavior for certain commands."
       (kbd "C-j") 'term-send-down)
     (evil-define-key 'normal term-raw-map
       (kbd "C-k") 'term-send-up
-      (kbd "C-j") 'term-send-down)))
+      (kbd "C-j") 'term-send-down)
+    (add-hook 'term-mode-hook 'dotemacs/disable-hl-line-mode)))
 
 (use-package xterm-color
   :ensure t
