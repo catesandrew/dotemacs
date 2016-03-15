@@ -186,7 +186,7 @@ debug-init and load the given list of packages."
     "/"  'dotemacs-doc-view-search-new-query
     "?"  'dotemacs-doc-view-search-new-query-backward
     "gg" 'doc-view-first-page
-    "G"  'doc-view-last-page
+    "G"  'dotemacs/doc-view-goto-page
     "gt" 'doc-view-goto-page
     "h"  'doc-view-previous-page
     "j"  'doc-view-next-line-or-next-page
@@ -209,6 +209,14 @@ debug-init and load the given list of packages."
       "Initiate a new query."
       (interactive)
       (doc-view-search 'newquery t))
+
+    (defun dotemacs/doc-view-goto-page (&optional count)
+      (interactive (list
+                    (when current-prefix-arg
+                      (prefix-numeric-value current-prefix-arg))))
+      (if (null count)
+          (doc-view-last-page)
+        (doc-view-goto-page count)))
 
     ;; fixed a weird issue where toggling display does not
     ;; swtich to text mode
