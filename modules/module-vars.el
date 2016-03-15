@@ -139,9 +139,6 @@ at start time despite the value of `dotemacs-auto-resume-layouts'.")
 (defvar git-magit-status-fullscreen t
   "If non nil magit-status buffer is displayed in fullscreen.")
 
-(defvar dotemacs-use-ido nil
-  "If non nil then `ido' replaces `helm' for some commands.")
-
 ;; only for backward compatibility
 (defalias 'dotemacs-mode 'emacs-lisp-mode)
 

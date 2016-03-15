@@ -38,8 +38,6 @@
   :init
   (progn
     (ido-vertical-mode t)
-    ;; (when dotemacs-use-ido
-    ;;   (dotemacs-set-leader-keys "ff" 'ido-find-file))
     (defun dotemacs//ido-minibuffer-setup ()
       "Setup the minibuffer."
       ;; Since ido is implemented in a while loop where each
