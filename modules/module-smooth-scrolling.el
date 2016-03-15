@@ -16,7 +16,7 @@
 
 ;;; Code:
 
-(defvar dotemacs-smooth-scrolling t
+(defvar dotemacs-smooth-scrolling nil
   "If non-nil, smooth scrolling (native-scrolling) is enabled.
 Smooth scrolling overrides the default behavior of Emacs which
 recenters the point when it reaches the top or bottom of the
