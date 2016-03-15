@@ -6,6 +6,7 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
 (require 'use-package)
 (require 'core-vars)
 ;; (require 'core-funcs)
@@ -19,7 +20,8 @@
 (require 'module-utils)
 (require 'use-package)
 
-;;; Code:
+
+;; vars
 
 (declare-function dotemacs-home "module-utils")
 
@@ -32,6 +34,22 @@
 
 (defvar layouts-autosave-delay 900
   "Delay in seconds between each layouts auto-save.")
+
+(defvar dotemacs--layouts-layouts-ts-full-hint-toggle 0
+  "Display a short doc when nil, full doc otherwise.")
+
+(defvar dotemacs--last-selected-layout persp-nil-name
+  "Previously selected layout.")
+
+(defvar dotemacs--custom-layout-alist nil
+  "List of custom layouts with their bound keys.
+ Do not modify directly, use provided `dotemacs-define-custom-layout'")
+
+(defvar dotemacs--layouts-autosave-timer nil
+  "Timer for layouts auto-save.")
+
+
+;; functions
 
 (defun dotemacs//current-layout-name ()
   "Get name of the current perspective."
@@ -211,6 +229,7 @@ FRAME defaults to the current frame."
       (call-interactively 'dotemacs/workspaces-transient-state/body)
     (message "You need the eyebrowse layer to use this feature.")))
 
+
 ;; packages
 
 (use-package persp-mode
@@ -228,19 +247,6 @@ FRAME defaults to the current frame."
 
     ;; always activate persp-mode
     (persp-mode)
-
-    (defvar dotemacs--layouts-layouts-ts-full-hint-toggle 0
-      "Display a short doc when nil, full doc otherwise.")
-
-    (defvar dotemacs--last-selected-layout persp-nil-name
-      "Previously selected layout.")
-
-    (defvar dotemacs--custom-layout-alist nil
-      "List of custom layouts with their bound keys.
- Do not modify directly, use provided `dotemacs-define-custom-layout'")
-
-    (defvar dotemacs--layouts-autosave-timer nil
-      "Timer for layouts auto-save.")
 
     (defun dotemacs/jump-to-last-layout ()
       "Open the previously selected layout, if it exists."

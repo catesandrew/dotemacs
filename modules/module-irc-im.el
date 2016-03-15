@@ -6,6 +6,7 @@
 ;;
 ;;; Commentary:
 ;;
+;;; Code:
 (require 'use-package)
 (require 'core-vars)
 ;; (require 'core-funcs)
@@ -18,7 +19,8 @@
 ;; (require 'module-core)
 (require 'module-utils)
 
-;;; Code:
+
+;; vars
 
 (dotemacs-defvar-company-backends erc-mode)
 
@@ -34,7 +36,8 @@
 (defvar erc-dotemacs-layout-binding "E"
   "Binding used in the setup for `dotemacs-layouts' micro-state")
 
-
+
+;; packages
 
 (use-package erc                        ; Powerful IRC client
   :defer t
