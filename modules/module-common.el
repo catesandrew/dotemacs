@@ -145,6 +145,9 @@
     (when-let (tidy5 (executable-find "tidy5"))
       (dotemacs/set-executable-tidy tidy5))
 
+    ;; this binding change can cause brittle behavior
+    ;; (define-key evil-visual-state-map (kbd "<escape>") 'keyboard-quit)
+
     ;; (dotemacs-define-custom-layout "NixOS Configuration"
     ;;   :binding "N"
     ;;   :body
