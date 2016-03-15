@@ -123,12 +123,13 @@
   :defer t
   :init
   (progn
-
     (setq org-startup-indented t
-          org-clock-persist-file
-          (concat dotemacs-cache-directory "org-clock-save.el")
-          org-id-locations-file
-          (concat dotemacs-cache-directory ".org-id-locations")
+          org-clock-persist-file (concat dotemacs-cache-directory
+                                         "org-clock-save.el")
+          org-id-locations-file (concat dotemacs-cache-directory
+                                        ".org-id-locations")
+          org-publish-timestamp-directory (concat dotemacs-cache-directory
+                                                  ".org-timestamps/")
           org-log-done t
           org-startup-with-inline-images t
           org-src-fontify-natively t ;; Fontify org-mode code blocks
