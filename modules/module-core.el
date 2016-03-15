@@ -535,9 +535,9 @@ argument takes the kindows rotate backwards."
 
 ;; check when opening large files - literal file open
 (defun dotemacs/check-large-file ()
-  (when (> (nth 7 (file-attributes (buffer-file-name)))
-           (* 1024 1024 dotemacs-large-file-size))
-    (when (y-or-n-p "This is a large file, open literally to avoid performance issues?")
+  (let ((size (nth 7 (file-attributes (buffer-file-name)))))
+    (when (and size (> size (* 1024 1024 dotemacs-large-file-size))
+               (y-or-n-p "This is a large file, open literally to avoid performance issues?"))
       (setq buffer-read-only t)
       (buffer-disable-undo)
       (fundamental-mode))))
