@@ -28,6 +28,14 @@
 (defvar erc-enable-sasl-auth t
   "If non nil then use SASL authenthication with ERC.")
 
+(defvar erc-dotemacs-layout-name "@ERC"
+  "Name used in the setup for `dotemacs-layouts' micro-state")
+
+(defvar erc-dotemacs-layout-binding "E"
+  "Binding used in the setup for `dotemacs-layouts' micro-state")
+
+
+
 (use-package erc                        ; Powerful IRC client
   :defer t
   :init
@@ -227,20 +235,21 @@
   :post-init
   (add-hook 'erc-mode-hook 'emoji-cheat-sheet-plus-display-mode))
 
-;; (dotemacs-use-package-add-hook persp-mode
-;;   :post-init
-  (dotemacs-define-custom-layout "@ERC"
-    :binding "E"
-    :body
-    (progn
-      (add-hook 'erc-mode #'(lambda ()
-                              (persp-add-buffer (current-buffer))))
-      (call-interactively 'erc)))
-  :post-config
+(with-eval-after-load persp-mode
   ;; do not save erc buffers
   (push (lambda (b) (with-current-buffer b (eq major-mode 'erc-mode)))
         persp-filter-save-buffers-functions)
-  ;; )
+
+  (dotemacs-define-custom-layout erc-dotemacs-layout-name
+    :binding erc-dotemacs-layout-binding
+    :body
+    (progn
+      (defun dotemacs-layouts/add-erc-buffer-to-persp ()
+        (persp-add-buffer (current-buffer)
+                          (persp-get-by-name
+                           erc-dotemacs-layout-name)))
+      (add-hook 'erc-mode-hook #'dotemacs-layouts/add-erc-buffer-to-persp)
+      (call-interactively 'erc))))
 
 (dotemacs-use-package-add-hook smooth-scrolling
   :post-init
