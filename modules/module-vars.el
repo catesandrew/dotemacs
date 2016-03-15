@@ -140,8 +140,7 @@ at start time despite the value of `dotemacs-auto-resume-layouts'.")
   "If non nil magit-status buffer is displayed in fullscreen.")
 
 (defvar dotemacs-use-ido nil
-  "If non nil then `ido' replaces `helm' for some commands. For now only
-`find-files' (SPC f f) is replaced.")
+  "If non nil then `ido' replaces `helm' for some commands.")
 
 ;; only for backward compatibility
 (defalias 'dotemacs-mode 'emacs-lisp-mode)

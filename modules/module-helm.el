@@ -297,8 +297,11 @@ tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
         (helm :sources '(helm-available-repls)
               :buffer "*helm repls*")))
 
-    ;; use helm by default for M-x
+    ;; use helm by default for M-x, C-x C-f, and C-x b
     (global-set-key (kbd "M-x") 'helm-M-x)
+    (unless dotemacs-use-ido
+      (global-set-key (kbd "C-x C-f") 'dotemacs/helm-find-files)
+      (global-set-key (kbd "C-x b") 'helm-buffers-list))
 
     (dotemacs-set-leader-keys
       "<f1>" 'helm-apropos
