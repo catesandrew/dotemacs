@@ -89,8 +89,12 @@
 
 (dotemacs-use-package-add-hook js2-mode
   :post-init
-  (add-hook 'react-mode-hook 'js2-imenu-extras-mode)
-  (add-hook 'react-mode-hook 'js2-minor-mode))
+  (progn
+    (defun react//setup-imenu ()
+      (setq imenu-create-index-function #'js2-mode-create-imenu-index))
+    (add-hook 'react-mode-hook 'react//setup-imenu)
+    (add-hook 'react-mode-hook 'js2-imenu-extras-mode)
+    (add-hook 'react-mode-hook 'js2-minor-mode)))
 
 (dotemacs-use-package-add-hook js2-refactor
   :post-init
