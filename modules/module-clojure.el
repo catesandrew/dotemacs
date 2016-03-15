@@ -349,6 +349,7 @@
 
 (use-package clj-refactor
   :defer t
+  :ensure t
   :init
   (add-hook 'clojure-mode-hook 'clj-refactor-mode)
   :config
@@ -385,6 +386,46 @@
       "rua" 'cljr-unwind-all
       "rup" 'cljr-update-project-dependencies
       "ruw" 'cljr-unwind)))
+
+(dotemacs-use-package-add-hook clojure-mode
+  :post-config
+  (progn
+    ;; https://github.com/jaycfields/unplugged-pack/blob/master/init.el
+    (dolist (x '((true        т)
+                 (false       ғ)
+                 (:keys       ӄ)
+                 (:strs       ş)
+                 (nil         Ø)
+                 (partial     ∂)
+                 (with-redefs я)
+                 (comp        º)
+                 (apply       ζ)
+                 (a-fn1       α)
+                 (a-fn2       β)
+                 (a-fn3       γ)
+                 (no-op       ε)))
+
+      '(font-lock-add-keywords
+        'clojure-mode `((,(concat "[\[({[:space:]]"
+                                  "\\(" (symbol-name (first x)) "\\)"
+                                  "[\])}[:space:]]")
+                         (0 (progn (compose-region (match-beginning 1)
+                                                   (match-end 1) ,(symbol-name (second x)))
+                                     nil)))))
+      '(font-lock-add-keywords
+        'clojure-mode `((,(concat "^"
+                                  "\\(" (symbol-name (first x)) "\\)"
+                                  "[\])}[:space:]]")
+                         (0 (progn (compose-region (match-beginning 1)
+                                                   (match-end 1) ,(symbol-name (second x)))
+                                   nil)))))
+      '(font-lock-add-keywords
+        'clojure-mode `((,(concat "[\[({[:space:]]"
+                                  "\\(" (symbol-name (first x)) "\\)"
+                                  "$")
+                         (0 (progn (compose-region (match-beginning 1)
+                                                   (match-end 1) ,(symbol-name (second x)))
+                                   nil))))))))
 
 (use-package clojure-mode
   :defer t
