@@ -385,9 +385,10 @@ below. Anything else exits."
             ad-do-it)))
 
       ;; Define history commands for comint
-      (evil-define-key 'insert comint-mode-map
-        (kbd "C-k") 'comint-previous-input
-        (kbd "C-j") 'comint-next-input)
+      (when (eq dotemacs-editing-style 'vim)
+        (evil-define-key 'insert comint-mode-map
+          (kbd "C-k") 'comint-previous-input
+          (kbd "C-j") 'comint-next-input))
       (evil-define-key 'normal comint-mode-map
         (kbd "C-k") 'comint-previous-input
         (kbd "C-j") 'comint-next-input)))

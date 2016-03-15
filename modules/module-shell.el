@@ -203,9 +203,10 @@ Executes the appropriate behavior for certain commands."
     (evil-define-key 'insert term-raw-map (kbd "C-c C-z") 'term-stop-subjob)
     (evil-define-key 'insert term-raw-map (kbd "<tab>") 'term-send-tab)
 
-    (evil-define-key 'insert term-raw-map
-      (kbd "C-k") 'term-send-up
-      (kbd "C-j") 'term-send-down)
+    (when (eq dotemacs-editing-style 'vim)
+      (evil-define-key 'insert term-raw-map
+        (kbd "C-k") 'term-send-up
+        (kbd "C-j") 'term-send-down))
     (evil-define-key 'normal term-raw-map
       (kbd "C-k") 'term-send-up
       (kbd "C-j") 'term-send-down)
