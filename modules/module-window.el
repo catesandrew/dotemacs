@@ -63,15 +63,16 @@
       "9" 'select-window-9)
     (window-numbering-mode 1))
 
-  (defun dotemacs//window-numbering-assign (windows)
-    "Custom number assignment for special buffers."
-    (mapc (lambda (w)
-            (when (and (boundp 'neo-global--window)
-                       (eq w neo-global--window))
-              (window-numbering-assign w 0)))
-          windows))
-  (add-hook 'window-numbering-before-hook 'dotemacs//window-numbering-assign)
-  (add-hook 'neo-after-create-hook '(lambda (w) (window-numbering-update))))
+  ;; make sure neotree is always 0
+  (defun dotemacs//window-numbering-assign ()
+    "Custom number assignment for neotree."
+    (when (and (boundp 'neo-buffer-name)
+               (string= (buffer-name) neo-buffer-name))
+      0))
+  ;; using lambda to work-around a bug in window-numbering, see
+  ;; https://github.com/nschum/window-numbering.el/issues/10
+  (setq window-numbering-assign-func
+        (lambda () (dotemacs//window-numbering-assign))))
 
 (provide 'module-window)
 ;;; module-window.el ends here
