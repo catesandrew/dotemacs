@@ -130,11 +130,11 @@ with 2 themes variants, one dark and one light.")
   "The current theme.")
 
 ;; Source Code Pro for Powerline
-(defvar dotemacs-default-font '("PragmataPro"
+(defvar dotemacs-default-font '("PragmataProMono"
                                 :size 14
                                 :weight normal
                                 :width normal
-                                :powerline-scale 1.4)
+                                :powerline-scale 1.2)
   "Default font. `powerline-scale' allows to quickly tweak the mode-line
 size to make separators look not too crappy.")
 
