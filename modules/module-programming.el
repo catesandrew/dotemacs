@@ -124,7 +124,7 @@
     ; (smartparens-mode +1)
 
     (dotemacs-enable-hs-minor-mode)
-    (set-syntax-table dotemacs/prog-syntax-table)
+    ;; (set-syntax-table dotemacs/prog-syntax-table)
     (defadvice evil-inner-word (around bars-as-word activate)
       (let ((table dotemacs/prog-syntax-table))
         (with-syntax-table table
