@@ -234,7 +234,7 @@
       ("e" ahs-to-iedit :exit t)
       ("n" dotemacs-quick-ahs-forward)
       ("N" dotemacs-quick-ahs-backward)
-      ("p" dotemacs/quick-ahs-backward)
+      ("p" dotemacs-quick-ahs-backward)
       ("R" ahs-back-to-start)
       ("r" ahs-change-range)
       ("/" dotemacs-helm-project-smart-do-search-region-or-symbol :exit t)
