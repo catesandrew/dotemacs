@@ -475,10 +475,6 @@
   (push '("*cider-doc*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
         popwin:special-display-config))
 
-(dotemacs-use-package-add-hook rainbow-delimiters
-  :post-init
-  (add-hook 'cider-mode-hook 'rainbow-delimiters-mode))
-
 (unless (version< emacs-version "24.4")
   (add-hook 'cider-mode-hook 'subword-mode))
 

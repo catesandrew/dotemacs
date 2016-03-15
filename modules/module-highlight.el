@@ -213,7 +213,7 @@ Press any other key to exit." component (eval var) component component)))
   (progn
     (dotemacs-set-leader-keys "tCd" 'rainbow-delimiters-mode)
     (when (member dotemacs-highlight-delimiters '(any all))
-      (dotemacs/add-to-hooks 'rainbow-delimiters-mode '(prog-mode-hook)))))
+      (dotemacs/add-to-hooks 'rainbow-delimiters-mode '(dotemacs-prog-mode-hook)))))
 
 
 ;; hl

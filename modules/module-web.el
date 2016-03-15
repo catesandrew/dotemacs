@@ -71,7 +71,7 @@
 
     ;; Run Prog Mode hooks, because for whatever reason CSS Mode derives from
     ;; `fundamental-mode'.
-    ;; (add-hook 'css-mode-hook (lambda () (run-hooks 'dotemacs-prog-mode-hook)))
+    (add-hook 'css-mode-hook (lambda () (run-hooks 'dotemacs-prog-mode-hook)))
 
     ;; Custom iMenu
     (defun css-imenu-make-index ()
@@ -159,7 +159,11 @@
 
 (use-package jade-mode
   :defer t
-  :ensure t)
+  :ensure t
+  :init
+  ;; Explicitly run prog-mode hooks since jade-mode does not derivate from
+  ;; prog-mode major-mode
+  (add-hook 'jade-mode-hook (lambda () (run-hooks 'dotemacs-prog-mode-hook))))
 
 (use-package less-css-mode
   :defer t
@@ -211,17 +215,6 @@
     (tagedit-add-experimental-features)
     (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))
     (dotemacs-diminish tagedit-mode " Ⓣ" " T")))
-
-(dotemacs-use-package-add-hook rainbow-delimiters
-  :post-init
-  (progn
-    (dotemacs/add-to-hooks 'rainbow-delimiters-mode '(haml-mode-hook
-                                                      jade-mode-hook
-                                                      less-css-mode-hook
-                                                      sass-mode-hook
-                                                      css-mode-hook
-                                                      scss-mode-hook
-                                                      slim-mode-hook))))
 
 (use-package web-mode                   ; Template editing
   :defer t
