@@ -37,6 +37,17 @@ Ensure that helm is required before calling FUNC."
 (dotemacs||set-helm-key "sww" helm-wikipedia-suggest)
 (dotemacs||set-helm-key "swg" helm-google-suggest)
 
+(defun dotemacs-helm//find-files-edit (candidate)
+  (dired (file-name-directory candidate))
+  (dired-goto-file candidate)
+  (dired-toggle-read-only))
+(defun dotemacs-helm/find-files-edit ()
+  "Exits helm, opens a dired buffer and immediately switches to editable mode."
+  (interactive)
+  (helm-exit-and-execute-action 'dotemacs-helm//find-files-edit))
+(with-eval-after-load 'helm-files
+  (define-key helm-find-files-map (kbd "C-c C-e") 'dotemacs-helm/find-files-edit))
+
 ;;; Variables:
 
 (defvar helm-resize nil
