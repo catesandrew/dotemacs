@@ -35,19 +35,6 @@
 (defvar layouts-autosave-delay 900
   "Delay in seconds between each layouts auto-save.")
 
-(defvar dotemacs--layouts-layouts-ts-full-hint-toggle 0
-  "Display a short doc when nil, full doc otherwise.")
-
-(defvar dotemacs--last-selected-layout persp-nil-name
-  "Previously selected layout.")
-
-(defvar dotemacs--custom-layout-alist nil
-  "List of custom layouts with their bound keys.
- Do not modify directly, use provided `dotemacs-define-custom-layout'")
-
-(defvar dotemacs--layouts-autosave-timer nil
-  "Timer for layouts auto-save.")
-
 
 ;; functions
 
@@ -247,6 +234,19 @@ FRAME defaults to the current frame."
 
     ;; always activate persp-mode
     (persp-mode)
+
+    (defvar dotemacs--layouts-layouts-ts-full-hint-toggle 0
+      "Display a short doc when nil, full doc otherwise.")
+
+    (defvar dotemacs--last-selected-layout persp-nil-name
+      "Previously selected layout.")
+
+    (defvar dotemacs--custom-layout-alist nil
+      "List of custom layouts with their bound keys.
+     Do not modify directly, use provided `dotemacs-define-custom-layout'")
+
+    (defvar dotemacs--layouts-autosave-timer nil
+      "Timer for layouts auto-save.")
 
     (defun dotemacs/jump-to-last-layout ()
       "Open the previously selected layout, if it exists."
