@@ -159,7 +159,7 @@ Supported properties:
 
 (defun dotemacs-get-package-directory (pkg)
   "Return the directory of PKG. Return nil if not found."
-  (let ((elpa-dir (concat user-emacs-directory "elpa/")))
+  (let ((elpa-dir (file-name-as-directory package-user-dir)))
     (when (file-exists-p elpa-dir)
       (let ((dir (reduce (lambda (x y) (if x x y))
                          (mapcar (lambda (x)
