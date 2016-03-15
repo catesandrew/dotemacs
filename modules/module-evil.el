@@ -304,8 +304,8 @@ Example: (evil-map visual \"<\" \"<gv\")"
     (dotemacs-set-leader-keys
      "n," 'dotemacs/scroll-transient-state/evil-scroll-page-up
      "n." 'dotemacs/scroll-transient-state/evil-scroll-page-down
-     "n<" 'dotemacs/scroll-transient-state/scroll-half-page-up
-     "n>" 'dotemacs/scroll-transient-state/scroll-half-page-down)
+     "n<" 'dotemacs/scroll-transient-state/evil-scroll-up
+     "n>" 'dotemacs/scroll-transient-state/evil-scroll-down)
 
     ;; pasting transient-state
     (evil-define-command dotemacs//transient-state-0 ()
