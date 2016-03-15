@@ -447,8 +447,9 @@ Available PROPS:
   One or several EXPRESSIONS that are going to be evaluated after
   we change into the perspective NAME."
       (declare (indent 1))
-      (let* ((func (dotemacs//custom-layout-func-name name))
-             (binding (car (dotemacs-mplist-get props :binding)))
+      (let* ((name (eval name))
+             (func (dotemacs//custom-layout-func-name name))
+             (binding (eval (car (dotemacs-mplist-get props :binding))))
              (body (dotemacs-mplist-get props :body))
              (already-defined? (cdr (assoc binding
                                            dotemacs--custom-layout-alist))))
@@ -465,7 +466,7 @@ Available PROPS:
            (if ,already-defined?
                (unless (equal ,already-defined? ,name)
                  (dotemacs-buffer/warning "Replacing existing binding \"%s\" for %s with %s"
-                       ,binding ,already-defined? ,name )
+                       ,binding ,already-defined? ,name)
                  (push '(,binding . ,name) dotemacs--custom-layout-alist))
              (push '(,binding . ,name) dotemacs--custom-layout-alist)))))
 
