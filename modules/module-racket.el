@@ -58,7 +58,7 @@
 `insert state'."
       (interactive)
       (racket-run-and-switch-to-repl)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (defun dotemacs-racket-send-last-sexp-focus ()
       "Call `racket-send-last-sexp' and switch to REPL buffer in
@@ -66,7 +66,7 @@
       (interactive)
       (racket-send-last-sexp)
       (racket-repl)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (defun dotemacs-racket-send-definition-focus ()
       "Call `racket-send-definition' and switch to REPL buffer in
@@ -74,7 +74,7 @@
       (interactive)
       (racket-send-definition)
       (racket-repl)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (defun dotemacs-racket-send-region-focus (start end)
       "Call `racket-send-region' and switch to REPL buffer in
@@ -82,7 +82,7 @@
       (interactive "r")
       (racket-send-region start end)
       (racket-repl)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (dolist (prefix '(("mg" . "navigation")
                       ("mh" . "doc")

@@ -69,13 +69,13 @@
       (interactive)
       (elm-repl-push-decl)
       (run-elm-interactive)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (defun dotemacs/elm-repl-push-focus ()
       "Send current region to the REPL and focus it in insert state."
       (elm-repl-push)
       (run-elm-interactive)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (dotemacs-set-leader-keys-for-major-mode 'elm-mode
       ;; make

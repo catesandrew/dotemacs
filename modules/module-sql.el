@@ -73,28 +73,28 @@
       (interactive)
       (let ((sql-pop-to-buffer-after-send-region t))
         (call-interactively 'sql-send-string)
-        (dotemacs/normal-to-insert-state)))
+        (evil-insert-state)))
 
     (defun dotemacs/sql-send-buffer-and-focus ()
       "Send the buffer to SQLi and switch to SQLi in `insert state'."
       (interactive)
       (let ((sql-pop-to-buffer-after-send-region t))
         (sql-send-buffer)
-        (dotemacs/normal-to-insert-state)))
+        (evil-insert-state)))
 
     (defun dotemacs/sql-send-paragraph-and-focus ()
       "Send the paragraph to SQLi and switch to SQLi in `insert state'."
       (interactive)
       (let ((sql-pop-to-buffer-after-send-region t))
         (sql-send-paragraph)
-        (dotemacs/normal-to-insert-state)))
+        (evil-insert-state)))
 
     (defun dotemacs/sql-send-region-and-focus (start end)
       "Send region to SQLi and switch to SQLi in `insert state'."
       (interactive "r")
       (let ((sql-pop-to-buffer-after-send-region t))
         (sql-send-region start end)
-        (dotemacs/normal-to-insert-state)))
+        (evil-insert-state)))
 
     (dotemacs-set-leader-keys-for-major-mode 'sql-mode
       "'" 'dotemacs/sql-start

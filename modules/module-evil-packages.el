@@ -75,9 +75,12 @@
 (use-package evil-iedit-state
   :ensure t
   :commands (evil-iedit-state evil-iedit-state/iedit-mode)
-  :init (dotemacs-set-leader-keys "se" (if (eq dotemacs-editing-style 'emacs)
-                                           'iedit-mode
-                                         'evil-iedit-state/iedit-mode))
+  :init
+  (progn
+    (setq iedit-current-symbol-default t
+          iedit-only-at-symbol-boundaries t
+          iedit-toggle-key-default nil)
+    (dotemacs-set-leader-keys "se" 'evil-iedit-state/iedit-mode))
   :config
   ;; activate leader in iedit and iedit-insert states
   (define-key evil-iedit-state-map

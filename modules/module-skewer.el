@@ -57,14 +57,14 @@
         (interactive)
         (skewer-load-buffer)
         (skewer-repl)
-        (dotemacs/normal-to-insert-state))
+        (evil-insert-state))
 
       (defun dotemacs/skewer-eval-defun-and-focus ()
        "Execute function at point in browser and switch to REPL in insert state."
        (interactive)
        (skewer-eval-defun)
        (skewer-repl)
-       (dotemacs/normal-to-insert-state))
+       (evil-insert-state))
 
       (defun dotemacs/skewer-eval-region (beg end)
         "Execute the region as JavaScript code in the attached browser."
@@ -76,7 +76,7 @@
         (interactive "r")
         (dotemacs/skewer-eval-region beg end)
         (skewer-repl)
-        (dotemacs/normal-to-insert-state))
+        (evil-insert-state))
 
       (dolist (mode '(js2-mode web-mode react-mode css-mode html-mode))
         (dotemacs-declare-prefix-for-mode mode "ms" "skewer")

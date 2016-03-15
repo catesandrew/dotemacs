@@ -93,7 +93,7 @@
       "Call `yas-expand' and switch to `insert state'"
       (interactive)
       (call-interactively 'aya-expand)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
     (dotemacs-declare-prefix "iS" "auto-yasnippet")
     (dotemacs-set-leader-keys
       "iSc" 'aya-create
