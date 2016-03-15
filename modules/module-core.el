@@ -533,6 +533,15 @@ argument takes the kindows rotate backwards."
       (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
+;; check when opening large files - literal file open
+(defun dotemacs/check-large-file ()
+  (when (> (nth 7 (file-attributes (buffer-file-name)))
+           (* 1024 1024 dotemacs-large-file-size))
+    (when (y-or-n-p "This is a large file, open literally to avoid performance issues?")
+      (setq buffer-read-only t)
+      (buffer-disable-undo)
+      (fundamental-mode))))
+
 ;; found at http://emacswiki.org/emacs/KillingBuffers
 (defun dotemacs/kill-other-buffers ()
   "Kill all other buffers."
