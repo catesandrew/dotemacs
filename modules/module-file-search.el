@@ -408,6 +408,7 @@ Search for a search tool in the order provided by `dotemacs-search-tools'."
   (evil-define-key 'normal helm-ag-map "SPC" dotemacs-default-map)
   (evilified-state-evilify helm-ag-mode helm-ag-mode-map
     (kbd "RET") 'helm-ag-mode-jump-other-window
+    (kbd "gr") 'helm-ag--update-save-results
     (kbd "q") 'quit-window)))
 
 (provide 'module-file-search)
