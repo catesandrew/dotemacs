@@ -169,6 +169,9 @@
   "ck" 'kill-compilation
   "cr" 'recompile
   "cq" 'dotemacs/close-compilation-window)
+(with-eval-after-load 'compile
+  (define-key compilation-mode-map "r" 'recompile)
+  (define-key compilation-mode-map "g" nil))
 
 ;; narrow & widen -------------------------------------------------------------
 (dotemacs-set-leader-keys
