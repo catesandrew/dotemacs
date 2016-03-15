@@ -110,6 +110,8 @@ Possible values are `rbenv', `rvm' or `chruby'.)")
 (dotemacs-use-package-add-hook popwin
   :post-config
   (push '("*rspec-compilation*" :dedicated t :position bottom :stick t :noselect t :height 0.4)
+        popwin:special-display-config)
+  (push '("*rake-compilation*" :dedicated t :position bottom :stick t :noselect t :height 0.4)
         popwin:special-display-config))
 
 (use-package rbenv
