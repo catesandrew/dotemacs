@@ -182,14 +182,14 @@ point to the position of the join."
       (interactive)
       (ensime-inf-eval-buffer)
       (ensime-inf-switch)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (defun ensime-inf-eval-region-switch (start end)
       "Send region content to shell and switch to it in insert mode."
       (interactive "r")
       (ensime-inf-switch)
       (ensime-inf-eval-region start end)
-      (dotemacs/normal-to-insert-state))
+      (evil-insert-state))
 
     (dolist (prefix '(("mb" . "scala/build")
                       ("mc" . "scala/check")

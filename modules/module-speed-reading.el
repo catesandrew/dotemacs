@@ -25,7 +25,7 @@
     (defun speed-reading/start-spray ()
       "Start spray speed reading on current buffer at current point."
       (interactive)
-      (dotemacs/normal-to-insert-state)
+      (evil-insert-state)
       (spray-mode t)
       (internal-show-cursor (selected-window) nil))
     (dotemacs-set-leader-keys "aR" 'speed-reading/start-spray)

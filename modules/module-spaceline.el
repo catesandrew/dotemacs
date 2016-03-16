@@ -157,9 +157,8 @@ ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
     (setq spaceline-org-clock-p nil)
 
     (defun dotemacs//evil-state-face ()
-      (when (bound-and-true-p evil-state)
-          (let ((state (if (eq 'operator evil-state) evil-previous-state evil-state)))
-            (intern (format "dotemacs-%S-face" state)))))
+      (let ((state (if (eq 'operator evil-state) evil-previous-state evil-state)))
+        (intern (format "dotemacs-%S-face" state))))
     (setq spaceline-highlight-face-func 'dotemacs//evil-state-face)
 
     (let ((unicodep (dotemacs-symbol-value

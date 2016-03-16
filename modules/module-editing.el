@@ -175,35 +175,6 @@ Otherwise insert the date as Mar 04, 2014."
       "ilp" 'lorem-ipsum-insert-paragraphs
       "ils" 'lorem-ipsum-insert-sentences)))
 
-(use-package iedit
-  :defer t
-  :ensure t
-  :init
-  (progn
-    (setq iedit-current-symbol-default t
-          iedit-only-at-symbol-boundaries t
-          iedit-toggle-key-default nil))
-  :config
-  (progn
-    (defun iedit-toggle-selection ()
-      "Override default iedit function to be able to add arbitrary overlays.
-
-It will toggle the overlay under point or create an overlay of one character."
-      (interactive)
-      (iedit-barf-if-buffering)
-      (let ((ov (iedit-find-current-occurrence-overlay)))
-        (if ov
-            (iedit-restrict-region (overlay-start ov) (overlay-end ov) t)
-          (save-excursion
-            (push (iedit-make-occurrence-overlay (point) (1+ (point)))
-                  iedit-occurrences-overlays))
-          (setq iedit-mode
-                (propertize
-                 (concat " Iedit:" (number-to-string
-                                    (length iedit-occurrences-overlays)))
-                 'face 'font-lock-warning-face))
-          (force-mode-line-update))))))
-
 (unless (version< emacs-version "24.4")
   (use-package subword                    ; Subword/superword editing
     :defer t

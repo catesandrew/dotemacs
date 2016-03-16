@@ -511,13 +511,10 @@ Removes the automatic guessing of the initial value based on thing at point. "
     (add-hook 'helm-mode-hook 'simpler-helm-bookmark-keybindings)
 
     ;; helm navigation on hjkl
-    (defun dotemacs//helm-hjkl-navigation (&optional arg)
-      "Set navigation in helm on `jklh'.
-ARG non nil means that the editing style is `vim'."
+    (defun dotemacs//helm-hjkl-navigation (style)
+      "Set navigation on 'hjkl' for the given editing STYLE."
       (cond
-       (arg
-        ;; better navigation on homerow
-        ;; rebind `describe-key' for convenience
+       ((eq 'vim style)
         (define-key helm-map (kbd "C-j") 'helm-next-line)
         (define-key helm-map (kbd "C-k") 'helm-previous-line)
         (define-key helm-map (kbd "C-h") 'helm-next-source)
@@ -527,17 +524,16 @@ ARG non nil means that the editing style is `vim'."
           (dolist (keymap (list helm-find-files-map helm-read-file-map))
             (define-key keymap (kbd "C-l") 'helm-execute-persistent-action)
             (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)
+            ;; rebind `describe-key' for convenience
             (define-key keymap (kbd "C-S-h") 'describe-key))))
        (t
         (define-key helm-map (kbd "C-j") 'helm-execute-persistent-action)
         (define-key helm-map (kbd "C-k") 'helm-delete-minibuffer-contents)
         (define-key helm-map (kbd "C-h") nil)
         (define-key helm-map (kbd "C-l") 'helm-recenter-top-bottom-other-window))))
-
-    (add-hook 'dotemacs--hjkl-completion-navigation-functions
-              'dotemacs//helm-hjkl-navigation)
-    (run-hook-with-args 'dotemacs--hjkl-completion-navigation-functions
-                        (member dotemacs-editing-style '(vim hybrid)))
+    (add-hook 'dotemacs-editing-style-hook 'dotemacs//helm-hjkl-navigation)
+    ;; ensure that the correct bindings are set at startup
+    (dotemacs//helm-hjkl-navigation dotemacs-editing-style)
 
     (defun dotemacs/helm-edit ()
       "Switch in edit mode depending on the current helm buffer."

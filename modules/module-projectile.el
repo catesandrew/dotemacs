@@ -22,6 +22,7 @@
     (projectile-register-project-type 'npm '("package.json") "npm" "npm test"))
   :post-init
   (progn
+    (setq projectile-enable-caching t)
     (defun dotemacs//locate-mocha-from-projectile (&optional dir)
       "Use local mocha from `./node_modules` if available."
       (let ((proj-root (or dir (projectile-project-root)))
@@ -189,16 +190,6 @@
           projectile-find-dir-includes-top-level t
           projectile-require-project-root t
           projectile-verbose nil)
-
-    (setq projectile-enable-caching nil)
-    (defadvice projectile-mode (before maybe-use-cache activate)
-      (when
-        (--any? (and it (file-remote-p it))
-                (list
-                  (buffer-file-name)
-                   list-buffers-directory
-                   default-directory))
-        (setq-local projectile-enable-caching t)))
 
     (unless (boundp 'dotemacs-use-helm-projectile)
       (dotemacs-set-leader-keys
