@@ -154,7 +154,7 @@
               (lambda nil
                 (let ((server-buf (current-buffer)))
                   (bury-buffer)
-                  (switch-to-buffer-other-frame server-buf))))
+                  (switch-to-buffer server-buf))))
 
     ;; You might also want to close the frame when you’re done with it. To do
     ;; this, setup a Server Done Hook in the same section to call delete-frame.
