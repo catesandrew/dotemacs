@@ -146,7 +146,28 @@
       (dotemacs/set-executable-tidy tidy5))
 
     ;; this binding change can cause brittle behavior
-    ;; (define-key evil-visual-state-map (kbd "<escape>") 'keyboard-quit)
+    (define-key evil-visual-state-map (kbd "<escape>") 'keyboard-quit)
+
+    ;; To open the files designated by emacsclient in their own frame, you can
+    ;; use the following hook as a Server Switch Hook
+    (add-hook 'server-switch-hook
+              (lambda nil
+                (let ((server-buf (current-buffer)))
+                  (bury-buffer)
+                  (switch-to-buffer-other-frame server-buf))))
+
+    ;; You might also want to close the frame when you’re done with it. To do
+    ;; this, setup a Server Done Hook in the same section to call delete-frame.
+    (add-hook 'server-done-hook 'delete-frame)
+
+    ;; I also like emacs to cleanup stuff when I finish the emacsclient, so I
+    ;; add another hook to kill the buffer when finished. This also takes care
+    ;; of weird buffer switching behaviors when closing client buffers.
+    ;; (add-hook 'server-done-hook (lambda nil (kill-buffer nil)))
+
+    ;; You can also use ‘server-kill-new-buffers’ instead of calling
+    ;; ‘kill-buffer’ in your ‘server-done-hook’, e.g.
+    (setq server-kill-new-buffers t)
 
     ;; (dotemacs-define-custom-layout "NixOS Configuration"
     ;;   :binding "N"
