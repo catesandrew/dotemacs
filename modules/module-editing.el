@@ -6,10 +6,10 @@
 ;;
 ;;; Commentary:
 ;;
-
+;;; Code:
 (require 'use-package)
-;; (require 'core-vars)
-;; (require 'core-funcs)
+(require 'core-vars)
+(require 'core-funcs)
 (require 'core-transient-state)
 (require 'core-keybindings)
 (require 'core-fonts-support)
@@ -20,7 +20,11 @@
 ;; (require 'module-utils)
 (require 'cl)
 
-;;; Code:
+
+;; vars
+
+
+;; functions
 
 (defun dotemacs-smart-kill-whole-line (&optional arg)
   "Kill whole line and move back to indentation.
@@ -94,6 +98,7 @@ Otherwise insert the date as Mar 04, 2014."
         (insert-uuid-cid uuid)
       (insert uuid))))
 
+
 ;; packages
 
 ;; Keeps track of the last auto-indent operation and trims down white space
