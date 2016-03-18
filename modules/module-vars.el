@@ -12,6 +12,11 @@
 
 (defvar dotemacs/verbose nil)
 
+(defvar dotemacs-large-file-size 1
+  "Size (in MB) above which dotemacs will prompt to open the large file
+literally to avoid performance issues. Opening a file literally means that
+no major mode or minor modes are active.")
+
 (defvar ycmd-server-command '("python" "/usr/local/src/ycmd/ycmd")
   "The path to the ycmd server.")
 

@@ -59,11 +59,6 @@ Ensure that helm is required before calling FUNC."
 (defvar dotemacs-helm-position 'bottom
   "Position in which to show the `helm' mini-buffer.")
 
-(defvar dotemacs-large-file-size 1
-  "Size (in MB) above which dotemacs will prompt to open the large file
-literally to avoid performance issues. Opening a file literally means that
-no major mode or minor modes are active.")
-
 (defvar dotemacs-search-tools '("ag" "pt" "ack" "grep")
   "List of search tool executable names.  Dotemacs uses the first installed
 tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
