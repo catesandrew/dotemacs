@@ -238,6 +238,9 @@ FRAME defaults to the current frame."
     (defvar dotemacs--layouts-layouts-ts-full-hint-toggle 0
       "Display a short doc when nil, full doc otherwise.")
 
+    (defvar dotemacs--workspaces-ts-full-hint-toggle 0
+      "Display a short doc when nil, full doc otherwise.")
+
     (defvar dotemacs--last-selected-layout persp-nil-name
       "Previously selected layout.")
 

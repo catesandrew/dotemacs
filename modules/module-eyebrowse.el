@@ -146,6 +146,13 @@ current workspace, preferably in the current window."
                                display-buffer-same-window)
                               (inhibit-same-window . nil))))
 
+    (defun dotemacs//workspaces-ts-toggle-hint ()
+      "Toggle the full hint docstring for the workspaces transient-state."
+      (interactive)
+      (setq dotemacs--workspaces-ts-full-hint-toggle
+            (logxor dotemacs--workspaces-ts-full-hint-toggle 1)))
+
+
     (defun dotemacs/workspaces-ts-rename ()
       "Rename a workspace and get back to transient-state."
       (interactive)
@@ -168,6 +175,7 @@ current workspace, preferably in the current window."
         :hint-is-doc t
         :dynamic-hint (dotemacs//workspaces-ts-hint)
         :bindings
+        ("?" dotemacs//workspaces-ts-toggle-hint)
         ("0" eyebrowse-switch-to-window-config-0 :exit t)
         ("1" eyebrowse-switch-to-window-config-1 :exit t)
         ("2" eyebrowse-switch-to-window-config-2 :exit t)
@@ -200,6 +208,9 @@ current workspace, preferably in the current window."
         ("p" eyebrowse-prev-window-config)
         ("R" dotemacs/workspaces-ts-rename :exit t)
         ("w" eyebrowse-switch-to-window-config :exit t))
+    (dotemacs-set-leader-keys
+     "bW" 'dotemacs/goto-buffer-workspace
+     "lw" 'dotemacs/workspaces-transient-state/body)
 
     (defun dotemacs//workspace-format-name (workspace)
       "Return a porpertized string given a WORKSPACE name."
