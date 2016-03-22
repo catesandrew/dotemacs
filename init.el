@@ -535,12 +535,6 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package async
   :ensure t)
 
-(use-package dired-async
-  :after async
-  :config
-  (dired-async-mode 1)
-  (async-bytecomp-package-mode 1))
-
 
 ;;; Evil
 (use-package module-evil)
