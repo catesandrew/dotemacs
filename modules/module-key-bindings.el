@@ -156,7 +156,6 @@
 (dotemacs-set-leader-keys
   "j0" 'dotemacs-push-mark-and-goto-beginning-of-line
   "j$" 'dotemacs-push-mark-and-goto-end-of-line
-  "jb" 'bookmark-jump
   "jd" 'dired-jump
   "jD" 'dired-jump-other-window
   "jf" 'find-function-at-point

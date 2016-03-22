@@ -87,11 +87,11 @@ Try the repeated popping up to 10 times."
     (setq avy-all-windows 'all-frames)
     (setq avy-background t)
     (dotemacs-set-leader-keys
+      "jb" 'avy-pop-mark
       "jj" 'evil-avy-goto-char
       "jJ" 'evil-avy-goto-char-2
       "jl" 'evil-avy-goto-line
-      "ju" 'avy-pop-mark
-      "jU" 'dotemacs-avy-goto-url
+      "ju" 'dotemacs/avy-goto-url
       "jw" 'evil-avy-goto-word-or-subword-1
       "xo" 'dotemacs-avy-open-url))
   :config
