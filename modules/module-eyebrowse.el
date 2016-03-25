@@ -16,8 +16,8 @@
 (require 'module-utils)
 (require 'dash)
 
-
-;; funcs
+
+;; functions
 
 (defvar eyebrowse-display-help t
   "If non-nil additional help is displayed when selecting a workspace.")
@@ -88,6 +88,122 @@ STATE is a window-state object as returned by `window-state-get'."
   ;; delq nil - removes buffers stored in STATE that don't exist anymore
   (delq nil (mapcar #'get-buffer (dotemacs/window-state-get-buffer-names state))))
 
+(defun dotemacs/find-workspace (buffer)
+  "Find Eyebrowse workspace containing BUFFER.
+If several workspaces contain BUFFER, return the first one.
+Workspaces are ordered by slot number. If no workspace contains
+BUFFER, return nil."
+  ;; the second element of a workspace is its window-state object
+  (--find (memq buffer (dotemacs/window-state-get-buffers (cadr it)))
+          (eyebrowse--get 'window-configs)))
+
+(defun dotemacs/display-in-workspace (buffer alist)
+  "Display BUFFER's workspace.
+Return BUFFER's window, if exists, otherwise nil. If BUFFER is
+already visible in current workspace, just return its window
+without switching workspaces."
+  (or (get-buffer-window buffer)
+      (-when-let (workspace (dotemacs/find-workspace buffer))
+        (eyebrowse-switch-to-window-config (car workspace))
+        (get-buffer-window buffer))))
+
+(defun dotemacs/goto-buffer-workspace (buffer)
+  "Switch to BUFFER's window in BUFFER's workspace.
+If BUFFER isn't displayed in any workspace, display it in the
+current workspace, preferably in the current window."
+  (interactive "B")
+  (pop-to-buffer buffer '((;; reuse buffer window from some workspace
+                           dotemacs/display-in-workspace
+                           ;; fallback to display in current window
+                           display-buffer-same-window)
+                          (inhibit-same-window . nil))))
+
+
+;; eyebrowse transient state
+
+(defun dotemacs//workspaces-ts-toggle-hint ()
+  "Toggle the full hint docstring for the workspaces transient-state."
+  (interactive)
+  (setq dotemacs--workspaces-ts-full-hint-toggle
+        (logxor dotemacs--workspaces-ts-full-hint-toggle 1)))
+
+(defun dotemacs/workspaces-ts-rename ()
+  "Rename a workspace and get back to transient-state."
+  (interactive)
+  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot) nil)
+  (dotemacs/workspaces-transient-state/body))
+
+(defun dotemacs//workspace-format-name (workspace)
+  "Return a porpertized string given a WORKSPACE name."
+  (let* ((current (eq (eyebrowse--get 'current-slot) (car workspace)))
+         (name (nth 2 workspace))
+         (number (car workspace))
+         (caption (if (< 0 (length name))
+                      (concat (int-to-string number) ":" name)
+                    (int-to-string number))))
+    (if current
+        (propertize (concat "[" caption "]") 'face 'warning)
+      caption)))
+
+(defun dotemacs//workspaces-ts-hint ()
+  "Return a one liner string containing all the workspace names."
+  (concat
+   " "
+   (mapconcat 'dotemacs//workspace-format-name
+              (eyebrowse--get 'window-configs) " | ")
+   (when eyebrowse-display-help dotemacs--workspaces-ts-full-hint)))
+
+
+;; eyebrowse and persp integration
+
+(defun dotemacs/load-eyebrowse-for-perspective (&optional frame)
+  "Load an eyebrowse workspace according to a perspective's parameters.
+FRAME's perspective is the perspective that is considered, defaulting to
+the current frame's perspective.
+If the perspective doesn't have a workspace, create one."
+  (let* ((persp (get-frame-persp frame))
+         (window-configs (persp-parameter 'eyebrowse-window-configs persp))
+         (current-slot (persp-parameter 'eyebrowse-current-slot persp))
+         (last-slot (persp-parameter 'eyebrowse-last-slot persp)))
+    (if window-configs
+        (progn
+          (eyebrowse--set 'window-configs window-configs frame)
+          (eyebrowse--set 'current-slot current-slot frame)
+          (eyebrowse--set 'last-slot last-slot frame)
+          (eyebrowse--load-window-config current-slot))
+      (eyebrowse--set 'window-configs nil frame)
+      (eyebrowse-init frame)
+      (dotemacs/save-eyebrowse-for-perspective frame))))
+
+(defun dotemacs/update-eyebrowse-for-perspective (&rest _args)
+  "Update and save current frame's eyebrowse workspace to its perspective.
+Parameters are ignored, and exists only for compatibility with
+`persp-before-switch-functions'."
+  (let* ((current-slot (eyebrowse--get 'current-slot))
+         (current-tag (nth 2 (assoc current-slot (eyebrowse--get 'window-configs)))))
+    (eyebrowse--update-window-config-element
+     (eyebrowse--current-window-config current-slot current-tag)))
+  (dotemacs/save-eyebrowse-for-perspective))
+
+(defun dotemacs/save-eyebrowse-for-perspective (&optional frame)
+  "Save FRAME's eyebrowse workspace to FRAME's perspective.
+FRAME defaults to the current frame."
+  (let ((persp (get-frame-persp frame)))
+    (set-persp-parameter
+     'eyebrowse-window-configs (eyebrowse--get 'window-configs frame) persp)
+    (set-persp-parameter
+     'eyebrowse-current-slot (eyebrowse--get 'current-slot frame) persp)
+    (set-persp-parameter
+     'eyebrowse-last-slot (eyebrowse--get 'last-slot frame) persp)))
+
+(defun dotemacs/layout-workspaces-transient-state ()
+  "Launches the workspaces transient state, if defined."
+  (interactive)
+  (if (fboundp 'dotemacs/workspaces-transient-state/body)
+      (call-interactively 'dotemacs/workspaces-transient-state/body)
+    (message "You need the eyebrowse layer to use this feature.")))
+
+
 ;; packages
 
 ;; (dotemacs-use-package-add-hook eyebrowse
@@ -115,49 +231,6 @@ STATE is a window-state object as returned by `window-state-get'."
     (define-key evil-motion-state-map "gT" 'eyebrowse-prev-window-config)
 
     (dotemacs-set-leader-keys "bW" 'dotemacs/goto-buffer-workspace)
-
-    (defun dotemacs/find-workspace (buffer)
-      "Find Eyebrowse workspace containing BUFFER.
-If several workspaces contain BUFFER, return the first one.
-Workspaces are ordered by slot number. If no workspace contains
-BUFFER, return nil."
-      ;; the second element of a workspace is its window-state object
-      (--find (memq buffer (dotemacs/window-state-get-buffers (cadr it)))
-              (eyebrowse--get 'window-configs)))
-
-    (defun dotemacs/display-in-workspace (buffer alist)
-      "Display BUFFER's workspace.
-Return BUFFER's window, if exists, otherwise nil. If BUFFER is
-already visible in current workspace, just return its window
-without switching workspaces."
-      (or (get-buffer-window buffer)
-          (-when-let (workspace (dotemacs/find-workspace buffer))
-            (eyebrowse-switch-to-window-config (car workspace))
-            (get-buffer-window buffer))))
-
-    (defun dotemacs/goto-buffer-workspace (buffer)
-      "Switch to BUFFER's window in BUFFER's workspace.
-If BUFFER isn't displayed in any workspace, display it in the
-current workspace, preferably in the current window."
-      (interactive "B")
-      (pop-to-buffer buffer '((;; reuse buffer window from some workspace
-                               dotemacs/display-in-workspace
-                               ;; fallback to display in current window
-                               display-buffer-same-window)
-                              (inhibit-same-window . nil))))
-
-    (defun dotemacs//workspaces-ts-toggle-hint ()
-      "Toggle the full hint docstring for the workspaces transient-state."
-      (interactive)
-      (setq dotemacs--workspaces-ts-full-hint-toggle
-            (logxor dotemacs--workspaces-ts-full-hint-toggle 1)))
-
-
-    (defun dotemacs/workspaces-ts-rename ()
-      "Rename a workspace and get back to transient-state."
-      (interactive)
-      (eyebrowse-rename-window-config (eyebrowse--get 'current-slot) nil)
-      (dotemacs/workspaces-transient-state/body))
 
     (dotemacs|transient-state-format-hint workspaces
       dotemacs--workspaces-ts-full-hint
@@ -210,27 +283,7 @@ current workspace, preferably in the current window."
         ("w" eyebrowse-switch-to-window-config :exit t))
     (dotemacs-set-leader-keys
      "bW" 'dotemacs/goto-buffer-workspace
-     "lw" 'dotemacs/workspaces-transient-state/body)
-
-    (defun dotemacs//workspace-format-name (workspace)
-      "Return a porpertized string given a WORKSPACE name."
-      (let* ((current (eq (eyebrowse--get 'current-slot) (car workspace)))
-             (name (nth 2 workspace))
-             (number (car workspace))
-             (caption (if (< 0 (length name))
-                          (concat (int-to-string number) ":" name)
-                        (int-to-string number))))
-        (if current
-            (propertize (concat "[" caption "]") 'face 'warning)
-          caption)))
-
-    (defun dotemacs//workspaces-ts-hint ()
-      "Return a one liner string containing all the workspace names."
-      (concat
-       " "
-       (mapconcat 'dotemacs//workspace-format-name
-                  (eyebrowse--get 'window-configs) " | ")
-       (when eyebrowse-display-help dotemacs--workspaces-ts-full-hint))))
+     "lw" 'dotemacs/workspaces-transient-state/body))
   :config
   (progn))
 
