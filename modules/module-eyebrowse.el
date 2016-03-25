@@ -39,9 +39,9 @@ representations of a window in a window-state object as returned by
 
 (defun dotemacs/window-state-get-buffer (window)
   "Get WINDOW's buffer.
-WINDOW is the representation of a window in a window-state
-object. The returned value is the representation of a buffer in a
-window-state object."
+WINDOW is the representation of a window in a window-state object.
+The returned value is the representation of a buffer in a window-state
+object."
   (cdr (assq 'buffer window)))
 
 (defun dotemacs/window-state-get-buffer-name (window)
@@ -65,16 +65,17 @@ WINDOW is the representation of a window in a window-state object."
 
 (defun dotemacs/window-state-walk-windows (state fn)
   "Execute FN once for each window in STATE and make a list of the results.
-FN is a function to execute. STATE is a window-state object."
+FN is a function to execute.
+STATE is a window-state object."
   (let (result)
     (dotemacs/window-state-walk-windows-1 (cdr state) fn)
     result))
 
 (defun dotemacs/window-state-all-windows (state)
   "Get all windows contained in STATE.
-STATE is a window-state object. The returned windows are not
-actual window objects. They are windows as represented in
-window-state objects."
+STATE is a window-state object.
+The returned windows are not actual window objects. They are windows as
+represented in window-state objects."
   (dotemacs/window-state-walk-windows state #'identity))
 
 (defun dotemacs/window-state-get-buffer-names (state)
@@ -90,18 +91,19 @@ STATE is a window-state object as returned by `window-state-get'."
 
 (defun dotemacs/find-workspace (buffer)
   "Find Eyebrowse workspace containing BUFFER.
-If several workspaces contain BUFFER, return the first one.
-Workspaces are ordered by slot number. If no workspace contains
-BUFFER, return nil."
+ If several workspaces contain BUFFER, return the first one. Workspaces are
+ ordered by slot number.
+ If no workspace contains
+ BUFFER, return nil."
   ;; the second element of a workspace is its window-state object
   (--find (memq buffer (dotemacs/window-state-get-buffers (cadr it)))
           (eyebrowse--get 'window-configs)))
 
 (defun dotemacs/display-in-workspace (buffer alist)
   "Display BUFFER's workspace.
-Return BUFFER's window, if exists, otherwise nil. If BUFFER is
-already visible in current workspace, just return its window
-without switching workspaces."
+ Return BUFFER's window, if exists, otherwise nil.
+ If BUFFER is already visible in current workspace, just return its window
+ without switching workspaces."
   (or (get-buffer-window buffer)
       (-when-let (workspace (dotemacs/find-workspace buffer))
         (eyebrowse-switch-to-window-config (car workspace))
@@ -109,8 +111,8 @@ without switching workspaces."
 
 (defun dotemacs/goto-buffer-workspace (buffer)
   "Switch to BUFFER's window in BUFFER's workspace.
-If BUFFER isn't displayed in any workspace, display it in the
-current workspace, preferably in the current window."
+ If BUFFER isn't displayed in any workspace, display it in the current
+ workspace, preferably in the current window."
   (interactive "B")
   (pop-to-buffer buffer '((;; reuse buffer window from some workspace
                            dotemacs/display-in-workspace
@@ -151,16 +153,20 @@ current workspace, preferably in the current window."
    " "
    (mapconcat 'dotemacs//workspace-format-name
               (eyebrowse--get 'window-configs) " | ")
-   (when eyebrowse-display-help dotemacs--workspaces-ts-full-hint)))
+   (if (equal 1 dotemacs--workspaces-ts-full-hint-toggle)
+       dotemacs--workspaces-ts-full-hint
+     (concat "  (["
+             (propertize "?" 'face 'hydra-face-red)
+             "] help)"))))
 
 
 ;; eyebrowse and persp integration
 
 (defun dotemacs/load-eyebrowse-for-perspective (&optional frame)
   "Load an eyebrowse workspace according to a perspective's parameters.
-FRAME's perspective is the perspective that is considered, defaulting to
-the current frame's perspective.
-If the perspective doesn't have a workspace, create one."
+ FRAME's perspective is the perspective that is considered, defaulting to
+ the current frame's perspective.
+ If the perspective doesn't have a workspace, create one."
   (let* ((persp (get-frame-persp frame))
          (window-configs (persp-parameter 'eyebrowse-window-configs persp))
          (current-slot (persp-parameter 'eyebrowse-current-slot persp))
