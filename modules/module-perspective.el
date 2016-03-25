@@ -469,7 +469,7 @@ perspectives does."
         ("x" dotemacs/layouts-ts-kill)
         ("X" dotemacs/layouts-ts-kill-other :exit t))
     (dotemacs-set-leader-keys "l" 'dotemacs/layouts-transient-state/body)
-
+    ;; custom layouts
     (dotemacs-define-custom-layout "@Dotemacs"
       :binding "e"
       :body
@@ -494,12 +494,6 @@ perspectives does."
   :post-init
   (setq spaceline-display-default-perspective
         dotemacs-display-default-layout))
-
-(dotemacs-use-package-add-hook eyebrowse
-  :post-init
-  (add-hook 'persp-before-switch-functions #'dotemacs/update-eyebrowse-for-perspective)
-  (add-hook 'eyebrowse-post-window-switch-hook #'dotemacs/save-eyebrowse-for-perspective)
-  (add-hook 'persp-activated-hook #'dotemacs/load-eyebrowse-for-perspective))
 
 (dotemacs-use-package-add-hook helm-projectile
   :post-init

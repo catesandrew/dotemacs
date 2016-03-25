@@ -230,14 +230,9 @@ FRAME defaults to the current frame."
   (progn
     (setq eyebrowse-new-workspace #'dotemacs-home-delete-other-windows
           eyebrowse-wrap-around t)
+    ;; always activate eyebrowse
     (eyebrowse-mode)
-
-    ;; vim-style tab switching
-    (define-key evil-motion-state-map "gt" 'eyebrowse-next-window-config)
-    (define-key evil-motion-state-map "gT" 'eyebrowse-prev-window-config)
-
-    (dotemacs-set-leader-keys "bW" 'dotemacs/goto-buffer-workspace)
-
+    ;; transient state
     (dotemacs|transient-state-format-hint workspaces
       dotemacs--workspaces-ts-full-hint
       "\n\n
@@ -287,9 +282,19 @@ FRAME defaults to the current frame."
         ("p" eyebrowse-prev-window-config)
         ("R" dotemacs/workspaces-ts-rename :exit t)
         ("w" eyebrowse-switch-to-window-config :exit t))
-    (dotemacs-set-leader-keys
-     "bW" 'dotemacs/goto-buffer-workspace
-     "lw" 'dotemacs/workspaces-transient-state/body))
+    ;; note: we don't need to declare the `<leader> l w' binding, it is
+    ;; declare in the layout transient state
+    (dotemacs-set-leader-keys "bW" 'dotemacs/goto-buffer-workspace)
+    ;; hooks
+    (add-hook 'persp-before-switch-functions
+              #'dotemacs/update-eyebrowse-for-perspective)
+    (add-hook 'eyebrowse-post-window-switch-hook
+              #'dotemacs/save-eyebrowse-for-perspective)
+    (add-hook 'persp-activated-hook
+              #'dotemacs/load-eyebrowse-for-perspective)
+    ;; vim-style tab switching
+    (define-key evil-motion-state-map "gt" 'eyebrowse-next-window-config)
+    (define-key evil-motion-state-map "gT" 'eyebrowse-prev-window-config))
   :config
   (progn))
 
