@@ -297,7 +297,7 @@ point to the position of the join."
     (dotemacs-set-leader-keys-for-major-mode 'scala-mode
       "bb" 'sbt-command)))
 
-(use-package scala-mode2                ; Scala editing
+(use-package scala-mode                ; Scala editing
   :ensure t
   :defer t
   :init

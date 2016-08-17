@@ -81,7 +81,7 @@
 
 (use-package eclim
   :defer t
-  :ensure emacs-eclim
+  :ensure eclim
   :diminish eclim-mode
   :init (add-hook 'java-mode-hook 'eclim-mode)
   :config
