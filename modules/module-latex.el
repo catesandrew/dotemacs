@@ -31,6 +31,9 @@
 (defvar latex-enable-folding t
   "Whether to use `TeX-fold-mode' or not in tex/latex buffers.")
 
+(defvar TeX-build-directory 'nil
+  "The location of build directory.")
+
 (defvar latex-nofill-env '("equation"
                            "equation*"
                            "align"
@@ -110,7 +113,21 @@ the automatic filling of the current paragraph."
   :defer t
   :init
   (progn
+    (with-eval-after-load 'tex-buf
+      (defun TeX-active-master (&optional extension nondirectory)
+        "The master file currently being compiled.
+
+If optional argument EXTENSION is non-nil, add that file extension to
+the name.  Special value t means use `TeX-default-extension'.
+
+If optional second argument NONDIRECTORY is non-nil, do not include
+the directory."
+        (if TeX-current-process-region-p
+            (concat TeX-build-directory (TeX-region-file extension nondirectory))
+          (concat TeX-build-directory (TeX-master-file extension nondirectory)))))
+
     (setq TeX-command-default latex-build-command
+          TeX-build-directory "build/"
           TeX-auto-save t               ; Automatically save style information
           TeX-parse-self t              ; Parse documents to provide completion
                                         ; for packages, etc.
@@ -144,6 +161,23 @@ the automatic filling of the current paragraph."
     (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode))
   :config
   (progn
+    ;; Sample `latexmkrc` for OSX that copies the *.pdf file from the `./build` directory
+    ;; to the working directory:
+    ;;    $pdflatex = 'pdflatex -file-line-error -synctex=1 %O %S && (cp "%D" "%R.pdf")';
+    ;;    $pdf_mode = 1;
+    ;;    $out_dir = './build';
+
+    ;; Skim's displayline is used for forward search (from .tex to .pdf)
+    ;; option -b highlights the current line
+    ;; option -g opens Skim in the background
+    ;; option -o open Skim in the foreground with full application focus.
+
+    ;; Skim -- turn on auto-refresh by typing the following into the terminal:
+    ;; defaults write -app Skim SKAutoReloadFileUpdate -boolean true
+
+    (setq TeX-view-program-selection '((output-pdf "pdf-viewer")))
+    (setq TeX-view-program-list '(("pdf-viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
     ;; Key bindings for plain TeX
     (dolist (mode '(tex-mode latex-mode))
       (dotemacs-set-leader-keys-for-major-mode mode
