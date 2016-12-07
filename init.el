@@ -123,6 +123,16 @@
 (require 'package)
 (require 'warnings)
 
+(let ((trustfile "/usr/local/etc/openssl/cert.pem"))
+  ;; Configuration for the versions of emacs build *WITH* `GnuTLS'.
+  (if (boundp 'gnutls-trustfiles)
+      (add-to-list 'gnutls-trustfiles trustfile)
+    (setq gnutls-trustfiles (list trustfile)))
+
+  ;; Configuration for the versions of emacs build *WITHOUT* `GnuTLS'.
+  (setq tls-program (list (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+    (if (eq window-system 'w32) ".exe" "") trustfile))))
+
 (defvar dotemacs-elpa-https t
   "If non nil ELPA repositories are contacted via HTTPS whenever it's
 possible. Set it to nil if you have no way to use HTTPS in your
