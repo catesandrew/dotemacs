@@ -22,6 +22,23 @@
   :commands (yas-global-mode yas-minor-mode)
   :init
   (progn
+    (when (eq dotemacs-completion-engine 'company)
+      (with-eval-after-load 'yasnippet
+        ;;  We need to know whether the company was enabled, see
+        ;; `yas-before-expand-snippet-hook' below.
+        (defvar company-enabled-initially t
+          "Stored whether company is originally enabled or not.")
+        (add-hook 'yas-before-expand-snippet-hook
+                  (lambda ()
+                    (message "Yas Before Expand")
+                    (setq company-enabled-initially (bound-and-true-p company-mode))
+                    (company-mode -1)))
+        (add-hook 'yas-after-exit-snippet-hook
+                  (lambda ()
+                    (message "Yas After Expand")
+                    (when company-enabled-initially
+                      (company-mode 1))))))
+
     ;; We don't want undefined variable errors
     (defvar yas-global-mode nil)
 
