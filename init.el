@@ -671,6 +671,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-php)
 (use-package module-racket)
 (use-package module-java)
+(use-package module-csharp)
 (use-package module-restclient)
 (use-package module-scheme)
 (use-package module-ycmd)
