@@ -498,17 +498,17 @@ otherwise it is scaled down."
 (defun dotemacs/scale-up-font ()
   "Scale up the font."
   (interactive)
-  (dotemacs-scale-up-or-down-font-size 1))
+  (dotemacs/scale-up-or-down-font-size 1))
 
 (defun dotemacs/scale-down-font ()
   "Scale up the font."
   (interactive)
-  (dotemacs-scale-up-or-down-font-size -1))
+  (dotemacs/scale-up-or-down-font-size -1))
 
 (defun dotemacs/reset-font-size ()
   "Reset the font size."
   (interactive)
-  (dotemacs-scale-up-or-down-font-size 0))
+  (dotemacs/scale-up-or-down-font-size 0))
 
 (dotemacs-define-transient-state scale-font
   :title "Font Scaling Transient State"
