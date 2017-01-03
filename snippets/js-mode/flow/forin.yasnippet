@@ -4,7 +4,7 @@
 # key: fi
 # --
 for (var ${1:key} in ${2:source}) {
-  if ($2.hasOwnProperty($1)) {
+  if ({}.hasOwnProperty.call($2, $1)) {
     var ${3:val} = $2[$1]
     ${0}
   }
