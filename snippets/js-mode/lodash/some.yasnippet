@@ -1,0 +1,9 @@
+# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: any item truthy in collection?
+# group: lodash
+# key: _some
+# type: snippet
+# --
+$0_.some(${1:collection}, function (${2:value}${3:, ${4:$$(yas-choose-value '("index" "key"))}}) {
+  return $2
+})

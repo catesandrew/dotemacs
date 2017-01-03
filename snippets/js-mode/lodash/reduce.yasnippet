@@ -1,9 +1,10 @@
 # -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: reduce
+# name: _reduce
 # group: lodash
-# key: reduce
+# key: _reduce
 # binding: direct-keybinding
 # --
-_.reduce(${1:data}, function (result, n, key) {
-  return $0
+return _.reduce(${1:data}, function (result, n, key) {
+  result=$0
+  return result
 })

@@ -1,9 +1,9 @@
 # -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: find
+# name: _find
 # group: lodash
-# key: find
+# key: _find
 # binding: direct-keybinding
 # --
-_.find(${1:data}, function (${2:x}) {
-  return $0
-})
+$0_.find(${1:collection}, function (${2:n}) {
+  return $2
+}${3:, ${4:0}})

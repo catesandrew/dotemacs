@@ -1,9 +1,9 @@
 # -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: filter
+# name: return array predicate is truthy for
 # group: lodash
-# key: filt
+# key: _filter
 # binding: direct-keybinding
 # --
-_.filter(${1:data}, function (${2:x}) {
-  return $0
+$0_.filter(${1:collection}, function (${2:value}${3:, ${4:$$(yas-choose-value '("index" "key"))}}) {
+  return $2
 })
