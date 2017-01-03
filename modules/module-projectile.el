@@ -79,10 +79,7 @@
              (dotemacs/set-executable-eslint result))))))
     (add-hook 'dotemacs/project-hook 'dotemacs//locate-eslint-from-projectile)
 
-    ;; make-variable-frame-local is obsolete according to the docs, but I don't
-    ;; want to have to manually munge frame-parameters all the time so I'm using
-    ;; it anyway.
-    (make-variable-frame-local
+    (make-local-variable
      (defvar dotemacs/projectile-curr nil
        "The current projectile project."))
 
