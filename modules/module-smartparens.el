@@ -83,6 +83,7 @@
   :commands (sp-split-sexp sp-newline sp-up-sexp)
   :init
   (progn
+    (setq sp-base-key-bindings 'sp)
     ;; TODO move these hooks into their layers
     ;; (dolist (hook '(LaTeX-mode-hook web-moode-hook inferior-python-mode-hook))
     ;;   (add-hook hook #'smartparens-mode))

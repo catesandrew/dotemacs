@@ -141,6 +141,8 @@
  '(lambda ()
     (setq user-full-name    "Andrew Cates"
           user-mail-address "catesandrew@gmail.com")
+    (setq-default c-basic-offset 2)
+    (setq-default tab-width 2)
 
     (when-let (tidy5 (executable-find "tidy5"))
       (dotemacs/set-executable-tidy tidy5))
