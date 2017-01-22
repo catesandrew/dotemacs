@@ -636,7 +636,7 @@ Removes the automatic guessing of the initial value based on thing at point. "
 (use-package helm-ls-git
   :defer t
   :ensure t
-  :commands (helm-ls-git-ls helm-browse-project)
+  :commands (helm-ls-git-not-inside-git-repo helm-ls-git-ls helm-browse-project)
   :init
   (progn
     (setq helm-ls-git-show-abs-or-relative 'relative) ))
