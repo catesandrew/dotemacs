@@ -87,6 +87,14 @@
   (define-key evil-iedit-state-map
     (kbd dotemacs-leader-key) dotemacs-default-map))
 
+;; Its primary purpose is to not let evil unbalance the parentheses when using
+;; the (smartparens-strict-mode t).
+(use-package evil-smartparens
+  :ensure t
+  :disabled t
+  :defer t
+  :init (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
+
 (use-package evil-lisp-state
   :ensure t
   :init (setq evil-lisp-state-global t)
