@@ -109,6 +109,7 @@
         "q" 'erc-quit-server)))
 
 (use-package erc-gitter
+  :defer t
   :quelpa (erc-gitter :fetcher github :repo "jleechpe/erc-gitter")
   :config
   (add-to-list 'erc-modules 'gitter))
@@ -157,6 +158,7 @@
 
 (use-package erc-social-graph
   :ensure t
+  :defer t
   :init
   (progn
     ;; does not exist ?
@@ -166,10 +168,12 @@
                                               "D" 'erc-social-graph-draw)))
 (use-package erc-yt
   :ensure t
+  :defer t
   :init (with-eval-after-load 'erc (add-to-list 'erc-modules 'youtube)))
 
 (use-package erc-view-log
   :ensure t
+  :defer t
   :init
   (progn
     (with-eval-after-load 'erc (add-to-list 'erc-modules 'log))
@@ -204,6 +208,7 @@
 
 (use-package erc-image
   :ensure t
+  :defer t
   :init (with-eval-after-load 'erc (add-to-list 'erc-modules 'image)))
 
 (use-package jabber        ;; Jabber (XMPP) client for Emacs
