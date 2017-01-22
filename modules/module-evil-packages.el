@@ -29,6 +29,7 @@
 
 (use-package evil-snipe
   :diminish evil-snipe-local-mode
+  :disabled t
   :ensure t
   :init
   (setq evil-snipe-scope 'whole-buffer
