@@ -178,6 +178,15 @@ Without FORMULA determine whether Homebrew itself is available."
   (setq helm-locate-fuzzy-match nil)
   (setq helm-locate-command "mdfind -name %s %s"))
 
+;; http://endlessparentheses.com/disable-mouse-only-inside-emacs.html
+(use-package disable-mouse
+  :defer t
+  :ensure t
+  :init
+  (when (and (eq system-type 'darwin)
+             ;; (disable-mouse-mode 1)
+             (global-disable-mouse-mode))))
+
 (use-package launchctl
   :defer t
   :ensure t
