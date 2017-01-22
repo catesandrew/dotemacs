@@ -181,11 +181,31 @@ Without FORMULA determine whether Homebrew itself is available."
 ;; http://endlessparentheses.com/disable-mouse-only-inside-emacs.html
 (use-package disable-mouse
   :defer t
+  :if (eq system-type 'darwin)
   :ensure t
   :init
-  (when (and (eq system-type 'darwin)
-             ;; (disable-mouse-mode 1)
-             (global-disable-mouse-mode))))
+  (progn
+    ;; https://xivilization.net/~marek/blog/2015/06/22/disabling-mouse-in-spacemacs/
+    ;; Every time I switch focus to Emacs by clicking in a random place on the
+    ;; window, the cursor moves to this place. Incredibly inconvenient, since I
+    ;; don’t want to move my cursor accidentally. Since I never use the mouse
+    ;; for anything in my editor anyway, I decided to disable it. Turn’s out, it
+    ;; is not that easy, since it is not a global key binding, but one that is
+    ;; local to the Evil mode. Frustrating to figure out.
+    (defun dotemacs/silence ()
+      (interactive))
+
+    (with-eval-after-load 'evil
+      ;; don't jump the cursor around in the window on clicking
+      (define-key evil-motion-state-map [down-mouse-1] 'dotemacs/silence)
+      (define-key evil-normal-state-map [down-mouse-1] 'dotemacs/silence)
+      (define-key evil-visual-state-map [down-mouse-1] 'dotemacs/silence)
+      ;; also avoid any '<mouse-1> is undefined' when setting to 'undefined
+      (define-key evil-motion-state-map [mouse-1] 'dotemacs/silence)
+      (define-key evil-normal-state-map [mouse-1] 'dotemacs/silence)
+      (define-key evil-visual-state-map [mouse-1] 'dotemacs/silence))
+
+    (global-disable-mouse-mode)))
 
 (use-package launchctl
   :defer t
