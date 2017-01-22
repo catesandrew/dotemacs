@@ -76,6 +76,117 @@
     (let ((o (sp--get-active-overlay)))
       (indent-region (overlay-start o) (overlay-end o)))))
 
+(define-minor-mode evil-sp-mode
+  "Minor mode for combining evil and smartparens."
+  :init-value nil
+  :keymap (make-sparse-keymap) ; defines evil-sp-mode-map
+  :lighter " ESP")
+(add-hook 'smartparens-enabled-hook 'evil-sp-mode) ;; only load with smartparens
+
+(dotemacs-use-package-add-hook smartparens
+  :post-config
+  (progn
+    ;; This only makes current evil commands work better with smartparens.
+    (defun dotemacs/evil-sp-evilize-name (name)
+      "Return an interned symbol NAME prefixed with 'evil-'."
+      (intern (format "evil-%s" name)))
+
+    (defmacro dotemacs/evil-sp-make-evil-smartparens-movement (name)
+      "Create Evil movement command from NAME function."
+      `(let ((evil-name (dotemacs/evil-sp-evilize-name ,name))
+             (doc (documentation ,name)))
+         (evil-define-motion evil-name (count)
+           doc
+           :type inclusive
+           :jump t
+           (,name count))))
+
+    (defun dotemacs/evil-sp-beginning-of-previous-sexp (&optional arg)
+      "Goto beginning of previous sexp.
+If ARG is non-nil, go back ARG sexps."
+      (interactive "P")
+      (setq arg (or arg 1))
+      (sp-previous-sexp arg)
+      (sp-backward-sexp))
+
+    (defun dotemacs/evil-sp-smartparens-config ()
+      "Bind smarparens commands."
+      (interactive)
+      (let ((sexp-motions
+             '(("sh" . sp-backward-sexp)
+               ("sj" . sp-down-sexp)
+               ("sk" . sp-backward-up-sexp)
+               ("sl" . sp-forward-sexp)
+
+               ("sn" . sp-next-sexp)
+               ("sp" . dotemacs/evil-sp-beginning-of-previous-sexp)
+               ("sa" . sp-beginning-of-sexp)
+               ("se" . sp-end-of-sexp)
+
+               ("sH" . sp-beginning-of-previous-sexp)
+               ("sJ" . sp-up-sexp)
+               ("sK" . sp-backward-down-sexp)
+               ("sL" . sp-beginning-of-next-sexp)
+
+               ;; sp-skip-forward-to-symbol (&optional stop-at-string stop-after-string)
+               ;; sp-skip-backward-to-symbol (&optional stop-at-string stop-after-string)
+
+               ("s\C-l" . sp-forward-symbol)
+               ("s\C-L" . sp-skip-forward-to-symbol)
+               ("s\C-h" . sp-backward-symbol)
+               ("s\C-H" . sp-skip-backward-to-symbol)))
+
+            (sexp-modifications
+             '(("st" . sp-transpose-sexp) ;; or `sp-transpose-hybrid-sexp`
+               ("sd" . sp-kill-hybrid-sexp)
+               ("su" . sp-unwrap-sexp)
+               ("sb" . sp-backward-unwrap-sexp)
+
+               ;; prefix: sf
+               ("sfh" . sp-backward-slurp-sexp)
+               ("sfH" . sp-backward-barf-sexp)
+
+               ("sfl" . sp-forward-slurp-sexp) ;; or `sp-slurp-hybrid-sexp`
+               ("sfL" . sp-forward-barf-sexp)
+
+               ;; prefix: sg
+               ("sgL" . sp-add-to-previous-sexp)
+               ("sgH" . sp-add-to-next-sexp)
+
+               ;; prefix: ss
+               ("ssw" . sp-swap-enclosing-sexp)
+               ("sss" . sp-splice-sexp)
+               ("ssdl" . sp-splice-sexp-killing-forward)
+               ("ssdh" . sp-splice-sexp-killing-backward)
+               ("ssda" . sp-splice-sexp-killing-around)
+
+               ("ssc" . sp-convolute-sexp)
+
+               ("ssh" . sp-absorb-sexp)
+               ("ssl" . sp-emit-sexp)
+
+               ("ssH" . sp-extract-before-sexp)
+               ("ssL" . sp-extract-after-sexp)
+
+               ("ssy" . sp-split-sexp)
+               ("ssY" . sp-join-sexp))))
+
+        (loop for (key . func) in sexp-motions
+              do
+              ;; Define the motion command
+              (dotemacs/evil-sp-make-evil-smartparens-movement func)
+
+              (mapc (lambda (state)
+                      (evil-define-key state evil-sp-mode-map key func))
+                    '(normal visual motion)))
+
+        (loop for (key . func) in sexp-modifications
+              do
+              (evil-define-key 'normal evil-sp-mode-map
+                key func))
+        ))
+    (dotemacs/evil-sp-smartparens-config)))
+
 ;; Use SmartParens instead of Paredit and Electric Pair
 (use-package smartparens                ; Parenthesis editing and balancing
   :ensure t
