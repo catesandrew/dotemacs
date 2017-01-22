@@ -609,6 +609,7 @@ a Markdown buffer and use this command to convert it.
 
 (use-package toc-org
   :ensure t
+  :defer t
   :init
   (progn
     (setq toc-org-max-depth 10)
