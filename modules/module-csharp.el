@@ -42,12 +42,13 @@
   ;; Load omnisharp-mode with csharp-mode, this should start the omnisharp server automatically
   :init
   (progn
+    (setq omnisharp-server-executable-path "/usr/local/src/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
     (when (eq dotemacs-completion-engine 'company)
       ;; needed to avoid an error when fetching doc using company
       ;; Note: if you are using a roslyn based omnisharp server you can
       ;; set back this variable to t.
       (setq omnisharp-auto-complete-want-documentation nil))
-      (push 'company-omnisharp company-backends-csharp-mode))
+    (push 'company-omnisharp company-backends-csharp-mode))
   :config
   (progn
     (mapc (lambda(x) (dotemacs-declare-prefix-for-mode
@@ -103,6 +104,13 @@
     (progn
       (dotemacs-add-company-hook csharp-mode))))
 
+(use-package csharp-mode
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (setq sh-indentation 2
+          sh-basic-offset 2)))
 
 (provide 'module-csharp)
 ;;; module-csharp.el ends here
