@@ -19,7 +19,11 @@
 (dotemacs-use-package-add-hook projectile
   :pre-config
   (progn
-    (projectile-register-project-type 'npm '("package.json") "npm" "npm test"))
+    (projectile-register-project-type 'npm '("package.json")
+                                      :compile "npm build"
+                                      :test "npm test"
+                                      :run "npm start"
+                                      :test-suffix ".spec"))
   :post-init
   (progn
     (setq projectile-enable-caching t)
