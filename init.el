@@ -748,6 +748,9 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-nixos)
 (use-package module-systemd)
 ;; (use-package module-tmux)
+(use-package docker
+  :defer t
+  :ensure t)
 
 
 ;;; Finance
