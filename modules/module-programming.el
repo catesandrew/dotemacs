@@ -134,6 +134,16 @@
     ;; (subword-mode +1) ;; camelCase
     (dotemacs-highlight-TODO-words)))
 
+(use-package string-inflection
+  :defer t
+  :ensure t
+  :init
+  (progn
+    )
+  :config
+  (progn
+    ))
+
 (use-package aggressive-indent
   :defer t
   :ensure t
