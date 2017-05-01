@@ -711,6 +711,7 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 (use-package module-markup-languages)
 (use-package module-latex)
 (use-package module-markdown)
+(use-package module-yaml)
 (use-package module-pandoc)
 (use-package module-asciidoc)
 (use-package graphviz-dot-mode          ; Graphviz
