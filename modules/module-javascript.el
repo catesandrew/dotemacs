@@ -89,9 +89,11 @@
       (dotemacs/add-flycheck-hook mode))
 
     (defun dotemacs/disable-js2-checks-if-flycheck-active ()
-      (unless (flycheck-get-checker-for-buffer)
-        (set (make-local-variable 'js2-mode-show-parse-errors) t)
-        (set (make-local-variable 'js2-mode-show-strict-warnings) t)))
+      (if (flycheck-get-checker-for-buffer)
+          ((set (make-local-variable 'js2-mode-show-parse-errors) nil)
+           (set (make-local-variable 'js2-mode-show-strict-warnings) nil))
+        ((set (make-local-variable 'js2-mode-show-parse-errors) t)
+         (set (make-local-variable 'js2-mode-show-strict-warnings) t))))
     (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active)))
 
 (dotemacs-use-package-add-hook ycmd
@@ -360,6 +362,8 @@
   (progn
     ;; (add-hook 'js2-mode-hook (lambda () (setq mode-name "")))
 
+    (setq-default js2-mode-show-parse-errors nil)
+    (setq-default js2-mode-show-strict-warnings nil)
     (setq-default javascript-indent-lever 2)
     (setq-default js-switch-indent-offset 2)
     (setq-default js2-jslint-globals t)
@@ -401,7 +405,7 @@
     ;; Let flycheck handle parse errors
     (setq-default js2-show-parse-errors nil)
     (setq-default js2-strict-missing-semi-warning nil)
-    (setq-default js2-highlight-external-variables t)
+    (setq-default js2-highlight-external-variables nil)
     (setq-default js2-strict-trailing-comma-warning nil)
 
     (dotemacs-declare-prefix-for-mode 'js2-mode "mz" "folding")
