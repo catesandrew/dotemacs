@@ -17,7 +17,7 @@
 literally to avoid performance issues. Opening a file literally means that
 no major mode or minor modes are active.")
 
-(defvar ycmd-server-command '("python" "/usr/local/src/ycmd/ycmd")
+(defvar ycmd-server-command '("/usr/local/bin/python" "/usr/local/src/ycmd/ycmd")
   "The path to the ycmd server.")
 
 ;; Regexp for useful and useless buffers for smarter buffer switching
