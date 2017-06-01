@@ -54,6 +54,7 @@
   (progn
     (add-to-list 'evil-motion-state-modes 'neotree-mode)
     (setq neo-window-width 27
+          neo-autorefresh nil
           neo-theme 'nerd
           neo-create-file-auto-open t
           neo-banner-message nil
