@@ -46,6 +46,10 @@
       )
     (add-hook 'dotemacs/project-hook 'dotemacs//neotree-dir-from-projectile-root t nil)))
 
+(use-package all-the-icons
+  :ensure t
+  :defer t)
+
 (use-package neotree
   :ensure t
   :defer t
