@@ -37,7 +37,12 @@
                       (replace-regexp-in-string "\\`\\." "" ext))
                   ignoramus-file-basename-endings))
     (setq projectile-globally-ignored-files dotemacs/file-basename-exact-names)
-    (setq projectile-globally-ignored-directories dotemacs/directory-basename-exact-names)))
+
+    (setq projectile-globally-ignored-directories
+          (append dotemacs/directory-basename-exact-names
+                  (--map (s-append "/" it)
+                         (--map (s-prepend "-" it)
+                                dotemacs/directory-basename-exact-names))))))
 
 (dotemacs-use-package-add-hook projectile
   :post-config
