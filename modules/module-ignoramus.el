@@ -445,6 +445,8 @@
             "bower_components"
             "node_modules"
             ".cache"
+            "auto"
+            ".vscode"
             ".sx"
             "elpa"
             ))
