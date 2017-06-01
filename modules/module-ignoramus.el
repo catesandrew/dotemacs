@@ -400,8 +400,8 @@
             ;; "Profile"                              ; various
             ;; "profile"                              ; various
             ;; "RCS"                                  ; RCS
-            "Release"                              ; various
-            "release"                              ; various
+            ;; "Release"                              ; various
+            ;; "release"                              ; various
             "SCCS"                                 ; SCCS
             "Session.vim"                          ; vim
             ;; "slprj"                                ; matlab
