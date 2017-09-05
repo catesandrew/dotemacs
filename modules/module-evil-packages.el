@@ -48,12 +48,13 @@
 
 (dotemacs-use-package-add-hook magit
   :post-init
-  (if evil-snipe-enable-alternate-f-and-t-behaviors
+  (when evil-snipe-enable-alternate-f-and-t-behaviors
       (progn
         (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
         (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-override-mode))
-    (add-hook 'magit-mode-hook 'turn-off-evil-snipe-mode)
-    (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-mode)))
+    ;; (add-hook 'magit-mode-hook 'turn-off-evil-snipe-mode)
+    ;; (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-mode)
+    ))
 
 (use-package evil-args
   :ensure t

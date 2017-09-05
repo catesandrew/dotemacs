@@ -45,9 +45,10 @@
 
 (dotemacs-use-package-add-hook evil-snipe
   :post-init
-  (if evil-snipe-enable-alternate-f-and-t-behaviors
+  (when evil-snipe-enable-alternate-f-and-t-behaviors
       (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-override-mode)
-    (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-mode)))
+    ;; (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-mode)
+    ))
 
 
 (provide 'module-ranger)
