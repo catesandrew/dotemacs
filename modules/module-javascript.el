@@ -38,7 +38,8 @@
 
 (setq javascript/key-binding-prefixes '(("mh" . "documentation")
                                         ("mg" . "goto")
-                                        ("mr" . "refactor")))
+                                        ("mr" . "refactor")
+                                        ("mx" . "xref")))
 (mapc (lambda (x) (dotemacs-declare-prefix-for-mode
               'js2-mode (car x) (cdr x)))
       javascript/key-binding-prefixes)
@@ -86,15 +87,7 @@
   :post-init
   (progn
     (dolist (mode '(coffee-mode js2-mode json-mode))
-      (dotemacs/add-flycheck-hook mode))
-
-    (defun dotemacs/disable-js2-checks-if-flycheck-active ()
-      (if (flycheck-get-checker-for-buffer)
-          ((set (make-local-variable 'js2-mode-show-parse-errors) nil)
-           (set (make-local-variable 'js2-mode-show-strict-warnings) nil))
-        ((set (make-local-variable 'js2-mode-show-parse-errors) t)
-         (set (make-local-variable 'js2-mode-show-strict-warnings) t))))
-    (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active)))
+      (dotemacs/add-flycheck-hook mode))))
 
 (dotemacs-use-package-add-hook ycmd
   :post-init
@@ -362,8 +355,6 @@
   (progn
     ;; (add-hook 'js2-mode-hook (lambda () (setq mode-name "")))
 
-    (setq-default js2-mode-show-parse-errors nil)
-    (setq-default js2-mode-show-strict-warnings nil)
     (setq-default javascript-indent-lever 2)
     (setq-default js-switch-indent-offset 2)
     (setq-default js2-jslint-globals t)
@@ -403,10 +394,21 @@
                                        ))
 
     ;; Let flycheck handle parse errors
-    (setq-default js2-show-parse-errors nil)
+    (setq-default js2-mode-show-parse-errors nil)
+    (setq-default js2-mode-show-strict-warnings nil)
     (setq-default js2-strict-missing-semi-warning nil)
     (setq-default js2-highlight-external-variables nil)
     (setq-default js2-strict-trailing-comma-warning nil)
+
+    (with-eval-after-load 'flycheck
+      (defun dotemacs/disable-js2-checks-if-flycheck-active ()
+        (unless (flycheck-get-checker-for-buffer)
+          (set (make-local-variable 'js2-mode-show-parse-errors) t)
+          (set (make-local-variable 'js2-mode-show-strict-warnings) t)
+          (when js2-highlight-unused-variables-mode
+              (remove-hook 'js2-post-parse-callbacks
+                           #'js2-highlight-unused-variables t))))
+      (add-hook 'js2-mode-hook 'dotemacs/disable-js2-checks-if-flycheck-active))
 
     (dotemacs-declare-prefix-for-mode 'js2-mode "mz" "folding")
     (dotemacs-set-leader-keys-for-major-mode 'js2-mode "w" 'js2-mode-toggle-warnings-and-errors)
@@ -724,6 +726,7 @@ change what is evaluated to the statement on the current line."
 
 (use-package mocha
   :ensure t
+  :defer t
   :init
   (progn
     (dolist (mode '(js2-mode web-mode))
@@ -743,6 +746,22 @@ change what is evaluated to the statement on the current line."
       (let ((mocha dotemacs//executable-mocha))
         (setq mocha-command mocha)))
     (add-hook 'dotemacs/mocha-executable-hook 'dotemacs//mocha-executable-mocha)))
+
+(use-package xref-js2
+  :defer t
+  :ensure t
+  :init
+  (progn
+    (defun dotemacs/js-xref-set-key-bindings (mode)
+      "Setup the key bindings for `xref-js2' for the given MODE."
+      (dotemacs-set-leader-keys-for-major-mode mode "." 'xref-find-definitions)
+      (dotemacs-set-leader-keys-for-major-mode mode "?" 'xref-find-references)
+      (dotemacs-set-leader-keys-for-major-mode mode "x." 'xref-find-definitions)
+      (dotemacs-set-leader-keys-for-major-mode mode "x?" 'xref-find-references)
+      (dotemacs-set-leader-keys-for-major-mode mode "x," 'xref-pop-marker-stack))
+    (dotemacs/js-xref-set-key-bindings 'js2-mode)
+    (add-hook 'js2-mode-hook (lambda ()
+                        (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))))
 
 (dotemacs-use-package-add-hook popwin
   :post-config
