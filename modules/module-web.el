@@ -163,7 +163,10 @@
   :init
   ;; Explicitly run prog-mode hooks since jade-mode does not derivate from
   ;; prog-mode major-mode
-  (add-hook 'jade-mode-hook (lambda () (run-hooks 'dotemacs-prog-mode-hook))))
+  (add-hook 'jade-mode-hook (lambda () (run-hooks 'dotemacs-prog-mode-hook)))
+  :mode
+  (("\\.jade\\'"    . jade-mode)
+   ("\\.pug\\'"     . jade-mode)))
 
 (use-package less-css-mode
   :defer t
@@ -320,6 +323,7 @@
    ("\\.mustache\\'"   . web-mode)
    ("\\.handlebars\\'" . web-mode)
    ("\\.hbs\\'"        . web-mode)
+   ("\\.njk\\'"        . web-mode)
    ("\\.eco\\'"        . web-mode)
    ("\\.ejs\\'"        . web-mode)
    ("\\.djhtml\\'"     . web-mode)))
