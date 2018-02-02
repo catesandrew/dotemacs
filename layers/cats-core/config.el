@@ -48,6 +48,10 @@
 (defvar cats/handlebars-executable-hook nil
   "Hooks run when cats//executable-handlebars is changed.")
 
+(defvar cats//executable-find nil)
+(defvar cats/find-executable-hook nil
+  "Hooks run when cats//executable-find is changed.")
+
 (defvar cats/projectile-dir-root nil
   "The current dir root of the projectile project.")
 

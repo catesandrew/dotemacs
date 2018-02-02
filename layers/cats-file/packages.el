@@ -115,9 +115,12 @@ Try the repeated popping up to 10 times."
     (spacemacs|use-package-add-hook projectile
       :post-init
       (progn
-        (when (and (spacemacs/system-is-mac) (executable-find "gfind"))
-          (setq projectile-indexing-method 'alien
-                projectile-generic-command "gfind . -type f print0"))
+        (add-hook 'cats/find-executable-hook
+           'cats//projectile-set-find-executable)
+
+        ;; (add-hook 'emacs-startup-hook 'cats//locate-find)
+        ;; (run-hooks 'emacs-startup-hook)
+        ;; (cats//locate-find)
 
         (setq projectile-use-git-grep t)
         ;; (setq projectile-switch-project-action 'projectile-dired)

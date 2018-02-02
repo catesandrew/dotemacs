@@ -219,4 +219,11 @@ Try the repeated popping up to 10 times."
     (dotimes (i 10)
       (when (= p (point)) (apply orig-fun args)))))
 
+
+;; projectile
+(defun cats//projectile-set-find-executable (find)
+  "Set the `projectile-generic-command' setting in `find' with `FIND'."
+  (setq projectile-indexing-method 'alien
+        projectile-generic-command (concat find " . -type f print0")))
+
 ;;; funcs.el ends here

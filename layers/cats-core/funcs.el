@@ -94,6 +94,18 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
     (ignore-errors
       (run-hook-with-args 'cats/handlebars-executable-hook handlebars))))
 
+(defun cats/set-executable-find (find)
+  "Set cats//executable-find to FIND."
+  (unless (string= find cats//executable-find)
+    (when cats/verbose
+      (message "find %s updated." find))
+    (setq cats//executable-find find)
+    (ignore-errors
+      (run-hook-with-args 'cats/find-executable-hook find))))
+
+
+;; other funcs
+
 (defun cats/abbreviate-file-name (filename)
   "Return a version of FILENAME shortened."
   ;; Get rid of the prefixes added by the automounter.
@@ -189,6 +201,19 @@ Add this to `kill-buffer-query-functions'."
       (if (y-or-n-p "Restore desktop? ")
           (cats//session-restore))))
 
+
+;; find
+(defun cats//locate-find ()
+  "Use find or gfind."
+  (async-start
+   `(lambda ()
+      (if (eq system-type 'darwin)
+          (executable-find "gfind")
+        (executable-find "find")))
+   (lambda (result)
+     (if result
+         (cats/set-executable-find result)
+       (message "Unable to locate find.")))))
 
 
 ;; prettyify symbols

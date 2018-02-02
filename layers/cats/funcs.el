@@ -90,6 +90,10 @@ symbols, emojis, greek letters, as well as fall backs for."
   (delete-other-windows)
   (message "Type C-x r j $ to return to pre-rgrep windows."))
 
+(defun cats//grep-set-find-executable (find)
+  "Set the `find-program' setting in `find' with `FIND'."
+  (setq find-program find))
+
 
 ;; osx
 (when (eq system-type 'darwin)
@@ -127,7 +131,5 @@ symbols, emojis, greek letters, as well as fall backs for."
                                          :header-name #'helm-ls-git-header-name
                                          :buffer-list (lambda () (helm-browse-project-get-buffers
                                                              (helm-ls-git-root-dir))))))))
-
-
 
 ;;; funcs.el ends here

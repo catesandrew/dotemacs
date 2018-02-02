@@ -529,15 +529,14 @@ Install mudraw with brew install mupdf-tools"))))))
 (defun cats/init-grep ()
   (use-package grep
     :defer t
+    :init
+    (progn
+      (add-hook 'cats/find-executable-hook 'cats//grep-set-find-executable))
     :config
     (progn
       (define-key grep-mode-map "q" 'rgrep-quit-window)
       (define-key grep-mode-map (kbd "C-<return>") 'rgrep-goto-file-and-close-rgrep)
-
-      (when-let* ((gnu-find (and (eq system-type 'darwin)
-                                 (executable-find "gfind"))))
-        (setq find-program gnu-find))
-
+      (grep-compute-defaults)
       (when-let* ((gnu-xargs (and (eq system-type 'darwin)
                                   (executable-find "gxargs"))))
         (setq xargs-program gnu-xargs)))))

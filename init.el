@@ -400,6 +400,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Don't nag me compile!
   (setq compilation-ask-about-save nil)
 
+  (add-hook 'emacs-startup-hook 'cats//locate-find)
+
   (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
   (setq spacemacs-useless-buffers-regexp '("^\\*[^\\*]+\\*$"))
   (setq spacemacs-useful-buffers-regexp '("\\*scratch\\*" "\\*spacemacs\\*"))
@@ -439,16 +441,6 @@ you should place you code here."
   (when (display-graphic-p)
     (spacemacs|do-after-display-system-init
      (cats//set-frame-size)))
-
-  ;; (when (cats/snapshot-version-p emacs-version)
-  ;;   ;; When on a snapshot version, warn if the build is older than a week to
-  ;;   ;; ensure that we stay up to date.
-  ;;   (run-with-idle-timer
-  ;;    2 nil
-  ;;    (lambda ()
-  ;;      (let ((time-since-build (time-subtract (current-time) emacs-build-time)))
-  ;;        (when (> (time-to-number-of-days time-since-build) 7)
-  ;;          (lwarn 'emacs :warning "Your Emacs build is more than a week old!"))))))
 
   (unless (eq window-system 'mac)
     (-when-let* ((frame (selected-frame)))
