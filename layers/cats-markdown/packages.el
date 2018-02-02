@@ -115,24 +115,34 @@
     :defer t
     :mode (("\\.mustache$" . mustache-mode))))
 
+
+;; handlebars
 (defun cats-markdown/init-handlebars-mode ()
   (use-package handlebars-mode
     :ensure t
     :defer t
     :init
     (progn
-      (with-eval-after-load 'flycheck
-        (when-let* ((handlebars (executable-find "handlebars")))
-          (setq flycheck-handlebars-executable handlebars))))
-    :mode (("\\.hbs$" . handlebars-mode)
-           ("\\.handlebars$" . handlebars-mode))
-    ))
+      (with-eval-after-load 'projectile
+        (add-hook 'cats/project-hook
+           'cats//locate-handlebars-from-projectile)
+        (run-hooks 'cats/project-hook))
 
+      (with-eval-after-load 'flycheck
+        (add-hook 'cats/handlebars-executable-hook
+           'cats//hbs-set-handlebars-executable)))
+    :mode (("\\.hbs$" . handlebars-mode)
+           ("\\.handlebars$" . handlebars-mode))))
+
+
+;; jira-markup
 (defun cats-markdown/init-jira-markup-mode ()
   (use-package jira-markup-mode
     :ensure t
     :defer t))
 
+
+;; smartparens
 (defun cats-markdown/post-init-smartparens ()
   (add-hook 'rst-mode-hook 'smartparens-mode))
 

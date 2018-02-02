@@ -16,6 +16,8 @@
     (prettify-symbols-mode :location built-in)
     ))
 
+
+;; autorevert
 (defun cats-core/init-autorevert ()
   "Auto refresh, auto-revert buffers of changed files."
   (use-package autorevert
@@ -26,11 +28,15 @@
             auto-revert-tail-mode-text " ♻~")
       (add-hook 'find-file-hook 'cats//auto-revert-turn-on-maybe))))
 
+
+;; buffer-move
 (defun cats-core/init-buffer-move ()
   "Init buffer move."
   (use-package buffer-move
     :defer t))
 
+
+;; projectile
 (defun cats-core/pre-init-projectile ()
   (spacemacs|use-package-add-hook projectile
     :pre-config
@@ -152,6 +158,8 @@
           (remove-hook 'find-file-hook #'cats/find-file-hook-to-project t))))
       )))
 
+
+;; desktop
 (defun cats-core/pre-init-desktop ()
   (spacemacs|use-package-add-hook desktop
     :pre-config
@@ -233,7 +241,6 @@
 
 
 ;; prettyify symbols
-
 (defun cats-core/init-prettify-symbols-mode ()
   "Add prettify symbols."
   (use-package prettify-symbols-mode

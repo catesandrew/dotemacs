@@ -85,6 +85,15 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
     (ignore-errors
       (run-hook-with-args 'cats/phantomjs-executable-hook phantomjs))))
 
+(defun cats/set-executable-handlebars (handlebars)
+  "Set cats//executable-handlebars to HANDLEBARS."
+  (unless (string= handlebars cats//executable-handlebars)
+    (when cats/verbose
+      (message "handlebars %s updated." handlebars))
+    (setq cats//executable-handlebars handlebars)
+    (ignore-errors
+      (run-hook-with-args 'cats/handlebars-executable-hook handlebars))))
+
 (defun cats/abbreviate-file-name (filename)
   "Return a version of FILENAME shortened."
   ;; Get rid of the prefixes added by the automounter.

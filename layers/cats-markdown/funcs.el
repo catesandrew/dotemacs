@@ -35,4 +35,26 @@
       (set-visited-file-name target 'no-query 'along-with-file)
       (message "Moved to %s" target))))
 
+
+;; handlebars
+(defun cats//locate-handlebars-from-projectile (&optional dir)
+  "Use local handlebars from DIR or `projectile-project-root'."
+  (let ((proj-root (or dir (projectile-project-root)))
+        (proj-type (projectile-detect-project-type)))
+    (when (string= proj-type "npm")
+      (async-start
+       `(lambda ()
+          (set  'proj-root ,proj-root)
+          (let ((default-directory proj-root))
+            (executable-find "handlebars")))
+       (lambda (result)
+         (if result
+             (cats/set-executable-handlebars result)
+           (message "Unable to locate handlebars."))
+         )))))
+
+(defun cats//hbs-set-handlebars-executable (handlebars)
+  "Set the `flycheck-handlebars-executable' setting in `handlebarse' with `HANDLEBARS'."
+  (setq flycheck-handlebars-executable handlebars))
+
 ;;; funcs.el ends here
