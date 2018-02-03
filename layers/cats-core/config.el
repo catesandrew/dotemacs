@@ -88,3 +88,6 @@
 (defvar desktop/desktop-base-lock-name
   (concat "emacs_" emacs-version-short ".desktop.lock")
   "Desktop lock file name.")
+
+(defvar cats/projectile-enable-caching nil
+  "Enable projectile caching.")

@@ -48,7 +48,8 @@
         :test-suffix ".spec"))
     :post-init
     (progn
-      (setq projectile-enable-caching t)
+      (when cats/projectile-enable-caching
+        (setq projectile-enable-caching t))
 
       (defun cats//locate-jshint-from-projectile (&optional dir)
         "Use local jshint from `./node_modules` if available."
