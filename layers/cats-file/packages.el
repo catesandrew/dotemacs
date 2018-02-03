@@ -166,11 +166,10 @@ Try the repeated popping up to 10 times."
 
   (when (configuration-layer/package-usedp 'projectile)
     (spacemacs|use-package-add-hook neotree
-      :post-config
+      :post-init
       (progn
-        (with-eval-after-load 'projectile
-          (add-hook 'cats/project-hook
-             'cats//neotree-dir-from-projectile-root t nil)))))
+        (add-hook 'cats/project-hook
+           'cats//neotree-dir-from-projectile-root t nil))))
 
   (spacemacs|use-package-add-hook neotree
     :post-init

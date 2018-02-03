@@ -51,6 +51,9 @@
       (add-hook 'cats/babel-node-executable-hook
          'cats//set-babel-node-executable)
 
+      (add-hook 'cats/project-hook
+         'cats//locate-babel-node-from-projectile)
+
       (spacemacs/register-repl 'babel-repl 'babel-repl "babel")
       (push "\\*babel-shell\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter babel-shell-mode)
@@ -70,12 +73,7 @@
 
       (dolist (mode (list babel-shell-mode-map))
         (evil-define-key 'normal mode
-          (kbd "q") 'quit-window))
-
-      (with-eval-after-load 'projectile
-        (add-hook 'cats/project-hook
-           'cats//locate-babel-node-from-projectile)
-        (run-hooks 'cats/project-hook)))))
+          (kbd "q") 'quit-window)))))
 
 
 ;; coffee
@@ -150,6 +148,9 @@
       (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
       (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
 
+      (add-hook 'cats/project-hook
+         'cats//locate-node-from-projectile)
+
       (spacemacs|add-toggle js2-highlight-unused-variables-mode
         :status js2-highlight-unused-variables-mode
         :on (progn
@@ -195,10 +196,6 @@
       (setq-default js2-strict-missing-semi-warning nil)
       (setq-default js2-highlight-external-variables nil)
       (setq-default js2-strict-trailing-comma-warning nil)
-
-      (with-eval-after-load 'projectile
-        (add-hook 'cats/project-hook
-           'cats//locate-node-from-projectile))
 
       (with-eval-after-load 'flycheck
         (add-hook 'js2-mode-hook 'cats/disable-js2-checks-if-flycheck-active)
