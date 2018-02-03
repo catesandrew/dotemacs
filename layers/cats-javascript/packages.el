@@ -83,10 +83,8 @@
   (spacemacs|use-package-add-hook coffee-mode
     :post-init
     (progn
-      (with-eval-after-load 'projectile
-        (add-hook 'cats/project-hook
-           'cats//locate-coffeelint-from-projectile)
-        (run-hooks 'cats/project-hook))
+      (add-hook 'cats/project-hook
+         'cats//locate-coffeelint-from-projectile)
 
       (with-eval-after-load 'flycheck
         (add-hook 'cats/coffeelint-executable-hook
@@ -285,6 +283,10 @@
           "mF" 'mocha-debug-file
           "mp" 'mocha-test-at-point))
 
+      (add-hook 'cats/project-hook
+         'cats//locate-mocha-from-projectile)
+      ;; (cats//set-mocha-executable cats//executable-mocha)
+
       (add-hook 'cats/node-executable-hook
          'cats//set-node-executable)
 
@@ -295,12 +297,7 @@
       (setq mocha-environment-variables "NODE_ENV=test")
       (setq mocha-options "--recursive --reporter dot -t 5000")
       (setq mocha-reporter "spec")
-      (setq mocha-project-test-directory "test"))
-    :config
-    (with-eval-after-load 'projectile
-      (add-hook 'cats/project-hook
-         'cats//locate-mocha-from-projectile)
-      (run-hooks 'cats/project-hook))))
+      (setq mocha-project-test-directory "test"))))
 
 
 ;; nodejs-repl
@@ -346,10 +343,7 @@
           (kbd "C-u") 'nodejs-repl-clear-line
           (kbd "TAB") 'completion-at-point
           (kbd "C-c C-c") 'nodejs-repl-quit-or-cancel
-          (kbd "q") 'quit-window))
-
-      (with-eval-after-load 'projectile
-        (run-hooks 'cats/project-hook)))))
+          (kbd "q") 'quit-window)))))
 
 
 ;; popwin
@@ -378,16 +372,12 @@
     (progn
       (add-hook 'cats/phantomjs-executable-hook
          'cats//skewer-set-phantomjs-executable)
-
+      (add-hook 'cats/project-hook
+         'cats//locate-phantomjs-from-projectile)
       (add-hook 'css-mode-hook 'skewer-css-mode)
       (add-hook 'html-mode-hook 'skewer-html-mode))
     :post-config
     (progn
-      (with-eval-after-load 'projectile
-        (add-hook 'cats/project-hook
-           'cats//locate-phantomjs-from-projectile)
-        (run-hooks 'cats/project-hook))
-
       (dolist (mode '(js2-jsx-mode web-mode react-mode css-mode html-mode))
         (spacemacs/declare-prefix-for-mode mode "ms" "skewer")
         (spacemacs/declare-prefix-for-mode mode "me" "eval")
@@ -403,8 +393,7 @@
           "sr" 'spacemacs/skewer-eval-region
           "sR" 'spacemacs/skewer-eval-region-and-focus
           "ss" 'skewer-repl)
-        )
-      )))
+        ))))
 
 
 ;; smartparens

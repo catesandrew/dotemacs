@@ -314,11 +314,6 @@
 
 
 ;; skewer mode
-
-;; (defvar cats//executable-phantomjs nil)
-;; (defvar cats/phantomjs-executable-hook nil
-;;   "Hooks run when cats//executable-phantomjs is changed.")
-
 (defun cats//locate-phantomjs-from-projectile (&optional dir)
   "Use local phantomjs from `DIR'."
   (when (empty-string-p dir)

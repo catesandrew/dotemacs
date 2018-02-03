@@ -123,10 +123,8 @@
     :defer t
     :init
     (progn
-      (with-eval-after-load 'projectile
-        (add-hook 'cats/project-hook
-           'cats//locate-handlebars-from-projectile)
-        (run-hooks 'cats/project-hook))
+      (add-hook 'cats/project-hook
+         'cats//locate-handlebars-from-projectile)
 
       (with-eval-after-load 'flycheck
         (add-hook 'cats/handlebars-executable-hook
