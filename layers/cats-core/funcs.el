@@ -1,7 +1,10 @@
-(defun cats/run-project-hook (&optional str)
-  (when cats/verbose
-    (message "!!! Running cats/project hook: %s" str))
-  (run-hook-with-args 'cats/project-hook str))
+(defun cats/run-project-hook (&optional dir)
+  "Sets cats//projectile-curr."
+  (unless (string= dir cats//projectile-curr)
+    (when cats/verbose
+      (message "projectile-curr updated: %s" dir))
+    (setq cats//projectile-curr dir)
+    (ignore-errors (run-hook-with-args 'cats/project-hook dir))))
 
 (defun cats/executable-find (command directory)
   "Search for COMMAND in DIRECTORY and return the absolute file name.

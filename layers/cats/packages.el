@@ -672,11 +672,16 @@ which is pretty awesome with: (helm-mode 1)"
 
 
 ;; helm-projectile
+(defun cats//on-helm-projectile-project-hook (&optional dir)
+  (if (empty-string-p dir)
+      (helm-projectile-off)
+    (helm-projectile-on)))
+
 (defun cats/pre-init-helm-projectile ()
   (spacemacs|use-package-add-hook helm-projectile
     :post-init
     (progn
-      (helm-projectile-on)
+      (add-hook 'cats/project-hook 'cats//on-helm-projectile-project-hook)
 
       ;; https://github.com/syl20bnr/spacemacs/issues/1544
       ;; Vim users are used to CtrlP plugin.

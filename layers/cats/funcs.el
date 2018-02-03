@@ -76,6 +76,10 @@ symbols, emojis, greek letters, as well as fall backs for."
   (while (string-match "\\`\n+\\|^\\s-+\\|\\s-+$\\|\n+\\'" str)
     (setq str (replace-match "" t t str))) str)
 
+(defun empty-string-p (string)
+  "Return true if the string is empty or nil. Expects string."
+  (or (null string)
+      (zerop (length (string-trim string)))))
 
 ;; grep
 (defun rgrep-quit-window ()

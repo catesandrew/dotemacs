@@ -123,7 +123,6 @@ Try the repeated popping up to 10 times."
         ;; (cats//locate-find)
 
         (setq projectile-use-git-grep t)
-        ;; (setq projectile-switch-project-action 'projectile-dired)
         (setq projectile-find-dir-includes-top-level t)
         (setq projectile-require-project-root t)
         (setq projectile-verbose nil))
@@ -172,7 +171,7 @@ Try the repeated popping up to 10 times."
       (progn
         (with-eval-after-load 'projectile
           (add-hook 'cats/project-hook
-                    'cats//neotree-dir-from-projectile-root t nil)))))
+             'cats//neotree-dir-from-projectile-root t nil)))))
 
   (spacemacs|use-package-add-hook neotree
     :post-init

@@ -38,20 +38,17 @@
 
 ;; handlebars
 (defun cats//locate-handlebars-from-projectile (&optional dir)
-  "Use local handlebars from DIR or `projectile-project-root'."
-  (let ((proj-root (or dir (projectile-project-root)))
-        (proj-type (projectile-detect-project-type)))
-    (when (string= proj-type "npm")
-      (async-start
-       `(lambda ()
-          (set  'proj-root ,proj-root)
-          (let ((default-directory proj-root))
-            (executable-find "handlebars")))
-       (lambda (result)
-         (if result
-             (cats/set-executable-handlebars result)
-           (message "Unable to locate handlebars."))
-         )))))
+  "Use local handlebars from DIR."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "handlebars"))
+     (lambda (result)
+       (when result
+         (cats/set-executable-handlebars result))))))
 
 (defun cats//hbs-set-handlebars-executable (handlebars)
   "Set the `flycheck-handlebars-executable' setting in `handlebarse' with `HANDLEBARS'."

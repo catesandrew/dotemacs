@@ -52,43 +52,43 @@
 
       (defun cats//locate-jshint-from-projectile (&optional dir)
         "Use local jshint from `./node_modules` if available."
-        (let ((proj-root (or dir (projectile-project-root)))
-              (proj-type (projectile-detect-project-type)))
-          (when (string= proj-type "npm")
-            (async-start
-             `(lambda ()
-                (set  'proj-root ,proj-root)
-                (let ((default-directory proj-root))
-                  (executable-find "jshint")))
-             (lambda (result)
+        (when (empty-string-p dir)
+          (setq dir default-directory))
+
+        (let ((default-directory dir))
+          (async-start
+           `(lambda ()
+              (executable-find "jshint"))
+           (lambda (result)
+             (when result
                (cats/set-executable-jshint result))))))
       (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
 
       (defun cats//locate-jscs-from-projectile (&optional dir)
         "Use local jscs from `./node_modules` if available."
-        (let ((proj-root (or dir (projectile-project-root)))
-              (proj-type (projectile-detect-project-type)))
-          (when (string= proj-type "npm")
-            (async-start
-             `(lambda ()
-                (set  'proj-root ,proj-root)
-                (let ((default-directory proj-root))
-                  (executable-find "jscs")))
-             (lambda (result)
+        (when (empty-string-p dir)
+          (setq dir default-directory))
+
+        (let ((default-directory dir))
+          (async-start
+           `(lambda ()
+              (executable-find "jscs"))
+           (lambda (result)
+             (when result
                (cats/set-executable-jscs result))))))
       (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
 
       (defun cats//locate-eslint-from-projectile (&optional dir)
         "Use local eslint from `./node_modules` if available."
-        (let ((proj-root (or dir (projectile-project-root)))
-              (proj-type (projectile-detect-project-type)))
-          (when (string= proj-type "npm")
-            (async-start
-             `(lambda ()
-                (set  'proj-root ,proj-root)
-                (let ((default-directory proj-root))
-                  (executable-find "eslint")))
-             (lambda (result)
+        (when (empty-string-p dir)
+          (setq dir default-directory))
+
+        (let ((default-directory dir))
+          (async-start
+           `(lambda ()
+              (executable-find "eslint"))
+           (lambda (result)
+             (when result
                (cats/set-executable-eslint result))))))
       (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
 
@@ -102,33 +102,37 @@
                       (file-name-nondirectory (directory-file-name (or dir (projectile-project-root)))))))
       ;; (add-hook 'cats/project-hook 'cats//dabbrev-from-projectile)
 
-      (make-local-variable
-       (defvar cats/projectile-curr nil
-         "The current projectile project."))
-
       (defun cats/find-file-hook-to-project ()
         "Use ."
         (when cats/verbose
           (message "!!! Running cats//find-file-hook-to-project"))
         (defun cats/do-nothing ())
-        (let ((projectile-require-project-root t))
-          (when (projectile-project-p)
-            (let ((project-root (projectile-project-root))
-                  (proj-dir-root (directory-file-name (projectile-project-root)))
-                  (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))))
-              (when (and project-root
-                         (not (string= project-root cats/projectile-curr)))
-                (let ((projectile-switch-project-action 'cats/do-nothing))
-                  (when cats/verbose
-                    (message "!!! Project Root %s" project-root)
-                    (message "!!! Project Base %s" proj-dir-base)
-                    (message "!!! Project Dir %s" proj-dir-root)
-                    (message "!!! Buffer Name %s" buffer-file-name))
-                  (projectile-switch-project-by-name project-root)
-                  (setq cats/projectile-curr project-root)
-                  (setq cats/projectile-dir-root proj-dir-root)
-                  (setq cats/projectile-dir-base proj-dir-base)
-                  (cats/run-project-hook project-root)))))))
+
+        (condition-case err
+            (let ((projectile-require-project-root t))
+              (projectile-project-root)
+              (let ((project-root (projectile-project-root))
+                    (proj-dir-root (directory-file-name (projectile-project-root)))
+                    (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))))
+                (when (and project-root
+                           (not (string= project-root cats//projectile-curr)))
+                  (let ((projectile-switch-project-action 'cats/do-nothing))
+                    (when cats/verbose
+                      (message "Project Root %s" project-root)
+                      (message "Project Base %s" proj-dir-base)
+                      (message "Project Dir %s" proj-dir-root)
+                      (message "Buffer Name %s" buffer-file-name))
+                    (projectile-switch-project-by-name project-root)
+                    (setq cats/projectile-dir-root proj-dir-root)
+                    (setq cats/projectile-dir-base proj-dir-base)
+                    (cats/run-project-hook project-root)))))
+          (error
+           (progn
+             (setq cats/projectile-dir-root nil)
+             (setq cats/projectile-dir-base nil)
+             (cats/run-project-hook nil))
+           nil))
+        )
 
       ;; does not attach to any c-level calls but is best we got
       (defadvice switch-to-buffer (after cats/projectile-switch activate)

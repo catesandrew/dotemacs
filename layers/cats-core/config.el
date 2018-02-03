@@ -1,11 +1,12 @@
 (defvar cats/projectile-require-project-root
   "Require projectile root.")
 
+(defvar cats//projectile-curr nil
+  "The current projectile project.")
 (defvar cats/project-hook nil
   "Hooks run when a cats/project is fired.")
 
 (defvar cats//executable-eslint nil)
-
 (defvar cats/eslint-executable-hook nil
   "Hooks run when cats//executable-eslint is changed.")
 

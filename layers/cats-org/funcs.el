@@ -1,4 +1,3 @@
-
 
 ;; personal org-mode defaults
 

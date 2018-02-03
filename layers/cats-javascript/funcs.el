@@ -10,31 +10,31 @@
 ;; funcs
 (defun cats//locate-node-from-projectile (&optional dir)
   "Use local node from `./node_modules` if available."
-  (let ((proj-root (or dir (projectile-project-root)))
-        (proj-type (projectile-detect-project-type)))
-    (when (string= proj-type "npm")
-      (async-start
-       `(lambda ()
-          (set  'proj-root ,proj-root)
-          (let ((default-directory proj-root))
-            (executable-find "node")))
-       (lambda (result)
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "node"))
+     (lambda (result)
+       (when result
          (cats/set-executable-node result))))))
 
 
 ;; babel
 
 (defun cats//locate-babel-node-from-projectile (&optional dir)
-  "Use local babel-node from DIR or `projectile-project-root'."
-  (let ((proj-root (or dir (projectile-project-root)))
-        (proj-type (projectile-detect-project-type)))
-    (when (string= proj-type "npm")
-      (async-start
-       `(lambda ()
-          (set  'proj-root ,proj-root)
-          (let ((default-directory proj-root))
-            (executable-find "babel-node")))
-       (lambda (result)
+  "Use local babel-node from DIR."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "babel-node"))
+     (lambda (result)
+       (when result
          (cats/set-executable-babel-node result))))))
 
 (defun cats//set-babel-node-executable (babel-node)
@@ -92,16 +92,16 @@
 ;; coffee
 
 (defun cats//locate-coffeelint-from-projectile (&optional dir)
-  "Use local coffeelint from DIR or `projectile-project-root'."
-  (let ((proj-root (or dir (projectile-project-root)))
-        (proj-type (projectile-detect-project-type)))
-    (when (string= proj-type "npm")
-      (async-start
-       `(lambda ()
-          (set  'proj-root ,proj-root)
-          (let ((default-directory proj-root))
-            (executable-find "coffeelint")))
-       (lambda (result)
+  "Use local coffeelint from DIR."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "coffeelint"))
+     (lambda (result)
+       (when result
          (cats/set-executable-coffeelint result))))))
 
 (defun cats//set-coffeelint-executable (coffeelint)
@@ -251,15 +251,15 @@
 ;; mocha
 (defun cats//locate-mocha-from-projectile (&optional dir)
   "Use local mocha from `./node_modules` if available."
-  (let ((proj-root (or dir (projectile-project-root)))
-        (proj-type (projectile-detect-project-type)))
-    (when (string= proj-type "npm")
-      (async-start
-       `(lambda ()
-          (set  'proj-root ,proj-root)
-          (let ((default-directory proj-root))
-            (executable-find "mocha")))
-       (lambda (result)
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "mocha"))
+     (lambda (result)
+       (when result
          (cats/set-executable-mocha result))))))
 
 (defun cats//set-mocha-executable (mocha)
@@ -320,16 +320,16 @@
 ;;   "Hooks run when cats//executable-phantomjs is changed.")
 
 (defun cats//locate-phantomjs-from-projectile (&optional dir)
-  "Use local mocha from `./node_modules` if available."
-  (let ((proj-root (or dir (projectile-project-root)))
-        (proj-type (projectile-detect-project-type)))
-    (when (string= proj-type "npm")
-      (async-start
-       `(lambda ()
-          (set  'proj-root ,proj-root)
-          (let ((default-directory proj-root))
-            (executable-find "phantomjs")))
-       (lambda (result)
+  "Use local phantomjs from `DIR'."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "phantomjs"))
+     (lambda (result)
+       (when result
          (cats/set-executable-phantomjs result))))))
 
 (defun cats//skewer-set-phantomjs-executable (phantomjs)

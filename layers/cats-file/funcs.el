@@ -172,18 +172,16 @@ none."
 
 ;; neotree/projectile integration
 
-(defun cats//neotree-dir-from-projectile-root (&optional dir)
+(defun cats//neotree-dir-from-projectile-root (dir)
   "Neotree responds to projectile root `DIR' when opening."
-  (when (and (fboundp 'projectile-project-root)
-             (fboundp 'neotree-dir))
-    (let ((proj-root (or dir (projectile-project-root)))
-          (neo-open (neo-global--window-exists-p)))
+  (when (and dir (fboundp 'neotree-dir))
+    (let ((neo-open (neo-global--window-exists-p)))
       (when cats/verbose
-        (message "Neotree switching to project: %s" proj-root))
+        (message "Neotree switching to project: %s" dir))
 
-      (neo-global--open-dir proj-root)
+      (neo-global--open-dir dir)
       (let ((origin-buffer-file-name buffer-file-name))
-        (neotree-find proj-root)
+        (neotree-find dir)
         (neotree-find origin-buffer-file-name)
         (call-interactively 'neotree-enter))
       (unless neo-open
