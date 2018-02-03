@@ -101,6 +101,7 @@ values."
      markdown
      python
      ruby
+     go
      (rust :variables
            ;; Enable auto-completion for Rust
            rust-enable-racer t)
