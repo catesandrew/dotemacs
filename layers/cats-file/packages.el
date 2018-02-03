@@ -124,7 +124,6 @@ Try the repeated popping up to 10 times."
 
         (setq projectile-use-git-grep t)
         (setq projectile-find-dir-includes-top-level t)
-        (setq projectile-require-project-root t)
         (setq projectile-verbose nil))
       :pre-config
       (progn

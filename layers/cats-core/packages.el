@@ -51,6 +51,9 @@
       (when cats/projectile-enable-caching
         (setq projectile-enable-caching t))
 
+      (when cats/projectile-require-project-root
+        (setq projectile-require-project-root t))
+
       (defun cats//locate-jshint-from-projectile (&optional dir)
         "Use local jshint from `./node_modules` if available."
         (when (empty-string-p dir)

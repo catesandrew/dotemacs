@@ -91,3 +91,6 @@
 
 (defvar cats/projectile-enable-caching nil
   "Enable projectile caching.")
+
+(defvar cats/projectile-require-project-root nil
+  "Require project root for projectile.")
