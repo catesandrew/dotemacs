@@ -91,7 +91,13 @@ values."
      ;; Programming and markup languages
      ansible
      csv
-     ;; dockerfile
+     docker
+     pdf-tools
+     rebox
+     ranger
+     pandoc
+     fasd
+     nginx
      emacs-lisp
      (haskell :variables haskell-enable-hindent-style "johan-tibell")
      (html :variables css-indent-offset 2)
