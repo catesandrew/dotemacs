@@ -32,7 +32,6 @@
     company
     company-emoji
     ;; Tools
-    ispell
     flycheck
     git-commit
     magit
@@ -374,22 +373,6 @@ ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
             :off (writeroom-mode -1)
             :documentation "Enable distraction-free editing"
             :evil-leader "tow")))
-
-(defun cats/init-ispell ()
-  (use-package ispell
-    :defer t
-    :config
-    (progn
-      (setq ispell-program-name (executable-find "aspell")
-            ispell-silently-savep t       ; Don't ask when saving the private dict
-            ;; Increase the height of the choices window to take our header line
-            ;; into account.
-            ispell-choices-win-default-height 5
-            ;; Default dictionary
-            ispell-dictionary "en_US")
-
-      (unless ispell-program-name
-        (warn "No spell checker available, install ASpell.")))))
 
 (defun cats/pre-init-flycheck ()
   (spacemacs|use-package-add-hook flycheck

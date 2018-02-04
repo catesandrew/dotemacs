@@ -90,6 +90,9 @@
   (spacemacs|use-package-add-hook flyspell
     :post-init
     (progn
+      ;; quiet "starting new ispell process" messages
+      (advice-add #'ispell-init-process :around #'message-off-advice)
+
       (setq flyspell-use-meta-tab nil
             flyspell-issue-welcome-flag nil  ;; Make Flyspell less chatty
             flyspell-issue-message-flag nil)
@@ -103,6 +106,6 @@
         "oSp" 'flyspell-goto-previous-error))
     :post-config
     (progn
-      ;; Undefine mouse buttons which get in the way
+      ;; Un define mouse buttons which get in the way
       (define-key flyspell-mouse-map [down-mouse-2] nil)
       (define-key flyspell-mouse-map [mouse-2] nil))))
