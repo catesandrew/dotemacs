@@ -224,7 +224,12 @@
 
       (exec-path-from-shell-initialize)
 
+      ;; TODO: get vars from system or env vars, below are two ways with osx:
+      ;; finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //'
+      ;; dscl . read /Users/`whoami` RealName | grep -v RealName | cut -c 2-
+      (setq user-full-name "Andrew Cates")
       (setq user-mail-address (getenv "EMAIL"))
+      (setq user-mail-address "andrew@cates.io")
 
       ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
       ;; already initializes info, we need to explicitly add the $INFOPATH
@@ -245,42 +250,19 @@
     :post-config
     ;; Always show default input method
     (setq spaceline-show-default-input-method t)
+    (spacemacs/toggle-mode-line-battery-off)
+    (spacemacs/toggle-mode-line-minor-modes-off)
 
     ;; 1 set srgb to nil to prevent emacs crashing after setting 2 and 3
     (setq ns-use-srgb-colorspace nil)
     ;; 2 use utf-8 separators because they look best
     ;; (setq powerline-default-separator 'utf-8)
-
-    ;; My personal branding
-    (spaceline-define-segment cats-branding
-      "My personal branding."
-      "🦁"
-      ;; Only on graphic displays, because emojis display poorly on most TTYs
-      :when (display-graphic-p)
-      :skip-alternate t
-      :enabled t)
-
-    (defun cats-spacemacs-theme (&rest additional-segments)
-      "Install the modeline used by Spacemacs.
-ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
-`buffer-position'."
-      (apply 'spaceline--theme
-             '((cats-branding
-                persp-name
-                workspace-number
-                window-number)
-               :fallback evil-state
-               :face highlight-face
-               :priority 0)
-             '((buffer-modified buffer-size buffer-id remote-host)
-               :priority 5)
-             additional-segments))
-    (cats-spacemacs-theme)))
+    ))
 
 (defun cats/init-remember ()
   (use-package remember
-    ;; Persistent scratch buffer.  Still disabled because this configuration
-    ;; doesn't yet override *scratch* properly.  Need to investigate
+    ;; Persistent scratch buffer. Still disabled because this configuration
+    ;; doesn't yet override *scratch* properly. Need to investigate
     :disabled t
     :init
     (setq initial-buffer-choice 'remember-notes
@@ -377,7 +359,11 @@ ADDITIONAL-SEGMENTS are inserted on the right, between `global' and
 (defun cats/pre-init-flycheck ()
   (spacemacs|use-package-add-hook flycheck
     ;; Enable Flycheck everywhere
-    :post-init (setq flycheck-global-modes t)))
+    :post-init
+    (progn
+      (add-hook 'cats/tidy-executable-hook
+         'cats//set-tidy-executable)
+      (setq flycheck-global-modes t))))
 
 (defun cats/post-init-git-commit ()
   ;; Support Git Commit Mode for external `git commit'

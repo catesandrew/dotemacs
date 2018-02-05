@@ -208,15 +208,28 @@ Add this to `kill-buffer-query-functions'."
 ;; find
 (defun cats//locate-find ()
   "Use find or gfind."
+  (if (eq system-type 'darwin)
+      (setq app "gfind")
+    (setq app "find"))
+
   (async-start
    `(lambda ()
-      (if (eq system-type 'darwin)
-          (executable-find "gfind")
-        (executable-find "find")))
+      (set  'app ,app)
+      (executable-find app))
    (lambda (result)
-     (if result
-         (cats/set-executable-find result)
-       (message "Unable to locate find.")))))
+     (when result
+       (cats/set-executable-find result)))))
+
+
+;; tidy
+(defun cats//locate-tidy ()
+  "Use tidy5 or tidy."
+  (async-start
+   `(lambda ()
+      (executable-find "tidy"))
+   (lambda (result)
+     (when result
+       (cats/set-executable-tidy result)))))
 
 
 ;; prettyify symbols

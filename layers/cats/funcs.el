@@ -135,4 +135,10 @@ symbols, emojis, greek letters, as well as fall backs for."
                                          :buffer-list (lambda () (helm-browse-project-get-buffers
                                                              (helm-ls-git-root-dir))))))))
 
+
+;; flycheck
+(defun cats//set-tidy-executable (tidy)
+  "Set the `flycheck-html-tidy-executable' setting with `TIDY'."
+  (setq flycheck-html-tidy-executable tidy))
+
 ;;; funcs.el ends here

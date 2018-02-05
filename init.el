@@ -407,7 +407,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Don't nag me compile!
   (setq compilation-ask-about-save nil)
 
-  (add-hook 'emacs-startup-hook 'cats//locate-find)
+  (when (spacemacs/window-system-is-mac)
+    (-when-let* ((frame (selected-frame)))
+      (cats-configure-fonts frame))
+    (add-hook 'after-make-frame-functions #'cats-configure-fonts))
 
   (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
   (setq spacemacs-useless-buffers-regexp '("^\\*[^\\*]+\\*$"))
@@ -447,12 +450,7 @@ you should place you code here."
 
   (when (display-graphic-p)
     (spacemacs|do-after-display-system-init
-     (cats//set-frame-size)))
-
-  (when (spacemacs/window-system-is-mac)
-    (-when-let* ((frame (selected-frame)))
-      (cats-configure-fonts frame))
-    (add-hook 'after-make-frame-functions #'cats-configure-fonts)))
+     (cats//set-frame-size))))
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()
@@ -460,10 +458,10 @@ you should place you code here."
           '(:eval (if (buffer-file-name)
                       (cats/abbreviate-file-name (buffer-file-name)) "%b")))
 
-    (setq user-full-name "Andrew Cates")
-    (setq user-mail-address "andrew@cates.io")
     (setq-default c-basic-offset 2)
     (setq-default tab-width 2)
+    (cats//locate-find)
+    (cats//locate-tidy)
 
     ;; Inhibit killing of important buffers
     (when buffer/do-not-kill-important-buffers
@@ -471,11 +469,7 @@ you should place you code here."
 
     ;; Autosave buffers when focus is lost, see
     (when buffer/force-save-some-buffers
-      (add-hook 'focus-out-hook 'cats//force-save-some-buffers))
-
-    ;; (when-let* (tidy5 (executable-find "tidy5"))
-    ;;   (dotemacs/set-executable-tidy tidy5))
-    ))
+      (add-hook 'focus-out-hook 'cats//force-save-some-buffers))))
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)
