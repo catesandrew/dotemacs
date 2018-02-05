@@ -65,6 +65,12 @@
   (spacemacs|use-package-add-hook web-mode
     :post-config
     (progn
+      ;; use 2 space indent also for element’s attributes,
+      ;; concatenations and contiguous function calls:
+      (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+      (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+      (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+
       (setq web-mode-enable-auto-pairing nil
             web-mode-markup-indent-offset 2
             web-mode-code-indent-offset 2

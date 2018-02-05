@@ -9,6 +9,9 @@
 (spacemacs|defvar-company-backends js2-jsx-mode)
 (spacemacs|define-jump-handlers js2-jsx-mode)
 
+(spacemacs|defvar-company-backends rjsx-mode)
+(spacemacs|define-jump-handlers rjsx-mode)
+
 (defvar cats/js-doc-mail-address "andrew@cates.io")
 (defvar cats/js-doc-author (format "Andrew Cates <%s>" cats/js-doc-mail-address))
 (defvar cats/js-doc-url "https://gitlab.cates.io/u/andrew")

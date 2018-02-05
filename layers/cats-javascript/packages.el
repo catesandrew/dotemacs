@@ -30,7 +30,31 @@
     web-beautify
     xref-js2
     ;; ycmd
+    rjsx-mode
     ))
+
+
+
+;; rjsx
+(defun cats-javascript/init-rjsx-mode ()
+  (use-package rjsx-mode
+    :defer t
+    :init
+    (progn
+      ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
+      (setq js2-mode-show-strict-warnings nil
+            js2-mode-show-parse-errors nil
+            js-indent-level 2
+            js2-basic-offset 2
+            js2-strict-trailing-comma-warning nil
+            js2-strict-missing-semi-warning nil)
+
+      (advice-add #'js-jsx-indent-line
+                  :after
+                  #'cats//js-jsx-indent-line-align-closing-bracket))
+    :config
+    (modify-syntax-entry ?_ "w" js2-mode-syntax-table)))
 
 
 ;; babel
@@ -91,22 +115,26 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
+  (spacemacs|add-company-hook rjsx-mode)
   (spacemacs|add-company-hook js2-jsx-mode))
 
 
 ;; company-tern
 (defun cats-javascript/post-init-company-tern ()
+  (push 'company-tern company-backends-rjsx-mode)
   (push 'company-tern company-backends-js2-jsx-mode))
 
 
 ;; company-ycmd
 (defun cats-javascript/post-init-company-ycmd ()
+  (push 'company-ycmd company-backends-rjsx-mode)
   (push 'company-ycmd company-backends-js2-mode)
   (push 'company-ycmd company-backends-js2-jsx-mode))
 
 
 ;; flycheck
 (defun cats-javascript/post-init-flycheck ()
+  (spacemacs/add-flycheck-hook 'rjsx-mode)
   (spacemacs/add-flycheck-hook 'js2-jsx-mode))
 
 
@@ -129,10 +157,11 @@
               " * @license %l\n"
               js-doc-bottom-line))
 
+      (add-hook 'rjsx-mode-hook 'spacemacs/js-doc-require)
       (add-hook 'js2-jsx-mode-hook 'spacemacs/js-doc-require)
       (add-hook 'react-mode-hook 'spacemacs/js-doc-require)
 
-      (dolist (mode '(js2-mode js2-jsx-mode react-mode))
+      (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mrd" "jsdoc")
         (spacemacs/js-doc-set-key-bindings mode)))))
 
@@ -199,6 +228,7 @@
 
       (with-eval-after-load 'flycheck
         (add-hook 'js2-mode-hook 'cats/disable-js2-checks-if-flycheck-active)
+        (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active)
         (add-hook 'js2-jsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active)))))
 
 
@@ -221,6 +251,7 @@
 
 ;; js2-refactor
 (defun cats-javascript/post-init-js2-refactor ()
+  (add-hook 'rjsx-mode-hook 'spacemacs/js2-refactor-require)
   (add-hook 'js2-jsx-mode-hook 'spacemacs/js2-refactor-require))
 
 
@@ -257,7 +288,7 @@
       (defalias 'js-live-eval 'livid-mode
         "Minor mode for automatic evaluation of a JavaScript buffer on every change")
 
-      (dolist (mode '(js2-mode js2-jsx-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "ml" "livid")
         (spacemacs/set-leader-keys-for-major-mode mode
           "le" 'js-live-eval)))))
@@ -271,7 +302,7 @@
     :defer t
     :init
     (progn
-      (dolist (mode '(js2-mode js2-jsx-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode))
         (spacemacs/declare-prefix-for-mode mode "mm" "mocha")
         (spacemacs/set-leader-keys-for-major-mode mode
           "mp" 'mocha-test-project
@@ -314,7 +345,7 @@
       (spacemacs/register-repl 'nodejs-repl 'nodejs-repl "nodejs")
       (push "\\*nodejs\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter nodejs-repl-mode)
-      (dolist (mode '(js2-mode js2-jsx-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode))
         (spacemacs/declare-prefix-for-mode mode "mn" "nodejs")
         (spacemacs/set-leader-keys-for-major-mode mode
           "n'" 'nodejs-start-repl
@@ -375,7 +406,7 @@
       (add-hook 'html-mode-hook 'skewer-html-mode))
     :post-config
     (progn
-      (dolist (mode '(js2-jsx-mode web-mode react-mode css-mode html-mode))
+      (dolist (mode '(rjsx-mode js2-jsx-mode web-mode react-mode css-mode html-mode))
         (spacemacs/declare-prefix-for-mode mode "ms" "skewer")
         (spacemacs/declare-prefix-for-mode mode "me" "eval")
         (spacemacs/set-leader-keys-for-major-mode mode
@@ -397,6 +428,8 @@
 (defun cats-javascript/pre-init-smartparens ()
   (spacemacs|use-package-add-hook smartparens
     :post-config
+    (sp-with-modes 'rjsx-mode
+      (sp-local-pair "<" ">"))
     (sp-with-modes 'js2-jsx-mode
       (sp-local-pair "<" ">"))))
 
@@ -406,12 +439,13 @@
   (spacemacs|use-package-add-hook tern
     :post-init
     (progn
-      (add-hook 'js2-jsx-mode-hook 'tern-mode)
+      (add-hook 'rjsx-mode-hook 'tern-mode)
+      (add-hook 'react-mode-hook 'tern-mode)
       (add-hook 'js2-jsx-mode-hook 'tern-mode))
 
     :post-config
     (progn
-      (dolist (mode '(js2-jsx-mode react-mode))
+      (dolist (mode '(rjsx-mode js2-jsx-mode react-mode))
         (when javascript-disable-tern-port-files
           (add-to-list 'tern-command "--no-port-file" 'append))
         (spacemacs//set-tern-key-bindings mode)))))
@@ -419,6 +453,7 @@
 
 ;; web-beautify
 (defun cats-javascript/post-init-web-beautify ()
+  (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode  "=" 'web-beautify-js)
   (spacemacs/set-leader-keys-for-major-mode 'js2-jsx-mode  "=" 'web-beautify-js))
 
 
@@ -432,7 +467,7 @@
       ;; (evilified-state-evilify xref-js2-mode xref-js2-mode-map
       ;;   (kbd "q") 'quit-window)
 
-      (dolist (mode '(js2-mode js2-jsx-mode react-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode web-mode))
         (spacemacs/declare-prefix-for-mode mode "mj" "jump/join/split")
         (spacemacs/set-leader-keys-for-major-mode mode
           "jg" 'xref-find-definitions
@@ -447,11 +482,13 @@
 
 ;; ycmd
 (defun cats-javascript/post-init-ycmd ()
+  (add-hook 'rjsx-mode-hook 'ycmd-mode)
   (add-hook 'js2-mode-hook 'ycmd-mode)
   (add-hook 'js2-jsx-mode-hook 'ycmd-mode)
+  (add-to-list 'spacemacs-jump-handlers-rjsx-mode '(ycmd-goto :async t))
   (add-to-list 'spacemacs-jump-handlers-js2-mode '(ycmd-goto :async t))
   (add-to-list 'spacemacs-jump-handlers-js2-jsx-mode '(ycmd-goto :async t))
-  (dolist (mode '(js2-mode js2-jsx-mode))
+  (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
     (spacemacs/set-leader-keys-for-major-mode mode
       "jy" 'ycmd-goto
       "jY" 'ycmd-goto-imprecise)))
