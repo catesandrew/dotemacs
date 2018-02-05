@@ -106,6 +106,10 @@
         (with-syntax-table table
           ad-do-it)))
 
+    (spacemacs/toggle-rainbow-identifier-on)
+    ;; (spacemacs/toggle-global-rainbow-identifiers-mode-on)
+    ;; (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
+
     (spacemacs/toggle-auto-fill-comments-mode-on)
     ;; (subword-mode +1) ;; camelCase
     (cats/highlight-TODO-words)
