@@ -453,11 +453,7 @@ you should place you code here."
     (-when-let* ((frame (selected-frame)))
       (cats-configure-fonts frame))
     (add-hook 'after-make-frame-functions #'cats-configure-fonts))
-
-  ;; On OS X the menu bar is always there anyway, and there's no use in an empty
-  ;; menu bar either, so let's re-enable the menu bar on OS X
-  (when (memq window-system '(mac ns))
-    (menu-bar-mode 1)))
+  )
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()
