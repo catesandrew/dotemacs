@@ -31,6 +31,10 @@
     xref-js2
     ;; ycmd
     rjsx-mode
+    emmet-mode
+    ggtags
+    helm-gtags
+    evil-matchit
     ))
 
 
@@ -41,20 +45,43 @@
     :defer t
     :init
     (progn
-      ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
-
-      (setq js2-mode-show-strict-warnings nil
-            js2-mode-show-parse-errors nil
-            js-indent-level 2
-            js2-basic-offset 2
-            js2-strict-trailing-comma-warning nil
-            js2-strict-missing-semi-warning nil)
+      ;; (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
+      (add-to-list 'auto-mode-alist '("\\.react.js\\'" . rjsx-mode))
+      (add-to-list 'auto-mode-alist '("\\index.android.js\\'" . rjsx-mode))
+      (add-to-list 'auto-mode-alist '("\\index.ios.js\\'" . rjsx-mode))
+      ;; (add-to-list 'magic-mode-alist '("/\\*\\* @jsx React\\.DOM \\*/" . rjsx-mode))
+      ;; (add-to-list 'magic-mode-alist '("^import React" . rjsx-mode))
 
       (advice-add #'js-jsx-indent-line
                   :after
                   #'cats//js-jsx-indent-line-align-closing-bracket))
     :config
-    (modify-syntax-entry ?_ "w" js2-mode-syntax-table)))
+    (progn
+      ;; subword mode
+      ;;(modify-syntax-entry ?_ "w" js2-mode-syntax-table)
+
+      (evil-define-key 'insert rjsx-mode-map (kbd "C-d") 'cats//rjsx-delete-creates-full-tag-with-insert)
+      (evil-define-key 'normal rjsx-mode-map (kbd "C-d") 'cats//rjsx-delete-creates-full-tag-with-insert)
+
+      (with-eval-after-load 'flycheck
+        (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active))
+      )))
+
+
+
+;; emmet-mode
+(defun cats-javascript/post-init-emmet-mode ()
+  (add-hook 'rjsx-mode-hook 'emmet-mode)
+  (add-hook 'rjsx-mode-hook 'cats//setup-emmet-mode-for-react))
+
+(defun cats-javascript/post-init-ggtags ()
+  (add-hook 'rjsx-mode-hook #'spacemacs/ggtags-mode-enable))
+
+(defun cats-javascript/post-init-helm-gtags ()
+  (spacemacs/helm-gtags-define-keys-for-mode 'rjsx-mode))
+
+(defun cats-javascript/post-init-evil-matchit ()
+  (add-hook `rjsx-mode `turn-on-evil-matchit-mode))
 
 
 ;; babel
@@ -228,7 +255,6 @@
 
       (with-eval-after-load 'flycheck
         (add-hook 'js2-mode-hook 'cats/disable-js2-checks-if-flycheck-active)
-        (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active)
         (add-hook 'js2-jsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active)))))
 
 

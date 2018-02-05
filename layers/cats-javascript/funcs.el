@@ -352,4 +352,13 @@
     (when (looking-at-p "^ +\/?> *$")
       (delete-char sgml-basic-offset))))
 
+(defun cats//rjsx-delete-creates-full-tag-with-insert (args)
+  (interactive "p")
+  (rjsx-delete-creates-full-tag args)
+  (evil-insert args))
+
+(defun cats//setup-emmet-mode-for-react ()
+  (emmet-mode 0)
+  (setq-local emmet-expand-jsx-className? t))
+
 ;;; funcs.el ends here

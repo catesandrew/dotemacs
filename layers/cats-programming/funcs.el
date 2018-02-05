@@ -60,6 +60,7 @@
               js-mode
               js-jsx-mode
               js2-jsx-mode
+              rjsx-mode
               react-mode
               javascript-mode))
     (cats/pretty-symbols pretty-symbols/js2))
