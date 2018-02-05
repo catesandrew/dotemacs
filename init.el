@@ -68,8 +68,6 @@ values."
      evil-commentary
      ;; Syntax and spell checking
      (spell-checking :variables
-                     enable-flyspell-auto-completion t
-                     ;; spell-checking-enable-auto-dictionary t
                      flyspell-default-dictionary "en")
      syntax-checking
      ;; Version control

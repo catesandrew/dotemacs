@@ -761,15 +761,6 @@ don't want to fix with `SPC', and you can abort completely with
                    bef aft (if p "loc" "glob")))
       (user-error "No typo at or before point"))))
 
-(defun message-off-advice (oldfun &rest args)
-  "Quiet down messages in adviced OLDFUN."
-  (let ((message-off (make-symbol "message-off")))
-    (unwind-protect
-        (progn
-          (advice-add #'message :around #'ignore (list 'name message-off))
-          (apply oldfun args))
-      (advice-remove #'message message-off))))
-
 
 ;; text-mode hooks
 (defun cats/text-mode-defaults ()
