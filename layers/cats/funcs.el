@@ -68,7 +68,6 @@ symbols, emojis, greek letters, as well as fall backs for."
   (set-fontset-font t nil (font-spec :family "Apple Symbols")
                     frame 'append))
 
-
 
 ;; utils
 (defun chomp (str)

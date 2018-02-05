@@ -449,11 +449,10 @@ you should place you code here."
     (spacemacs|do-after-display-system-init
      (cats//set-frame-size)))
 
-  ;; (unless (eq window-system 'mac)
-  ;;   (-when-let* ((frame (selected-frame)))
-  ;;     (cats-configure-fonts frame))
-  ;;   (add-hook 'after-make-frame-functions #'cats-configure-fonts))
-  )
+  (when (spacemacs/window-system-is-mac)
+    (-when-let* ((frame (selected-frame)))
+      (cats-configure-fonts frame))
+    (add-hook 'after-make-frame-functions #'cats-configure-fonts)))
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()
