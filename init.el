@@ -101,6 +101,8 @@ values."
      fasd
      nginx
      emacs-lisp
+     common-lisp
+     plantuml
      (haskell :variables haskell-enable-hindent-style "johan-tibell")
      (html :variables css-indent-offset 2)
      ipython-notebook
@@ -110,6 +112,7 @@ values."
      python
      ruby
      go
+     slack
      (rust :variables
            ;; Enable auto-completion for Rust
            rust-enable-racer t)
