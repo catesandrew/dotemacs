@@ -50,16 +50,17 @@ values."
      osx
      ;; Editing
      helm
-     (auto-completion
-      :variables
-        auto-completion-complete-with-key-sequence '"jk"
-        auto-completion-complete-with-key-sequence-delay 0.2
-        auto-completion-enable-help-tooltip t
-        auto-completion-enable-snippets-in-popup t
-        auto-completion-enable-sort-by-usage t
-        auto-completion-return-key-behavior 'complete
-        auto-completion-tab-key-behavior 'cycle
-        )
+     (auto-completion :variables
+                      auto-completion-complete-with-key-sequence '"jk"
+                      auto-completion-complete-with-key-sequence-delay 0.2
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      :disabled-for
+                      markdown
+                      git)
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      colors
      emoji
@@ -115,6 +116,7 @@ values."
             ;; Automatically insert asterisk in comments
             scala-auto-insert-asterisk-in-comments t)
      (shell-scripts :variables
+                    shell-default-shell 'term
                     sh-indentation 2
                     sh-basic-offset 2)
      sql
@@ -226,6 +228,7 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
                          zenburn
+                         farmhouse-dark
                          spacemacs-dark
                          spacemacs-light
                          )

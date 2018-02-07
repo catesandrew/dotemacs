@@ -57,11 +57,8 @@
                   #'cats//js-jsx-indent-line-align-closing-bracket))
     :config
     (progn
-      ;; subword mode
-      ;;(modify-syntax-entry ?_ "w" js2-mode-syntax-table)
-
-      (evil-define-key 'insert rjsx-mode-map (kbd "C-d") 'cats//rjsx-delete-creates-full-tag-with-insert)
-      (evil-define-key 'normal rjsx-mode-map (kbd "C-d") 'cats//rjsx-delete-creates-full-tag-with-insert)
+      (evil-define-key 'insert rjsx-mode-map (kbd "C-d")
+        'cats//rjsx-delete-creates-full-tag-with-insert)
 
       (with-eval-after-load 'flycheck
         (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active))
