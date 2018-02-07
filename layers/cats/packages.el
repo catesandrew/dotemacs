@@ -224,12 +224,13 @@
 
       (exec-path-from-shell-initialize)
 
-      ;; TODO: get vars from system or env vars, below are two ways with osx:
-      ;; finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //'
-      ;; dscl . read /Users/`whoami` RealName | grep -v RealName | cut -c 2-
-      (setq user-full-name "Andrew Cates")
-      (setq user-mail-address (getenv "EMAIL"))
-      (setq user-mail-address "andrew@cates.io")
+      (setq email (chomp (getenv "EMAIL")))
+      (when (not (empty-string-p email))
+        (setq user-mail-address email))
+
+      (setq name (chomp (getenv "NAME")))
+      (when (not (empty-string-p name))
+        (setq user-mail-address name))
 
       ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
       ;; already initializes info, we need to explicitly add the $INFOPATH

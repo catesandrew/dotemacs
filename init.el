@@ -467,6 +467,8 @@ you should place you code here."
 
     (setq-default c-basic-offset 2)
     (setq-default tab-width 2)
+    (cats//locate-name)
+    (cats//locate-email)
     (cats//locate-find)
     (cats//locate-tidy)
 

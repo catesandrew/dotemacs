@@ -12,8 +12,7 @@
 (spacemacs|defvar-company-backends rjsx-mode)
 (spacemacs|define-jump-handlers rjsx-mode)
 
-(defvar cats/js-doc-mail-address "andrew@cates.io")
-(defvar cats/js-doc-author (format "Andrew Cates <%s>" cats/js-doc-mail-address))
+(defvar cats/js-doc-author (format "%s <%s>" user-full-name user-mail-address))
 (defvar cats/js-doc-url "https://gitlab.cates.io/u/andrew")
 (defvar cats/js-doc-license "SEE LICENSE IN LICENSE.md")
 (defvar cats/js-doc-parameter-line " * @param {} %p\n")

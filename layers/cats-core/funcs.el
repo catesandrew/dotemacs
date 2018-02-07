@@ -232,6 +232,41 @@ Add this to `kill-buffer-query-functions'."
        (cats/set-executable-tidy result)))))
 
 
+;; name and email
+
+;; get vars from system or env vars, below are two ways with osx:
+;; (shell-command-to-string "finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //'")
+;; (shell-command-to-string "dscl . read /Users/`whoami` RealName | grep -v RealName | cut -c 2-")
+(defun cats//locate-name ()
+  (setq name (chomp (getenv "NAME")))
+
+  (when (empty-string-p name)
+    (async-start
+     `(lambda ()
+        (when (eq system-type 'darwin)
+          (shell-command-to-string "finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //'")))
+     (lambda (result)
+       (when result
+         (setq name (chomp result))))))
+
+  (when (not (empty-string-p name))
+    (setq user-full-name (chomp name))))
+
+(defun cats//locate-email ()
+  (setq email (chomp (getenv "EMAIL")))
+  ;; (when (empty-string-p email)
+  ;;   (async-start
+  ;;    `(lambda ()
+  ;;       (when (eq system-type 'darwin)
+  ;;         (shell-command-to-string "finger")))
+  ;;    (lambda (result)
+  ;;      (when result
+  ;;        (setq email (chomp result))))))
+
+  (when (not (empty-string-p email))
+    (setq user-mail-address email)))
+
+
 ;; prettyify symbols
 (defun cats/pretty-symbols (new-pretty-symbols)
   (mapcar

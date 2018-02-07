@@ -167,7 +167,7 @@
   (spacemacs|use-package-add-hook js-doc
     :post-init
     (progn
-      (setq js-doc-mail-address cats/js-doc-mail-address)
+      (setq js-doc-mail-address user-mail-address)
       (setq js-doc-author cats/js-doc-author)
       (setq js-doc-url cats/js-doc-url)
       (setq js-doc-license cats/js-doc-license)
