@@ -70,7 +70,8 @@ values."
      ;; Syntax and spell checking
      (spell-checking :variables
                      flyspell-default-dictionary "en")
-     syntax-checking
+     (syntax-checking :variables
+                      syntax-checking-enable-tooltips t)
      ;; Version control
      (version-control :variables
                       ;; No git-gutter please
