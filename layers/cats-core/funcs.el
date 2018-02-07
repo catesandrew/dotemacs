@@ -238,33 +238,42 @@ Add this to `kill-buffer-query-functions'."
 ;; (shell-command-to-string "finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //'")
 ;; (shell-command-to-string "dscl . read /Users/`whoami` RealName | grep -v RealName | cut -c 2-")
 (defun cats//locate-name ()
-  (setq name (chomp (getenv "NAME")))
+  ;; (setq cats//name (chomp (getenv "NAME")))
+  (setq cats//name (getenv "NAME"))
 
-  (when (empty-string-p name)
+  (unless (empty-string-p cats//name)
+    (setq cats//name (chomp cats//name)))
+
+  (when (empty-string-p cats//name)
     (async-start
      `(lambda ()
         (when (eq system-type 'darwin)
           (shell-command-to-string "finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //'")))
      (lambda (result)
        (when result
-         (setq name (chomp result))))))
+         (setq cats//name result)))))
 
-  (when (not (empty-string-p name))
-    (setq user-full-name (chomp name))))
+  (unless (empty-string-p cats//name)
+    (setq user-full-name (chomp cats//name))))
 
 (defun cats//locate-email ()
-  (setq email (chomp (getenv "EMAIL")))
-  ;; (when (empty-string-p email)
+  ;; (setq email (chomp (getenv "EMAIL")))
+  (setq cats//email (getenv "EMAIL"))
+
+  (unless (empty-string-p cats//email)
+    (setq cats//email (chomp cats//email)))
+
+  ;; (when (empty-string-p cats//email)
   ;;   (async-start
   ;;    `(lambda ()
   ;;       (when (eq system-type 'darwin)
   ;;         (shell-command-to-string "finger")))
   ;;    (lambda (result)
   ;;      (when result
-  ;;        (setq email (chomp result))))))
+  ;;        (setq cats//email result)))))
 
-  (when (not (empty-string-p email))
-    (setq user-mail-address email)))
+  (unless (empty-string-p cats//email)
+    (setq user-mail-address (chomp cats//email))))
 
 
 ;; prettyify symbols
