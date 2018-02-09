@@ -148,6 +148,7 @@ values."
      cats-scala
      cats-xml
      cats-grammar
+     cats-kubernetes
      cats-misc-langs
      )
 
