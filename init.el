@@ -119,10 +119,7 @@ values."
      (scala :variables
             ;; Automatically insert asterisk in comments
             scala-auto-insert-asterisk-in-comments t)
-     (shell-scripts :variables
-                    shell-default-shell 'term
-                    sh-indentation 2
-                    sh-basic-offset 2)
+     shell-scripts
      sql
      vimscript
      yaml
@@ -130,7 +127,11 @@ values."
      react
      ;; Applications
      org
-     shell
+     (shell :variables
+            shell-default-shell 'shell
+            shell-default-term-shell "/bin/bash"
+            sh-indentation 2
+            sh-basic-offset 2)
      ycmd
      asciidoc
      ;; My personal layers
@@ -178,6 +179,13 @@ This function is called at the very startup of Spacemacs initialization
 before layers configuration.
 You should not put any user code in there besides modifying the variable
 values."
+
+  (setq locale-coding-system    'utf-8)    ; pretty
+  (set-terminal-coding-system   'utf-8)    ; pretty
+  (set-keyboard-coding-system   'utf-8)    ; pretty
+  (set-selection-coding-system  'utf-8)    ; please
+  (set-language-environment     'utf-8)    ; with sugar on top
+
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default

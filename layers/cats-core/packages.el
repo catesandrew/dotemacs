@@ -15,8 +15,11 @@
     desktop
     (prettify-symbols-mode :location built-in)
     (icicles :location local)
+    (eshell :location built-in)
+    (shell :location built-in)
+    (term :location built-in)
+    xterm-color
     ))
-
 
 
 ;; icicles
@@ -312,5 +315,68 @@
         :documentation "Prettify symbols globally."
         :evil-leader "to C-p"))
     :config (spacemacs|hide-lighter prettify-symbols-mode)))
+
+
+;; eshell
+(defun cats-core/pre-init-eshell ()
+  (spacemacs|use-package-add-hook eshell
+    :post-init
+      (setq compilation-environment '("TERM=xterm-256color"))))
+
+
+;; term
+(defun cats-core/pre-init-term ()
+  ;; kill buffer after terminal is exited
+  (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
+    (if (memq (process-status proc) '(signal exit))
+        (let ((buffer (process-buffer proc)))
+          ad-do-it
+          (kill-buffer buffer))
+      ad-do-it))
+  (ad-activate 'term-sentinel)
+
+  (defadvice ansi-term (before force-bash)
+    (interactive (list shell-default-term-shell)))
+  (ad-activate 'ansi-term)
+
+  (with-eval-after-load 'exec-path-from-shell
+    (let ((shell-term-shell (getenv "SHELL")))
+      (unless (empty-string-p shell-term-shell)
+        (setq shell-term-shell (chomp shell-term-shell))
+        (setq shell-default-term-shell shell-term-shell)
+        (setq multi-term-program shell-term-shell))))
+
+  ;; display certain characters correctly
+  (defun my-term-use-utf8 ()
+    (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+  (add-hook 'term-exec-hook 'my-term-use-utf8)
+
+  ;; clickable urls
+  (defun my-term-hook ()
+    (goto-address-mode))
+  (add-hook 'term-mode-hook 'my-term-hook))
+
+
+;; shell
+(defun cats-core/pre-init-shell ())
+
+
+;; xterm-color
+(defun cats-core/pre-init-xterm-color ()
+  (spacemacs|use-package-add-hook xterm-color
+    :post-init
+    (add-hook 'compilation-start-hook
+       (lambda (proc)
+         ;; We need to differentiate between compilation-mode buffers
+         ;; and running as part of comint (which at this point we assume
+         ;; has been configured separately for xterm-color)
+         (when (eq (process-filter proc) 'compilation-filter)
+           ;; This is a process associated with a compilation-mode buffer.
+           ;; We may call `xterm-color-filter' before its own filter function.
+           (set-process-filter
+            proc
+            (lambda (proc string)
+              (funcall 'compilation-filter proc
+                       (xterm-color-filter string)))))))))
 
 ;;; packages.el ends here
