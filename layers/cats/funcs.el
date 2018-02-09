@@ -68,6 +68,11 @@ symbols, emojis, greek letters, as well as fall backs for."
   (set-fontset-font t nil (font-spec :family "Apple Symbols")
                     frame 'append))
 
+(when (spacemacs/window-system-is-mac)
+  (when-let* ((frame (selected-frame)))
+    (cats-configure-fonts frame))
+  (add-hook 'after-make-frame-functions #'cats-configure-fonts))
+
 
 ;; utils
 (defun chomp (str)

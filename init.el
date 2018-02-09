@@ -423,11 +423,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Don't nag me compile!
   (setq compilation-ask-about-save nil)
 
-  (when (spacemacs/window-system-is-mac)
-    (-when-let* ((frame (selected-frame)))
-      (cats-configure-fonts frame))
-    (add-hook 'after-make-frame-functions #'cats-configure-fonts))
-
   (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
   (setq spacemacs-useless-buffers-regexp '("^\\*[^\\*]+\\*$"))
   (setq spacemacs-useful-buffers-regexp '("\\*scratch\\*" "\\*spacemacs\\*"))
