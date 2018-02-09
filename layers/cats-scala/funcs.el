@@ -12,7 +12,7 @@
 (when (configuration-layer/package-usedp 'dash)
   (defun cats-scala/find-config-file-in-sbt-project (file &optional _checker)
     "Find a config FILE in sbt project/ directories."
-    (-when-let* ((file-name (buffer-file-name))
+    (when-let* ((file-name (buffer-file-name))
                  (root-dir (locate-dominating-file file-name "build.sbt"))
                  (project-dir (expand-file-name "project/" root-dir))
                  (config-file (expand-file-name file project-dir)))
