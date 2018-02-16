@@ -1,0 +1,10 @@
+# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: export imports
+# group: imports
+# key: exim
+# binding: direct-keybinding
+# --
+import $1, { $2 } from '$3'
+
+export { $2, $1 }
+export { $2 as name1, $1 as name2 }

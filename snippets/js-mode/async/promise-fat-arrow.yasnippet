@@ -1,9 +1,14 @@
 # -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: Promise
 # group: async
-# name: Promise then
-# key: tha
+# key: profa
 # binding: direct-keybinding
 # --
-.then(function (${1:result}) {
+new Promise((resolve, reject) => {
   return ${false}
+})
+.then((${1:result}) => {
+  return ${false}
+})
+.catch((${2:err} => {
 })

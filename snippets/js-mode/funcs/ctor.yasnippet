@@ -1,9 +1,10 @@
 # -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# group: async
-# name: Promise then
-# key: tha
+# name: ctor
+# group: funcs
+# key: ctor
 # binding: direct-keybinding
 # --
-.then(function (${1:result}) {
-  return ${false}
-})
+constructor(${1:arg}) {
+  ${2:super(${3:arg})}
+  $0
+}
