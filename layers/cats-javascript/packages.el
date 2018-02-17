@@ -181,9 +181,10 @@
               " * @license %l\n"
               js-doc-bottom-line))
 
-      (add-hook 'rjsx-mode-hook 'spacemacs/js-doc-require)
-      (add-hook 'js2-jsx-mode-hook 'spacemacs/js-doc-require)
-      (add-hook 'react-mode-hook 'spacemacs/js-doc-require)
+      (dolist (hook '(rjsx-mode-hook
+                      js2-jsx-mode-hook
+                      react-mode-hook))
+        (add-hook hook 'spacemacs/js-doc-require))
 
       (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mrd" "jsdoc")
@@ -266,16 +267,21 @@
       (set-default 'imenu-auto-rescan t)
       ;; required to make `<leader> sj' or `<leader> ij` to work correctly
       ;; it is tied to `dotemacs/jump-in-buffer`
-      (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-      (add-hook 'js2-mode-hook
-         (lambda ()
-           (setq imenu-create-index-function 'js2-imenu-make-index))))))
+      (dolist (hook '(rjsx-mode-hook
+                      js2-jsx-mode-hook
+                      react-mode-hook
+                      js2-mode-hook))
+        (add-hook hook 'js2-imenu-extras-mode)
+        (add-hook hook
+           (lambda ()
+             (setq imenu-create-index-function 'js2-imenu-make-index)))))))
 
 
 ;; js2-refactor
 (defun cats-javascript/post-init-js2-refactor ()
-  (add-hook 'rjsx-mode-hook 'spacemacs/js2-refactor-require)
-  (add-hook 'js2-jsx-mode-hook 'spacemacs/js2-refactor-require))
+  (dolist (hook '(rjsx-mode-hook
+                  js2-jsx-mode-hook))
+    (add-hook hook 'spacemacs/js2-refactor-require)))
 
 
 ;; json-mode
@@ -421,6 +427,10 @@
   (spacemacs|use-package-add-hook skewer-mode
     :post-init
     (progn
+      (dolist (hook '(rjsx-mode-hook
+                      js2-jsx-mode-hook
+                      react-mode-hook))
+        (add-hook hook 'skewer-mode))
       (add-hook 'cats/phantomjs-executable-hook
          'cats//skewer-set-phantomjs-executable)
       (add-hook 'cats/project-hook
@@ -462,10 +472,10 @@
   (spacemacs|use-package-add-hook tern
     :post-init
     (progn
-      (add-hook 'rjsx-mode-hook 'tern-mode)
-      (add-hook 'react-mode-hook 'tern-mode)
-      (add-hook 'js2-jsx-mode-hook 'tern-mode))
-
+      (dolist (hook '(rjsx-mode-hook
+                      js2-jsx-mode-hook
+                      react-mode-hook))
+        (add-hook hook 'tern-mode)))
     :post-config
     (progn
       (dolist (mode '(rjsx-mode js2-jsx-mode react-mode))
@@ -476,8 +486,9 @@
 
 ;; web-beautify
 (defun cats-javascript/post-init-web-beautify ()
-  (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode  "=" 'web-beautify-js)
-  (spacemacs/set-leader-keys-for-major-mode 'js2-jsx-mode  "=" 'web-beautify-js))
+  (dolist (mode '(rjsx-mode
+                  js2-jsx-mode))
+    (spacemacs/set-leader-keys-for-major-mode mode  "=" 'web-beautify-js)))
 
 
 ;; xref-js2
@@ -498,20 +509,26 @@
           "jl" 'xref-resume-last-search
           "jb" 'xref-pop-marker-stack))
 
-      (add-hook 'js2-mode-hook
-         (lambda ()
-           (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))))
+      (dolist (hook '(rjsx-mode-hook
+                      js2-jsx-mode-hook
+                      react-mode-hook
+                      js2-mode-hook))
+        (add-hook hook
+           (lambda ()
+             (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))))))
 
 
 ;; ycmd
 (defun cats-javascript/post-init-ycmd ()
-  (add-hook 'rjsx-mode-hook 'ycmd-mode)
-  (add-hook 'js2-mode-hook 'ycmd-mode)
-  (add-hook 'js2-jsx-mode-hook 'ycmd-mode)
+  (dolist (hook '(rjsx-mode-hook
+                  js2-jsx-mode-hook
+                  react-mode-hook
+                  js2-mode-hook))
+    (add-hook hook 'ycmd-mode))
   (add-to-list 'spacemacs-jump-handlers-rjsx-mode '(ycmd-goto :async t))
   (add-to-list 'spacemacs-jump-handlers-js2-mode '(ycmd-goto :async t))
   (add-to-list 'spacemacs-jump-handlers-js2-jsx-mode '(ycmd-goto :async t))
-  (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
+  (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
     (spacemacs/set-leader-keys-for-major-mode mode
       "jy" 'ycmd-goto
       "jY" 'ycmd-goto-imprecise)))
