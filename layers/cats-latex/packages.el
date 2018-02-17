@@ -12,6 +12,7 @@
     (auctex-skim :location local)
     bibtex
     typo
+    (latex-pretty-symbols :location local)
     ))
 
 (defun cats-latex/pre-init-auctex ()
@@ -113,5 +114,11 @@
 (defun cats-latex/post-init-typo ()
   ;; Keep typo mode enabled in LaTeX
   (remove-hook 'LaTeX-mode-hook 'spacemacs//disable-typo-mode))
+
+
+;; latex-pretty-symbols
+(defun cats-latex/init-latex-pretty-symbols ()
+  (use-package latex-pretty-symbols
+    :commands (latex-unicode-simplified)))
 
 ;;; packages.el ends here
