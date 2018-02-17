@@ -98,8 +98,6 @@
     ;; (when (bound-and-true-p visual-fill-column-mode)
     ;;   (visual-fill-column-mode--disable))
 
-    ;; (smartparens-mode +1)
-
     ;; (set-syntax-table cats/prog-syntax-table)
     (defadvice evil-inner-word (around bars-as-word activate)
       (let ((table cats/prog-syntax-table))
