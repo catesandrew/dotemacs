@@ -344,14 +344,6 @@
 
 ;; rjsx
 
-;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
-(defun cats//js-jsx-indent-line-align-closing-bracket ()
-  "Workaround sgml-mode and align closing bracket with opening bracket"
-  (save-excursion
-    (beginning-of-line)
-    (when (looking-at-p "^ +\/?> *$")
-      (delete-char sgml-basic-offset))))
-
 (defun cats//rjsx-delete-creates-full-tag-with-insert (args)
   (interactive "p")
   (rjsx-delete-creates-full-tag args)
