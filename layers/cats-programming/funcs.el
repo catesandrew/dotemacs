@@ -75,7 +75,7 @@
 (defun cats/prog-mode-defaults ()
   "Default coding hook, useful with any programming language."
   (when cats/prog-mode-spell-checking
-    (flyspell-prog-mode))
+    (spacemacs/toggle-spelling-checking-on))
 
   (unless (bound-and-true-p my-pmh-ran)
     ;; add buffer-local indicator for whether prog-mode-hook has run.
