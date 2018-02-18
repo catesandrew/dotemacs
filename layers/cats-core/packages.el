@@ -11,6 +11,8 @@
 (defconst cats-core-packages
   '(projectile
     autorevert
+    company
+    yasnippet
     buffer-move
     desktop
     (prettify-symbols-mode :location built-in)
@@ -22,8 +24,20 @@
     ))
 
 
-;; icicles
+;; company
+(defun cats-core/post-init-company ()
+  ;; Enable auto-completion everywhere!
+  (spacemacs|add-company-hook shell-mode)
+  (spacemacs|add-company-hook eshell-mode))
 
+
+;; yasnippet
+(defun cats-core/post-init-yasnippet ()
+  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(eshell-mode-hook))
+  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(shell-mode-hook)))
+
+
+;; icicles
 (defun cats-core/init-icicles ()
   (use-package icicles
     :commands (icicle-complete-keys icy-mode icicle-auto-complete-keys-mode)
@@ -318,10 +332,23 @@
 
 
 ;; eshell
-(defun cats-core/pre-init-eshell ()
-  (spacemacs|use-package-add-hook eshell
-    :post-init
-      (setq compilation-environment '("TERM=xterm-256color"))))
+(defun cats-core/init-eshell ()
+  (use-package eshell
+    :init
+    (progn
+      (setq compilation-environment '("TERM=xterm-256color"))
+      (add-hook 'eshell-mode-hook
+         (lambda ()
+           ;; The 'ls' executable requires the Gnu version on the Mac
+           (let ((ls (if (file-exists-p "/usr/local/bin/gls")
+                         "/usr/local/bin/gls"
+                       "/bin/ls")))
+             (add-to-list 'eshell-command-aliases-list (list "ll" (concat ls " -AlohG --color=always") ))))))
+    :config
+    (progn
+      (require 'em-alias)
+      )
+    ))
 
 
 ;; term

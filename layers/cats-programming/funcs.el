@@ -68,18 +68,24 @@
     ;; default
     (cats/pretty-symbols pretty-symbols/prog))))
 
-
 
 ;; personal prog-mode defaults
 
 (defun cats/prog-mode-defaults ()
   "Default coding hook, useful with any programming language."
   (when cats/prog-mode-spell-checking
+    (spacemacs/toggle-spelling-checking-off)
     (spacemacs/toggle-spelling-checking-on))
 
   (unless (bound-and-true-p my-pmh-ran)
     ;; add buffer-local indicator for whether prog-mode-hook has run.
     (set (make-local-variable 'my-pmh-ran) t)
+
+    ;; Jump to bug references from code
+    (bug-reference-prog-mode)
+
+    ;; cleanup whitespace
+    (spacemacs/toggle-whitespace-cleanup-on)
 
     ;; disable line wrap
     (unless (bound-and-true-p truncate-lines)
@@ -105,8 +111,6 @@
           ad-do-it)))
 
     (spacemacs/toggle-rainbow-identifier-on)
-    ;; (spacemacs/toggle-global-rainbow-identifiers-mode-on)
-    ;; (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
 
     (spacemacs/toggle-auto-fill-comments-mode-on)
     ;; (subword-mode +1) ;; camelCase

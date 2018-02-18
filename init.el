@@ -138,6 +138,7 @@ values."
             sh-basic-offset 2)
      ycmd
      asciidoc
+     search-engine
      ;; My personal layers
      cats
      cats-core
@@ -413,7 +414,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'changed
+   dotspacemacs-whitespace-cleanup 'trailing
    )
   ;; force powerline-scale to resize
   (spacemacs/set-default-font dotspacemacs-default-font))

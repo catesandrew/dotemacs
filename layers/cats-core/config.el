@@ -1,3 +1,14 @@
+;;; config.el --- cats-core
+
+;;; Commentary:
+
+;; My personal configuration.
+
+;;; Code:
+
+(spacemacs|defvar-company-backends shell-mode)
+(spacemacs|defvar-company-backends eshell-mode)
+
 (defvar cats/projectile-require-project-root
   "Require projectile root.")
 
@@ -94,6 +105,17 @@
 
 (defvar cats/projectile-require-project-root nil
   "Require project root for projectile.")
+
+
+
+;; [[http://www.emacswiki.org/emacs/EshellAlias][shell aliases]]
+
+(defalias 'e 'find-file)
+(defalias 'ff 'find-file)
+
+;; What about =gd= to call the Diff command?
+(defalias 'gd 'magit-diff-unstaged)
+(defalias 'gds 'magit-diff-staged)
 
 
 ;; aws

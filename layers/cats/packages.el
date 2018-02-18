@@ -47,7 +47,6 @@
     ;; visual-fill-column
     copyright
     editorconfig
-    ;; whitespace-cleanup-mode
     hardhat
     (tramp :location built-in)
     (grep :location built-in)
@@ -61,24 +60,137 @@
     helm-ls-git
     encourage-mode
     yasnippet
+    engine-mode
     ))
 
 
-;; yasnippet
-(defun cats/post-init-yasnippet ()
-  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(eshell-mode-hook))
-  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(shell-mode-hook)))
+;; search-engine
+(defun cats/pre-init-engine-mode ()
+  (spacemacs|use-package-add-hook engine-mode
+    :post-init
+    (progn
+      (setq browse-url-browser-function 'browse-url-default-windows-browser)
+      (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
-(defun cats/init-whitespace-cleanup-mode()
-  "Cleanup whitespace in buffers."
-  (use-package whitespace-cleanup-mode
-    :ensure t
-    :defer t
-    :init
-    (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-      (add-hook hook 'whitespace-cleanup-mode))
-    :diminish (whitespace-cleanup-mode . "⌫")))
+      (setq browse-url-browser-function 'browse-url-generic
+            engine/browser-function 'browse-url-generic
+            browse-url-generic-program (cond
+                                        ((spacemacs/system-is-mac)
+                                         "open")
+                                        ((spacemacs/system-is-linux)
+                                         (executable-find "firefox"))))
 
+      (setq search-engine-alist
+            '((amazon
+               :name "Amazon"
+               :keybinding "a"
+               :browser 'browse-url-generic
+               :url "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%%3Daps&field-keywords=%s")
+              (bing
+               :browser 'eww-browse-url
+               :keybinding "b"
+               :name "Bing"
+               :url "http://www.bing.com/search?q=%s")
+              (duck-duck-go
+               :name "Duck Duck Go"
+               :keybinding "d"
+               :browser 'browse-url-generic
+               :url "https://duckduckgo.com/?q=%s")
+              (google
+               :keybinding "g"
+               :browser 'browse-url-generic
+               :name "Google"
+               :url "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
+              (google-images
+               :name "Google Images"
+               :keybinding "i"
+               :browser 'browse-url-generic
+               :url "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
+              (github
+               :browser 'eww-browse-url
+               :keybinding "G"
+               :name "Github"
+               :url "https://github.com/search?ref=simplesearch&q=%s")
+              (google-maps
+               :keybinding "m"
+               :browser 'browse-url-generic
+               :name "Google Maps"
+               :url "http://maps.google.com/maps?q=%s")
+              (twitter
+               :name "Twitter"
+               :keybinding "t"
+               :browser 'browse-url-generic
+               :url "https://twitter.com/search?q=%s")
+              (project-gutenberg
+               :name "Project Gutenberg"
+               :keybinding "p"
+               :browser 'browse-url-generic
+               :url "http://www.gutenberg.org/ebooks/search.html/?format=html&default_prefix=all&sort_order=&query=%s")
+              (youtube
+               :keybinding "y"
+               :browser 'browse-url-generic
+               :name "YouTube"
+               :url "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
+              (stack-overflow
+               :name "Stack Overflow"
+               :keybinding "o"
+               :browser 'browse-url-generic
+               :url "https://stackoverflow.com/search?q=%s")
+              (tex-stack-exchange
+               :name "TeX Stack Exchange"
+               :browser 'browse-url-generic
+               :keybinding "x"
+               :url "https://tex.stackexchange.com/search?q=%s")
+              (wikipedia
+               :browser 'eww-browse-url
+               :keybinding "w"
+               :name "Wikipedia"
+               :url "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
+              (wolfram-alpha
+               :name "Wolfram Alpha"
+               :browser 'browse-url-generic
+               :url "http://www.wolframalpha.com/input/?i=%s")))
+      (dolist (engine search-engine-alist)
+        (let ((func (intern (format "engine/search-%S" (car engine)))))
+          (autoload func "engine-mode" nil 'interactive))))
+    :post-config
+    (progn
+      (engine/set-keymap-prefix (kbd "C-c C-/"))
+      (dolist (engine search-engine-alist)
+        (let* ((cur-engine (car engine))
+               (engine-url (plist-get (cdr engine) :url))
+               (engine-keybinding (plist-get (cdr engine) :keybinding))
+               (engine-browser (plist-get (cdr engine) :browser)))
+          (eval `(defengine ,cur-engine ,engine-url :keybinding ,engine-keybinding :browser ,engine-browser))))
+      )))
+
+;; (defengine youtube
+;;   "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+;;   :keybinding "y"
+;;   )
+
+;; | ~SPC a /~ | ~C-c /~ | Summon a Helm buffer to select any engine |
+
+;; * Customize it!
+
+;; If you'd rather have emacs use chrome, or firefox or any other thing (=eww=) you
+;; can have that customization. For example for google chrome you can put this in
+;; your =dotspacemacs/user-config=:
+
+;; #+BEGIN_SRC emacs-lisp
+;;   (setq browse-url-browser-function 'browse-url-generic
+;;         engine/browser-function 'browse-url-generic
+;;         browse-url-generic-program "google-chrome")
+;; #+END_SRC
+
+;; If you'd rather not use helm but would want a specific search engine, remember
+;; the function generated is always =engine/search-(the name of the search engine
+;; lower-case and hyphen instead-of-spaces-for-separation)= so you can bind that to
+;; any key binding you want.
+
+
+
+;; editorconfig
 (defun cats/init-editorconfig ()
   "EditorConfig plugin for emacs."
   (use-package editorconfig
@@ -291,8 +403,6 @@
 
 (defun cats/post-init-company ()
   ;; Enable auto-completion everywhere!
-  (spacemacs|add-company-hook shell-mode)
-  (spacemacs|add-company-hook eshell-mode)
   (global-company-mode))
 
 
@@ -384,12 +494,29 @@
   ;; Support Git Commit Mode for external `git commit'
   (global-git-commit-mode))
 
-(defun cats/pre-init-magit ()
-  ;; Please, no gravatars.  Thanks
-  (spacemacs|use-package-add-hook magit
-    :post-config
-    (setq magit-revision-show-gravatars nil)))
 
+
+;; magit
+(defun cats/pre-init-magit ()
+  "Please, no gravatars.  Thanks"
+  (spacemacs|use-package-add-hook magit
+    :post-init
+    (progn
+      (setq magit-revision-show-gravatars nil)
+      ;; For annotated tags prepare message with commit messages since last tag.
+      (add-hook 'git-commit-mode-hook
+         (lambda()
+           (when (equal "TAG_EDITMSG" (buffer-name))
+             (progn
+               (insert (shell-command-to-string "git log --pretty=format:\"* %s\" `git rev-list --tags --max-count=1`..HEAD" ))
+               (newline)
+               (goto-char (point-min))
+               (newline)
+               (goto-char (point-min))))))
+      )))
+
+
+;; fancy-battery
 (defun cats/post-init-fancy-battery ()
   (spacemacs/toggle-mode-line-battery-on))
 
