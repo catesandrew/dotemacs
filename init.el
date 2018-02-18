@@ -458,9 +458,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
-
-  (when (display-graphic-p)
-    (spacemacs|do-after-display-system-init
+  (spacemacs|do-after-display-system-init
+   (when (display-graphic-p)
      (cats//set-frame-size))))
 
 (spacemacs/defer-until-after-user-config
