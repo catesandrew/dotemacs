@@ -60,7 +60,14 @@
     helm-projectile
     helm-ls-git
     encourage-mode
+    yasnippet
     ))
+
+
+;; yasnippet
+(defun cats/post-init-yasnippet ()
+  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(eshell-mode-hook))
+  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(shell-mode-hook)))
 
 (defun cats/init-whitespace-cleanup-mode()
   "Cleanup whitespace in buffers."
@@ -274,6 +281,8 @@
           (if (configuration-layer/package-usedp 'markdown-mode)
               'markdown-mode 'text-mode))))
 
+
+;; company
 (defun cats/pre-init-company ()
   (spacemacs|use-package-add-hook company
     :post-config
@@ -282,8 +291,12 @@
 
 (defun cats/post-init-company ()
   ;; Enable auto-completion everywhere!
+  (spacemacs|add-company-hook shell-mode)
+  (spacemacs|add-company-hook eshell-mode)
   (global-company-mode))
 
+
+;; company-emoji
 (defun cats/post-init-company-emoji ()
   ;; Enable Company Emoji everywhere
   (with-eval-after-load 'company
@@ -291,7 +304,8 @@
   ;; Re-enable unicode emoji.  It's 2015, dammit
   (setq company-emoji-insert-unicode t))
 
-;; Editing
+
+;; editing
 (defun cats/whitespace-mode-local ()
   "Enable `whitespace-mode' after local variables where set up."
   (add-hook 'hack-local-variables-hook #'whitespace-mode nil 'local))

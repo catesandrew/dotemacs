@@ -36,5 +36,7 @@
 (defvar cats/git-grep-switches "--extended-regexp -I -n --ignore-case --no-color"
   "Switches to pass to `git grep'.")
 
+(spacemacs|defvar-company-backends shell-mode)
+(spacemacs|defvar-company-backends eshell-mode)
 
 ;;; config.el ends here
