@@ -35,6 +35,7 @@
     ggtags
     helm-gtags
     evil-matchit
+    web-mode
     ))
 
 
@@ -48,9 +49,7 @@
       (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
       (add-to-list 'auto-mode-alist '("\\.react.js\\'" . rjsx-mode))
       (add-to-list 'auto-mode-alist '("\\index.android.js\\'" . rjsx-mode))
-      (add-to-list 'auto-mode-alist '("\\index.ios.js\\'" . rjsx-mode))
-      (add-to-list 'magic-mode-alist '("/\\*\\* @jsx React\\.DOM \\*/" . rjsx-mode))
-      (add-to-list 'magic-mode-alist '("^import React" . rjsx-mode)))
+      (add-to-list 'auto-mode-alist '("\\index.ios.js\\'" . rjsx-mode)))
     :config
     (progn
       ;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
@@ -543,5 +542,11 @@
       "jy" 'ycmd-goto
       "jY" 'ycmd-goto-imprecise)))
 
+
+;; web-mode
+(defun cats-javascript/post-init-web-mode ()
+  (dolist (hook '(rjsx-mode-hook
+                  js2-jsx-mode-hook))
+    (add-hook hook 'spacemacs//setup-react-mode)))
 
 ;;; packages.el ends here
