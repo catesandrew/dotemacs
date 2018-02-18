@@ -454,6 +454,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq indicate-empty-lines t)
   (setq require-final-newline t)
 
+  ;; force GPG to not use an external tool for pin entry. That is particularly
+  ;; useful if you don’t want the default GPG Agent pin entry tool to start,
+  ;; particularly if you want Emacs to handle the pin entry for you.
+  ;; (setf epa-pinentry-mode 'loopback)
+  (setenv "GPG_AGENT_INFO" nil)
+
   (setq mark-ring-max 64)
   (setq kill-ring-max 200)
   (setq global-mark-ring-max 128))

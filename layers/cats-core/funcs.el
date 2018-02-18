@@ -273,7 +273,8 @@ Add this to `kill-buffer-query-functions'."
   ;;        (setq cats//email result)))))
 
   (unless (empty-string-p cats//email)
-    (setq user-mail-address (chomp cats//email))))
+    (setq user-mail-address cats//email)
+    (setq epa-file-encrypt-to cats//email)))
 
 
 ;; prettyify symbols

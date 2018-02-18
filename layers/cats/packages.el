@@ -342,14 +342,8 @@
         (add-to-list 'exec-path-from-shell-variables var))
 
       (exec-path-from-shell-initialize)
-
-      (setq email (chomp (getenv "EMAIL")))
-      (when (not (empty-string-p email))
-        (setq user-mail-address email))
-
-      (setq name (chomp (getenv "NAME")))
-      (when (not (empty-string-p name))
-        (setq user-mail-address name))
+      (cats//locate-email)
+      (cats//locate-name)
 
       ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
       ;; already initializes info, we need to explicitly add the $INFOPATH
