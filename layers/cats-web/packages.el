@@ -11,7 +11,79 @@
     emmet-mode
     smartparens
     web-mode
+    company
+    xah-css-mode
+    flycheck
+    (helm-css-scss :toggle (configuration-layer/package-usedp 'helm))
+    yasnippet
     ))
+
+
+;; company
+(defun cats-web/post-init-company ()
+  (spacemacs|add-company-hook xah-css-mode))
+
+
+;; xah-css-mode
+(defun cats-web/init-xah-css-mode ()
+  (use-package xah-css-mode
+    :defer t
+    :mode ("\\.css\\'" . xah-css-mode)
+    :init
+    (progn
+      (push 'company-xah-css company-backends-xah-css-mode)
+
+      ;; Mark `css-indent-offset' as safe-local variable
+      (put 'css-indent-offset 'safe-local-variable #'integerp)
+
+      ;; Explicitly run prog-mode hooks since css-mode does not derive from
+      ;; prog-mode major-mode in Emacs 24 and below.
+      (when (version< emacs-version "25")
+        (add-hook 'xah-css-mode-hook 'spacemacs/run-prog-mode-hooks))
+
+      (defun css-expand-statement ()
+        "Expand CSS block"
+        (interactive)
+        (save-excursion
+          (end-of-line)
+          (search-backward "{")
+          (forward-char 1)
+          (while (or (eobp) (not (looking-at "}")))
+          (let ((beg (point)))
+            (newline)
+            (search-forward ";")
+            (indent-region beg (point))
+            ))
+          (newline)))
+
+      (defun css-contract-statement ()
+        "Contract CSS block"
+        (interactive)
+        (end-of-line)
+        (search-backward "{")
+        (while (not (looking-at "}"))
+          (join-line -1)))
+
+      (spacemacs/set-leader-keys-for-major-mode 'xah-css-mode
+        "zc" 'css-contract-statement
+        "zo" 'css-expand-statement))))
+
+
+;; flycheck
+(defun cats-web/post-init-flycheck ()
+  (with-eval-after-load 'flycheck
+    (dolist (checker '(css-csslint css-stylelint))
+      (flycheck-add-mode checker 'xah-css-mode)))
+  (dolist (mode '(xah-css-mode))
+    (spacemacs/add-flycheck-hook mode)))
+
+
+;; helm
+(defun cats-web/pre-init-helm-css-scss ()
+  (spacemacs|use-package-add-hook helm-css-scss
+    :post-init
+    (dolist (mode '(xah-css-mode))
+      (spacemacs/set-leader-keys-for-major-mode mode "gh" 'helm-css-scss))))
 
 
 ;; css-eldoc
@@ -38,6 +110,7 @@
   (spacemacs|use-package-add-hook emmet-mode
     :post-init
     (progn
+      (spacemacs/add-to-hooks 'emmet-mode '(xah-css-mode-hook))
       (setq emmet-indentation 2
             emmet-move-cursor-between-quotes t))))
 
@@ -59,6 +132,13 @@
       (sp-local-pair "{%- "  " %}")
       (sp-local-pair "{# "  " #}"))))
 
+(defun cats-web/post-init-smartparens ()
+  (spacemacs/add-to-hooks
+   (if dotspacemacs-smartparens-strict-mode
+       'smartparens-strict-mode
+     'smartparens-mode)
+   '(xah-css-mode-hook)))
+
 
 ;; web-mode
 (defun cats-web/pre-init-web-mode ()
@@ -79,5 +159,10 @@
             web-mode-attr-indent-offset 2
             web-mode-style-padding 2
             web-mode-script-padding 2))))
+
+
+;; yasnippet
+(defun cats-web/post-init-yasnippet ()
+  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(xah-css-mode-hook)))
 
 ;;; packages.el ends here
