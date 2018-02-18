@@ -59,7 +59,6 @@
     helm-projectile
     helm-ls-git
     encourage-mode
-    yasnippet
     engine-mode
     ))
 

@@ -27,8 +27,7 @@
 ;; company
 (defun cats-core/post-init-company ()
   ;; Enable auto-completion everywhere!
-  (spacemacs|add-company-hook shell-mode)
-  (spacemacs|add-company-hook eshell-mode))
+  (spacemacs|add-company-hook shell-mode))
 
 
 ;; yasnippet
@@ -332,9 +331,9 @@
 
 
 ;; eshell
-(defun cats-core/init-eshell ()
-  (use-package eshell
-    :init
+(defun cats-core/pre-init-eshell ()
+  (spacemacs|use-package-add-hook eshell
+    :post-init
     (progn
       (setq compilation-environment '("TERM=xterm-256color"))
       (add-hook 'eshell-mode-hook
@@ -344,7 +343,7 @@
                          "/usr/local/bin/gls"
                        "/bin/ls")))
              (add-to-list 'eshell-command-aliases-list (list "ll" (concat ls " -AlohG --color=always") ))))))
-    :config
+    :post-config
     (progn
       (require 'em-alias)
       )

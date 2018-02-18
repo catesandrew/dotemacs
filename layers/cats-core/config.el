@@ -7,7 +7,6 @@
 ;;; Code:
 
 (spacemacs|defvar-company-backends shell-mode)
-(spacemacs|defvar-company-backends eshell-mode)
 
 (defvar cats/projectile-require-project-root
   "Require projectile root.")

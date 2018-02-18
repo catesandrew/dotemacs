@@ -14,7 +14,7 @@
     company
     xah-css-mode
     flycheck
-    (helm-css-scss :toggle (configuration-layer/package-usedp 'helm))
+    helm-css-scss
     yasnippet
     ))
 
