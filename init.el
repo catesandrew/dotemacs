@@ -126,7 +126,11 @@ values."
      ;; Frameworks
      react
      ;; Applications
-     org
+     (org :variables
+          org-enable-bootstrap-support t
+          org-enable-github-support t
+          org-projectile-file "TODOs.org"
+          org-enable-reveal-js-support t)
      (shell :variables
             shell-default-shell 'shell
             shell-default-term-shell "/bin/bash"
@@ -144,7 +148,8 @@ values."
      cats-web
      cats-latex
      cats-markdown
-     cats-org
+     (cats-org :variables
+               org-enable-jira-support t)
      cats-scala
      cats-xml
      cats-grammar
