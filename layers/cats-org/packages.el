@@ -10,8 +10,47 @@
   '(
     (org :location built-in)
     org-bullets
+    (ox-jira :toggle org-enable-jira-support)
+    org-jira
     ))
 
+;; org-jira
+(defun cats-org/init-org-jira ()
+  (use-package org-jira
+    :defer t
+    :commands (org-jira-get-issues org-jira-get-projects org-jira-get-issue org-jira-get-subtasks)
+    :init
+    (progn
+      ;; (defconst org-jira-progress-issue-flow
+      ;;   '(("To Do" . "In Progress"
+      ;;      ("In Progress" . "Done"))))
+
+      ;; If your Jira is set up to display a status in the issue differently
+      ;; than what is shown in the button on Jira, your alist may look like this
+      ;; (use the labels shown in the org-jira Status when setting it up, or
+      ;; manually work out the workflows being used through standard C-c iw
+      ;; options/usage):
+      ;; (defconst org-jira-progress-issue-flow
+      ;;   '(("To Do" . "Start Progress")
+      ;;     ("In Development" . "Ready For Review")
+      ;;     ("Code Review" . "Done")
+      ;;     ("Done" . "Reopen")))
+      )
+    :config
+    (progn
+      )
+    ))
+
+
+;; ox-jira
+(defun cats-org/init-ox-jira ()
+  (use-package ox-jira
+    :init
+    (spacemacs|use-package-add-hook org
+      :post-config (require 'ox-jira))))
+
+
+;; org
 (defun cats-org/pre-init-org ()
   "Add org mode hooks."
   (spacemacs|use-package-add-hook org

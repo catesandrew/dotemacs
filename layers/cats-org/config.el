@@ -39,3 +39,6 @@
     ("ae" . ?æ)
     ("^_^" . ?☻))
   "Symbols for org mode.")
+
+(defvar org-enable-jira-support nil
+  "If non-nil Jira related packages are configured.")
