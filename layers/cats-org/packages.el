@@ -12,7 +12,6 @@
     org-bullets
     ))
 
-
 (defun cats-org/pre-init-org ()
   "Add org mode hooks."
   (spacemacs|use-package-add-hook org
@@ -37,6 +36,13 @@
             org-treat-S-cursor-todo-selection-as-state-change nil
             org-agenda-files `(,org-directory))
 
+      (setq my-logbook-org-file (concat org-directory "/logbook.org")
+            org-indent-indentation-per-level 2
+            org-use-fast-todo-selection t
+            org-completion-use-ido t
+            org-treat-S-cursor-todo-selection-as-state-change nil
+            org-agenda-files `(,org-directory))
+
       (setq org-capture-templates
             '(("t" "Todo" entry (file+headline my-inbox-org-file "INBOX")
                "* TODO %?\n%U\n%a\n")
@@ -44,7 +50,9 @@
                "* %? :NOTE:\n%U\n%a\n")
               ("m" "Meeting" entry (file my-inbox-org-file)
                "* MEETING %? :MEETING:\n%U")
-              ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org"))
+              ("l" "Logbook" entry (file my-logbook-org-file)
+               "* LOGBOOK %? :LOGBOOK:\n%U")
+              ("j" "Journal" entry (file+olp+datetree (concat org-directory "/journal.org"))
                "* %?\n%U\n")))
 
       ;; org-mode colors
@@ -77,6 +85,5 @@
     :post-init
     (progn
       (setq org-bullets-bullet-list '("✿" "❀" "☢" "☯" "✸" )))))
-
 
 ;;; packages.el ends here
