@@ -263,15 +263,6 @@ Add this to `kill-buffer-query-functions'."
   (unless (empty-string-p cats//email)
     (setq cats//email (chomp cats//email)))
 
-  ;; (when (empty-string-p cats//email)
-  ;;   (async-start
-  ;;    `(lambda ()
-  ;;       (when (eq system-type 'darwin)
-  ;;         (shell-command-to-string "finger")))
-  ;;    (lambda (result)
-  ;;      (when result
-  ;;        (setq cats//email result)))))
-
   (unless (empty-string-p cats//email)
     (setq user-mail-address cats//email)
     (setq epa-file-encrypt-to cats//email)))
