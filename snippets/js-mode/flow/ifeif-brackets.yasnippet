@@ -1,8 +1,11 @@
 # -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: if statement
+# name: if...else if with brackets
 # group: flow
-# key: if
+# key: ifeifb
 # type: snippet
 # --
-if (${1:condition})
+if (${1:condition}) {
+  $3
+} else if (${2:condition}) {
   $0
+}
