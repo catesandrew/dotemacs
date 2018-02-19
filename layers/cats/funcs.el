@@ -146,4 +146,23 @@ symbols, emojis, greek letters, as well as fall backs for."
   "Set the `flycheck-html-tidy-executable' setting with `TIDY'."
   (setq flycheck-html-tidy-executable tidy))
 
+(defun cats//flycheck-turn-on-maybe ()
+  (unless
+      (or
+       buffer-read-only
+       (hardhat-buffer-included-p (current-buffer))
+       (cats//current-buffer-remote-p))
+    (flycheck-mode)))
+
+
+;; tramp
+(defun cats//current-buffer-remote-p ()
+  "Is the current buffer remote?"
+  ;; (file-remote-p buffer-file-name 'method)
+  (-any? 'file-remote-p
+         (remove nil (list
+                      buffer-file-name
+                      list-buffers-directory
+                      default-directory))))
+
 ;;; funcs.el ends here

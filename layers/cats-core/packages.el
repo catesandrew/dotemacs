@@ -21,6 +21,7 @@
     (shell :location built-in)
     (term :location built-in)
     xterm-color
+    (tramp :location built-in)
     ))
 
 
@@ -77,7 +78,15 @@
       (setq auto-revert-check-vc-info nil
             auto-revert-mode-text " ♻"
             auto-revert-tail-mode-text " ♻~")
-      (add-hook 'find-file-hook 'cats//auto-revert-turn-on-maybe))))
+
+      (defadvice auto-revert-mode (around auto-revert-turn-on-maybe)
+        (unless
+            (or
+             buffer-read-only
+             (hardhat-buffer-included-p (current-buffer))
+             (cats//current-buffer-remote-p))
+          ad-do-it))
+      (ad-activate 'auto-revert-mode))))
 
 
 ;; buffer-move
@@ -215,7 +224,11 @@
           (add-hook 'find-file-hook #'cats/find-file-hook-to-project t t))
          (t
           (remove-hook 'find-file-hook #'cats/find-file-hook-to-project t))))
-      )))
+
+      (defadvice projectile-mode (before caching-turn-off-maybe)
+        (when (cats//current-buffer-remote-p)
+          (setq-local projectile-enable-caching nil)))
+      (ad-activate 'projectile-mode))))
 
 
 ;; desktop
@@ -404,5 +417,35 @@
             (lambda (proc string)
               (funcall 'compilation-filter proc
                        (xterm-color-filter string)))))))))
+
+
+;; tramp
+(defun cats-core/pre-init-tramp ()
+  (use-package tramp
+    :defer t
+    :config
+    (progn
+      ;; Use my ~/.ssh/config control master settings according to
+      ;; https://puppet.com/blog/speed-up-ssh-by-reusing-connections
+      ;; (setq tramp-ssh-controlmaster-options "")
+
+      ;; From https://emacs.stackexchange.com/questions/22306
+      (setq backup-enable-predicate
+            (lambda (name)
+              (and (normal-backup-enable-predicate name)
+                   ;; Disable all tramp backups
+                   (and cats/disable-tramp-backups
+                        (member 'all cats/disable-tramp-backups)
+                        (not (file-remote-p name 'method)))
+                   (not ;; disable backup for tramp with the listed methods
+                    (let ((method (file-remote-p name 'method)))
+                      (when (stringp method)
+                        (member method cats/disable-tramp-backups)))))))
+
+      (defun tramp-set-auto-save--check (original)
+        (if (funcall backup-enable-predicate (buffer-file-name))
+            (funcall original)
+          (auto-save-mode -1)))
+      (advice-add 'tramp-set-auto-save :around #'tramp-set-auto-save--check))))
 
 ;;; packages.el ends here

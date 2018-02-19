@@ -463,7 +463,7 @@
         :evil-leader "tob")
 
       (spacemacs/toggle-beacon-on))
-    :config (spacemacs|hide-lighter beacon-mode))) 
+    :config (spacemacs|hide-lighter beacon-mode)))
 
 (defun cats/init-writeroom-mode ()
   (use-package writeroom-mode
@@ -474,11 +474,22 @@
             :documentation "Enable distraction-free editing"
             :evil-leader "tow")))
 
+
+;; flycheck
 (defun cats/pre-init-flycheck ()
+  "Pre init for flycheck."
   (spacemacs|use-package-add-hook flycheck
-    ;; Enable Flycheck everywhere
     :post-init
     (progn
+      (defadvice flycheck-mode (around flycheck-turn-on-maybe)
+        (unless
+            (or
+             buffer-read-only
+             (hardhat-buffer-included-p (current-buffer))
+             (cats//current-buffer-remote-p))
+          ad-do-it))
+      (ad-activate 'flycheck-mode)
+
       (add-hook 'cats/tidy-executable-hook
          'cats//set-tidy-executable)
       (setq flycheck-global-modes t))))

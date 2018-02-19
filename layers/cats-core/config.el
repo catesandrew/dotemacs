@@ -117,6 +117,11 @@
 (defalias 'gds 'magit-diff-staged)
 
 
+;; tramp
+;; (defvar disable-tramp-backups '("ssh" "sftp" "su" "sudo"))
+(defvar cats/disable-tramp-backups '(all))
+
+
 ;; aws
 
 ;; A collection of yasnippet snippets to be used with AWS CLI

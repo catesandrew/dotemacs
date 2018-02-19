@@ -139,10 +139,6 @@ smaller 100 column windows for smaller displays."
     (set-frame-height (selected-frame) fhp)
     (set-frame-width (selected-frame) fwp)))
 
-(defun cats//auto-revert-turn-on-maybe ()
-  (unless (file-remote-p default-directory)
-    (auto-revert-mode)))
-
 (defun cats//do-not-kill-important-buffers ()
   "Inhibit killing of important buffers.
 Add this to `kill-buffer-query-functions'."
