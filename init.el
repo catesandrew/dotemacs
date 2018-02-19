@@ -477,9 +477,30 @@ you should place you code here."
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()
-    (setq frame-title-format
-          '(:eval (if (buffer-file-name)
-                      (cats/abbreviate-file-name (buffer-file-name)) "%b")))
+    (setq-default frame-title-format
+                  '(:eval
+                    (if (cats//current-buffer-remote-p)
+                        (format "%s@%s: %s %s"
+                                (or (file-remote-p default-directory 'user)
+                                    user-real-login-name)
+                                (or (file-remote-p default-directory 'host)
+                                    system-name)
+                                (buffer-name)
+                                (cond
+                                 (buffer-file-truename
+                                  (concat "(" buffer-file-truename ")"))
+                                 (dired-directory
+                                  (concat "{" dired-directory "}"))
+                                 (t
+                                  "[no file]")))
+                      (format "%s"
+                              (cond
+                               (buffer-file-name
+                                (cats/abbreviate-file-name buffer-file-name))
+                               (buffer-file-truename
+                                (cats/abbreviate-file-name buffer-file-truename))
+                               (t
+                                (buffer-name)))))))
 
     (setq-default c-basic-offset 2)
     (setq-default tab-width 2)
