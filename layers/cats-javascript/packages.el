@@ -46,6 +46,10 @@
     :defer t
     :init
     (progn
+      (advice-add #'js-jsx-indent-line
+                  :after
+                  #'cats//js-jsx-indent-line-align-closing-bracket)
+
       (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
       (add-to-list 'auto-mode-alist '("\\.react.js\\'" . rjsx-mode))
       (add-to-list 'auto-mode-alist '("\\index.android.js\\'" . rjsx-mode))
@@ -54,17 +58,17 @@
     (progn
       ;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
       ;; Workaround sgml-mode and align closing bracket with opening bracket
-      (defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)
-        "Workaround sgml-mode and follow airbnb component style."
-        (let* ((cur-line (buffer-substring-no-properties
-                          (line-beginning-position)
-                          (line-end-position))))
-          (if (string-match "^\\( +\\)\/?> *$" cur-line)
-              (let* ((empty-spaces (match-string 1 cur-line)))
-                (replace-regexp empty-spaces
-                                (make-string (- (length empty-spaces) sgml-basic-offset) 32)
-                                nil
-                                (line-beginning-position) (line-end-position))))))
+      ;; (defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)
+      ;;   "Workaround sgml-mode and follow airbnb component style."
+      ;;   (let* ((cur-line (buffer-substring-no-properties
+      ;;                     (line-beginning-position)
+      ;;                     (line-end-position))))
+      ;;     (if (string-match "^\\( +\\)\/?> *$" cur-line)
+      ;;         (let* ((empty-spaces (match-string 1 cur-line)))
+      ;;           (replace-regexp empty-spaces
+      ;;                           (make-string (- (length empty-spaces) sgml-basic-offset) 32)
+      ;;                           nil
+      ;;                           (line-beginning-position) (line-end-position))))))
 
       (evil-define-key 'insert rjsx-mode-map (kbd "C-d")
         'cats//rjsx-delete-creates-full-tag-with-insert)
