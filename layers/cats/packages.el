@@ -283,13 +283,28 @@
 (defun cats/pre-init-exec-path-from-shell ()
   (spacemacs|use-package-add-hook exec-path-from-shell
     :pre-init
-    (progn
+    (when (or (spacemacs/system-is-mac)
+              (spacemacs/system-is-linux)
+              (memq window-system '(x)))
+
       (when (string-match-p "/bash$" (getenv "SHELL"))
         ;; Use a non-interactive login shell. A login shell, because my
         ;; environment variables are mostly set in `.bashrc'.
         (setq exec-path-from-shell-arguments '("-l"))))
-    :post-config
-    (progn
+    :post-init
+    (when (or (spacemacs/system-is-mac)
+              (spacemacs/system-is-linux)
+              (memq window-system '(x)))
+
+      ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
+      ;; already initializes info, we need to explicitly add the $INFOPATH
+      ;; directories to `Info-directory-list'.  We reverse the list of info paths
+      ;; to prepend them in proper order subsequently
+      (with-eval-after-load 'info
+        (dolist (dir (nreverse (parse-colon-path (getenv "INFOPATH"))))
+          (when dir
+            (add-to-list 'Info-directory-list dir))))
+
       (dolist
           (var '(
                  "ANDROID_HOME"
@@ -339,19 +354,11 @@
                  "XML_CATALOG_FILES"
                  ))
         (add-to-list 'exec-path-from-shell-variables var))
+      (exec-path-from-shell-initialize))))
 
-      (exec-path-from-shell-initialize)
-      (cats//locate-email)
-      (cats//locate-name)
-
-      ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
-      ;; already initializes info, we need to explicitly add the $INFOPATH
-      ;; directories to `Info-directory-list'.  We reverse the list of info paths
-      ;; to prepend them in proper order subsequently
-      (with-eval-after-load 'info
-        (dolist (dir (nreverse (parse-colon-path (getenv "INFOPATH"))))
-          (when dir
-            (add-to-list 'Info-directory-list dir)))))))
+(defun cats/post-init-exec-path-from-shell ()
+  (cats//locate-email)
+  (cats//locate-name))
 
 (defun cats/init-focus-autosave-mode ()
   (use-package focus-autosave-mode
