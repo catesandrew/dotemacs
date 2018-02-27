@@ -68,17 +68,13 @@
   (spacemacs|use-package-add-hook engine-mode
     :post-init
     (progn
-      (setq browse-url-browser-function 'browse-url-default-windows-browser)
-      (setq browse-url-browser-function 'browse-url-default-macosx-browser)
-
-      (setq browse-url-browser-function 'browse-url-generic
-            engine/browser-function 'browse-url-generic
-            browse-url-generic-program (cond
+      (setq browse-url-browser-function 'browse-url-generic)
+      (setq engine/browser-function 'browse-url-generic)
+      (setq browse-url-generic-program (cond
                                         ((spacemacs/system-is-mac)
                                          "open")
                                         ((spacemacs/system-is-linux)
                                          (executable-find "firefox"))))
-
       (setq search-engine-alist
             '((amazon
                :name "Amazon"
@@ -154,7 +150,7 @@
           (autoload func "engine-mode" nil 'interactive))))
     :post-config
     (progn
-      (engine/set-keymap-prefix (kbd "C-c C-/"))
+      (engine/set-keymap-prefix (kbd "C-c /"))
       (dolist (engine search-engine-alist)
         (let* ((cur-engine (car engine))
                (engine-url (plist-get (cdr engine) :url))
@@ -162,31 +158,6 @@
                (engine-browser (plist-get (cdr engine) :browser)))
           (eval `(defengine ,cur-engine ,engine-url :keybinding ,engine-keybinding :browser ,engine-browser))))
       )))
-
-;; (defengine youtube
-;;   "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
-;;   :keybinding "y"
-;;   )
-
-;; | ~SPC a /~ | ~C-c /~ | Summon a Helm buffer to select any engine |
-
-;; * Customize it!
-
-;; If you'd rather have emacs use chrome, or firefox or any other thing (=eww=) you
-;; can have that customization. For example for google chrome you can put this in
-;; your =dotspacemacs/user-config=:
-
-;; #+BEGIN_SRC emacs-lisp
-;;   (setq browse-url-browser-function 'browse-url-generic
-;;         engine/browser-function 'browse-url-generic
-;;         browse-url-generic-program "google-chrome")
-;; #+END_SRC
-
-;; If you'd rather not use helm but would want a specific search engine, remember
-;; the function generated is always =engine/search-(the name of the search engine
-;; lower-case and hyphen instead-of-spaces-for-separation)= so you can bind that to
-;; any key binding you want.
-
 
 
 ;; editorconfig
