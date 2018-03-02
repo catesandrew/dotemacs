@@ -1,7 +1,9 @@
 # -*- coding: utf-8; mode: snippet -*-
-# name: jQuery hasClass()
-# key: has
+# name: jQuery each()
+# key: each
 # group: jquery
 # contributor: David Miller <david@deadpansincerity.com>
 # --
-hasClass( "${1:class}" )$0
+$.each(${1:an-array}, function(i){
+    $0
+});

@@ -1,8 +1,11 @@
 # -*- coding: utf-8; mode: snippet -*-
 # group: objects
-# name: getter
-# key: get
+# name: getter + setter
+# key: getset
 # --
 get ${1:property}() {
-  return $0
+  $0
+}
+set $1(${2:value}) {
+  $0
 }
