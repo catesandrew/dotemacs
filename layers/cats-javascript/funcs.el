@@ -21,6 +21,58 @@
        (when result
          (cats/set-executable-node result))))))
 
+(defun cats//locate-jshint-from-projectile (&optional dir)
+  "Use local jshint from `./node_modules` if available."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "jshint"))
+     (lambda (result)
+       (when result
+         (cats/set-executable-jshint result))))))
+
+(defun cats//locate-jscs-from-projectile (&optional dir)
+  "Use local jscs from `./node_modules` if available."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "jscs"))
+     (lambda (result)
+       (when result
+         (cats/set-executable-jscs result))))))
+
+(defun cats//locate-eslint-from-projectile (&optional dir)
+  "Use local eslint from `./node_modules` if available."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "eslint"))
+     (lambda (result)
+       (when result
+         (cats/set-executable-eslint result))))))
+
+(defun cats//locate-tsserver-from-projectile (&optional dir)
+  "Use local tsserver from `./node_modules` if available."
+  (when (empty-string-p dir)
+    (setq dir default-directory))
+
+  (let ((default-directory dir))
+    (async-start
+     `(lambda ()
+        (executable-find "tsserver"))
+     (lambda (result)
+       (when result
+         (cats/set-executable-tsserver result))))))
+
 
 ;; babel
 
@@ -87,6 +139,12 @@
   (let ((babel-repl-pop-to-buffer t))
     (babel-repl-send-dwim)
     (evil-insert-state)))
+
+
+;; eslint
+(defun cats//esilnt-set-eslint-executable (eslint)
+  "Set the `flycheck-javascript-eslint-executable' setting in `flycheck-mode' with `ESLINT'."
+  (setq flycheck-javascript-eslint-executable eslint))
 
 
 ;; coffee
@@ -266,7 +324,7 @@
   "Set the `mocha-command' setting in `mocha-mode' with `MOCHA'."
   (setq mocha-command mocha))
 
-(defun cats//set-node-executable (node)
+(defun cats//mocha-set-node-executable (node)
   "Set the `mocha-which-node' setting in `mocha-mode' with `NODE'."
   (setq mocha-which-node node))
 
@@ -311,6 +369,16 @@
   (nodejs-repl-send-buffer)
   (nodejs-repl-switch-to-repl)
   (evil-insert-state))
+
+
+;; tide
+(defun cats//tide-set-node-executable (node)
+  "Set the `tide-node-executable' setting in `tide-mode' with `NODE'."
+  (setq tide-node-executable node))
+
+(defun cats//tide-set-tsserver-executable (tsserver)
+  "Set the `tide-tsserver-executable' setting in `tide-mode' with `TSSERVER'."
+  (setq tide-tsserver-executable tsserver))
 
 
 ;; skewer mode

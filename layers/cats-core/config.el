@@ -63,6 +63,10 @@
 (defvar cats/find-executable-hook nil
   "Hooks run when cats//executable-find is changed.")
 
+(defvar cats//executable-tsserver nil)
+(defvar cats/tsserver-executable-hook nil
+  "Hooks run when cats//executable-tsserver is changed.")
+
 (defvar cats/projectile-dir-root nil
   "The current dir root of the projectile project.")
 

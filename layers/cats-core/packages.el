@@ -114,48 +114,6 @@
       (when cats/projectile-require-project-root
         (setq projectile-require-project-root t))
 
-      (defun cats//locate-jshint-from-projectile (&optional dir)
-        "Use local jshint from `./node_modules` if available."
-        (when (empty-string-p dir)
-          (setq dir default-directory))
-
-        (let ((default-directory dir))
-          (async-start
-           `(lambda ()
-              (executable-find "jshint"))
-           (lambda (result)
-             (when result
-               (cats/set-executable-jshint result))))))
-      (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
-
-      (defun cats//locate-jscs-from-projectile (&optional dir)
-        "Use local jscs from `./node_modules` if available."
-        (when (empty-string-p dir)
-          (setq dir default-directory))
-
-        (let ((default-directory dir))
-          (async-start
-           `(lambda ()
-              (executable-find "jscs"))
-           (lambda (result)
-             (when result
-               (cats/set-executable-jscs result))))))
-      (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
-
-      (defun cats//locate-eslint-from-projectile (&optional dir)
-        "Use local eslint from `./node_modules` if available."
-        (when (empty-string-p dir)
-          (setq dir default-directory))
-
-        (let ((default-directory dir))
-          (async-start
-           `(lambda ()
-              (executable-find "eslint"))
-           (lambda (result)
-             (when result
-               (cats/set-executable-eslint result))))))
-      (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
-
       (defun cats//dabbrev-from-projectile (&optional dir)
         "Use ."
         (when cats/verbose

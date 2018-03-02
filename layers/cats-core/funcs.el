@@ -1,8 +1,6 @@
 (defun cats/run-project-hook (&optional dir)
   "Sets cats//projectile-curr."
   (unless (string= dir cats//projectile-curr)
-    (when cats/verbose
-      (message "projectile-curr updated: %s" dir))
     (setq cats//projectile-curr dir)
     (ignore-errors (run-hook-with-args 'cats/project-hook dir))))
 
@@ -15,48 +13,36 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 (defun cats/set-executable-eslint (eslint)
   "Set cats//executable-eslint to ESLINT."
   (unless (string= eslint cats//executable-eslint)
-    (when cats/verbose
-      (message "eslint %s updated." eslint))
     (setq cats//executable-eslint eslint)
     (ignore-errors (run-hook-with-args 'cats/eslint-executable-hook eslint))))
 
 (defun cats/set-executable-jscs (jscs)
   "Set cats//executable-jscs to JSCS."
   (unless (string= jscs cats//executable-jscs)
-    (when cats/verbose
-      (message "jscs %s updated." jscs))
     (setq cats//executable-jscs jscs)
     (ignore-errors (run-hook-with-args 'cats/jscs-executable-hook jscs))))
 
 (defun cats/set-executable-jshint (jshint)
   "Set cats//executable-jshint to JSHINT."
   (unless (string= jshint cats//executable-jshint)
-    (when cats/verbose
-      (message "jshint %s updated." jshint))
     (setq cats//executable-jshint jshint)
     (ignore-errors (run-hook-with-args 'cats/jshint-executable-hook jshint))))
 
 (defun cats/set-executable-tidy (tidy)
   "Set cats//executable-tidy to TIDY."
   (unless (string= tidy cats//executable-tidy)
-    (when cats/verbose
-      (message "tidy %s updated." tidy))
     (setq cats//executable-tidy tidy)
     (ignore-errors (run-hook-with-args 'cats/tidy-executable-hook tidy))))
 
 (defun cats/set-executable-mocha (mocha)
   "Set cats//executable-mocha to MOCHA."
   (unless (string= mocha cats//executable-mocha)
-    (when cats/verbose
-      (message "mocha %s updated." mocha))
     (setq cats//executable-mocha mocha)
     (ignore-errors (run-hook-with-args 'cats/mocha-executable-hook mocha))))
 
 (defun cats/set-executable-babel-node (babel-node)
   "Set cats//executable-babel-node to BABEL-NODE."
   (unless (string= babel-node cats//executable-babel-node)
-    (when cats/verbose
-      (message "babel-node %s updated." babel-node))
     (setq cats//executable-babel-node babel-node)
     (ignore-errors
       (run-hook-with-args 'cats/babel-node-executable-hook babel-node))))
@@ -64,8 +50,6 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 (defun cats/set-executable-coffeelint (coffeelint)
   "Set cats//executable-coffeelint to COFFEELINT."
   (unless (string= coffeelint cats//executable-coffeelint)
-    (when cats/verbose
-      (message "coffeelint %s updated." coffeelint))
     (setq cats//executable-coffeelint coffeelint)
     (ignore-errors
       (run-hook-with-args 'cats/coffeelint-executable-hook coffeelint))))
@@ -73,8 +57,6 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 (defun cats/set-executable-node (node)
   "Set cats//executable-node to NODE."
   (unless (string= node cats//executable-node)
-    (when cats/verbose
-      (message "node %s updated." node))
     (setq cats//executable-node node)
     (ignore-errors
       (run-hook-with-args 'cats/node-executable-hook node))))
@@ -82,8 +64,6 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 (defun cats/set-executable-phantomjs (phantomjs)
   "Set cats//executable-phantomjs to PHANTOMJS."
   (unless (string= phantomjs cats//executable-phantomjs)
-    (when cats/verbose
-      (message "phantomjs %s updated." phantomjs))
     (setq cats//executable-phantomjs phantomjs)
     (ignore-errors
       (run-hook-with-args 'cats/phantomjs-executable-hook phantomjs))))
@@ -91,8 +71,6 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 (defun cats/set-executable-handlebars (handlebars)
   "Set cats//executable-handlebars to HANDLEBARS."
   (unless (string= handlebars cats//executable-handlebars)
-    (when cats/verbose
-      (message "handlebars %s updated." handlebars))
     (setq cats//executable-handlebars handlebars)
     (ignore-errors
       (run-hook-with-args 'cats/handlebars-executable-hook handlebars))))
@@ -100,11 +78,15 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 (defun cats/set-executable-find (find)
   "Set cats//executable-find to FIND."
   (unless (string= find cats//executable-find)
-    (when cats/verbose
-      (message "find %s updated." find))
     (setq cats//executable-find find)
     (ignore-errors
       (run-hook-with-args 'cats/find-executable-hook find))))
+
+(defun cats/set-executable-tsserver (tsserver)
+  "Set cats//executable-tsserver to TSSERVER."
+  (unless (string= tsserver cats//executable-tsserver)
+    (setq cats//executable-tsserver tsserver)
+    (ignore-errors (run-hook-with-args 'cats/tsserver-executable-hook tsserver))))
 
 
 ;; other funcs
@@ -226,6 +208,13 @@ Add this to `kill-buffer-query-functions'."
    (lambda (result)
      (when result
        (cats/set-executable-tidy result)))))
+
+
+;; tsserver
+
+(defvar cats//executable-tsserver nil)
+(defvar cats/tsserver-executable-hook nil
+  "Hooks run when cats//executable-tsserver is changed.")
 
 
 ;; name and email

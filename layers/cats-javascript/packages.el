@@ -77,7 +77,6 @@
         (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active))
       )))
 
-
 
 ;; emmet-mode
 (defun cats-javascript/post-init-emmet-mode ()
@@ -168,9 +167,15 @@
   (push 'company-ycmd company-backends-js2-mode)
   (push 'company-ycmd company-backends-js2-jsx-mode))
 
-
 ;; flycheck
 (defun cats-javascript/post-init-flycheck ()
+  (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
+  (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
+  (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
+  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
+  (add-hook 'cats/eslint-executable-hook
+     'cats//esilnt-set-eslint-executable)
+
   (spacemacs/add-flycheck-hook 'rjsx-mode)
   (spacemacs/add-flycheck-hook 'js2-jsx-mode))
 
@@ -214,9 +219,6 @@
       (add-to-list 'auto-mode-alist '("\\.eslintrc$" . js2-mode))
       (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
       (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
-
-      (add-hook 'cats/project-hook
-         'cats//locate-node-from-projectile)
 
       (spacemacs|add-toggle js2-highlight-unused-variables-mode
         :status js2-highlight-unused-variables-mode
@@ -358,7 +360,7 @@
       ;; (cats//set-mocha-executable cats//executable-mocha)
 
       (add-hook 'cats/node-executable-hook
-         'cats//set-node-executable)
+         'cats//mocha-set-node-executable)
 
       (add-hook 'cats/mocha-executable-hook
          'cats//set-mocha-executable)
