@@ -154,6 +154,28 @@ symbols, emojis, greek letters, as well as fall backs for."
        (cats//current-buffer-remote-p))
     (flycheck-mode)))
 
+(defun flycheck-remove-next-checker (checker next)
+  "Remove `NEXT' from `CHECKER'."
+  (let ((next-checkers (flycheck-checker-get checker 'next-checkers)))
+    (when (member next next-checkers)
+      (setf (get checker 'flycheck-next-checkers) (remove next next-checkers))
+      ;; (setq nth 0)
+      ;; (dolist (next-checker next-checkers)
+      ;;   (when (equal next-checker next)
+      ;;     (if (zerop nth)
+      ;;         (setf (get checker 'flycheck-next-checkers) '())
+      ;;       (let ((last (nthcdr (1- nth) next-checkers)))
+      ;;         (setcdr last (cddr last))
+      ;;         next-checkers)))
+      ;;   (setq nth (+ nth 1)))
+      )))
+
+(defun flycheck-add-next-checker (checker next)
+  "Add `NEXT' to `CHECKER'."
+  (let ((next-checkers (flycheck-checker-get checker 'next-checkers)))
+    (unless (member next next-checkers)
+      (flycheck-add-next-checker checker next 'append))))
+
 
 ;; tramp
 (defun cats//current-buffer-remote-p ()
@@ -202,6 +224,5 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
   (if (eq (length comment-end) 0)
       (yas-string-reverse (yas-trimmed-comment-start))
     (yas-s-trim comment-end)))
-
 
 ;;; funcs.el ends here

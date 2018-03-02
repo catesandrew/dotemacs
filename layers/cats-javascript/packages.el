@@ -36,8 +36,114 @@
     helm-gtags
     evil-matchit
     web-mode
+    tide
+    indium
     ))
 
+
+;; indium
+(defun cats-javascript/init-indium ()
+  (use-package indium
+    :commands (indium-interaction-mode indium-repl-mode indium-run-node indium-inspector-mode)
+    :defer t
+    :init
+    (progn
+      (when (string-equal system-type "darwin")
+        (setq indium-chrome-executable "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"))
+      (setq indium-v8-cache-disabled t)
+
+      (spacemacs|add-toggle indium-interaction-mode
+        :status indium-interaction-mode
+        :on (progn
+              (when (bound-and-true-p indium-interaction-mode)
+                (indium-interaction-mode -1))
+              (indium-interaction-mode))
+        :off (indium-interaction-mode -1)
+        :documentation "Indium interactive mode.")
+
+      (spacemacs/register-repl 'indium-repl 'indium-repl "indium")
+      (push "\\*JS REPL\\*" spacemacs-useful-buffers-regexp)
+      (spacemacs|hide-lighter indium-repl-mode)
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode react-mode))
+        (spacemacs/declare-prefix-for-mode mode "mT" "toggle")
+        (spacemacs/declare-prefix-for-mode mode "mTi" "indium interaction")
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "Ti" 'spacemacs/toggle-indium-interaction-mode)
+
+        (spacemacs/declare-prefix-for-mode mode "mi" "indium")
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "i'" 'indium-run-node
+          "ib" 'indium-eval-buffer
+          "ic" 'indium-connect-to-chrome
+          "ie" 'indium-eval
+          "if" 'indium-eval-defun
+          "if" 'indium-eval-last-node
+          "ir" 'indium-eval-region
+          "ii" 'indium-restart-node))
+      )))
+
+
+;; tide
+(defun cats-javascript/init-tide ()
+  (use-package tide
+    :commands (tide-mode tide-setup)
+    :defer t
+    :init
+    (progn
+      (add-hook 'cats/node-executable-hook
+         'cats//tide-set-node-executable)
+
+      (add-hook 'cats/project-hook
+         'cats//locate-tsserver-from-projectile)
+
+      (add-hook 'cats/tsserver-executable-hook
+         'cats//tide-set-tsserver-executable)
+
+      (spacemacs|add-toggle tide-mode
+        :status tide-mode
+        :on (progn
+              (when (bound-and-true-p tide-mode)
+                (tide-mode -1))
+              (tide-mode))
+        :off (tide-mode -1)
+        :documentation "Tide mode.")
+
+      (spacemacs|add-toggle tide-hl-identifier-mode
+        :status tide-hl-identifier-mode
+        :on (progn
+              (when (bound-and-true-p tide-hl-identifier-mode)
+                (tide-hl-identifier-mode -1))
+              (tide-hl-identifier-mode))
+        :off (tide-hl-identifier-mode -1)
+        :documentation "Tide identifier mode.")
+
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode react-mode))
+        (spacemacs/declare-prefix-for-mode mode "mT" "toggle")
+        (spacemacs/declare-prefix-for-mode mode "mTt" "tide")
+        (spacemacs/declare-prefix-for-mode mode "mTh" "tide hl")
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "Tt" 'spacemacs/toggle-tide-mode
+          "Th" 'spacemacs/toggle-tide-hl-identifier-mode))
+
+      (defadvice tide-mode (after check-flycheck-tide-eslint-checkers activate)
+        (if (bound-and-true-p tide-mode)
+            (tide-flycheck-setup)
+          (tide-flycheck-teardown)))
+
+      (push 'company-tide company-backends-js2-mode)
+      (push 'company-tide company-backends-js2-jsx-mode)
+      (push 'company-tide company-backends-react-mode)
+      (push 'company-tide company-backends-web-mode)
+      (push 'company-tide company-backends-rjsx-mode)
+
+      (dolist (hook '(js-jsx-mode-hook
+                      js2-jsx-mode-hook
+                      js-mode-hook
+                      js2-mode-hook
+                      rjsx-mode-hook
+                      react-mode-hook
+                      web-mode-hook))
+        (add-hook hook 'setup-tide-mode)))))
 
 
 ;; rjsx
@@ -151,6 +257,8 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
+  (spacemacs|add-company-hook indium-repl-mode)
+  (spacemacs|add-company-hook tide-mode)
   (spacemacs|add-company-hook rjsx-mode)
   (spacemacs|add-company-hook js2-jsx-mode))
 
@@ -376,7 +484,6 @@
 
 (defun cats-javascript/init-nodejs-repl ()
   (use-package nodejs-repl
-    :ensure t
     :commands (nodejs-repl--get-or-create-process nodejs-repl)
     :defer t
     :init
@@ -389,7 +496,7 @@
       (spacemacs/register-repl 'nodejs-repl 'nodejs-repl "nodejs")
       (push "\\*nodejs\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter nodejs-repl-mode)
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode react-mode js2-jsx-mode web-mode))
         (spacemacs/declare-prefix-for-mode mode "mn" "nodejs")
         (spacemacs/set-leader-keys-for-major-mode mode
           "n'" 'nodejs-start-repl

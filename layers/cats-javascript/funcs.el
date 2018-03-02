@@ -380,6 +380,20 @@
   "Set the `tide-tsserver-executable' setting in `tide-mode' with `TSSERVER'."
   (setq tide-tsserver-executable tsserver))
 
+(defun setup-tide-mode ()
+  (tide-setup)
+  (spacemacs/toggle-tide-mode-on)
+  (spacemacs/toggle-tide-hl-identifier-mode-on))
+
+(defun tide-flycheck-setup ()
+  (with-eval-after-load 'flycheck
+    (flycheck-add-next-checker 'javascript-eslint 'jsx-tide)
+    (flycheck-add-next-checker 'javascript-eslint 'javascript-tide)))
+
+(defun tide-flycheck-teardown ()
+  (flycheck-remove-next-checker 'javascript-eslint 'javascript-tide)
+  (flycheck-remove-next-checker 'javascript-eslint 'jsx-tide))
+
 
 ;; skewer mode
 (defun cats//locate-phantomjs-from-projectile (&optional dir)
