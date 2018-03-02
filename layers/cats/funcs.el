@@ -146,14 +146,6 @@ symbols, emojis, greek letters, as well as fall backs for."
   "Set the `flycheck-html-tidy-executable' setting with `TIDY'."
   (setq flycheck-html-tidy-executable tidy))
 
-(defun cats//flycheck-turn-on-maybe ()
-  (unless
-      (or
-       buffer-read-only
-       (hardhat-buffer-included-p (current-buffer))
-       (cats//current-buffer-remote-p))
-    (flycheck-mode)))
-
 (defun flycheck-remove-next-checker (checker next)
   "Remove `NEXT' from `CHECKER'."
   (let ((next-checkers (flycheck-checker-get checker 'next-checkers)))

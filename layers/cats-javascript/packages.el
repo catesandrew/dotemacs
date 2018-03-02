@@ -43,13 +43,18 @@
 
 ;; indium
 (defun cats-javascript/init-indium ()
+  "Use indium."
   (use-package indium
     :commands (indium-interaction-mode indium-repl-mode indium-run-node indium-inspector-mode)
-    :defer t
     :init
     (progn
+      (spacemacs|add-company-backends
+       :backends company-indium-repl
+       :modes indium-repl)
+
       (when (string-equal system-type "darwin")
         (setq indium-chrome-executable "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"))
+
       (setq indium-v8-cache-disabled t)
 
       (spacemacs|add-toggle indium-interaction-mode
@@ -64,7 +69,7 @@
       (spacemacs/register-repl 'indium-repl 'indium-repl "indium")
       (push "\\*JS REPL\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter indium-repl-mode)
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode react-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
         (spacemacs/declare-prefix-for-mode mode "mT" "toggle")
         (spacemacs/declare-prefix-for-mode mode "mTi" "indium interaction")
         (spacemacs/set-leader-keys-for-major-mode mode
@@ -79,7 +84,8 @@
           "if" 'indium-eval-defun
           "if" 'indium-eval-last-node
           "ir" 'indium-eval-region
-          "ii" 'indium-restart-node))
+          "ii" 'indium-restart-node)
+        )
       )))
 
 
@@ -130,11 +136,9 @@
             (tide-flycheck-setup)
           (tide-flycheck-teardown)))
 
-      (push 'company-tide company-backends-js2-mode)
-      (push 'company-tide company-backends-js2-jsx-mode)
-      (push 'company-tide company-backends-react-mode)
-      (push 'company-tide company-backends-web-mode)
-      (push 'company-tide company-backends-rjsx-mode)
+      (spacemacs|add-company-backends
+       :backends company-tide
+       :modes rjsx-mode js2-jsx-mode js2-mode react-mode web-mode)
 
       (dolist (hook '(js-jsx-mode-hook
                       js2-jsx-mode-hook
@@ -257,23 +261,23 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
-  (spacemacs|add-company-hook indium-repl-mode)
-  (spacemacs|add-company-hook tide-mode)
-  (spacemacs|add-company-hook rjsx-mode)
-  (spacemacs|add-company-hook js2-jsx-mode))
+  (spacemacs|add-company-backends
+   :backends company-tern
+   :modes rjsx-mode js2-jsx-mode))
 
 
 ;; company-tern
 (defun cats-javascript/post-init-company-tern ()
-  (push 'company-tern company-backends-rjsx-mode)
-  (push 'company-tern company-backends-js2-jsx-mode))
+  (spacemacs|add-company-backends
+   :backends company-tern
+   :modes rjsx-mode js2-jsx-mode))
 
 
 ;; company-ycmd
 (defun cats-javascript/post-init-company-ycmd ()
-  (push 'company-ycmd company-backends-rjsx-mode)
-  (push 'company-ycmd company-backends-js2-mode)
-  (push 'company-ycmd company-backends-js2-jsx-mode))
+  (spacemacs|add-company-backends
+   :backends company-ycmd
+   :modes rjsx-mode js2-jsx-mode js2-mode))
 
 ;; flycheck
 (defun cats-javascript/post-init-flycheck ()
@@ -284,8 +288,8 @@
   (add-hook 'cats/eslint-executable-hook
      'cats//esilnt-set-eslint-executable)
 
-  (spacemacs/add-flycheck-hook 'rjsx-mode)
-  (spacemacs/add-flycheck-hook 'js2-jsx-mode))
+  (dolist (mode '(rjsx-mode js2-jsx-mode))
+    (spacemacs/enable-flycheck mode)))
 
 
 ;; js-doc

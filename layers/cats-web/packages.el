@@ -11,17 +11,11 @@
     emmet-mode
     smartparens
     web-mode
-    company
     xah-css-mode
     flycheck
     helm-css-scss
     yasnippet
     ))
-
-
-;; company
-(defun cats-web/post-init-company ()
-  (spacemacs|add-company-hook xah-css-mode))
 
 
 ;; xah-css-mode
@@ -31,7 +25,9 @@
     :mode ("\\.css\\'" . xah-css-mode)
     :init
     (progn
-      (push 'company-xah-css company-backends-xah-css-mode)
+      (spacemacs|add-company-backends
+       :backends company-css
+       :modes xah-css-mode)
 
       ;; Mark `css-indent-offset' as safe-local variable
       (put 'css-indent-offset 'safe-local-variable #'integerp)
@@ -75,7 +71,7 @@
     (dolist (checker '(css-csslint css-stylelint))
       (flycheck-add-mode checker 'xah-css-mode)))
   (dolist (mode '(xah-css-mode))
-    (spacemacs/add-flycheck-hook mode)))
+    (spacemacs/enable-flycheck mode)))
 
 
 ;; helm

@@ -12,6 +12,7 @@
   '(projectile
     autorevert
     company
+    company-shell
     yasnippet
     buffer-move
     desktop
@@ -28,7 +29,15 @@
 ;; company
 (defun cats-core/post-init-company ()
   ;; Enable auto-completion everywhere!
-  (spacemacs|add-company-hook shell-mode))
+  (spacemacs|add-company-backends
+   :backends company-capf
+   :modes shell-mode))
+
+(defun cats-core/post-init-company-shell ()
+  ;; Enable auto-completion everywhere!
+  (spacemacs|add-company-backends
+   :backends (company-shell company-shell-env)
+   :modes shell-mode))
 
 
 ;; yasnippet

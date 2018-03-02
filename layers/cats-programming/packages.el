@@ -22,13 +22,10 @@
     :post-init
     (setq ycmd-server-command cats/ycmd-server-command)))
 
-(defun cats-programming/init-compile ()
+(defun cats-programming/post-init-compile ()
   "Colorize output of compilation mode."
-  (use-package compile
-    :init
-    (progn
-      (setq compilation-ask-about-save nil
-            compilation-always-kill t))))
+  (setq compilation-ask-about-save nil)
+  (setq compilation-always-kill t))
 
 (defun cats-programming/init-hs-minor-mode ()
   "Visit http://stackoverflow.com/questions/1085170 for more info."
@@ -75,26 +72,20 @@
     :post-init
     (add-hook 'prog-mode-hook 'clean-aindent-mode)))
 
-(defun cats-programming/init-string-inflection ()
+(defun cats-programming/pre-init-string-inflection ()
   "String inflections for underscore -> UPCASE -> CamelCase conversion of names."
-  (use-package string-inflection
-    :defer t
-    :ensure t
-    :init
+  (spacemacs|use-package-add-hook string-inflection
+    :post-init
     (progn
-      (spacemacs/declare-prefix "oca" "auto")
-      (spacemacs/declare-prefix "ocu" "emacs_lisp")
-      (spacemacs/declare-prefix "occ" "EmacsLisp")
-      (spacemacs/declare-prefix "ocl" "emacsLisp")
-      (spacemacs/declare-prefix "ocU" "EMACS_LISP")
-      (spacemacs/declare-prefix "ock" "emacs-lisp")
-      (spacemacs/set-leader-keys
-        "oca" 'cats/string-inflection-cycle-auto
-        "ocu" 'string-inflection-underscore
-        "occ" 'string-inflection-camelcase
-        "ocl" 'string-inflection-lower-camelcase
-        "ocU" 'string-inflection-upcase
-        "ock" 'string-inflection-kebab-case))))
+      (spacemacs/declare-prefix "xia" "auto")
+
+      (spacemacs/declare-prefix "xi_" "emacs_lisp")
+      (spacemacs/declare-prefix "xiu" "emacs_lisp")
+      (spacemacs/declare-prefix "xiC" "EmacsLisp")
+      (spacemacs/declare-prefix "xic" "emacsLisp")
+      (spacemacs/declare-prefix "xiU" "EMACS_LISP")
+      (spacemacs/declare-prefix "xik" "emacs-lisp")
+      (spacemacs/declare-prefix "xi-" "emacs-lisp"))))
 
 (defun cats-programming/init-evil-string-inflection ()
   "String inflections for underscore -> UPCASE -> CamelCase conversion of names."

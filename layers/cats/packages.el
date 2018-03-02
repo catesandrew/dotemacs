@@ -161,12 +161,10 @@
 
 
 ;; editorconfig
-(defun cats/init-editorconfig ()
+(defun cats/pre-init-editorconfig ()
   "EditorConfig plugin for emacs."
-  (use-package editorconfig
-    :defer t
-    :ensure t
-    :init (add-to-list 'auto-mode-alist '("\\.editorconfig" . conf-unix-mode))))
+  (spacemacs|use-package-add-hook editorconfig
+    :post-init (add-to-list 'auto-mode-alist '("\\.editorconfig" . conf-unix-mode))))
 
 (defun cats/init-copyright ()
   "Deal with copyright notices."
@@ -262,7 +260,7 @@
         ;; Use a non-interactive login shell. A login shell, because my
         ;; environment variables are mostly set in `.bashrc'.
         (setq exec-path-from-shell-arguments '("-l"))))
-    :post-init
+    :pre-config
     (when (or (spacemacs/system-is-mac)
               (spacemacs/system-is-linux)
               (memq window-system '(x)))
@@ -324,7 +322,10 @@
                  "VAGRANT_VMWARE_CLONE_DIRECTORY"
                  "XML_CATALOG_FILES"
                  ))
-        (add-to-list 'exec-path-from-shell-variables var))
+        (unless (or (member var exec-path-from-shell-variables) (getenv var))
+          (push var exec-path-from-shell-variables))
+        ;; (add-to-list 'exec-path-from-shell-variables var)
+        )
       (exec-path-from-shell-initialize))))
 
 (defun cats/post-init-exec-path-from-shell ()
@@ -466,7 +467,7 @@
              (hardhat-buffer-included-p (current-buffer))
              (cats//current-buffer-remote-p))
           ad-do-it))
-      (ad-activate 'flycheck-mode)
+      ;; (ad-activate 'flycheck-mode)
 
       (add-hook 'cats/tidy-executable-hook
          'cats//set-tidy-executable)
@@ -589,6 +590,7 @@ Install mudraw with brew install mupdf-tools"))))))
   "Protect user-writable files."
   (use-package hardhat
     :ensure t
+    :commands (hardhat-buffer-included-p)
     :init
     (progn
       ;; (global-hardhat-mode)
@@ -618,20 +620,19 @@ Install mudraw with brew install mupdf-tools"))))))
 
 
 ;; grep
-(defun cats/init-grep ()
-  (use-package grep
-    :defer t
-    :init
-    (progn
-      (add-hook 'cats/find-executable-hook 'cats//grep-set-find-executable))
-    :config
-    (progn
-      (define-key grep-mode-map "q" 'rgrep-quit-window)
-      (define-key grep-mode-map (kbd "C-<return>") 'rgrep-goto-file-and-close-rgrep)
-      (grep-compute-defaults)
-      (when-let* ((gnu-xargs (and (eq system-type 'darwin)
-                                  (executable-find "gxargs"))))
-        (setq xargs-program gnu-xargs)))))
+(defun cats/post-init-grep ()
+  (add-hook 'cats/find-executable-hook 'cats//grep-set-find-executable)
+  )
+
+(defun cats/pre-init-grep ()
+  (spacemacs|use-package-add-hook helm
+    :post-config
+    (define-key grep-mode-map "q" 'rgrep-quit-window)
+    (define-key grep-mode-map (kbd "C-<return>") 'rgrep-goto-file-and-close-rgrep)
+    (grep-compute-defaults)
+    (when-let* ((gnu-xargs (and (eq system-type 'darwin)
+                                (executable-find "gxargs"))))
+      (setq xargs-program gnu-xargs))))
 
 
 ;; locate
