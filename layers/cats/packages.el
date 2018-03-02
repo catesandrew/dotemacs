@@ -476,7 +476,6 @@
   ;; Support Git Commit Mode for external `git commit'
   (global-git-commit-mode))
 
-
 
 ;; magit
 (defun cats/pre-init-magit ()
