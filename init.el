@@ -103,7 +103,9 @@ values."
      emacs-lisp
      common-lisp
      plantuml
-     (haskell :variables haskell-enable-hindent-style "johan-tibell")
+     pl
+     (haskell :variables haskell-enable-hindent-style "johan-tibell"
+                         haskell-completion-backend 'dante)
      (html :variables css-indent-offset 2)
      ipython-notebook
      javascript
