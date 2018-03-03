@@ -75,4 +75,4 @@ snippets/*/MIT
 *-pkg.el
 
 # layers/private directory
-layers/private/
+/private/cats-private

@@ -14,6 +14,18 @@ values."
    ;; Don't move back the cursor one position when exiting insert mode
    evil-move-cursor-back nil
    evil-jumps-post-jump-hook 'recenter
+   configuration-layer-private-directory
+   (let ((dotspacemacs-configuration-layer-private-directory
+          configuration-layer-private-directory)
+         (dotspacemacs-private-dir
+          (when dotspacemacs-directory
+            (expand-file-name
+             (concat dotspacemacs-directory "private/")))))
+     (if (and dotspacemacs-directory
+              (file-exists-p dotspacemacs-private-dir))
+         dotspacemacs-private-dir
+       dotspacemacs-configuration-layer-private-directory))
+
    ;; prevent certain movement commands from breaking at the end of the lines
    ;; evil-move-beyond-eol t
    ;; Base distribution to use. This is a layer contained in the directory
@@ -38,6 +50,7 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path
    (list (expand-file-name "layers/" dotspacemacs-directory))
+
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
@@ -157,7 +170,7 @@ values."
      cats-grammar
      cats-kubernetes
      cats-misc-langs
-     private
+     cats-private
      )
 
    ;; List of additional packages that will be installed without being
