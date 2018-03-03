@@ -387,12 +387,12 @@
 
 (defun tide-flycheck-setup ()
   (with-eval-after-load 'flycheck
-    (flycheck-add-next-checker 'javascript-eslint 'jsx-tide)
-    (flycheck-add-next-checker 'javascript-eslint 'javascript-tide)))
+    (cats//flycheck-add-next-checker 'javascript-eslint 'jsx-tide)
+    (cats//flycheck-add-next-checker 'javascript-eslint 'javascript-tide)))
 
 (defun tide-flycheck-teardown ()
-  (flycheck-remove-next-checker 'javascript-eslint 'javascript-tide)
-  (flycheck-remove-next-checker 'javascript-eslint 'jsx-tide))
+  (cats//flycheck-remove-next-checker 'javascript-eslint 'javascript-tide)
+  (cats//flycheck-remove-next-checker 'javascript-eslint 'jsx-tide))
 
 
 ;; skewer mode

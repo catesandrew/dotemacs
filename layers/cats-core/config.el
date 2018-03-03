@@ -11,6 +11,7 @@
 
 (defvar cats//projectile-curr nil
   "The current projectile project.")
+
 (defvar cats/project-hook nil
   "Hooks run when a cats/project is fired.")
 

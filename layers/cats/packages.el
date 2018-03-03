@@ -460,7 +460,7 @@
   (spacemacs|use-package-add-hook flycheck
     :post-init
     (progn
-      (defadvice flycheck-mode (around flycheck-turn-on-maybe)
+      (defadvice flycheck-mode (around flycheck-turn-on-maybe activate)
         (unless
             (or
              buffer-read-only

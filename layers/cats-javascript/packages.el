@@ -284,9 +284,9 @@
   (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
   (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
   (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
-  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
   (add-hook 'cats/eslint-executable-hook
      'cats//esilnt-set-eslint-executable)
+  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
 
   (dolist (mode '(rjsx-mode js2-jsx-mode))
     (spacemacs/enable-flycheck mode)))
