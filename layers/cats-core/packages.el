@@ -123,79 +123,94 @@
       (when cats/projectile-require-project-root
         (setq projectile-require-project-root t))
 
-      (defun cats//dabbrev-from-projectile (&optional dir)
-        "Use ."
-        (when cats/verbose
-          (message "!!! Running cats//dabbrev-from-projectile: %s" (file-name-nondirectory (directory-file-name (or dir (projectile-project-root))))))
-        (add-to-list 'directory-abbrev-alist
-                     (cons
-                      (concat "^" (directory-file-name (or dir (projectile-project-root))))
-                      (file-name-nondirectory (directory-file-name (or dir (projectile-project-root)))))))
-      ;; (add-hook 'cats/project-hook 'cats//dabbrev-from-projectile)
+      (defadvice winum-select-window-by-number (after cats/winum-select-window-by-number (&optional arg))
+        ;; (princ (format "defadvice: winum-select-window-by-number %s\n" arg))
+        (let* ((n (cond
+                   ((integerp arg) arg)
+                   (arg (winum-get-number))
+                   ((called-interactively-p 'any)
+                    (let ((user-input-str (read-from-minibuffer "Window: ")))
+                      (if (not (string-match-p "[+-]?[0-9]+\.*" user-input-str))
+                          (winum-get-number)
+                        (string-to-number user-input-str))))
+                   (t (winum-get-number))))
+               (w (winum-get-window-by-number (abs n))))
 
-      (defun cats/find-file-hook-to-project ()
-        "Use ."
-        (when cats/verbose
-          (message "!!! Running cats//find-file-hook-to-project"))
-        (defun cats/do-nothing ())
+          ;; (princ (format "w: %s\n" w))
+          ;; (princ (format "n: %s\n" n))
+          ;; (princ (format "(> 0 n): %s\n" (> n 0)))
+          (when (and w (and (buffer-file-name) (> n 0)))
+            (cats/find-file-hook-to-project))))
+      (ad-activate 'winum-select-window-by-number)
 
-        (condition-case err
-            (let ((projectile-require-project-root t))
-              (projectile-project-root)
-              (let ((project-root (projectile-project-root))
-                    (proj-dir-root (directory-file-name (projectile-project-root)))
-                    (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))))
-                (when (and project-root
-                           (not (string= project-root cats//projectile-curr)))
-                  (let ((projectile-switch-project-action 'cats/do-nothing))
-                    (when cats/verbose
-                      (message "Project Root %s" project-root)
-                      (message "Project Base %s" proj-dir-base)
-                      (message "Project Dir %s" proj-dir-root)
-                      (message "Buffer Name %s" buffer-file-name))
-                    (projectile-switch-project-by-name project-root)
-                    (setq cats/projectile-dir-root proj-dir-root)
-                    (setq cats/projectile-dir-base proj-dir-base)
-                    (cats/run-project-hook project-root)))))
-          (error
-           (progn
-             (setq cats/projectile-dir-root nil)
-             (setq cats/projectile-dir-base nil)
-             (cats/run-project-hook nil))
-           nil))
-        )
-
-      ;; does not attach to any c-level calls but is best we got
-      (defadvice switch-to-buffer (after cats/projectile-switch activate)
-        (when buffer-file-name
-          (when cats/verbose
-            (message "!!! Switch to buffer: %s" buffer-file-name))
+      (defadvice spacemacs/alternate-buffer (after cats/spacemacs/alternate-buffer activate)
+        ;; (princ (format "defadvice: spacemacs/alternate-buffer\n"))
+        (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
-      (defadvice switch-to-prev-buffer (after cats/projectile-switch-prev activate)
-        (when buffer-file-name
-          (when cats/verbose
-            (message "!!! Switch prev buffer: %s" buffer-file-name))
+      (defadvice spacemacs/alternate-window (after cats/spacemacs/alternate-window activate)
+        ;; (princ (format "defadvice: spacemacs/alternate-window\n"))
+        (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
-      (defadvice switch-to-next-buffer (after cats/projectile-switch-next activate)
-        (when buffer-file-name
-          (when cats/verbose
-            (message "!!! Switch next buffer: %s" buffer-file-name))
+      (add-hook 'projectile-after-switch-project-hook
+         (lambda ()
+           (unless cats//projectile-switching-project-by-name
+             ;; (message "defadvice: projectile-after-switch-project-hook")
+             (condition-case err
+                 (save-excursion
+                   (select-window (selected-window))
+                   (let ((cb (current-buffer))   ;; save current-buffer
+                         (origin-buffer-file-name (buffer-file-name))
+                         (projectile-require-project-root t))
+                     ;; (princ (format "current-buffer: `%s''\n" cb))
+                     ;; (princ (format "origin-buffer-file-name: `%s'\n" origin-buffer-file-name))
+                     (projectile-project-root)
+                     (let ((project-root (projectile-project-root))
+                           (proj-dir-root (directory-file-name (projectile-project-root)))
+                           (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))))
+                       ;; (princ (format "project-root: `%s'\n" project-root))
+                       ;; (princ (format "cats//projectile-curr: `%s''\n" cats//projectile-curr))
+                       (when (and project-root
+                                  (not (string= project-root cats//projectile-curr)))
+                         (cats/run-project-hook project-root)))))
+               (error
+                (progn
+                  (setq cats/projectile-dir-root nil)
+                  (setq cats/projectile-dir-base nil))
+                nil)))
+           (setq cats//projectile-switching-project-by-name nil)))
+
+      (defadvice switch-to-buffer (after cats/switch-to-buffer activate)
+        ;; (princ (format "defadvice: switch-to-buffer\n"))
+        (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
-      (add-hook 'projectile-mode-hook 'cats/projectile-mode-hook)
-      (defun cats/projectile-mode-hook ()
-        (cond
-         (projectile-mode
-          (add-hook 'find-file-hook #'cats/find-file-hook-to-project t t))
-         (t
-          (remove-hook 'find-file-hook #'cats/find-file-hook-to-project t))))
+      (defadvice switch-to-prev-buffer (after cats/switch-to-prev-buffer activate)
+        ;; (princ (format "defadvice: switch-to-prev-buffer\n"))
+        (when (buffer-file-name)
+          (cats/find-file-hook-to-project)))
 
-      (defadvice projectile-mode (before caching-turn-off-maybe)
-        (when (cats//current-buffer-remote-p)
-          (setq-local projectile-enable-caching nil)))
-      (ad-activate 'projectile-mode))))
+      (defadvice switch-to-next-buffer (after cats/switch-to-next-buffer activate)
+        ;; (princ (format "defadvice: switch-to-next-buffer\n"))
+        (when (buffer-file-name)
+          (cats/find-file-hook-to-project)))
+
+      (add-hook 'projectile-find-file-hook
+         (lambda ()
+           ;; (message "defadvice: projectile-find-file-hook")
+           (cats/find-file-hook-to-project)))
+
+      (add-hook 'find-file-hook
+         (lambda ()
+           ;; (message "defadvice: find-file-hook")
+           (cond
+            (projectile-mode
+             ;; (message "find-file-hook: projectile-mode on")
+             (cats/find-file-hook-to-project))
+            (t
+             ;; (message "find-file-hook: projectile-mode off")
+             ))) t))))
 
 
 ;; desktop

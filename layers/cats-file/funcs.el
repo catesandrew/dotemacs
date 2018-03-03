@@ -174,21 +174,23 @@ none."
 
 (defun cats//neotree-dir-from-projectile-root (dir)
   "Neotree responds to projectile root `DIR' when opening."
-  (when (and dir (fboundp 'neotree-dir))
-    (let ((neo-open (neo-global--window-exists-p)))
-      (when cats/verbose
-        (message "Neotree switching to project: %s" dir))
+  (when (and (fboundp 'projectile-project-root)
+             (fboundp 'neotree-dir))
+    (let ((proj-root (or dir (projectile-project-root)))
+          (neo-open (neo-global--window-exists-p)))
 
-      (neo-global--open-dir dir)
-      (let ((origin-buffer-file-name buffer-file-name))
-        (neotree-find dir)
-        (neotree-find origin-buffer-file-name)
-        (call-interactively 'neotree-enter))
+      (if (eq (current-buffer) (neo-global--get-buffer))
+          (neo-buffer--refresh t)
+        (save-excursion
+          (let ((cw (selected-window)))  ;; save current window
+            (let ((origin-buffer-file-name (buffer-file-name)))
+              (neo-global--open-dir proj-root)
+              (neotree-find proj-root)
+              (neotree-find origin-buffer-file-name)
+              (call-interactively 'neotree-enter))
+            (recenter))))
       (unless neo-open
-        (neotree-hide))
-      )
-    )
-  )
+        (neotree-hide)))))
 
 
 ;; jumping, mark ring navigation
