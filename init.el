@@ -561,6 +561,12 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
+
+  ;; arrow arrow-fade brace butt curve roundstub utf-8
+  (setq powerline-default-separator 'utf-8)
+  (setq spaceline-workspace-numbers-unicode t)
+  (setq spaceline-window-numbers-unicode t)
+
   (spacemacs|do-after-display-system-init
    (when (display-graphic-p)
      (cats//set-frame-size))))
