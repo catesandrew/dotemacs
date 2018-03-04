@@ -17,7 +17,6 @@
     buffer-move
     desktop
     (prettify-symbols-mode :location built-in)
-    (icicles :location local)
     (eshell :location built-in)
     (shell :location built-in)
     (term :location built-in)
@@ -44,38 +43,6 @@
 (defun cats-core/post-init-yasnippet ()
   (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(eshell-mode-hook))
   (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(shell-mode-hook)))
-
-
-;; icicles
-(defun cats-core/init-icicles ()
-  (use-package icicles
-    :commands (icicle-complete-keys icy-mode icicle-auto-complete-keys-mode)
-    :defer t
-    :init
-    (progn
-      (spacemacs|add-toggle icy-mode
-        :status icy-mode
-        :on (progn
-              (when (bound-and-true-p icy-mode)
-                (icy-mode -1))
-              (icy-mode))
-        :off (icy-mode -1)
-        :documentation "Icicles"
-        :evil-leader "toI")
-
-      (spacemacs|add-toggle icicle-auto-complete-keys-mode
-        :status icicle-auto-complete-keys-mode
-        :on (progn
-              (when (bound-and-true-p icicle-auto-complete-keys-mode)
-                (icicle-auto-complete-keys-mode -1))
-              (icicle-auto-complete-keys-mode))
-        :off (icicle-auto-complete-keys-mode -1)
-        :documentation "Describe keys"
-        :evil-leader "tod"))
-    :config
-    (progn
-      (spacemacs|hide-lighter icicle-auto-complete-keys-mode)
-      (spacemacs|hide-lighter icy-mode))))
 
 
 ;; autorevert
