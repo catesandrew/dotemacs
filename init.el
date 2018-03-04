@@ -302,11 +302,11 @@ values."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Pragmata Pro Mono"
+   dotspacemacs-default-font '("PragmataPro"
                                :size 14
                                :weight normal
                                :width normal
-                               ;; :powerline-scale 1.4
+                               :powerline-scale 1.4
                                )
    ;; The leader key
    dotspacemacs-leader-key "SPC"
