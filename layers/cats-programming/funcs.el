@@ -63,7 +63,7 @@
               rjsx-mode
               react-mode
               javascript-mode))
-    (cats/pretty-symbols pretty-symbols/js2))
+    (cats/pretty-symbols pretty-symbols/js2-width))
    (t
     ;; default
     (cats/pretty-symbols pretty-symbols/prog))))
