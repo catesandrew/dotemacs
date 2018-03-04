@@ -10,6 +10,9 @@
 
 (spacemacs|define-jump-handlers rjsx-mode)
 
+(defvar cats/javascript-mode-hook nil
+  "Hooks run when javascipt type mode is fired.")
+
 (defvar cats/js-doc-author (format "%s <%s>" user-full-name user-mail-address))
 (defvar cats/js-doc-url "https://gitlab.cates.io/u/andrew")
 (defvar cats/js-doc-license "SEE LICENSE IN LICENSE.md")

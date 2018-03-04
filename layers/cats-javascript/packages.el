@@ -38,6 +38,7 @@
     web-mode
     tide
     indium
+    react-mode
     ))
 
 
@@ -159,6 +160,8 @@
       (advice-add #'js-jsx-indent-line
                   :after
                   #'cats//js-jsx-indent-line-align-closing-bracket)
+
+      (add-hook 'js2-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))
 
       (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
       (add-to-list 'auto-mode-alist '("\\.react.js\\'" . rjsx-mode))
@@ -321,11 +324,22 @@
         (spacemacs/js-doc-set-key-bindings mode)))))
 
 
+;; react mode
+(defun cats-javascript/pre-init-react-mode ()
+  (spacemacs|use-package-add-hook js2-mode
+    :post-init
+    (add-hook 'react-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))))
+
+
 ;; js2-mode
 (defun cats-javascript/pre-init-js2-mode ()
   (spacemacs|use-package-add-hook js2-mode
     :post-init
     (progn
+      (dolist (hook '(js2-jsx-mode-hook
+                      js2-mode-hook))
+        (add-hook hook (lambda () (run-hooks #'cats/javascript-mode-hook))))
+
       (add-to-list 'auto-mode-alist (cons (rx ".jsx" eos) 'js2-jsx-mode))
       (add-to-list 'auto-mode-alist '("\\.jshintrc$" . js2-mode))
       (add-to-list 'auto-mode-alist '("\\.eslintrc$" . js2-mode))

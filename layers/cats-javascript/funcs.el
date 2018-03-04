@@ -442,4 +442,14 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
   (emmet-mode 0)
   (setq-local emmet-expand-jsx-className? t))
 
+
+
+;; javascript mode defaults
+(defun cats/javascript-mode-defaults ()
+  "Default javascript hook."
+  (spacemacs/toggle-rainbow-identifier-off))
+
+(add-hook 'cats/javascript-mode-hook 'cats/javascript-mode-defaults)
+
+
 ;;; funcs.el ends here
