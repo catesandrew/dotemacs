@@ -442,7 +442,6 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
   (emmet-mode 0)
   (setq-local emmet-expand-jsx-className? t))
 
-
 
 ;; javascript mode defaults
 (defun cats/javascript-mode-defaults ()
@@ -450,6 +449,53 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
   (spacemacs/toggle-rainbow-identifier-off))
 
 (add-hook 'cats/javascript-mode-hook 'cats/javascript-mode-defaults)
+
+
+;; indium
+(defun cats/indium-start-repl ()
+  "Attach a browser to Emacs and start a indium REPL."
+  (interactive)
+  (let ((cb (current-buffer))   ;; save current-buffer
+        (origin-buffer-file-name (buffer-file-name)))
+
+    (unless (indium-repl-get-buffer)
+      (call-interactively 'indium-run-node)
+      ;; (switch-to-buffer cb)
+      ;; (switch-to-buffer-other-window "*JS REPL*")
+      (pop-to-buffer cb t)
+      (spacemacs/toggle-indium-interaction-mode-on))
+
+    ;; (indium-switch-to-repl-buffer)
+    (if-let ((buf (indium-repl-get-buffer)))
+        (progn
+          (setq indium-repl-switch-from-buffer cb)
+          (pop-to-buffer buf t)))))
+
+(defun cats/indium-eval-buffer-and-focus ()
+  "Execute whole buffer in browser and switch to REPL in insert state."
+  (interactive)
+  (indium-eval-buffer)
+  (indium-switch-to-repl-buffer)
+  (evil-insert-state))
+
+(defun cats/indium-eval-defun-and-focus ()
+  "Execute function at point in browser and switch to REPL in insert state."
+  (interactive)
+  (indium-eval-defun)
+  (indium-switch-to-repl-buffer)
+  (evil-insert-state))
+
+(defun cats/indium-eval-region (beg end)
+  "Execute the region as JavaScript code in the attached browser."
+  (interactive "r")
+  (indium-eval (buffer-substring-no-properties beg end)))
+
+(defun cats/indium-eval-region-and-focus (beg end)
+  "Execute the region in browser and swith to REPL in insert state."
+  (interactive "r")
+  (cats/indium-eval-region beg end)
+  (indium-switch-to-repl-buffer)
+  (evil-insert-state))
 
 
 ;;; funcs.el ends here

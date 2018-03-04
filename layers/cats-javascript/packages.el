@@ -46,17 +46,27 @@
 (defun cats-javascript/init-indium ()
   "Use indium."
   (use-package indium
-    :commands (indium-interaction-mode indium-repl-mode indium-run-node indium-inspector-mode)
+    :commands (indium-interaction-mode
+               indium-repl-mode
+               indium-run-node
+               indium-repl-get-buffer
+               indium-inspector-mode)
     :init
     (progn
+      (spacemacs/register-repl
+       'indium-repl-mode
+       'cats/indium-start-repl
+       "indium")
+
       (spacemacs|add-company-backends
        :backends company-indium-repl
-       :modes indium-repl)
+       :modes indium-repl-mode)
 
       (when (string-equal system-type "darwin")
         (setq indium-chrome-executable "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"))
-
       (setq indium-v8-cache-disabled t)
+
+      (add-hook 'indium-repl-mode-hook 'spacemacs/disable-hl-line-mode)
 
       (spacemacs|add-toggle indium-interaction-mode
         :status indium-interaction-mode
@@ -67,26 +77,85 @@
         :off (indium-interaction-mode -1)
         :documentation "Indium interactive mode.")
 
-      (spacemacs/register-repl 'indium-repl 'indium-repl "indium")
       (push "\\*JS REPL\\*" spacemacs-useful-buffers-regexp)
+      (push "\\*node process\\*" spacemacs-useless-buffers-regexp)
       (spacemacs|hide-lighter indium-repl-mode)
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
+      (dolist (mode '(indium-repl-mode rjsx-mode js2-mode js2-jsx-mode react-mode))
         (spacemacs/declare-prefix-for-mode mode "mT" "toggle")
-        (spacemacs/declare-prefix-for-mode mode "mTi" "indium interaction")
+        (spacemacs/declare-prefix-for-mode mode "mTu" "indium interaction")
         (spacemacs/set-leader-keys-for-major-mode mode
           "Ti" 'spacemacs/toggle-indium-interaction-mode)
 
-        (spacemacs/declare-prefix-for-mode mode "mi" "indium")
+        (spacemacs/declare-prefix-for-mode mode "mu" "indium")
         (spacemacs/set-leader-keys-for-major-mode mode
-          "i'" 'indium-run-node
-          "ib" 'indium-eval-buffer
-          "ic" 'indium-connect-to-chrome
-          "ie" 'indium-eval
-          "if" 'indium-eval-defun
-          "if" 'indium-eval-last-node
-          "ir" 'indium-eval-region
-          "ii" 'indium-restart-node)
-        )
+          "u'" 'cats/indium-start-repl
+          "ub" 'indium-eval-buffer
+          "uB" 'cats/indium-eval-buffer-and-focus
+          "uc" 'indium-connect-to-chrome
+          "ue" 'indium-eval
+          "uf" 'indium-eval-defun
+          "uF" 'cats/indium-eval-defun-and-focus
+          "ui" 'cats/indium-start-repl
+          "ul" 'indium-eval-last-node
+          "us" 'indium-switch-to-repl-buffer
+          "ur" 'indium-eval-region
+          "uR" 'cats/indium-eval-region-and-focus
+          "ui" 'indium-restart-node))
+
+      (spacemacs/set-leader-keys-for-major-mode 'indium-repl-mode
+        "q" 'quit-window
+        "Q" 'indium-quit
+        "i" 'indium-repl-inspect
+        "o" 'indium-repl-clear-output
+        "z" 'indium-repl-pop-buffer
+        "p" 'indium-repl-previous-input
+        "k" 'indium-repl-previous-input
+        "n" 'indium-repl-next-input
+        "j" 'indium-repl-next-input)
+
+      (spacemacs/set-leader-keys-for-major-mode 'indium-inspector-mode
+        "q" 'quit-window
+        "RET" 'indium-follow-link
+        "gg" 'indium-inspector-refresh
+        "i" 'indium-repl-inspect
+        "C-n" 'indium-inspector-next-reference
+        "C-p" 'indium-inspector-previous-reference
+        "h" 'indium-inspector-pop
+        "j" 'indium-inspector-next-reference
+        "k" 'indium-inspector-previous-reference
+        "l" 'indium-follow-link
+        "TAB" 'indium-inspector-next-reference
+        "S-TAB" 'indium-inspector-previous-reference))
+    :config
+    (progn
+      (evilified-state-evilify JS-REPL-mode JS-REPL-mode-map)
+      (evilified-state-evilify Inspector-mode Inspector-mode-map)
+
+      (when (eq dotspacemacs-editing-style 'vim)
+        (evil-define-key 'insert indium-inspector-mode-map
+          (kbd "C-k") 'indium-inspector-previous-reference
+          (kbd "C-j") 'indium-inspector-next-reference)
+        (evil-define-key 'insert indium-repl-mode-map
+          (kbd "C-k") 'indium-repl-previous-input
+          (kbd "C-j") 'indium-repl-next-input))
+
+      (evil-define-key 'normal indium-repl-mode-map
+        (kbd "C-k") 'indium-repl-previous-input
+        (kbd "C-j") 'indium-repl-next-input
+        "q" 'quit-window
+        "gk" 'indium-repl-previous-input
+        "gj" 'indium-repl-next-input)
+
+      (evil-define-key 'normal indium-inspector-mode-map
+        (kbd "C-k") 'indium-inspector-previous-reference
+        (kbd "C-j") 'indium-inspector-next-reference
+        (kbd "C-h") 'indium-inspector-pop
+        (kbd "C-l") 'indium-follow-link
+        "q" 'quit-window
+        "gh" 'indium-inspector-pop
+        "gk" 'indium-inspector-previous-reference
+        "gj" 'indium-inspector-next-reference
+        "gl" 'indium-follow-link)
       )))
 
 
@@ -264,6 +333,12 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
+  (spacemacs|add-company-backends
+    :backends company-capf
+    :modes
+    indium-mode
+    indium-repl-mode)
+
   (spacemacs|add-company-backends
    :backends company-tern
    :modes rjsx-mode js2-jsx-mode))
@@ -551,13 +626,27 @@
           popwin:special-display-config)
     (push '("*nodejs*" :dedicated t :position bottom)
           popwin:special-display-config)
-    (push '("*mocha tests*"                :dedicated t :position bottom)
+    ;; indium
+    (push '("*node process*" :dedicated t :position bottom :noselect nil)
           popwin:special-display-config)
-    (push '("*babel-shell*"                :dedicated t :position bottom
-            :stick t        :noselect nil)
+    ;; (push '("^\\*JS \\(REPL\\|Inspector\\)\\*$"
+    ;;         :regexp t
+    ;;         :dedicated t
+    ;;         :position bottom
+    ;;         :stick t)
+    ;;       popwin:special-display-config)
+    ;; tide
+    (push '("*tide-server*"  :position bottom :noselect nil)
+          popwin:special-display-config)
+    ;; mocha
+    (push '("*mocha tests*"                :dedicated t :position bottom)
           popwin:special-display-config)
     (push '("* Mocha Test Output *"        :dedicated t :position bottom
             :stick tc-state :noselect nil :height 0.4)
+          popwin:special-display-config)
+    ;; babel
+    (push '("*babel-shell*"                :dedicated t :position bottom
+            :stick t        :noselect nil)
           popwin:special-display-config)
     ))
 
