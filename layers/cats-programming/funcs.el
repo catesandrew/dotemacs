@@ -88,17 +88,17 @@
     (spacemacs/toggle-whitespace-cleanup-on)
 
     ;; disable line wrap
-    (unless (bound-and-true-p truncate-lines)
-      ;; (set (make-local-variable 'truncate-lines) t)
-      (setq truncate-lines t))
+    (spacemacs/toggle-truncate-lines-on)
 
     ;; enable line number-mode
     (when cats/line-numbers
-      (unless (bound-and-true-p linum-mode)
-        (spacemacs/toggle-line-numbers-on)))
+      (spacemacs/toggle-line-numbers-on))
 
-    (when (bound-and-true-p visual-line-mode)
-      (setq visual-line-mode nil))
+    (when cats/relative-line-numbers
+      (spacemacs/toggle-line-numbers-on)
+      (spacemacs/linum-relative-toggle))
+
+    (spacemacs/toggle-visual-line-navigation-off)
 
     ;; TODO: Check and disable visual-fill-column-mode
     ;; (when (bound-and-true-p visual-fill-column-mode)
