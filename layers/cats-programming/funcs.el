@@ -71,6 +71,10 @@
 
 ;; personal prog-mode defaults
 
+(defun add-pragmatapro-prettify-symbols-alist ()
+  (dolist (alias pragmatapro-prettify-symbols-alist-width)
+    (push alias prettify-symbols-alist)))
+
 (defun cats/prog-mode-defaults ()
   "Default coding hook, useful with any programming language."
   (when cats/prog-mode-spell-checking
@@ -117,6 +121,7 @@
     (cats/highlight-TODO-words)
 
     ;; prettify and enable locally
+    (add-pragmatapro-prettify-symbols-alist)
     (cats/prettify-symbols-auto)
     (spacemacs/toggle-prettify-symbols-mode-on)))
 
