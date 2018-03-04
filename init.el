@@ -61,6 +61,7 @@ values."
      ;; ----------------------------------------------------------------
      ;; System integration
      osx
+     spacemacs-purpose
      ;; Editing
      helm
      (auto-completion :variables
@@ -608,6 +609,8 @@ you should place you code here."
     ;; Inhibit killing of important buffers
     (when buffer/do-not-kill-important-buffers
       (add-hook 'kill-buffer-query-functions 'cats//do-not-kill-important-buffers))
+
+    (pupo/update-purpose-config)
 
     ;; Autosave buffers when focus is lost, see
     (when buffer/force-save-some-buffers
