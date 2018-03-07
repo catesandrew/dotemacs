@@ -642,11 +642,10 @@ Install mudraw with brew install mupdf-tools"))))))
 
 ;; grep
 (defun cats/post-init-grep ()
-  (add-hook 'cats/find-executable-hook 'cats//grep-set-find-executable)
-  )
+  (add-hook 'cats/find-executable-hook 'cats//grep-set-find-executable))
 
 (defun cats/pre-init-grep ()
-  (spacemacs|use-package-add-hook helm
+  (spacemacs|use-package-add-hook grep
     :post-config
     (define-key grep-mode-map "q" 'rgrep-quit-window)
     (define-key grep-mode-map (kbd "C-<return>") 'rgrep-goto-file-and-close-rgrep)
