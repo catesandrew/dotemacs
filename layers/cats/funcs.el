@@ -217,4 +217,12 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
       (yas-string-reverse (yas-trimmed-comment-start))
     (yas-s-trim comment-end)))
 
+
+;; compilation
+(defun spacemacs/open-compilation-window ()
+  "Open the window containing the '*compilation*' buffer."
+  (interactive)
+  (with-current-buffer "*compilation*"
+    (switch-to-buffer (current-buffer))))
+
 ;;; funcs.el ends here
