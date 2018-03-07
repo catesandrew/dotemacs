@@ -183,9 +183,16 @@ Try the repeated popping up to 10 times."
       ;; Don't allow neotree to be the only open window
       (setq neo-show-hidden-files nil)
 
+      (defun cats/neotree-find ()
+        (interactive)
+        (neotree-find)
+        (recenter))
+
+      (spacemacs/declare-prefix "f/" "neotree find")
       (spacemacs/set-leader-keys
-       "fn" 'neotree-show
-       "fN" 'neotree-hide))
+        "f/" 'cats/neotree-find
+        "fn" 'neotree-show
+        "fN" 'neotree-hide))
 
     :post-config
     (when neo-persist-show
