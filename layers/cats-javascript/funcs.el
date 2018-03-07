@@ -452,7 +452,7 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
 
 
 ;; indium
-(defun cats/indium-start-repl ()
+(defun cats/indium-start-node-repl ()
   "Attach a browser to Emacs and start a indium REPL."
   (interactive)
   (let ((cb (current-buffer))   ;; save current-buffer
@@ -466,7 +466,23 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
       (spacemacs/toggle-indium-interaction-mode-on))
 
     ;; (indium-switch-to-repl-buffer)
-    (if-let ((buf (indium-repl-get-buffer)))
+    (if-let* ((buf (indium-repl-get-buffer)))
+        (progn
+          (setq indium-repl-switch-from-buffer cb)
+          (pop-to-buffer buf t)))))
+
+(defun cats/indium-start-chrome-repl ()
+  "Attach a browser to Emacs and start a indium REPL."
+  (interactive)
+  (let ((cb (current-buffer))   ;; save current-buffer
+        (origin-buffer-file-name (buffer-file-name)))
+
+    (unless (indium-repl-get-buffer)
+      (call-interactively 'indium-run-chrome)
+      (pop-to-buffer cb t)
+      (spacemacs/toggle-indium-interaction-mode-on))
+
+    (if-let* ((buf (indium-repl-get-buffer)))
         (progn
           (setq indium-repl-switch-from-buffer cb)
           (pop-to-buffer buf t)))))

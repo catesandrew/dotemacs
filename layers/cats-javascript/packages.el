@@ -88,15 +88,16 @@
 
         (spacemacs/declare-prefix-for-mode mode "mu" "indium")
         (spacemacs/set-leader-keys-for-major-mode mode
-          "u'" 'cats/indium-start-repl
+          "u'" 'cats/indium-start-node-repl
           "ub" 'indium-eval-buffer
           "uB" 'cats/indium-eval-buffer-and-focus
-          "uc" 'indium-connect-to-chrome
+          "uc" 'cats/indium-start-chrome-repl
+          "uC" 'indium-connect-to-chrome
           "ue" 'indium-eval
           "uf" 'indium-eval-defun
           "uF" 'cats/indium-eval-defun-and-focus
-          "ui" 'cats/indium-start-repl
           "ul" 'indium-eval-last-node
+          "un" 'cats/indium-start-node-repl
           "us" 'indium-switch-to-repl-buffer
           "ur" 'indium-eval-region
           "uR" 'cats/indium-eval-region-and-focus
