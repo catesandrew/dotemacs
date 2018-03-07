@@ -22,4 +22,23 @@
 (defvar cats/git-grep-switches "--extended-regexp -I -n --ignore-case --no-color"
   "Switches to pass to `git grep'.")
 
+(when (spacemacs/window-system-is-mac)
+  ;; To edit OSX binary and xml plist files, use the compressed file framework and
+  ;; the plutil provided with OSX. Emacs provides jka-compr which decompresses a
+  ;; file to stdout for reading, and compresses the data from stdin to write the
+  ;; file back out again.
+  (add-to-list 'jka-compr-compression-info-list
+               ["\\.plist$"
+                "converting text XML to binary plist"
+                "plutil"
+                ("-convert" "binary1" "-o" "-" "-")
+                "converting binary plist to text XML"
+                "plutil"
+                ("-convert" "xml1" "-o" "-" "-")
+                nil nil "bplist"])
+
+  ;;It is necessary to perform an update!
+  (jka-compr-update)
+)
+
 ;;; config.el ends here
