@@ -115,9 +115,10 @@
           ad-do-it)))
 
     (spacemacs/toggle-rainbow-identifier-on)
+    (unless (bound-and-true-p rainbow-mode)
+      (rainbow-mode))
 
     (spacemacs/toggle-auto-fill-comments-mode-on)
-    ;; (subword-mode +1) ;; camelCase
     (cats/highlight-TODO-words)
 
     ;; prettify and enable locally
