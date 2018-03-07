@@ -405,7 +405,8 @@
 (defun cats-javascript/pre-init-react-mode ()
   (spacemacs|use-package-add-hook js2-mode
     :post-init
-    (add-hook 'react-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))))
+    (progn
+      (add-hook 'react-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook))))))
 
 
 ;; js2-mode
@@ -417,7 +418,6 @@
                       js2-mode-hook))
         (add-hook hook (lambda () (run-hooks #'cats/javascript-mode-hook))))
 
-      (add-to-list 'auto-mode-alist (cons (rx ".jsx" eos) 'js2-jsx-mode))
       (add-to-list 'auto-mode-alist '("\\.jshintrc$" . js2-mode))
       (add-to-list 'auto-mode-alist '("\\.eslintrc$" . js2-mode))
       (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
@@ -766,9 +766,11 @@
 
 
 ;; web-mode
-(defun cats-javascript/post-init-web-mode ()
-  (dolist (hook '(rjsx-mode-hook
-                  js2-jsx-mode-hook))
-    (add-hook hook 'spacemacs//setup-react-mode)))
+(defun cats-javascript/pre-init-web-mode ()
+  (spacemacs|use-package-add-hook web-mode
+    :post-init
+    (dolist (hook '(rjsx-mode-hook
+                    js2-jsx-mode-hook))
+      (add-hook hook 'spacemacs//setup-react-mode))))
 
 ;;; packages.el ends here
