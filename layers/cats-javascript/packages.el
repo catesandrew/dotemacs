@@ -161,6 +161,7 @@
 
 
 ;; tide
+
 (defun cats-javascript/init-tide ()
   (use-package tide
     :commands (tide-mode tide-setup)
@@ -209,16 +210,7 @@
 
       (spacemacs|add-company-backends
        :backends company-tide
-       :modes rjsx-mode js2-jsx-mode js2-mode react-mode web-mode)
-
-      (dolist (hook '(js-jsx-mode-hook
-                      js2-jsx-mode-hook
-                      js-mode-hook
-                      js2-mode-hook
-                      rjsx-mode-hook
-                      react-mode-hook
-                      web-mode-hook))
-        (add-hook hook 'setup-tide-mode)))))
+       :modes rjsx-mode js2-jsx-mode js2-mode react-mode web-mode))))
 
 
 ;; rjsx
@@ -233,12 +225,21 @@
 
       (add-hook 'js2-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))
 
-      (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
-      (add-to-list 'auto-mode-alist '("\\.react.js\\'" . rjsx-mode))
-      (add-to-list 'auto-mode-alist '("\\index.android.js\\'" . rjsx-mode))
-      (add-to-list 'auto-mode-alist '("\\index.ios.js\\'" . rjsx-mode)))
+      (add-to-list 'magic-mode-alist
+                   '("\\(import.*from \'react\';\\|\/\/ @flow\nimport.*from \'react\';\\)" . rjsx-mode))
+      )
     :config
     (progn
+      (when (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal)
+        (setf (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal) 'rjsx-mode))
+
+      (when (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal)
+        (setf (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal) 'rjsx-mode))
+
+      (dolist (key '("\\.jsx\\'" "\\.react.js\\'" "\\index.android.js\\'" "\\index.ios.js\\'"))
+        (when (alist-get key auto-mode-alist nil nil #'equal)
+          (setf (alist-get key auto-mode-alist nil nil #'equal) 'rjsx-mode)))
+
       ;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
       ;; Workaround sgml-mode and align closing bracket with opening bracket
       ;; (defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)

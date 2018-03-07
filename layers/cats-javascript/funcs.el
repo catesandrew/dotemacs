@@ -385,6 +385,10 @@
   (spacemacs/toggle-tide-mode-on)
   (spacemacs/toggle-tide-hl-identifier-mode-on))
 
+(defun turn-on-tide-mode ()
+  (when (not tide-mode)
+    (tide-setup)))
+
 (defun tide-flycheck-setup ()
   (with-eval-after-load 'flycheck
     (cats//flycheck-add-next-checker 'javascript-eslint 'jsx-tide)
