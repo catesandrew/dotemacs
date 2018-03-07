@@ -58,9 +58,30 @@
     helm
     helm-projectile
     helm-ls-git
+    helm-open-github
     encourage-mode
     engine-mode
     ))
+
+
+;; helm open github
+(defun cats/init-helm-open-github ()
+  ""
+  (use-package helm-open-github
+    :commands (helm-open-github-from-commit helm-open-github-from-file helm-open-github-from-issues helm-open-github-from-pull-requests)
+    :ensure t
+    :init
+    (progn
+      (spacemacs/declare-prefix "go" "github open")
+      (spacemacs/declare-prefix "gof" "github from file")
+      (spacemacs/declare-prefix "goc" "open from commit")
+      (spacemacs/declare-prefix "goi" "open from issues")
+      (spacemacs/declare-prefix "gop" "open from pull requests")
+      (spacemacs/set-leader-keys
+        "gof" 'helm-open-github-from-file
+        "goc" 'helm-open-github-from-commit
+        "goi" 'helm-open-github-from-issues
+        "gop" 'helm-open-github-from-pull-requests))))
 
 
 ;; search-engine
