@@ -9,7 +9,6 @@
 (defconst cats-org-packages
   '(
     (org :location built-in)
-    org-bullets
     (ox-jira :toggle org-enable-jira-support)
     org-jira
     ))
@@ -118,11 +117,5 @@
       )))
 
 
-;; org-bullets
-(defun cats-org/pre-init-org-bullets ()
-  (spacemacs|use-package-add-hook org-bullets
-    :post-init
-    (progn
-      (setq org-bullets-bullet-list '("✿" "❀" "☢" "☯" "✸" )))))
 
 ;;; packages.el ends here
