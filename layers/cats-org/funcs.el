@@ -1,3 +1,43 @@
+;;; funcs.el --- cats-org
+
+;;; Commentary:
+
+;; Personal functions
+
+;;; Code:
+
+
+
+;; Define some shortcuts to access major org files.
+
+(defun cats/org-find-notes ()
+  (interactive)
+  (find-file "~/org/notes.org"))
+
+(defun cats/org-find-private ()
+  (interactive)
+  (find-file "~/org/private.org"))
+
+(defun cats/org-find-workhours ()
+  (interactive)
+  (find-file "~/org/workhours.org"))
+
+(defun cats/org-find-bba ()
+  (interactive)
+  (find-file "~/org/bba.org"))
+
+(defun cats/org-find-work ()
+  (interactive)
+  (if (equal "work" (getenv "SYSENV"))
+    (find-file "~/workorg/work.org")
+    (find-file "~/org/work.org")))
+
+(defun cats/org-find-emacs ()
+  (interactive)
+  (if (file-exists-p "~/org/emacs.org")
+    (find-file "~/org/emacs.org")
+    (find-file "~/.emacs.d/org/emacs.org")))
+
 
 ;; personal org-mode defaults
 
@@ -16,7 +56,6 @@
 
 
 ;; prettify, font-lock
-
 (defun cats/highlight-org-mode-words ()
   "Highlight keywords in comments."
   (interactive)
@@ -29,3 +68,4 @@
                 (1 font-lock-comment-face prepend)
                 (2 font-lock-function-name-face)
                 (3 font-lock-comment-face prepend)))))
+;;; funcs.el ends here

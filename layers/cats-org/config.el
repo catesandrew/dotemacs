@@ -1,3 +1,11 @@
+;;; config.el --- cats-org
+
+;;; Commentary:
+
+;; Personal functions
+
+;;; Code:
+
 (defvar cats/org-mode-hook nil
   "Hooks run when `org-mode-hook' is fired.")
 
@@ -42,3 +50,5 @@
 
 (defvar org-enable-jira-support nil
   "If non-nil Jira related packages are configured.")
+
+;;; config.el ends here
