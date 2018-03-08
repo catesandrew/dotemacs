@@ -110,7 +110,8 @@ values."
      docker
      pdf-tools
      rebox
-     ranger
+     (ranger :variables
+       ranger-show-preview t)
      pandoc
      fasd
      nginx
