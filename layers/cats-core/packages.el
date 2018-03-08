@@ -27,40 +27,36 @@
 
 
 ;; spaceline-all-the-icons
-(defun cats-core/init-spaceline-all-the-icons ()
-  (use-package spaceline-all-the-icons
-    :after spaceline
-    :init
-    (progn
-      (setq spaceline-all-the-icons-icon-set-flycheck-slim (quote dots))
-      ;; (setq spaceline-all-the-icons-icon-set-git-ahead (quote commit))
-      ;; (setq spaceline-all-the-icons-icon-set-window-numbering (quote square))
-      (setq spaceline-all-the-icons-flycheck-alternate t)
-      (setq spaceline-all-the-icons-highlight-file-name t)
-      ;; (setq spaceline-all-the-icons-separator-type (quote none))
-      )
-    :config
-    (progn
-      (spaceline-all-the-icons-theme)
-      (spaceline-all-the-icons--setup-anzu)
-      (spaceline-all-the-icons--setup-package-updates)
-      (spaceline-all-the-icons--setup-paradox)
-      (spaceline-all-the-icons--setup-git-ahead)
-      ;; (spaceline-all-the-icons--setup-neotree)
-      (spaceline-toggle-all-the-icons-vc-icon-on)
-      (spaceline-toggle-all-the-icons-fullscreen-off)
-      (spaceline-toggle-all-the-icons-flycheck-status-on)
-      (spaceline-toggle-all-the-icons-git-status-on)
-      (spaceline-toggle-all-the-icons-vc-icon-on)
-      (spaceline-toggle-all-the-icons-mode-icon-on)
-      (spaceline-toggle-all-the-icons-package-updates-on)
-      (spaceline-toggle-all-the-icons-text-scale-off)
-      (spaceline-toggle-all-the-icons-region-info-on)
-      (spaceline-toggle-all-the-icons-battery-status-off)
-      (spaceline-toggle-all-the-icons-time-off)
-      (spaceline-toggle-all-the-icons-projectile-on)
-      (spaceline-toggle-all-the-icons-hud-off)
-      (spaceline-toggle-all-the-icons-nyan-cat-on))))
+(defun cats-core/pre-init-spaceline-all-the-icons ()
+  (when (eq 'all-the-icons (spacemacs/get-mode-line-theme-name))
+    (spacemacs|use-package-add-hook spaceline-config
+      :pre-config
+      (progn
+        (setq spaceline-all-the-icons-icon-set-flycheck-slim (quote dots))
+        ;; (setq spaceline-all-the-icons-icon-set-git-ahead (quote commit))
+        ;; (setq spaceline-all-the-icons-icon-set-window-numbering (quote square))
+        (setq spaceline-all-the-icons-flycheck-alternate t)
+        ;; (setq spaceline-all-the-icons-separator-type (quote none))
+        (setq spaceline-all-the-icons-highlight-file-name t))
+      :post-config
+      (progn
+        (spaceline-all-the-icons-theme)
+        (spaceline-all-the-icons--setup-package-updates)
+        (spaceline-all-the-icons--setup-paradox)
+        (spaceline-toggle-all-the-icons-vc-icon-on)
+        (spaceline-toggle-all-the-icons-fullscreen-off)
+        (spaceline-toggle-all-the-icons-flycheck-status-on)
+        (spaceline-toggle-all-the-icons-git-status-on)
+        (spaceline-toggle-all-the-icons-vc-icon-on)
+        (spaceline-toggle-all-the-icons-mode-icon-on)
+        (spaceline-toggle-all-the-icons-package-updates-on)
+        (spaceline-toggle-all-the-icons-text-scale-off)
+        (spaceline-toggle-all-the-icons-region-info-on)
+        (spaceline-toggle-all-the-icons-battery-status-off)
+        (spaceline-toggle-all-the-icons-time-off)
+        (spaceline-toggle-all-the-icons-projectile-on)
+        (spaceline-toggle-all-the-icons-hud-off)
+        (spaceline-toggle-all-the-icons-nyan-cat-on)))))
 
 
 ;; company
