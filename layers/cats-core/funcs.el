@@ -179,7 +179,7 @@ Add this to `kill-buffer-query-functions'."
   "Save all modified buffers, without prompts."
   (save-some-buffers 'dont-ask))
 
-(defun cats//desktop-session-restore-and-enable ()
+(defun cats/desktop-session-restore-and-enable ()
   "Load the desktop and enable autosaving."
   (interactive)
   (let ((desktop-load-locked-desktop "ask"))
@@ -189,7 +189,7 @@ Add this to `kill-buffer-query-functions'."
     (desktop-save-mode 1)))
 
 ;; use session-save to save the desktop manually
-(defun cats//session-save ()
+(defun cats/session-save ()
   "Save an Emacs session."
   (interactive)
   (if (cats//saved-session)
@@ -199,7 +199,7 @@ Add this to `kill-buffer-query-functions'."
     (desktop-save-in-desktop-dir)))
 
 ;; use session-restore to restore the desktop manually
-(defun cats//session-restore ()
+(defun cats/session-restore ()
   "Restore a saved Emacs session."
   (interactive)
   (if (cats//saved-session)
@@ -208,7 +208,6 @@ Add this to `kill-buffer-query-functions'."
 
 (defun cats//desktop-after-read ()
   "Load the desktop and enable autosaving."
-  (interactive)
   ;; desktop-remove clears desktop-dirname
   (setq desktop-dirname-tmp desktop/desktop-dirname)
   (desktop-remove)
@@ -216,16 +215,14 @@ Add this to `kill-buffer-query-functions'."
 
 (defun cats//saved-session ()
   "Save session."
-  (interactive)
   (file-exists-p (
     concat desktop/desktop-dirname "/" desktop/desktop-base-file-name)))
 
 (defun cats//desktop-after-init ()
   "Save an emacs session."
-  (interactive)
   (if (cats//saved-session)
       (if (y-or-n-p "Restore desktop? ")
-          (cats//session-restore))))
+          (cats/session-restore))))
 
 
 ;; find

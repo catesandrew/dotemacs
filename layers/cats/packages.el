@@ -61,7 +61,25 @@
     helm-open-github
     encourage-mode
     engine-mode
+     which-key
     ))
+
+
+;; which-key
+(defun cats/post-init-which-key ()
+  ;; Replace rules for better naming of functions
+  (let ((new-descriptions
+          '(("cats/\\(.+\\)" . "\\1"))))
+    (dolist (nd new-descriptions)
+      ;; ensure the target matches the whole string
+      (push (cons (cons nil (concat "\\`" (car nd) "\\'")) (cons nil (cdr nd)))
+        which-key-replacement-alist)))
+
+  (spacemacs/set-leader-keys
+    "ohb" 'which-key-show-keymap
+    "ohk" 'which-key-show-full-keymap
+    "ohM" 'which-key-show-major-mode
+    "ohm" 'which-key-show-minor-mode-keymap))
 
 
 ;; helm open github

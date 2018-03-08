@@ -15,12 +15,12 @@ The file is the buffer's file name, or the `default-directory' in
       default-directory
     (buffer-file-name)))
 
-(defun cats//find-user-init-file-other-window ()
+(defun cats/find-user-init-file-other-window ()
   "Edit the `user-init-file', in another window."
   (interactive)
   (find-file-other-window user-init-file))
 
-(defun cats//recompile-packages ()
+(defun cats/recompile-packages ()
   "Recompile all packages."
   (interactive)
   (byte-recompile-directory package-user-dir nil 'force))
@@ -54,7 +54,7 @@ Otherwise copy the non-directory part only."
 
 ;;; Working with the current file
 ;;;###autoload
-(defun cats//rename-file-and-buffer ()
+(defun cats/rename-file-and-buffer ()
   "Rename the current file and buffer."
   (interactive)
   (let* ((filename (buffer-file-name))
@@ -70,7 +70,7 @@ Otherwise copy the non-directory part only."
       (set-visited-file-name new-name 'no-query 'along-with-file)))))
 
 ;;;###autoload
-(defun cats//delete-file-and-buffer ()
+(defun cats/delete-file-and-buffer ()
   "Delete the current file and kill the buffer."
   (interactive)
   (let ((filename (buffer-file-name)))
@@ -82,7 +82,7 @@ Otherwise copy the non-directory part only."
       (kill-buffer)))))
 
 ;;;###autoload
-(defun cats//launch-dwim ()
+(defun cats/launch-dwim ()
   "Open the current file externally."
   (interactive)
   (if (derived-mode-p 'dired-mode)
@@ -117,7 +117,7 @@ nil if no project root was found."
        (expand-file-name "Contents/MacOS/idea" bundle)))
     (_ (user-error "No launcher for system %S" system-type))))
 
-(defun cats//open-in-intellij ()
+(defun cats/open-in-intellij ()
   "Open the current file in IntelliJ IDEA."
   (interactive)
   (let ((idea (executable-find "idea")))
@@ -130,7 +130,7 @@ Create with Tools -> Create Command-line launcher in IntelliJ"))
       (error "IntelliJ failed"))))
 
 ;;; URLs and browsing
-(defun cats//browse-feature-url (feature)
+(defun cats/browse-feature-url (feature)
   "Browse the URL of the given FEATURE.
 
 Interactively, use the symbol at point, or prompt, if there is

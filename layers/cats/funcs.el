@@ -10,12 +10,12 @@
 (require 'lisp-mnt)
 (require 'find-func)
 
-(defun cats//insert-page-break-line ()
+(defun cats/insert-page-break-line ()
   "Insert a new line with a page break at point."
   (interactive)
   (insert "\n\n"))
 
-(defun cats//insert-current-date (iso)
+(defun cats/insert-current-date (iso)
   "Insert the current date at point.
 
 When ISO is non-nil, insert the date in ISO 8601 format.
