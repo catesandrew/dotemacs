@@ -178,7 +178,11 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages
+    '(
+       yasnippet-snippets
+       all-the-icons ;; M-x all-the-icons-install-fonts
+       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -299,7 +303,8 @@ values."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   ;; dotspacemacs-mode-line-theme '(spacemacs :separator utf-8 :separator-scale 1.5)
+   dotspacemacs-mode-line-theme 'all-the-icons
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
@@ -307,8 +312,7 @@ values."
                                :size 15
                                :weight normal
                                :width normal
-                               :powerline-scale 1.4
-                               )
+                               :powerline-scale 1.3)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -563,10 +567,6 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
-  ;; arrow arrow-fade brace butt curve roundstub utf-8
-  (setq powerline-default-separator 'utf-8)
-  (setq spaceline-workspace-numbers-unicode t)
-  (setq spaceline-window-numbers-unicode t)
 
   (spacemacs|do-after-display-system-init
    (when (display-graphic-p)
