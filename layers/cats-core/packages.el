@@ -275,8 +275,6 @@
                     "\\|\\(\\.bkp$\\)"
                     "\\|\\(\\TAGS$\\)"))
 
-
-
       ;; Don't save the eww buffers
       (setq desktop-buffers-not-to-save
             (concat desktop-buffers-not-to-save
