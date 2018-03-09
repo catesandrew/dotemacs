@@ -137,12 +137,16 @@
 
 
 ;; org-ehtml
-(defun cats-org/pre-init-ox-html ()
+(defun cats-org/pre-init-org-ehtml ()
+  (spacemacs|use-package-add-hook org :post-config (require 'org-ehtml)))
+
+(defun cats-org/init-org-html ()
   (use-package org-ehtml
-    :disabled t
+    :defer t
     :config
     (progn
-      (setq org-ehtml-docroot (expand-file-name "~/Dropbox/org"))
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
+        (setq org-ehtml-docroot (concat dir "ehtml")))
       (setq org-ehtml-allow-agenda t)
       (setq org-ehtml-editable-headlines t)
       (setq org-ehtml-everything-editable t))))
@@ -344,24 +348,6 @@
     :config
     (progn
       )
-    ))
-
-
-;; ox-jira
-(defun cats-org/pre-init-ox-jira ()
-  (spacemacs|use-package-add-hook org :post-config (require 'ox-jira)))
-
-(defun cats-org/init-ox-jira ()
-  (use-package ox-jira
-    :defer t
-    :config
-    (progn
-      ;; (define-key org-mode-map "\M-\S-w" 'cats/ox-clip-formatted-copy)
-      ;; (define-key org-mode-map "\C-c\S-j" 'cats/org-export-jira-clipboard)
-      ;; cats/export-jira-org
-      ;; cats/create-ticket-tmp-dir-open-dir-screen
-      )
-
     ))
 
 
