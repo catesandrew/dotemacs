@@ -314,14 +314,14 @@ values."
    ;; user defined themes, refer to the DOCUMENTATION.org for more info on how
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
-   ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   ;; dotspacemacs-mode-line-theme '(spacemacs :separator utf-8 :separator-scale 1.5)
-   dotspacemacs-mode-line-theme '(all-the-icons :separator-scale 1.5)
+   ;; (default '(spacemacs :separator wave :separator-scale 1.0))
+   dotspacemacs-mode-line-theme '(spacemacs :separator utf-8 :separator-scale 1.0)
+   ;; dotspacemacs-mode-line-theme '(all-the-icons :separator-scale 1.0)
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("PragmataPro"
-                               :size 15
+                               :size 10
                                :weight normal
                                :width normal)
    ;; The leader key
@@ -520,10 +520,7 @@ values."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil)
-
-  ;; force powerline-scale to resize
-  (spacemacs/set-default-font dotspacemacs-default-font))
+   dotspacemacs-pretty-docs nil))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -580,8 +577,14 @@ you should place you code here."
 
   (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "❀"))
   (spacemacs|do-after-display-system-init
+    (spacemacs/set-default-font '("PragmataPro"
+                                   :size 15
+                                   :weight normal
+                                   :width normal
+                                   :powerline-scale 1.0))
    (when (display-graphic-p)
      (cats//set-frame-size))))
+
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()
