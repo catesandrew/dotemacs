@@ -8,8 +8,6 @@
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-org-packages
   '(
-     ;; (cats-default-org-config :location built-in)
-     ;; org-jira
      (ox :toggle org-enable-ox-support :location built-in)
      (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
@@ -18,13 +16,21 @@
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
      (ox-jira :toggle org-enable-jira-support)
      (ox-html :toggle org-enable-ox-html-support :location built-in)
+     org-jira
      ;; org-projectile
      ;; org-projectile-helm
      ;; org-super-agenda
      ;; org-caldav
      ;; org-notify
      ;; helm-org-rifle
-     ;; org-ehtml
+     org-ehtml
+
+     ;; ob, org and org-agenda are installed by `org-plus-contrib' from spacemacs-org
+     ;; (ob :location built-in)
+     (org :location built-in)
+     ;; (org-agenda :location built-in)
+
+     ;; (cats-default-org-config :location built-in)
      ))
 
 
@@ -347,6 +353,30 @@
       )
     :config
     (progn
+      )
+    ))
+
+
+;; org
+(defun cats-org/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :pre-config
+    (progn
+      (message "ORG PRE CONFIG")
+      )
+    :post-config
+    (progn
+      (message "ORG POST CONFIG")
+      )
+    :post-init
+    (progn
+      (message "ORG POST INIT")
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
+        (setq org-export-async-init-file (concat dir "org-async-init.el")))
+      )
+    :pre-init
+    (progn
+      (message "ORG PRE INIT")
       )
     ))
 
