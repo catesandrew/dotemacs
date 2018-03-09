@@ -184,8 +184,9 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
     '(
-       yasnippet-snippets
-       all-the-icons ;; M-x all-the-icons-install-fonts
+       ;; yasnippet-snippets
+       ;; M-x all-the-icons-install-fonts
+       all-the-icons
        )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -307,16 +308,15 @@ values."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator utf-8 :separator-scale 1.5)
-   ;; dotspacemacs-mode-line-theme 'all-the-icons
+   ;; dotspacemacs-mode-line-theme '(spacemacs :separator utf-8 :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(all-the-icons :separator-scale 1.5)
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("PragmataPro"
                                :size 15
                                :weight normal
-                               :width normal
-                               :powerline-scale 1.3)
+                               :width normal)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
