@@ -9,17 +9,119 @@
 (defconst cats-org-packages
   '(
      ;; (cats-default-org-config :location built-in)
-     ;; (ox-jira :toggle org-enable-jira-support)
      ;; org-jira
+     (ox :toggle org-enable-ox-support :location built-in)
+     (ox-latex :toggle org-enable-ox-latex-support :location built-in)
+     (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
+     (ox-beamer :toggle org-enable-ox-beamer-support :location built-in)
+     (ox-md :toggle org-enable-ox-md-support :location built-in)
+     (ox-publish :toggle org-enable-ox-publish-support :location built-in)
+     (ox-jira :toggle org-enable-jira-support)
+     (ox-html :toggle org-enable-ox-html-support :location built-in)
      ;; org-projectile
      ;; org-projectile-helm
      ;; org-super-agenda
      ;; org-caldav
      ;; org-notify
      ;; helm-org-rifle
-     ;; ox-html
      ;; org-ehtml
      ))
+
+
+;; ox-html
+(defun cats-org/pre-init-ox-html ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-html)))
+
+(defun cats-org/init-ox-html ()
+  (use-package ox-html
+    :defer t
+    :init (progn)
+    :config (progn)))
+
+
+;; ox-jira
+(defun cats-org/pre-init-ox-jira ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-jira)))
+
+(defun cats-org/init-ox-jira ()
+  (use-package ox-jira
+    :defer t
+    :config
+    (progn
+      (define-key org-mode-map
+        (kbd "M-S w") 'cats/ox-clip-formatted-copy)
+      (define-key org-mode-map
+        (kbd "C-c J") 'cats/org-export-jira-clipboard)
+
+      ;; cats/export-jira-org
+      ;; cats/create-ticket-tmp-dir-open-dir-screen
+      )))
+
+
+;; ox-publish
+(defun cats-org/pre-init-ox-publish ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-publish)))
+
+(defun cats-org/init-ox-publish ()
+  (use-package ox-publish
+    :defer t
+    :init (progn)
+    :config (progn)))
+
+
+;; ox-md
+(defun cats-org/pre-init-ox-md ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-md)))
+
+(defun cats-org/init-ox-md ()
+  (use-package ox-md
+    :defer t
+    :init (progn)
+    :config (progn)))
+
+
+;; ox-beamer
+(defun cats-org/pre-init-ox-beamer ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-beamer)))
+
+(defun cats-org/init-ox-beamer ()
+  (use-package ox-beamer
+    :defer t
+    :init (progn)
+    :config (progn)))
+
+
+;; ox-bibtex
+(defun cats-org/pre-init-ox-bibtex ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-bibtex)))
+
+(defun cats-org/init-ox-bibtex ()
+  (use-package ox-bibtex
+    :defer t
+    :init (progn)
+    :config (progn)))
+
+
+;; ox-latex
+(defun cats-org/pre-init-ox-latex ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-latex)))
+
+(defun cats-org/init-ox-latex ()
+  (use-package ox-latex
+    :defer t
+    :init (progn)
+    :config (progn)))
+
+
+;; ox
+(defun cats-org/pre-init-ox ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox)))
+
+(defun cats-org/init-ox ()
+  (use-package ox
+    :defer t
+    :init (progn)
+    :config (progn)))
 
 
 ;; org-present
@@ -268,13 +370,6 @@
   "Add org mode hooks."
   (with-eval-after-load 'org
     (provide 'emacs-orgmode-config)
-    ;; (require 'ox-reveal)
-    ;; (require 'ox)
-    ;; (require 'ox-latex)
-    ;; (require 'ox-bibtex)
-    ;; (require 'ox-beamer)
-    ;; (require 'ox-md)
-    ;; (require 'ox-publish)
     ;; (require 'org-agenda)
 
     ;; (define-key org-mode-map "\C-c\S-n" 'cats/find-next-BEGIN_SRC_block)

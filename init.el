@@ -168,8 +168,15 @@ values."
      cats-web
      cats-latex
      cats-markdown
-     ;; (cats-org :variables
-     ;;           org-enable-jira-support t)
+     (cats-org :variables
+       org-enable-ox-support t
+       org-enable-ox-latex-support t
+       org-enable-ox-bibtex-support t
+       org-enable-ox-beamer-support t
+       org-enable-ox-md-support t
+       org-enable-ox-publish-support t
+       org-enable-ox-html-support t
+       org-enable-jira-support t)
      cats-scala
      cats-xml
      cats-grammar

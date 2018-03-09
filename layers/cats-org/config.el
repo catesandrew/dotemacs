@@ -103,6 +103,15 @@
 (defvar org-enable-jira-support nil
   "If non-nil Jira related packages are configured.")
 
+(defvar org-enable-ox-support nil)
+(defvar org-enable-ox-latex-support nil)
+(defvar org-enable-ox-bibtex-support nil)
+(defvar org-enable-ox-beamer-support nil)
+(defvar org-enable-ox-md-support nil)
+(defvar org-enable-ox-publish-support nil)
+(defvar org-enable-jira-support nil)
+(defvar org-enable-ox-html-support nil)
+
 ;; (defvar bh/organization-task-id "20140625-424242-424242")
 
 ;; (defvar bh/insert-inactive-timestamp t)
