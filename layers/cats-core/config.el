@@ -9,9 +9,6 @@
 (defvar cats/projectile-require-project-root
   "Require projectile root.")
 
-(defvar cats//projectile-curr nil
-  "The current projectile project.")
-
 (defvar cats/project-hook nil
   "Hooks run when a cats/project is fired.")
 
@@ -65,12 +62,6 @@
 (defvar cats//executable-tsserver nil)
 (defvar cats/tsserver-executable-hook nil
   "Hooks run when cats//executable-tsserver is changed.")
-
-(defvar cats/projectile-dir-root nil
-  "The current dir root of the projectile project.")
-
-(defvar cats/projectile-dir-base nil
-  "The current base dir of the projectile project.")
 
 (defvar cats//frame-width nil
   "Frame width.")

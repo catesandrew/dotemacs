@@ -84,15 +84,16 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 
 
 ;; projectile
-(defvar cats//projectile-switching-project-by-name nil)
+
+;; variables local to frame from https://github.com/john2x/nameframe
 
 (defun cats/run-project-hook (dir)
   "Set `cats//projectile-curr' with DIR."
   ;; (princ (format "cats/run-project-hook dir: `%s'\n" dir))
   ;; (princ (format "cats/run-project-hook cats//projectile-curr: `%s'\n" cats//projectile-curr))
   (when dir
-    (unless (string= dir cats//projectile-curr)
-      (setq cats//projectile-curr dir)
+    (unless (string= dir (frame-parameter nil 'cats//projectile-curr))
+      (set-frame-parameter nil 'cats//projectile-curr dir)
       (ignore-errors (run-hook-with-args 'cats/project-hook dir)))))
 
 (defun cats//dabbrev-from-projectile (&optional dir)
@@ -115,22 +116,22 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
           ;; (message "project-root:%s" project-root)
           ;; (message "cats//projectile-curr: %s" cats//projectile-curr)
           (when (and project-root
-                     (not (string= project-root cats//projectile-curr)))
+                  (not (string= project-root (frame-parameter nil 'cats//projectile-curr))))
             (let ((projectile-switch-project-action 'cats/do-nothing)
                   (projectile-before-switch-project-hook 'cats/do-nothing)
                   (projectile-after-switch-project-hook 'cats/do-nothing))
               ;; (message "Project Base %s" proj-dir-base)
               ;; (message "Project Dir %s" proj-dir-root)
               ;; (message "Buffer Name %s" buffer-file-name)
-              (setq cats//projectile-switching-project-by-name t)
+              (set-frame-parameter nil 'cats//projectile-switching-project-by-name t)
               (projectile-switch-project-by-name project-root)
-              (setq cats/projectile-dir-root proj-dir-root)
-              (setq cats/projectile-dir-base proj-dir-base)
+              (set-frame-parameter nil 'cats/projectile-dir-root proj-dir-root)
+              (set-frame-parameter nil 'cats/projectile-dir-base proj-dir-base)
               (cats/run-project-hook project-root)))))
     (error
      (progn
-       (setq cats/projectile-dir-root nil)
-       (setq cats/projectile-dir-base nil))
+       (set-frame-parameter nil 'cats/projectile-dir-root nil)
+       (set-frame-parameter nil 'cats/projectile-dir-base nil))
      nil)))
 
 
@@ -140,13 +141,12 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
   "Return a version of FILENAME shortened."
   ;; Get rid of the prefixes added by the automounter.
   (save-match-data
-    (if (string-match (concat "^" cats/projectile-dir-root) filename)
+    (if (string-match (concat "^" (frame-parameter nil 'cats/projectile-dir-root)) filename)
         (setq filename
               (concat "★" (substring filename (match-end 0))))
       (setq filename (file-name-nondirectory filename))
-        ;; (setq filename
-        ;;       (concat cats/projectile-dir-base
-        ;;               (substring filename (match-end 0))))
+      ;; (setq filename (concat (frame-parameter nil 'cats/projectile-dir-base)
+      ;;                    (substring filename (match-end 0))))
       )))
 
 (defun cats//set-frame-size ()

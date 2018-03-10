@@ -156,7 +156,7 @@
 
       (add-hook 'projectile-after-switch-project-hook
          (lambda ()
-           (unless cats//projectile-switching-project-by-name
+           (unless (frame-parameter nil 'cats//projectile-switching-project-by-name)
              ;; (message "defadvice: projectile-after-switch-project-hook")
              (condition-case err
                  (save-excursion
@@ -173,14 +173,14 @@
                        ;; (princ (format "project-root: `%s'\n" project-root))
                        ;; (princ (format "cats//projectile-curr: `%s''\n" cats//projectile-curr))
                        (when (and project-root
-                                  (not (string= project-root cats//projectile-curr)))
+                               (not (string= project-root (frame-parameter nil 'cats//projectile-curr))))
                          (cats/run-project-hook project-root)))))
                (error
                 (progn
-                  (setq cats/projectile-dir-root nil)
-                  (setq cats/projectile-dir-base nil))
+                  (set-frame-parameter nil 'cats/projectile-dir-root nil)
+                  (set-frame-parameter nil 'cats/projectile-dir-base nil))
                 nil)))
-           (setq cats//projectile-switching-project-by-name nil)))
+           (set-frame-parameter nil 'cats//projectile-switching-project-by-name nil)))
 
       (defadvice switch-to-buffer (after cats/switch-to-buffer activate)
         ;; (princ (format "defadvice: switch-to-buffer\n"))
