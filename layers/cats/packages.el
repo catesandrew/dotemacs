@@ -54,6 +54,7 @@
     ;; helm-ag
     (calendar :location built-in)
     (time :location built-in)
+    (conf-mode :location built-in)
     disable-mouse
     helm
     helm-projectile
@@ -61,8 +62,16 @@
     helm-open-github
     encourage-mode
     engine-mode
-     which-key
+    which-key
     ))
+
+
+;; conf-mode
+(defun cats/init-conf-mode ()
+  (use-package conf-mode
+    :init
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))))
 
 
 ;; which-key
