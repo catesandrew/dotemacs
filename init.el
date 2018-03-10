@@ -165,6 +165,7 @@ values."
      cats-programming
      cats-emacs-lisp
      cats-javascript
+     cats-utils
      cats-web
      cats-latex
      cats-markdown
