@@ -855,7 +855,7 @@ which is pretty awesome with: (helm-mode 1)"
 (defun cats/init-encourage-mode ()
   (use-package encourage-mode
     :defer t
-    :ensure t
+    :commands encourage-mode
     :init
     (progn
       (spacemacs|add-toggle encourage-mode
@@ -867,6 +867,7 @@ which is pretty awesome with: (helm-mode 1)"
         :off (encourage-mode -1)
         :documentation "Disable encourage mode."
         :evil-leader "toe")
+      (spacemacs/toggle-encourage-mode-off)
       (spacemacs/toggle-encourage-mode-on))
     :config (spacemacs|hide-lighter encourage-mode)))
 
