@@ -9,8 +9,10 @@
 (defvar cats/projectile-require-project-root
   "Require projectile root.")
 
-(defvar cats/project-hook nil
-  "Hooks run when a cats/project is fired.")
+(defcustom cats/project-hook nil
+  "Hooks run when a projectile project is changed."
+  :group 'cats
+  :type 'hook)
 
 (defvar cats//executable-eslint nil)
 (defvar cats/eslint-executable-hook nil
