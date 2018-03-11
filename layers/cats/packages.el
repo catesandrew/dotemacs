@@ -67,9 +67,9 @@
 
 
 ;; conf-mode
-(defun cats/init-conf-mode ()
-  (use-package conf-mode
-    :init
+(defun cats/pre-init-conf-mode ()
+  (spacemacs|use-package-add-hook conf-mode
+    :post-init
     (progn
       (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))))
 
