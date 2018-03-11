@@ -67,16 +67,13 @@
 
 
 ;; conf-mode
-(defun cats/pre-init-conf-mode ()
-  (spacemacs|use-package-add-hook conf-mode
-    :post-init
-    (progn
-      (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))))
+(defun cats/post-init-conf-mode ()
+  (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))
 
 
 ;; which-key
 (defun cats/post-init-which-key ()
-  ;; Replace rules for better naming of functions
+  "Replace rules for better naming of functions."
   (let ((new-descriptions
           '(("cats/\\(.+\\)" . "\\1"))))
     (dolist (nd new-descriptions)
