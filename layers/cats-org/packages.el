@@ -8,6 +8,25 @@
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-org-packages
   '(
+     ;; ob, org and org-agenda are installed by `org-plus-contrib' from spacemacs-org
+     (ob :location built-in)
+     (org :location built-in)   ;; (cats-default-org-config :location built-in)
+     (org-agenda :location built-in)
+     ;; org-super-agenda
+     org-jira
+     ;; org-caldav
+     ;; org-notify
+     ;; helm-org-rifle
+     org-ehtml
+     ;; org-brain
+     ;; (org-expiry :location built-in)
+     ;; org-journal
+     ;; org-download
+     ;; org-mime
+     ;; org-pomodoro
+     ;; org-present
+     ;; org-projectile
+     ;; org-projectile-helm
      (ox :toggle org-enable-ox-support :location built-in)
      (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
@@ -16,33 +35,7 @@
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
      (ox-jira :toggle org-enable-jira-support)
      (ox-html :toggle org-enable-ox-html-support :location built-in)
-     org-jira
-     ;; org-projectile
-     ;; org-projectile-helm
-     ;; org-super-agenda
-     ;; org-caldav
-     ;; org-notify
-     ;; helm-org-rifle
-     org-ehtml
-
-     ;; ob, org and org-agenda are installed by `org-plus-contrib' from spacemacs-org
-     ;; (ob :location built-in)
-     (org :location built-in)
-     ;; (org-agenda :location built-in)
-
-     ;; (cats-default-org-config :location built-in)
      ))
-
-
-;; ox-html
-(defun cats-org/pre-init-ox-html ()
-  (spacemacs|use-package-add-hook org :post-config (require 'ox-html)))
-
-(defun cats-org/init-ox-html ()
-  (use-package ox-html
-    :defer t
-    :init (progn)
-    :config (progn)))
 
 
 ;; ox-jira
@@ -131,15 +124,17 @@
 
 
 ;; org-present
-(defun cats-org/init-org-present ()
-  (use-package org-present
-    :commands org-present))
+(defun cats-org/pre-init-org-present ()
+  (spacemacs|use-package-add-hook org-present
+    :post-init
+    ()))
 
 
 ;; org-pomodoro
-(defun cats-org/init-org-pomodoro ()
-  (use-package org-pomodoro
-    :disabled t))
+(defun cats-org/pre-init-org-pomodoro ()
+  (spacemacs|use-package-add-hook org-pomodoro
+    :post-init
+    ()))
 
 
 ;; org-ehtml
@@ -160,45 +155,48 @@
 
 ;; ox-html
 (defun cats-org/pre-init-ox-html ()
-  ;; Allow with query params in image extentions
-  (spacemacs|use-package-add-hook ox-html
-    :post-config
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-html)))
+
+(defun cats-org/init-ox-html ()
+  (use-package ox-html
+    :defer t
+    :init
     (progn
+      ;; Add link icons in headings that lead to themselves
+      (defvar imalison:link-svg-html
+        "<svg aria-hidden=\"true\" class=\"octicon octicon-link\" height=\"16\" version=\"1.1\" viewBox=\"0 0 16 16\" width=\"16\"><path fill-rule=\"evenodd\" d=\"M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z\"></path></svg>")
+      (defvar imalison:current-html-headline)
+      (defun imalison:set-current-html-headline (headline &rest args)
+        (setq imalison:current-html-headline headline))
+      (defun imalison:clear-current-html-headline (&rest args)
+        (setq imalison:current-html-headline nil))
+      (defun imalison:org-html-format-heading-function (todo todo-type priority text tags info)
+        (let* ((reference (when imalison:current-html-headline
+                            (org-export-get-reference imalison:current-html-headline info)))
+                ;; Don't do anything special if the current headline is not set
+                (new-text (if reference
+                            (format "%s <a href=\"#%s\">%s</a>" text reference imalison:link-svg-html)
+                            text)))
+          (org-html-format-headline-default-function
+            todo todo-type priority new-text tags info)))
+
+      )
+    :config
+    (progn
+      ;; Allow with query params in image extentions
       (setq org-html-inline-image-rules
         '(("file" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")
-
            ("http" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")
-           ("https" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")))))
+           ("https" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")))
 
-  ;; Add link icons in headings that lead to themselves
-  (spacemacs|use-package-add-hook ox-html
-    (use-package ox-html
-      :post-init
-      (progn
-        (defvar imalison:link-svg-html
-          "<svg aria-hidden=\"true\" class=\"octicon octicon-link\" height=\"16\" version=\"1.1\" viewBox=\"0 0 16 16\" width=\"16\"><path fill-rule=\"evenodd\" d=\"M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z\"></path></svg>")
-        (defvar imalison:current-html-headline)
-        (defun imalison:set-current-html-headline (headline &rest args)
-          (setq imalison:current-html-headline headline))
-        (defun imalison:clear-current-html-headline (&rest args)
-          (setq imalison:current-html-headline nil))
-        (defun imalison:org-html-format-heading-function (todo todo-type priority text tags info)
-          (let* ((reference (when imalison:current-html-headline
-                              (org-export-get-reference imalison:current-html-headline info)))
-                  ;; Don't do anything special if the current headline is not set
-                  (new-text (if reference
-                              (format "%s <a href=\"#%s\">%s</a>" text reference imalison:link-svg-html)
-                              text)))
-            (org-html-format-headline-default-function
-              todo todo-type priority new-text tags info))))
-      :config
-      (progn
-        ;; This is set before and cleared afterwards, so that we know when we are
-        ;; generating the text for the headline itself and when we are not.
-        (advice-add 'org-html-headline :before 'imalison:set-current-html-headline)
-        (advice-add 'org-html-headline :after 'imalison:clear-current-html-headline)
-        (setq org-html-format-headline-function
-          'imalison:org-html-format-heading-function)))))
+      ;; Add link icons in headings that lead to themselves
+      ;; This is set before and cleared afterwards, so that we know when we are
+      ;; generating the text for the headline itself and when we are not.
+      (advice-add 'org-html-headline :before 'imalison:set-current-html-headline)
+      (advice-add 'org-html-headline :after 'imalison:clear-current-html-headline)
+      (setq org-html-format-headline-function
+        'imalison:org-html-format-heading-function)
+              )))
 
 
 ;; helm-org-rifle
@@ -313,6 +311,15 @@
     :bind (("C-c n p" . org-projectile-helm-template-or-project))))
 
 
+;; org-agenda
+(defun cats-org/pre-init-org-agenda ()
+  (spacemacs|use-package-add-hook org-agenda
+    :post-init
+    ()
+    :post-config
+    ))
+
+
 ;; org-super-agenda
 (defun cats-org/init-org-super-agenda ()
   (use-package org-super-agenda
@@ -330,10 +337,12 @@
 
 
 ;; org-jira
+(defun cats-org/pre-init-org-jira ()
+  (spacemacs|use-package-add-hook org :post-config (require 'org-jira)))
+
 (defun cats-org/init-org-jira ()
   (use-package org-jira
     :defer t
-    :commands (org-jira-get-issues org-jira-get-projects org-jira-get-issue org-jira-get-subtasks)
     :init
     (progn
       ;; (defconst org-jira-progress-issue-flow
@@ -379,6 +388,63 @@
       (message "ORG PRE INIT")
       )
     ))
+
+
+;; ob
+(defun cats-org/pre-init-ob ()
+  (spacemacs|use-package-add-hook ob
+    :pre-config
+    (progn
+      (message "OB PRE CONFIG")
+      )
+    :post-config
+    (progn
+      (message "OB POST CONFIG")
+      )
+    :post-init
+    (progn
+      (message "OB POST INIT")
+      )
+    :pre-init
+    (progn
+      (message "OB PRE INIT")
+      )
+    )
+  )
+
+
+;; org-brain
+(defun cats-org/pre-init-org-brain ()
+  (uspacemacs|use-package-add-hook org-brain
+    :post-init
+    ()))
+
+
+;; org-expiry
+(defun cats-org/pre-init-org-expiry ()
+  (spacemacs|use-package-add-hook org-expiry
+    ))
+
+
+;; org-download
+(defun cats-org/pre-init-org-download ()
+  (spacemacs|use-package-add-hook org-download
+    :post-init
+    ()))
+
+
+;; org-mime
+(defun cats-org/pre-init-org-mime ()
+  (spacemacs|use-package-add-hook org-mime
+    :post-init
+    ()))
+
+
+;; org-journal
+(defun cats-org/pre-init-org-journal ()
+  (spacemacs|use-package-add-hook org-journal
+    :post-init
+    ()))
 
 
 ;; default-cats-org-config
