@@ -126,7 +126,10 @@ values."
      (latex :variables latex-enable-auto-fill t)
      markdown
      python
-     ruby
+     (ruby :variables
+        ruby-enable-enh-ruby-mode t
+        ruby-test-runner 'rspec
+        ruby-version-manager 'rbenv)
      go
      slack
      (rust :variables
