@@ -37,18 +37,19 @@
 
 
 ;; handlebars
-(defun cats//locate-handlebars-from-projectile (&optional dir)
+(defun cats//locate-handlebars-from-projectile (dir frame-name)
   "Use local handlebars from DIR."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "handlebars"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-handlebars result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "handlebars"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-handlebars result)))))))
 
 (defun cats//hbs-set-handlebars-executable (handlebars)
   "Set the `flycheck-handlebars-executable' setting in `handlebarse' with `HANDLEBARS'."

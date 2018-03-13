@@ -800,10 +800,12 @@ which is pretty awesome with: (helm-mode 1)"
 
 
 ;; helm-projectile
-(defun cats//on-helm-projectile-project-hook (&optional dir)
-  (if (empty-string-p dir)
+(defun cats//on-helm-projectile-project-hook (dir frame-name)
+  ;; (princ (format "frame-name: `%s''\n" frame-name))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (if (empty-string-p dir)
       (helm-projectile-off)
-    (helm-projectile-on)))
+      (helm-projectile-on))))
 
 (defun cats/pre-init-helm-projectile ()
   (spacemacs|use-package-add-hook helm-projectile

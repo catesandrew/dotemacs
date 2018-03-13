@@ -581,6 +581,7 @@ you should place you code here."
 
   (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "❀"))
   (spacemacs|do-after-display-system-init
+    (cats//initialize-frame-uuid nil)
     (spacemacs/set-default-font '("PragmataPro"
                                    :size 15
                                    :weight normal
@@ -588,7 +589,6 @@ you should place you code here."
                                    :powerline-scale 1.0))
    (when (display-graphic-p)
      (cats//set-frame-size))))
-
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()

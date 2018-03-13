@@ -84,17 +84,24 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 
 
 ;; projectile
+(defun cats//initialize-frame-uuid (frame)
+  (set-frame-parameter frame 'cats//frame-name (uuidgen-4)))
+(add-hook 'after-make-frame-functions 'cats//initialize-frame-uuid)
 
-;; variables local to frame from https://github.com/john2x/nameframe
-
-(defun cats/run-project-hook (dir)
-  "Set `cats//projectile-curr' with DIR."
+(defun cats/run-project-hook (dir frame-name)
+  "Set `cats//projectile-curr' with `DIR' and `FRAME-NAME'."
   ;; (princ (format "cats/run-project-hook dir: `%s'\n" dir))
   ;; (princ (format "cats/run-project-hook cats//projectile-curr: `%s'\n" cats//projectile-curr))
+  ;; (princ (format "cats/run-project-hook frame-name: `%s''\n" frame-name))
+  ;; (princ (format "cats/run-project-hook dir: `%s''\n" dir))
   (when dir
     (unless (string= dir (frame-parameter nil 'cats//projectile-curr))
       (set-frame-parameter nil 'cats//projectile-curr dir)
-      (ignore-errors (run-hook-with-args 'cats/project-hook dir)))))
+      (ignore-errors (run-hook-with-args 'cats/project-hook dir frame-name)))))
+
+(defun cats//get-frame-name (frame)
+  "Helper function to extract the name of a `FRAME'."
+  (frame-parameter frame 'cats//frame-name))
 
 (defun cats//dabbrev-from-projectile (&optional dir)
   "Use ."
@@ -103,9 +110,12 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
                 (concat "^" (directory-file-name (or dir (projectile-project-root))))
                 (file-name-nondirectory (directory-file-name (or dir (projectile-project-root)))))))
 
+
+(defun cats//do-nothing ()
+  "A function that does nothing.")
+
 (defun cats/find-file-hook-to-project ()
   "Use ."
-  (defun cats/do-nothing ())
   ;; (unless (cats//current-buffer-remote-p))
   (condition-case err
       (let ((projectile-require-project-root t))
@@ -117,17 +127,19 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
           ;; (message "cats//projectile-curr: %s" cats//projectile-curr)
           (when (and project-root
                   (not (string= project-root (frame-parameter nil 'cats//projectile-curr))))
-            (let ((projectile-switch-project-action 'cats/do-nothing)
-                  (projectile-before-switch-project-hook 'cats/do-nothing)
-                  (projectile-after-switch-project-hook 'cats/do-nothing))
+            (let ((projectile-switch-project-action 'cats//do-nothing)
+                  (projectile-before-switch-project-hook 'cats//do-nothing)
+                  (projectile-after-switch-project-hook 'cats//do-nothing)
+                  (frame-name (cats//get-frame-name nil)))
               ;; (message "Project Base %s" proj-dir-base)
               ;; (message "Project Dir %s" proj-dir-root)
               ;; (message "Buffer Name %s" buffer-file-name)
+              ;; (princ (format "frame-name: `%s''\n" frame-name))
               (set-frame-parameter nil 'cats//projectile-switching-project-by-name t)
               (projectile-switch-project-by-name project-root)
               (set-frame-parameter nil 'cats/projectile-dir-root proj-dir-root)
               (set-frame-parameter nil 'cats/projectile-dir-base proj-dir-base)
-              (cats/run-project-hook project-root)))))
+              (cats/run-project-hook project-root frame-name)))))
     (error
      (progn
        (set-frame-parameter nil 'cats/projectile-dir-root nil)

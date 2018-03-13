@@ -8,86 +8,92 @@
 
 
 ;; funcs
-(defun cats//locate-node-from-projectile (&optional dir)
+(defun cats//locate-node-from-projectile (dir frame-name)
   "Use local node from `./node_modules` if available."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "node"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-node result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "node"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-node result)))))))
 
-(defun cats//locate-jshint-from-projectile (&optional dir)
+(defun cats//locate-jshint-from-projectile (dir frame-name)
   "Use local jshint from `./node_modules` if available."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "jshint"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-jshint result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "jshint"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-jshint result)))))))
 
-(defun cats//locate-jscs-from-projectile (&optional dir)
-  "Use local jscs from `./node_modules` if available."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+(defun cats//locate-jscs-from-projectile (dir frame-name)
+  "Use local jscs from `DIR' and `FRAME-NAME' if available."
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "jscs"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-jscs result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "jscs"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-jscs result)))))))
 
-(defun cats//locate-eslint-from-projectile (&optional dir)
-  "Use local eslint from `./node_modules` if available."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+(defun cats//locate-eslint-from-projectile (dir frame-name)
+  "Use local eslint from `DIR' and `FRAME-NAME' if available."
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "eslint"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-eslint result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "eslint"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-eslint result)))))))
 
-(defun cats//locate-tsserver-from-projectile (&optional dir)
+(defun cats//locate-tsserver-from-projectile (dir frame-name)
   "Use local tsserver from `./node_modules` if available."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "tsserver"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-tsserver result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "tsserver"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-tsserver result)))))))
 
 
 ;; babel
 
-(defun cats//locate-babel-node-from-projectile (&optional dir)
+(defun cats//locate-babel-node-from-projectile (dir frame-name)
   "Use local babel-node from DIR."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "babel-node"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-babel-node result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "babel-node"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-babel-node result)))))))
 
 (defun cats//set-babel-node-executable (babel-node)
   "Set the `babel-repl-cli-program' setting in `babel-mode' with `BABEL-NODE'."
@@ -149,18 +155,19 @@
 
 ;; coffee
 
-(defun cats//locate-coffeelint-from-projectile (&optional dir)
+(defun cats//locate-coffeelint-from-projectile (dir frame-name)
   "Use local coffeelint from DIR."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "coffeelint"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-coffeelint result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "coffeelint"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-coffeelint result)))))))
 
 (defun cats//set-coffeelint-executable (coffeelint)
   "Set the `babel-repl-cli-program' setting in `coffee-mode' with `COFFEELINT'."
@@ -307,18 +314,19 @@
 
 
 ;; mocha
-(defun cats//locate-mocha-from-projectile (&optional dir)
-  "Use local mocha from `./node_modules` if available."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+(defun cats//locate-mocha-from-projectile (dir frame-name)
+  "Use local mocha from if available from `DIR' and `FRAME-NAME'."
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "mocha"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-mocha result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "mocha"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-mocha result)))))))
 
 (defun cats//set-mocha-executable (mocha)
   "Set the `mocha-command' setting in `mocha-mode' with `MOCHA'."
@@ -400,18 +408,19 @@
 
 
 ;; skewer mode
-(defun cats//locate-phantomjs-from-projectile (&optional dir)
-  "Use local phantomjs from `DIR'."
-  (when (empty-string-p dir)
-    (setq dir default-directory))
+(defun cats//locate-phantomjs-from-projectile (dir frame-name)
+  "Use local phantomjs from `DIR' and `FRAME-NAME'."
+  (when (string= frame-name (cats//get-frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
 
-  (let ((default-directory dir))
-    (async-start
-     `(lambda ()
-        (executable-find "phantomjs"))
-     (lambda (result)
-       (when result
-         (cats/set-executable-phantomjs result))))))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "phantomjs"))
+        (lambda (result)
+          (when result
+            (cats/set-executable-phantomjs result)))))))
 
 (defun cats//skewer-set-phantomjs-executable (phantomjs)
   "Set the `phantomjs-program-name' setting in `skewer-mode' with `PHANTOMJS'."

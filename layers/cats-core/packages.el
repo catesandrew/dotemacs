@@ -169,12 +169,13 @@
                      (projectile-project-root)
                      (let ((project-root (projectile-project-root))
                            (proj-dir-root (directory-file-name (projectile-project-root)))
-                           (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))))
+                           (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root))))
+                           (frame-name (cats//get-frame-name nil)))
                        ;; (princ (format "project-root: `%s'\n" project-root))
                        ;; (princ (format "cats//projectile-curr: `%s''\n" cats//projectile-curr))
                        (when (and project-root
                                (not (string= project-root (frame-parameter nil 'cats//projectile-curr))))
-                         (cats/run-project-hook project-root)))))
+                         (cats/run-project-hook project-root frame-name)))))
                (error
                 (progn
                   (set-frame-parameter nil 'cats/projectile-dir-root nil)

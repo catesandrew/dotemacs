@@ -172,15 +172,17 @@ none."
 
 ;; neotree/projectile integration
 
-(defun cats//neotree-dir-from-projectile-root (dir)
-  "Neotree responds to projectile root `DIR' when opening."
-  (when (and (fboundp 'projectile-project-root)
-             (fboundp 'neotree-dir))
+(defun cats//neotree-dir-from-projectile-root (dir frame-name)
+  "Neotree responds to projectile root `DIR' when opening if `FRAME-NAME'."
+  ;; (princ (format "frame-name: `%s''\n" frame-name))
+  (when (and (string= frame-name (cats//get-frame-name nil))
+          (and (fboundp 'projectile-project-root)
+            (fboundp 'neotree-dir)))
     (let ((proj-root (or dir (projectile-project-root)))
-          (neo-open (neo-global--window-exists-p)))
+           (neo-open (neo-global--window-exists-p)))
 
       (if (eq (current-buffer) (neo-global--get-buffer))
-          (neo-buffer--refresh t)
+        (neo-buffer--refresh t)
         (save-excursion
           (let ((cw (selected-window)))  ;; save current window
             (let ((origin-buffer-file-name (buffer-file-name)))
