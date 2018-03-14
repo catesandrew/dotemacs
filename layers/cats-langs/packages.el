@@ -50,8 +50,12 @@
   (spacemacs|use-package-add-hook haskell-mode
     :pre-init
     (progn
-      (add-to-list 'rebox-language-character-alist '(7 . "-"))
-      (add-hook 'haskell-mode-hook 'cats//init-haskell))
+      ;; (with-eval-after-load 'rebox2
+      ;;   (setq-local rrebox-language-character-alist
+      ;;     (append rebox-language-character-alist
+      ;;       '(7 . "-"))))
+      ;; (add-hook 'haskell-mode-hook 'cats//init-haskell)
+      )
     :post-config
     (rebox-register-all-templates)))
 
