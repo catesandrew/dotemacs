@@ -3,13 +3,13 @@
 
 (defconst cats-vm-packages
   '(
+     docker-tramp
+     exec-path-from-shell
      kubernetes
      ;; kubernetes-evil
      kubernetes-tramp
-     timonier
      popwin
-     docker-tramp
-     exec-path-from-shell
+     timonier
      ))
 
 
