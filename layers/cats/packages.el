@@ -294,13 +294,33 @@
   ;; It's better that the default value is too small than too big
   (setq-default evil-shift-width 2))
 
+
+;; exec-path-from-shell
 (defun cats/pre-init-exec-path-from-shell ()
   (setq-default exec-path-from-shell-check-startup-files nil)
-
   (spacemacs|use-package-add-hook exec-path-from-shell
     :pre-config
     (progn
-      (setq exec-path-from-shell-check-startup-files nil)
+      ;; (setq exec-path-from-shell-check-startup-files nil)
+      (dolist
+        (var '(
+                "ANDROID_HOME"
+                "ANDROID_SDK_ROOT"
+                "BREW_HOME"
+                "EMAIL"
+                "GITHUB_TOKEN"
+                "GITLAB_PRIVATE_TOKEN"
+                "HOME"
+                "HOMEBREW_GITHUB_API_TOKEN"
+                "HTML_TIDY"
+                "IRC_CLIENT"
+                "MANPATH"
+                "SBT_OPTS"
+                "XML_CATALOG_FILES"
+                ) exec-path-from-shell-variables)
+        (unless (or (member var exec-path-from-shell-variables) (getenv var))
+          (push var exec-path-from-shell-variables)))
+
       ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
       ;; already initializes info, we need to explicitly add the $INFOPATH
       ;; directories to `Info-directory-list'.  We reverse the list of info paths
@@ -308,59 +328,7 @@
       (with-eval-after-load 'info
         (dolist (dir (nreverse (parse-colon-path (getenv "INFOPATH"))))
           (when dir
-            (add-to-list 'Info-directory-list dir))))
-
-      (dolist
-        (var '(
-                "ANDROID_HOME"
-                "ANDROID_SDK_ROOT"
-                "BREW_HOME"
-                "DOCKER_CERT_PATH"
-                "DOCKER_COMPLETION_TLS"
-                "DOCKER_HOST"
-                "DOCKER_MACHINE_NAME"
-                "DOCKER_NAMESPACE"
-                "DOCKER_PREFIX"
-                "DOCKER_REGISTRY"
-                "DOCKER_TLS_VERIFY"
-                "EMAIL"
-                "GITHUB_TOKEN"
-                "GITLAB_PRIVATE_TOKEN"
-                "GOPATH"
-                "GOROOT"
-                "HOME"
-                "HOMEBREW_GITHUB_API_TOKEN"
-                "HTML_TIDY"
-                "INFOPATH"
-                "IRC_CLIENT"
-                "JAVA_OPTS"
-                "KUBECONFIG"
-                "MANPATH"
-                "MINIKUBE_HOME"
-                "NODE_REPL_HISTORY_FILE"
-                "NODE_REPL_MODE"
-                "NVM_BIN"
-                "NVM_DIR"
-                "NVM_PATH"
-                "NVM_TARGET"
-                "PACKER_CACHE_DIR"
-                "PYENV_HOME"
-                "PYENV_ROOT"
-                "PYENV_SHELL"
-                "PYTHONPATH"
-                "RBENV_HOME"
-                "RBENV_ROOT"
-                "RBENV_SHELL"
-                "SBT_OPTS"
-                "VAGRANT_CHECKPOINT_DISABLE"
-                "VAGRANT_DOTFILE_PATH"
-                "VAGRANT_HOME"
-                "VAGRANT_VMWARE_CLONE_DIRECTORY"
-                "XML_CATALOG_FILES"
-                ))
-        (unless (or (member var exec-path-from-shell-variables) (getenv var))
-          ;; (add-to-list 'exec-path-from-shell-variables var)
-          (push var exec-path-from-shell-variables))))
+            (add-to-list 'Info-directory-list dir)))))
     :post-config
     (exec-path-from-shell-initialize)))
 

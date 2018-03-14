@@ -9,12 +9,38 @@
      timonier
      popwin
      docker-tramp
+     exec-path-from-shell
      ))
 
 
 ;; docker-tramp
 (defun cats-kubernetes/pre-init-docker-tramp ()
   (setq docker-tramp-use-names t))
+
+
+;; exec-path-from-shell
+(defun cats-kubernetes/pre-init-exec-path-from-shell ()
+  (spacemacs|use-package-add-hook exec-path-from-shell
+    :pre-config
+    (dolist (var '(
+                    "DOCKER_CERT_PATH"
+                    "DOCKER_COMPLETION_TLS"
+                    "DOCKER_HOST"
+                    "DOCKER_MACHINE_NAME"
+                    "DOCKER_NAMESPACE"
+                    "DOCKER_PREFIX"
+                    "DOCKER_REGISTRY"
+                    "DOCKER_TLS_VERIFY"
+                    "KUBECONFIG"
+                    "MINIKUBE_HOME"
+                    "VAGRANT_CHECKPOINT_DISABLE"
+                    "VAGRANT_DOTFILE_PATH"
+                    "VAGRANT_HOME"
+                    "VAGRANT_VMWARE_CLONE_DIRECTORY"
+                    "PACKER_CACHE_DIR"
+                    ) exec-path-from-shell-variables)
+      (unless (or (member var exec-path-from-shell-variables) (getenv var))
+        (push var exec-path-from-shell-variables)))))
 
 
 ;; kubernetes

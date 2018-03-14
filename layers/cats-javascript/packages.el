@@ -8,6 +8,7 @@
 
 (defconst cats-javascript-packages
   '(
+    exec-path-from-shell
     babel-repl
     coffee-mode
     company
@@ -40,6 +41,22 @@
     indium
     react-mode
     ))
+
+
+;; exec-path-from-shell
+(defun cats-javascript/pre-init-exec-path-from-shell ()
+  (spacemacs|use-package-add-hook exec-path-from-shell
+    :pre-config
+    (dolist (var '(
+                    "NODE_REPL_HISTORY_FILE"
+                    "NODE_REPL_MODE"
+                    "NVM_BIN"
+                    "NVM_DIR"
+                    "NVM_PATH"
+                    "NVM_TARGET"
+                    ) exec-path-from-shell-variables)
+      (unless (or (member var exec-path-from-shell-variables) (getenv var))
+        (push var exec-path-from-shell-variables)))))
 
 
 ;; indium
