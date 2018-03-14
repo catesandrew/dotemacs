@@ -6,15 +6,15 @@
 
 ;;; Code:
 
-(defconst cats-misc-langs-packages
+(defconst cats-langs-packages
   '(
-    thrift
      exec-path-from-shell
-    ))
+     thrift
+     ))
 
 
 ;; exec-path-from-shell
-(defun cats-misc-langs/pre-init-exec-path-from-shell ()
+(defun cats-langs/pre-init-exec-path-from-shell ()
   (spacemacs|use-package-add-hook exec-path-from-shell
     :pre-config
     (dolist (var '(
@@ -32,8 +32,7 @@
 
 
 ;; thrift
-
-(defun cats-misc-langs/init-thrift ()
+(defun cats-langs/init-thrift ()
   (use-package thrift
     :defer t
     :init (put 'thrift-indent-level 'safe-local-variable #'integerp)

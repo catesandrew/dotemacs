@@ -185,7 +185,7 @@ values."
      cats-xml
      cats-grammar
      cats-vm
-     cats-misc-langs
+     cats-langs
      cats-private
      )
 
