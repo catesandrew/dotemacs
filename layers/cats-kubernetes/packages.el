@@ -1,16 +1,23 @@
 ;;; packages.el --- kubernetes Layer packages File for Spacemacs
 ;;; License: GPLv3
 
-
 (defconst cats-kubernetes-packages
   '(
-    kubernetes
-    ;; kubernetes-evil
-    kubernetes-tramp
-    timonier
-    popwin
-    ))
+     kubernetes
+     ;; kubernetes-evil
+     kubernetes-tramp
+     timonier
+     popwin
+     docker-tramp
+     ))
 
+
+;; docker-tramp
+(defun cats-kubernetes/pre-init-docker-tramp ()
+  (setq docker-tramp-use-names t))
+
+
+;; kubernetes
 (defun cats-kubernetes/init-kubernetes ()
   (use-package kubernetes
     :commands (kubernetes-overview)
