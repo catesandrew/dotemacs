@@ -35,6 +35,7 @@
     flycheck
     git-commit
     magit
+    (magit-repos :location built-in)
     fancy-battery
     list-environment
     ;; Applications
@@ -482,9 +483,47 @@
   (global-git-commit-mode))
 
 
+;; magit-repos
+(defun cats/init-magit-repos ()
+  (use-package magit-repos
+    :init
+    (progn
+      (setq magit-repolist-columns
+        '(("Name"    25 magit-repolist-column-ident
+            ())
+           ("Version" 25 magit-repolist-column-version
+             ())
+           ("D"        1 magit-repolist-column-dirty
+             ())
+           ("L<U"      3 magit-repolist-column-unpulled-from-upstream
+             ((:right-align t)
+               (:help-echo "Upstream changes not in branch")))
+           ("L>U"      3 magit-repolist-column-unpushed-to-upstream
+             ((:right-align t)
+               (:help-echo "Local changes not in upstream")))
+           ("Path"    99 magit-repolist-column-path
+             ())))
+
+      (spacemacs|hide-lighter magit-repolist-mode)
+      (dolist (mode '(magit-repolist-mode))
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "f" 'cats/repolist-fetch
+          "F" 'cats/repolist-fetch-async
+          "p" 'cats/repolist-pull-ff-only
+          "c" 'cats/magit-repolist-call-command)))
+    :config
+    (progn
+      (require 'magit-remote)
+      (evilified-state-evilify-map magit-repolist-mode-map
+        :mode magit-repolist-mode
+        :bindings
+        (kbd "q") 'quit-window
+        (kbd "RET") 'magit-repolist-status))))
+
+
 ;; magit
 (defun cats/pre-init-magit ()
-  "Please, no gravatars.  Thanks"
+  "Please, no gravatars. Thanks"
   (spacemacs|use-package-add-hook magit
     :post-init
     (progn
@@ -498,8 +537,7 @@
                (newline)
                (goto-char (point-min))
                (newline)
-               (goto-char (point-min))))))
-      )))
+               (goto-char (point-min)))))))))
 
 
 ;; fancy-battery

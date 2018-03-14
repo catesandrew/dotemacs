@@ -225,4 +225,62 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
   (with-current-buffer "*compilation*"
     (switch-to-buffer (current-buffer))))
 
+
+;; magit-repos
+(defun cats/repolist-pull-ff-only ()
+  "Fetch all remotes in repositories returned by `magit-list-repos'.
+Fetching is done synchronously."
+  (interactive)
+  (run-hooks 'magit-credential-hook)
+  (let* ((repos (magit-list-repos))
+          (l (length repos))
+          (i 0))
+    (dolist (repo repos)
+      (let* ((default-directory (file-name-as-directory repo))
+              (msg (format "(%s/%s) Pulling --ff-only in %s..."
+                     (cl-incf i) l default-directory)))
+        (message msg)
+        (magit-run-git "pull" "--ff-only" "origin" (magit-fetch-arguments))
+        (message (concat msg "done")))))
+  (magit-refresh))
+
+(defun cats/repolist-fetch ()
+  "Fetch all remotes in repositories returned by `magit-list-repos'.
+Fetching is done synchronously."
+  (interactive)
+  (run-hooks 'magit-credential-hook)
+  (let* ((repos (magit-list-repos))
+         (l (length repos))
+         (i 0))
+    (dolist (repo repos)
+      (let* ((default-directory (file-name-as-directory repo))
+             (msg (format "(%s/%s) Fetching in %s..."
+                          (cl-incf i) l default-directory)))
+        (message msg)
+        (magit-run-git "remote" "update" (magit-fetch-arguments))
+        (message (concat msg "done")))))
+  (magit-refresh))
+
+(defun cats/repolist-fetch-async ()
+  "Fetch all remotes in repositories returned by `magit-list-repos'.
+Fetching is done asynchronously."
+  (interactive)
+  (run-hooks 'magit-credential-hook)
+  (dolist (repo (magit-list-repos))
+    (let ((default-directory (file-name-as-directory repo)))
+      (magit-run-git-async "remote" "update" (magit-fetch-arguments)))))
+
+(defun cats/magit-repolist-call-command (command)
+  "Read a command and run it in repositories returned by `magit-list-repos'.
+
+If the COMMAND does its job asynchronously, then that likely
+won't be done for all repositories by the time this function
+returns.  If it does its job synchronously, then doing it
+many times might take a long time."
+  (interactive (list (read-command "Call in all repositories: ")))
+  (magit-with-repositories
+    (call-interactively command))
+  (magit-refresh))
+
+
 ;;; funcs.el ends here
