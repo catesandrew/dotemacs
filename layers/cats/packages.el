@@ -486,6 +486,7 @@
 ;; magit-repos
 (defun cats/init-magit-repos ()
   (use-package magit-repos
+    :commands (magit-repolist-mode)
     :init
     (progn
       (setq magit-repolist-columns
