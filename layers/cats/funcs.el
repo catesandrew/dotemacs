@@ -227,6 +227,14 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
 
 
 ;; magit-repos
+(defun cats/open-in-projectile (&optional _button)
+  "Open the projectile project for the repository at point."
+  (interactive)
+  (--if-let (tabulated-list-get-id)
+    (projectile-switch-project-by-name (expand-file-name it))
+    ;; (magit-status-internal (expand-file-name it))
+    (user-error "There is no repository at point")))
+
 (defun cats/repolist-pull-ff-only ()
   "Fetch all remotes in repositories returned by `magit-list-repos'.
 Fetching is done synchronously."

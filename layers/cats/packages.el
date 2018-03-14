@@ -509,7 +509,8 @@
         (spacemacs/set-leader-keys-for-major-mode mode
           "f" 'cats/repolist-fetch
           "F" 'cats/repolist-fetch-async
-          "p" 'cats/repolist-pull-ff-only
+          "p" 'cats/open-in-projectile
+          "r" 'cats/repolist-pull-ff-only
           "c" 'cats/magit-repolist-call-command)))
     :config
     (progn
