@@ -6,20 +6,24 @@
 
 ;;; Code:
 
-(defconst cats-markdown-packages
+(defconst cats-markup-packages
   '(
-    markdown-mode
-    rst
-    mustache-mode
-    handlebars-mode
-    jira-markup-mode
-    smartparens
-    ))
+     handlebars-mode
+     jira-markup-mode
+     markdown-mode
+     mustache-mode
+     rst
+     smartparens
+     ))
 
-(defun cats-markdown/pre-init-markdown-mode ()
+
+;; markdown
+(defun cats-markup/pre-init-markdown-mode ()
   (spacemacs|use-package-add-hook markdown-mode
-    :post-mode (("\\.markdown$" . markdown-mode)
-                ("\\.apib$" . markdown-mode))
+    :pre-init
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.markdown$" . markdown-mode))
+      (add-to-list 'auto-mode-alist '("\\.apib$" . markdown-mode)))
     :post-config
     (progn
       ;; http://www.tychoish.com/posts/imenu-for-markdown-and-writing/
@@ -50,20 +54,21 @@
         (setq markdown-open-command "mark"))
 
       (spacemacs/set-leader-keys-for-major-mode 'markdown-mode
-        "oh" 'cats-markdown/post-header
-        "op" 'cats-markdown/publish-jekyll-draft)
+        "oh" 'cats/post-header
+        "op" 'cats/publish-jekyll-draft)
 
-      (let* ((layer-dir (configuration-layer/get-layer-local-dir 'cats-markdown))
+      (let* ((layer-dir (configuration-layer/get-layer-local-dir 'cats-markup))
              (stylesheet (expand-file-name "pandoc.css" layer-dir)))
         (setq markdown-command
               (mapconcat #'shell-quote-argument
                          `("pandoc" "--toc" "--section-divs"
                            "--css" ,(concat "file://" stylesheet)
                            "--standalone" "-f" "markdown" "-t" "html5")
-                         " "))))
-    ))
+                         " "))))))
 
-(defun cats-markdown/init-rst ()
+
+;; rst
+(defun cats-markup/init-rst ()
   (use-package rst
     :defer t
     :init
@@ -105,10 +110,14 @@
       "gj" 'rst-forward-section
       "gk" 'rst-backward-section)))
 
-(defun cats-markdown/post-init-smartparens ()
+
+;; smartparens
+(defun cats-markup/post-init-smartparens ()
   (add-hook 'rst-mode-hook 'smartparens-mode))
 
-(defun cats-markdown/init-mustache-mode ()
+
+;; mustache
+(defun cats-markup/init-mustache-mode ()
   "Mustache mode."
   (use-package mustache-mode
     :ensure t
@@ -117,7 +126,7 @@
 
 
 ;; handlebars
-(defun cats-markdown/init-handlebars-mode ()
+(defun cats-markup/init-handlebars-mode ()
   (use-package handlebars-mode
     :ensure t
     :defer t
@@ -134,14 +143,14 @@
 
 
 ;; jira-markup
-(defun cats-markdown/init-jira-markup-mode ()
+(defun cats-markup/init-jira-markup-mode ()
   (use-package jira-markup-mode
     :ensure t
     :defer t))
 
 
 ;; smartparens
-(defun cats-markdown/post-init-smartparens ()
+(defun cats-markup/post-init-smartparens ()
   (add-hook 'rst-mode-hook 'smartparens-mode))
 
 ;;; packages.el ends here

@@ -171,7 +171,7 @@ values."
      cats-utils
      cats-web
      cats-latex
-     cats-markdown
+     cats-markup
      (cats-org :variables
        org-enable-ox-support t
        org-enable-ox-latex-support t

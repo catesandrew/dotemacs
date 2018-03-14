@@ -10,7 +10,7 @@
 (require 'rx)
 (require 'subr-x)
 
-(define-skeleton cats-markdown/post-header
+(define-skeleton cats/post-header
   "Insert a header for blog posts."
   (read-from-minibuffer "Title: ")
   "---\n"
@@ -18,7 +18,7 @@
   "---\n\n"
   -)
 
-(defun cats-markdown/publish-jekyll-draft ()
+(defun cats/publish-jekyll-draft ()
   "Publish a Jekyll draft in this buffer as a post."
   (interactive)
   (let ((current-dir (directory-file-name (file-name-directory (buffer-file-name))))
