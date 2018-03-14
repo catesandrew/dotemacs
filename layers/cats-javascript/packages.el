@@ -55,9 +55,9 @@
       ;; Adding 500 replaces `?' by ';', for LISP and assembler.
       ;; Adding 600 replaces `?' by `%', for TeX and PostScript.
       ;; js-doc style
-      (rebox-register-template 247 248 ["/**"
+      (rebox-register-template 247 248 '("/**"
                                         " * box123456"
-                                        " */"]))))
+                                        " */")))))
 
 
 ;; exec-path-from-shell
