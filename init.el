@@ -184,7 +184,7 @@ values."
      cats-scala
      cats-xml
      cats-grammar
-     cats-kubernetes
+     cats-vm
      cats-misc-langs
      cats-private
      )

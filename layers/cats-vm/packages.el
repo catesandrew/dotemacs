@@ -1,7 +1,7 @@
 ;;; packages.el --- kubernetes Layer packages File for Spacemacs
 ;;; License: GPLv3
 
-(defconst cats-kubernetes-packages
+(defconst cats-vm-packages
   '(
      kubernetes
      ;; kubernetes-evil
@@ -14,12 +14,12 @@
 
 
 ;; docker-tramp
-(defun cats-kubernetes/pre-init-docker-tramp ()
+(defun cats-vm/pre-init-docker-tramp ()
   (setq docker-tramp-use-names t))
 
 
 ;; exec-path-from-shell
-(defun cats-kubernetes/pre-init-exec-path-from-shell ()
+(defun cats-vm/pre-init-exec-path-from-shell ()
   (spacemacs|use-package-add-hook exec-path-from-shell
     :pre-config
     (dolist (var '(
@@ -44,7 +44,7 @@
 
 
 ;; kubernetes
-(defun cats-kubernetes/init-kubernetes ()
+(defun cats-vm/init-kubernetes ()
   (use-package kubernetes
     :commands (kubernetes-overview)
     :defer t
@@ -133,7 +133,7 @@
 
 
 ;; kubernetes-tramp
-(defun cats-kubernetes/init-kubernetes-tramp ()
+(defun cats-vm/init-kubernetes-tramp ()
   (use-package kubernetes-tramp
     :defer t
     :init
@@ -148,7 +148,7 @@
 
 
 ;; kubernetes-evil
-;; (defun cats-kubernetes/init-kubernetes-evil ()
+;; (defun cats-vm/init-kubernetes-evil ()
 ;;   (use-package kubernetes-evil
 ;;     :defer t
 ;;     :after kubernetes))
@@ -156,18 +156,18 @@
 
 ;; timonier
 
-(defun cats-kubernetes/init-timonier ()
+(defun cats-vm/init-timonier ()
   (use-package timonier
     :defer t))
 
-;; (defun cats-kubernetes/init-dockerfile-mode ()
+;; (defun cats-vm/init-dockerfile-mode ()
 ;;   (use-package docker-mode
 ;;     :defer t
 ;;     :config (evil-leader/set-key-for-mode 'dockerfile-mode
 ;;               "mcb" 'dockerfile-build-buffer)))
 
 
-(defun cats-kubernetes/pre-init-popwin ()
+(defun cats-vm/pre-init-popwin ()
   (spacemacs|use-package-add-hook popwin
     :post-config
     (push '("*kubernetes overview*" :dedicated t :position bottom)
