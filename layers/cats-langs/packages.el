@@ -10,6 +10,7 @@
   '(
      exec-path-from-shell
      thrift
+     haskell-mode
      ))
 
 
@@ -38,5 +39,20 @@
     :init (put 'thrift-indent-level 'safe-local-variable #'integerp)
     ;; Fake inheritance from prog mode
     :config (add-hook 'thrift-mode-hook (lambda () (run-hooks 'prog-mode-hook)))))
+
+
+;; haskell-mode
+(defun cats//init-haskell ()
+  "Initialize the haskell mode."
+  (setq-local rebox-style-loop '(725)))
+
+(defun cats-langs/pre-init-haskell-mode ()
+  (spacemacs|use-package-add-hook haskell-mode
+    :pre-init
+    (progn
+      (add-to-list 'rebox-language-character-alist '(7 . "-"))
+      (add-hook 'haskell-mode-hook 'cats//init-haskell))
+    :post-config
+    (rebox-register-all-templates)))
 
 ;;; packages.el ends here
