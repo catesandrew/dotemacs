@@ -8,16 +8,21 @@
 
 (defconst cats-javascript-packages
   '(
-    exec-path-from-shell
+    (js2-menu-extras :location built-in)
     babel-repl
     coffee-mode
     company
     company-tern
-    ;; company-ycmd
+     ;; company-ycmd
+    emmet-mode
+    evil-matchit
+    exec-path-from-shell
     flycheck
+    ggtags
+    helm-gtags
+    indium
     js-doc
     js2-mode
-    (js2-menu-extras :location built-in)
     js2-refactor
     json-mode
     json-reformat
@@ -25,22 +30,17 @@
     mocha
     nodejs-repl
     popwin
+    react-mode
+    rebox2
+    rjsx-mode
     skewer-mode
     smartparens
     tern
-    web-beautify
-    xref-js2
-    ;; ycmd
-    rjsx-mode
-    emmet-mode
-    ggtags
-    helm-gtags
-    evil-matchit
-    web-mode
     tide
-    indium
-    react-mode
-    rebox2
+    web-beautify
+    web-mode
+    xref-js2
+     ;; ycmd
     ))
 
 
@@ -195,7 +195,6 @@
 
 
 ;; tide
-
 (defun cats-javascript/init-tide ()
   (use-package tide
     :commands (tide-mode tide-setup)
