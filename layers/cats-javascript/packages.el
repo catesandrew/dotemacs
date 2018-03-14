@@ -40,7 +40,24 @@
     tide
     indium
     react-mode
+    rebox2
     ))
+
+
+;; rebox2
+(defun cats-javascript/pre-init-rebox2 ()
+  (spacemacs|use-package-add-hook rebox2
+    :post-config
+    (progn
+      ;; Box templates. First number is style, second is recognition weight.
+      ;; Adding 300 replaces `?' by `/', for C++ style comments.
+      ;; Adding 400 replaces `?' by `#', for scripting languages.
+      ;; Adding 500 replaces `?' by ';', for LISP and assembler.
+      ;; Adding 600 replaces `?' by `%', for TeX and PostScript.
+      ;; js-doc style
+      (rebox-register-template 247 248 ["/**"
+                                        " * box123456"
+                                        " */"]))))
 
 
 ;; exec-path-from-shell
