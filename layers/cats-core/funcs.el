@@ -99,6 +99,65 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
   (set-frame-parameter frame 'cats//frame-name (uuidgen-4)))
 (add-hook 'after-make-frame-functions 'cats//initialize-frame-uuid)
 
+(defun cats//set-frame-size (frame)
+  "For the height, subtract 52 pixels from the screen height (for panels,
+menubars and what not), then divide by the height of a char to get the
+height we want. Use 140 char wide window for largeish displays and
+smaller 100 column windows for smaller displays."
+  (when (display-graphic-p)
+    (let* ((fwp (if (> (x-display-pixel-width) 1680) 140 100))
+            (fhp (/ (- (x-display-pixel-height) 52)
+                   (frame-char-height))))
+      (setq cats//frame-width fwp)
+      (setq cats//frame-height fhp)
+      (add-to-list 'initial-frame-alist `(width . ,cats//frame-width))
+      (add-to-list 'initial-frame-alist `(height . ,cats//frame-height))
+      (add-to-list 'default-frame-alist `(height . ,cats//frame-height))
+      (add-to-list 'default-frame-alist `(width  . ,cats//frame-width))
+      (set-frame-height frame fhp)
+      (set-frame-width frame fwp))))
+(add-hook 'after-make-frame-functions 'cats//set-frame-size)
+
+;; More refined font setup, providing math and emoji support.  Needs:
+;;
+;; - XITS Math (https://github.com/khaledhosny/xits-math) as fallback for math
+;;
+;; Currently this setup only works for OS X, as we rely on Apple's Emoji and
+;; Symbol fonts.
+
+;; Font setup
+(defun cats//initialize-frame-fonts (frame)
+  "Set up fonts for FRAME.
+
+Set the default font, and configure various overrides for
+symbols, emojis, greek letters, as well as fall backs for."
+  ;; Additional fonts for special characters and fallbacks
+  ;; Test range: 🐷 ❤ ⊄ ∫ 𝛼 α 🜚 Ⓚ
+
+  (dolist (script '(symbol mathematical))
+    (set-fontset-font t script (font-spec :family "XITS Math")
+                      frame 'prepend))
+
+  ;; Define a font set stack for symbols, greek and math characters
+  (dolist (script '(symbol greek mathematical))
+    (set-fontset-font t script (font-spec :family "Arial Unicode MS")
+                      frame 'prepend)
+    (set-fontset-font t script (font-spec :family "Menlo")
+                      frame 'prepend)
+    (set-fontset-font t script (font-spec :family "DejaVu Sans Mono")
+                      frame 'prepend))
+
+  ;; (when (eq system-type 'darwin)
+  (when (spacemacs/window-system-is-mac)
+    ;; Colored Emoji on OS X, prefer over everything else!
+    (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji")
+      frame 'prepend)
+
+    ;; Fallbacks for math and generic symbols
+    (set-fontset-font t nil (font-spec :family "Apple Symbols")
+      frame 'append)))
+(add-hook 'after-make-frame-functions 'cats//initialize-frame-fonts)
+
 
 ;; projectile
 (defun cats/run-project-hook (dir frame-name)
@@ -172,25 +231,6 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
       ;; (setq filename (concat (frame-parameter nil 'cats/projectile-dir-base)
       ;;                    (substring filename (match-end 0))))
       )))
-
-(defun cats//set-frame-size (frame)
-  "For the height, subtract 52 pixels from the screen height (for panels,
-menubars and what not), then divide by the height of a char to get the
-height we want. Use 140 char wide window for largeish displays and
-smaller 100 column windows for smaller displays."
-  (when (display-graphic-p)
-    (let* ((fwp (if (> (x-display-pixel-width) 1680) 140 100))
-            (fhp (/ (- (x-display-pixel-height) 52)
-                   (frame-char-height))))
-      (setq cats//frame-width fwp)
-      (setq cats//frame-height fhp)
-      (add-to-list 'initial-frame-alist `(width . ,cats//frame-width))
-      (add-to-list 'initial-frame-alist `(height . ,cats//frame-height))
-      (add-to-list 'default-frame-alist `(height . ,cats//frame-height))
-      (add-to-list 'default-frame-alist `(width  . ,cats//frame-width))
-      (set-frame-height frame fhp)
-      (set-frame-width frame fwp))))
-(add-hook 'after-make-frame-functions 'cats//set-frame-size)
 
 (defun cats//do-not-kill-important-buffers ()
   "Inhibit killing of important buffers.

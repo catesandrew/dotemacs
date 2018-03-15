@@ -588,6 +588,7 @@ you should place you code here."
                                    :weight normal
                                    :width normal
                                    :powerline-scale 1.0))
+    (cats//initialize-frame-fonts (selected-frame))
     (cats//set-frame-size (selected-frame))))
 
 (spacemacs/defer-until-after-user-config
