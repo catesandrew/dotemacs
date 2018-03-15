@@ -83,11 +83,24 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
     (ignore-errors (run-hook-with-args 'cats/tsserver-executable-hook tsserver))))
 
 
-;; projectile
+;; frame
+(defun cats//initialize-frame-transparency ()
+  "Transparent frame."
+  ;; https://github.com/d12frosted/homebrew-emacs-plus/blob/master/Formula/emacs-plus.rb#L98
+  ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/55
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Properties-in-Mode.html#Properties-in-Mode
+  (when (memq window-system '(mac ns))
+    (add-to-list 'default-frame-alist '(ns-appearance . dark))
+    (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+    (spacemacs/toggle-transparent-frame)))
+(add-hook 'after-make-frame-functions 'cats//initialize-frame-transparency)
+
 (defun cats//initialize-frame-uuid (frame)
   (set-frame-parameter frame 'cats//frame-name (uuidgen-4)))
 (add-hook 'after-make-frame-functions 'cats//initialize-frame-uuid)
 
+
+;; projectile
 (defun cats/run-project-hook (dir frame-name)
   "Set `cats//projectile-curr' with `DIR' and `FRAME-NAME'."
   ;; (princ (format "cats/run-project-hook dir: `%s'\n" dir))
@@ -109,7 +122,6 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
                (cons
                 (concat "^" (directory-file-name (or dir (projectile-project-root))))
                 (file-name-nondirectory (directory-file-name (or dir (projectile-project-root)))))))
-
 
 (defun cats//do-nothing ()
   "A function that does nothing.")
@@ -161,22 +173,24 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
       ;;                    (substring filename (match-end 0))))
       )))
 
-(defun cats//set-frame-size ()
+(defun cats//set-frame-size (frame)
   "For the height, subtract 52 pixels from the screen height (for panels,
 menubars and what not), then divide by the height of a char to get the
 height we want. Use 140 char wide window for largeish displays and
 smaller 100 column windows for smaller displays."
-  (let* ((fwp (if (> (x-display-pixel-width) 1680) 140 100))
-         (fhp (/ (- (x-display-pixel-height) 52)
-                 (frame-char-height))))
-    (setq cats//frame-width fwp)
-    (setq cats//frame-height fhp)
-    (add-to-list 'initial-frame-alist `(width . ,cats//frame-width))
-    (add-to-list 'initial-frame-alist `(height . ,cats//frame-height))
-    (add-to-list 'default-frame-alist `(height . ,cats//frame-height))
-    (add-to-list 'default-frame-alist `(width  . ,cats//frame-width))
-    (set-frame-height (selected-frame) fhp)
-    (set-frame-width (selected-frame) fwp)))
+  (when (display-graphic-p)
+    (let* ((fwp (if (> (x-display-pixel-width) 1680) 140 100))
+            (fhp (/ (- (x-display-pixel-height) 52)
+                   (frame-char-height))))
+      (setq cats//frame-width fwp)
+      (setq cats//frame-height fhp)
+      (add-to-list 'initial-frame-alist `(width . ,cats//frame-width))
+      (add-to-list 'initial-frame-alist `(height . ,cats//frame-height))
+      (add-to-list 'default-frame-alist `(height . ,cats//frame-height))
+      (add-to-list 'default-frame-alist `(width  . ,cats//frame-width))
+      (set-frame-height frame fhp)
+      (set-frame-width frame fwp))))
+(add-hook 'after-make-frame-functions 'cats//set-frame-size)
 
 (defun cats//do-not-kill-important-buffers ()
   "Inhibit killing of important buffers.

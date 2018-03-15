@@ -439,7 +439,7 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 96
+   dotspacemacs-inactive-transparency 90
    ;; If non nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
    ;; If non nil show the color guide hint for transient state keys. (default t)
@@ -582,13 +582,13 @@ you should place you code here."
   (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "❀"))
   (spacemacs|do-after-display-system-init
     (cats//initialize-frame-uuid nil)
+    (cats//initialize-frame-transparency)
     (spacemacs/set-default-font '("PragmataPro"
                                    :size 15
                                    :weight normal
                                    :width normal
                                    :powerline-scale 1.0))
-   (when (display-graphic-p)
-     (cats//set-frame-size))))
+    (cats//set-frame-size (selected-frame))))
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()
