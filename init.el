@@ -99,7 +99,7 @@ values."
           magit-refs-show-commit-count 'all
           ;; This is really creepy magit
           magit-revision-show-gravatars nil)
-     (github :variables gh-profile-default-profile "catesandrew")
+     github
      ;; Development tools
      restclient
      dash

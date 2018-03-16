@@ -511,6 +511,7 @@
           "f" 'cats/repolist-fetch
           "F" 'cats/repolist-fetch-async
           "p" 'cats/open-in-projectile
+          "l" 'cats/open-in-git-link
           "r" 'cats/repolist-pull-ff-only
           "c" 'cats/magit-repolist-call-command)))
     :config

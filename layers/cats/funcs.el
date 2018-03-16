@@ -184,6 +184,27 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
 
 
 ;; magit-repos
+
+(defun cats/open-in-git-link (&optional _button)
+  "Open the github project page for the repository at point."
+  (interactive)
+  (require 'git-link)
+  (--if-let (tabulated-list-get-id)
+    (let ((default-directory (expand-file-name it)))
+      (let* ((remote (git-link--select-remote))
+              (remote-host (git-link--remote-host (git-link--select-remote)))
+              (handler (git-link--handler git-link-remote-alist remote-host)))
+        (cond
+          ((null remote-host)
+            (message "Remote `%s' is unknown or contains an unsupported URL" remote))
+          ((not (functionp handler))
+            (message "No handler for %s" remote-host))
+          ((git-link--new
+             (funcall handler
+               remote-host
+               (git-link--remote-dir remote)))))))
+    (user-error "There is no repository at point")))
+
 (defun cats/open-in-projectile (&optional _button)
   "Open the projectile project for the repository at point."
   (interactive)
