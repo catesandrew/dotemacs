@@ -583,16 +583,28 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
   (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "❀"))
+  ;; seems to be needed to avoid weird artefacts with first graphical client
   (spacemacs|do-after-display-system-init
-    (cats//initialize-frame-uuid nil)
-    (cats//initialize-frame-transparency)
+    "Ran on *first* instance of emacsclient."
     (spacemacs/set-default-font '("PragmataPro"
                                    :size 15
                                    :weight normal
                                    :width normal
                                    :powerline-scale 1.0))
-    (cats//initialize-frame-fonts (selected-frame))
-    (cats//set-frame-size (selected-frame))))
+
+    ;; initialize frame settings with first graphical client
+    (cats//initialize-frame-size)
+    (cats//initialize-frame-transparency)
+
+    (let* ((frame (selected-frame)))
+      (cats//toggle-frame-fonts frame)
+      (cats//toggle-frame-size frame)
+      (cats/toggle-transparency frame))
+
+    ;; reuse for new frames created with emacsclient
+    (add-hook 'after-make-frame-functions 'cats//toggle-frame-fonts)
+    (add-hook 'after-make-frame-functions 'cats//toggle-frame-size)
+    (add-hook 'after-make-frame-functions 'cats/toggle-transparency)))
 
 (spacemacs/defer-until-after-user-config
  '(lambda ()

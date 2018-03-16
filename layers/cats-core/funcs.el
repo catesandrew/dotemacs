@@ -84,22 +84,30 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
 
 
 ;; frame
+(defun cats/toggle-transparency (&optional frame)
+  "Toggle between transparent and opaque state for FRAME.
+If FRAME is nil, it defaults to the selected frame."
+  (interactive)
+  (when (memq (window-system) '(mac ns))
+    (let ((alpha (frame-parameter frame 'alpha))
+          (dotfile-setting (cons dotspacemacs-active-transparency
+                              dotspacemacs-inactive-transparency)))
+      (unless (equal alpha dotfile-setting)
+        (spacemacs/enable-transparency frame dotfile-setting)))))
+
 (defun cats//initialize-frame-transparency ()
-  "Transparent frame."
-  ;; https://github.com/d12frosted/homebrew-emacs-plus/blob/master/Formula/emacs-plus.rb#L98
+  "Transparent frame title bar."
   ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/55
-  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Properties-in-Mode.html#Properties-in-Mode
-  (when (memq window-system '(mac ns))
+  (when (memq (window-system) '(mac ns))
     (add-to-list 'default-frame-alist '(ns-appearance . dark))
-    (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-    (spacemacs/toggle-transparent-frame)))
-(add-hook 'after-make-frame-functions 'cats//initialize-frame-transparency)
+    (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))))
 
 (defun cats//initialize-frame-uuid (frame)
+  "Initialize the frame UUID."
   (set-frame-parameter frame 'cats//frame-name (uuidgen-4)))
 (add-hook 'after-make-frame-functions 'cats//initialize-frame-uuid)
 
-(defun cats//set-frame-size (frame)
+(defun cats//initialize-frame-size ()
   "For the height, subtract 52 pixels from the screen height (for panels,
 menubars and what not), then divide by the height of a char to get the
 height we want. Use 140 char wide window for largeish displays and
@@ -110,13 +118,14 @@ smaller 100 column windows for smaller displays."
                    (frame-char-height))))
       (setq cats//frame-width fwp)
       (setq cats//frame-height fhp)
-      (add-to-list 'initial-frame-alist `(width . ,cats//frame-width))
-      (add-to-list 'initial-frame-alist `(height . ,cats//frame-height))
-      (add-to-list 'default-frame-alist `(height . ,cats//frame-height))
-      (add-to-list 'default-frame-alist `(width  . ,cats//frame-width))
-      (set-frame-height frame fhp)
-      (set-frame-width frame fwp))))
-(add-hook 'after-make-frame-functions 'cats//set-frame-size)
+      (add-to-list 'default-frame-alist `(height . ,fhp))
+      (add-to-list 'default-frame-alist `(width  . ,fwp)))))
+
+(defun cats//toggle-frame-size (frame)
+  "Set the FRAME width and height."
+  (when (display-graphic-p)
+    (set-frame-height frame cats//frame-height)
+    (set-frame-width frame cats//frame-width)))
 
 ;; More refined font setup, providing math and emoji support.  Needs:
 ;;
@@ -126,14 +135,13 @@ smaller 100 column windows for smaller displays."
 ;; Symbol fonts.
 
 ;; Font setup
-(defun cats//initialize-frame-fonts (frame)
+(defun cats//toggle-frame-fonts (frame)
   "Set up fonts for FRAME.
 
 Set the default font, and configure various overrides for
 symbols, emojis, greek letters, as well as fall backs for."
   ;; Additional fonts for special characters and fallbacks
   ;; Test range: 🐷 ❤ ⊄ ∫ 𝛼 α 🜚 Ⓚ
-
   (dolist (script '(symbol mathematical))
     (set-fontset-font t script (font-spec :family "XITS Math")
                       frame 'prepend))
@@ -147,16 +155,13 @@ symbols, emojis, greek letters, as well as fall backs for."
     (set-fontset-font t script (font-spec :family "DejaVu Sans Mono")
                       frame 'prepend))
 
-  ;; (when (eq system-type 'darwin)
-  (when (spacemacs/window-system-is-mac)
+  (when (eq system-type 'darwin)
     ;; Colored Emoji on OS X, prefer over everything else!
     (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji")
       frame 'prepend)
-
     ;; Fallbacks for math and generic symbols
     (set-fontset-font t nil (font-spec :family "Apple Symbols")
       frame 'append)))
-(add-hook 'after-make-frame-functions 'cats//initialize-frame-fonts)
 
 
 ;; projectile

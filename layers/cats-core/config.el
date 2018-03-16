@@ -6,6 +6,12 @@
 
 ;;; Code:
 
+(defvar cats//frame-width 0
+  "Frame width.")
+
+(defvar cats//frame-height 0
+  "Frame height.")
+
 (defvar cats/projectile-require-project-root
   "Require projectile root.")
 

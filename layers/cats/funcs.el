@@ -247,5 +247,4 @@ many times might take a long time."
     (call-interactively command))
   (magit-refresh))
 
-
 ;;; funcs.el ends here
