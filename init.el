@@ -107,6 +107,7 @@ values."
      ;; Programming and markup languages
      ansible
      csv
+     neotree
      docker
      pdf-tools
      rebox
