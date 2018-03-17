@@ -29,6 +29,7 @@
     livid-mode
     mocha
     nodejs-repl
+    org
     popwin
     react-mode
     rebox2
@@ -42,6 +43,12 @@
     xref-js2
      ;; ycmd
     ))
+
+
+;; org
+(defun cats-javascript/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config (add-to-list 'org-babel-load-languages '(js2 . t))))
 
 
 ;; rebox2

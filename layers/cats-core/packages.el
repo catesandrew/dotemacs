@@ -9,21 +9,21 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-core-packages
-  '(projectile
-    autorevert
-    company
-    company-shell
-    yasnippet
-    buffer-move
-    desktop
-    (prettify-symbols-mode :location built-in)
-    (eshell :location built-in)
-    (shell :location built-in)
-    (term :location built-in)
-    xterm-color
-    (tramp :location built-in)
-    spaceline-all-the-icons
-    ))
+  '(autorevert
+     buffer-move
+     company
+     company-shell
+     desktop
+     (eshell :location built-in)
+     (prettify-symbols-mode :location built-in)
+     projectile
+     (shell :location built-in)
+     spaceline-all-the-icons
+     (term :location built-in)
+     (tramp :location built-in)
+     xterm-color
+     yasnippet
+     ))
 
 
 ;; spaceline-all-the-icons

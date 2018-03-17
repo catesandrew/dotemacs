@@ -9,9 +9,19 @@
 (defconst cats-langs-packages
   '(
      exec-path-from-shell
-     thrift
      haskell-mode
+     org
+     thrift
      ))
+
+
+;; org
+(defun cats-langs/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config
+    (add-to-list 'org-babel-load-languages '(haskell . t))
+    (add-to-list 'org-babel-load-languages '(thrift . t))
+    ))
 
 
 ;; exec-path-from-shell

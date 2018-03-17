@@ -9,13 +9,20 @@
     css-eldoc
     css-mode
     emmet-mode
+    flycheck
+    helm-css-scss
+    org
     smartparens
     web-mode
     xah-css-mode
-    flycheck
-    helm-css-scss
     yasnippet
     ))
+
+
+;; org
+(defun cats-web/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config (add-to-list 'org-babel-load-languages '(css . t))))
 
 
 ;; xah-css-mode

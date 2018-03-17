@@ -375,7 +375,18 @@
       )
     :post-config
     (progn
-      (message "ORG POST CONFIG")
+      (add-to-list 'org-babel-load-languages '(org . t))
+      (add-to-list 'org-babel-load-languages '(c . t))
+      (add-to-list 'org-babel-load-languages '(c++ . t))
+      (add-to-list 'org-babel-load-languages '(awk . t))
+      (add-to-list 'org-babel-load-languages '(ditaa . t))
+      (add-to-list 'org-babel-load-languages '(gnuplot . t))
+      (add-to-list 'org-babel-load-languages '(lisp . t))
+      (add-to-list 'org-babel-load-languages '(maxima . t))
+      (add-to-list 'org-babel-load-languages '(octave . t))
+      (add-to-list 'org-babel-load-languages '(perl . t))
+      (add-to-list 'org-babel-load-languages '(sql . t))
+      (add-to-list 'org-babel-load-languages '(sqlite . t))
       )
     :post-init
     (progn
@@ -393,24 +404,10 @@
 ;; ob
 (defun cats-org/pre-init-ob ()
   (spacemacs|use-package-add-hook ob
-    :pre-config
-    (progn
-      (message "OB PRE CONFIG")
-      )
-    :post-config
-    (progn
-      (message "OB POST CONFIG")
-      )
     :post-init
-    (progn
-      (message "OB POST INIT")
-      )
+    (progn)
     :pre-init
-    (progn
-      (message "OB PRE INIT")
-      )
-    )
-  )
+    (progn)))
 
 
 ;; org-brain
@@ -1005,7 +1002,6 @@
     ;; Disable yasnippet in org-mode
     (add-hook 'org-mode-hook 'spacemacs/toggle-yasnippet-off)
     (add-hook 'org-mode-hook (lambda () (setq org-todo-key-trigger t)))
-    (add-hook 'org-mode-hook 'cats//load-babel-languages)
 
     ;; Set Background Color of Source Blocks for Export.This was taken from
     ;; [[http://emacs.stackexchange.com/questions/3374/][here]].
