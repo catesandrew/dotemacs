@@ -525,11 +525,23 @@
 
 
 ;; magit
+(defun cats//toggle-gh-profile (dir frame-name)
+  (when (string= frame-name (cats//get-frame-name nil))
+    (require 'gh-profile)
+    (require 'git-link)
+    (let* ((remote (git-link--select-remote))
+            (id (gh-profile-get-remote-profile (git-link--remote-url remote))))
+      (when id
+        ;; (set (make-local-variable 'js2-mode-show-parse-errors) t)
+        (setq gh-profile-default-profile id)))))
+
 (defun cats/pre-init-magit ()
   "Please, no gravatars. Thanks"
   (spacemacs|use-package-add-hook magit
     :post-init
     (progn
+      (add-hook 'cats/project-hook 'cats//toggle-gh-profile)
+
       (setq magit-revision-show-gravatars nil)
       ;; For annotated tags prepare message with commit messages since last tag.
       (add-hook 'git-commit-mode-hook
