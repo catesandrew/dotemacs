@@ -17,7 +17,7 @@
      ;; org-caldav
      ;; org-notify
      ;; helm-org-rifle
-     org-ehtml
+     ;; org-ehtml
      ;; org-brain
      ;; (org-expiry :location built-in)
      ;; org-journal
