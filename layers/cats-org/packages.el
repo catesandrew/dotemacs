@@ -37,6 +37,11 @@
      (ox-html :toggle org-enable-ox-html-support :location built-in)
      ))
 
+;; NOTE: org-capture throws json-readtable-error
+;; sudo apt-get -y install ipython ipython-notebook
+;; sudo -H pip install jupyter
+;; or, brew install jupyter
+
 
 ;; ox-jira
 (defun cats-org/pre-init-ox-jira ()
@@ -355,13 +360,13 @@
       )
     :post-config
     (progn
+      ;; https://orgmode.org/worg/org-contrib/babel/languages.html
       (add-to-list 'org-babel-load-languages '(org . t))
-      (add-to-list 'org-babel-load-languages '(c . t))
-      (add-to-list 'org-babel-load-languages '(c++ . t))
+      (add-to-list 'org-babel-load-languages '(C . t))
+      (add-to-list 'org-babel-load-languages '(dot . t))
       (add-to-list 'org-babel-load-languages '(awk . t))
       (add-to-list 'org-babel-load-languages '(ditaa . t))
       (add-to-list 'org-babel-load-languages '(gnuplot . t))
-      (add-to-list 'org-babel-load-languages '(lisp . t))
       (add-to-list 'org-babel-load-languages '(maxima . t))
       (add-to-list 'org-babel-load-languages '(octave . t))
       (add-to-list 'org-babel-load-languages '(perl . t))
@@ -373,10 +378,13 @@
       (message "ORG POST INIT")
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
+
       )
     :pre-init
     (progn
       (message "ORG PRE INIT")
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-utils)))
+        (setq org-plantuml-jar-path (concat dir "plantuml/plantuml.jar")))
       )
     ))
 

@@ -9,15 +9,8 @@
 (defconst cats-xml-packages
   '(
     nxml
-    org
     smartparens
     ))
-
-
-;; org
-(defun cats-xml/pre-init-org ()
-  (spacemacs|use-package-add-hook org
-    :post-config (add-to-list 'org-babel-load-languages '(xml . t))))
 
 (defun cats-xml/init-nxml ()
   (use-package nxml-mode

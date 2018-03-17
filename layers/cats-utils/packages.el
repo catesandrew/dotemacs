@@ -8,9 +8,9 @@
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-utils-packages
   '(
-     plantuml-mode
      flycheck
      (flycheck-plantuml :requires flycheck)
+     plantuml-mode
      ))
 
 

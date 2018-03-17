@@ -8,12 +8,19 @@
 
 (defconst cats-latex-packages
   '(
-    auctex
-    (auctex-skim :location local)
-    bibtex
-    typo
-    (latex-pretty-symbols :location local)
-    ))
+     auctex
+     (auctex-skim :location local)
+     bibtex
+     (latex-pretty-symbols :location local)
+     org
+     typo
+     ))
+
+
+;; org
+(defun cats-latex/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config (add-to-list 'org-babel-load-languages '(latex . t))))
 
 (defun cats-latex/pre-init-auctex ()
   (spacemacs|use-package-add-hook tex

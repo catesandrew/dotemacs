@@ -48,7 +48,7 @@
 ;; org
 (defun cats-javascript/pre-init-org ()
   (spacemacs|use-package-add-hook org
-    :post-config (add-to-list 'org-babel-load-languages '(js2 . t))))
+    :post-config (add-to-list 'org-babel-load-languages '(js . t))))
 
 
 ;; rebox2

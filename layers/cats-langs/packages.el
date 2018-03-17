@@ -19,9 +19,7 @@
 (defun cats-langs/pre-init-org ()
   (spacemacs|use-package-add-hook org
     :post-config
-    (add-to-list 'org-babel-load-languages '(haskell . t))
-    (add-to-list 'org-babel-load-languages '(thrift . t))
-    ))
+    (add-to-list 'org-babel-load-languages '(haskell . t))))
 
 
 ;; exec-path-from-shell

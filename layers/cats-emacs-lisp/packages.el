@@ -8,12 +8,22 @@
 
 (defconst cats-emacs-lisp-packages
   '(
-    flycheck
-    flycheck-cask
-    flycheck-package
-    buttercup
-    ))
+     buttercup
+     flycheck
+     flycheck-cask
+     flycheck-package
+     org
+     ))
 
+
+;; org
+(defun cats-emacs-lisp/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config
+    (add-to-list 'org-babel-load-languages '(lisp . t))))
+
+
+;; flycheck
 (defun cats-emacs-lisp/post-init-flycheck ()
   (setq flycheck-emacs-lisp-load-path nil))
 
