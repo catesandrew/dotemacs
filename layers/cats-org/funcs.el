@@ -464,4 +464,24 @@ background of code to whatever theme I'm using's background"
           (format "<style type=\"text/css\">\n pre.src {background-color: %s; color: %s;}</style>\n"
             my-pre-bg my-pre-fg))))))
 
+
+;; ox-html
+;; Add link icons in headings that lead to themselves
+(defun cats//set-current-html-headline (headline &rest args)
+  (setq cats//current-html-headline headline))
+
+(defun cats//clear-current-html-headline (&rest args)
+  (setq cats//current-html-headline nil))
+
+(defun cats//org-html-format-heading-function (todo todo-type priority text tags info)
+  (let* ((reference (when cats//current-html-headline
+                      (org-export-get-reference cats//current-html-headline info)))
+          ;; Don't do anything special if the current headline is not set
+          (new-text (if reference
+                      (format "%s <a href=\"#%s\">%s</a>" text reference cats//link-svg-html)
+                      text)))
+    (org-html-format-headline-default-function
+      todo todo-type priority new-text tags info)))
+
+
 ;;; funcs.el ends here
