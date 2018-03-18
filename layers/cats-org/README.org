@@ -1,6 +1,5 @@
 * TODOs
 
-
 ** TODO http://spacemacs.org/layers/+emacs/org/README.html
 
 ** TODO [[http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html][orgtutorial_dto]]
@@ -25,6 +24,9 @@
 
 ** TODO [[http://www.howardism.org/Technical/Learning/index.html][Teching Programming to Kids]]
 
+** TODO [[https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html][Dig into Org Mode]]
+
+** TODO [[https://meta.caspershire.net/spacemacs-and-org-mode/][Spacemacs and Org-mode]]
 * Key bindings
 
 ** Starting org-mode
