@@ -155,33 +155,40 @@
           (cats/find-file-hook-to-project)))
 
       (add-hook 'projectile-after-switch-project-hook
-         (lambda ()
-           (unless (frame-parameter nil 'cats//projectile-switching-project-by-name)
-             ;; (message "defadvice: projectile-after-switch-project-hook")
-             (condition-case err
-                 (save-excursion
-                   (select-window (selected-window))
-                   (let ((cb (current-buffer))   ;; save current-buffer
+        (lambda ()
+          (let* ((frame (selected-frame))
+                  (frame-name (cats//get-frame-name frame)))
+            (unless (frame-parameter frame
+                      'cats//projectile-switching-project-by-name)
+              ;; (message "defadvice: projectile-after-switch-project-hook")
+              (condition-case err
+                (save-excursion
+                  (select-window (selected-window))
+                  (let* ((cb (current-buffer))   ;; save current-buffer
                          (origin-buffer-file-name (buffer-file-name))
                          (projectile-require-project-root t))
-                     ;; (princ (format "current-buffer: `%s''\n" cb))
-                     ;; (princ (format "origin-buffer-file-name: `%s'\n" origin-buffer-file-name))
-                     (projectile-project-root)
-                     (let ((project-root (projectile-project-root))
-                           (proj-dir-root (directory-file-name (projectile-project-root)))
-                           (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root))))
-                           (frame-name (cats//get-frame-name nil)))
-                       ;; (princ (format "project-root: `%s'\n" project-root))
-                       ;; (princ (format "cats//projectile-curr: `%s''\n" cats//projectile-curr))
-                       (when (and project-root
-                               (not (string= project-root (frame-parameter nil 'cats//projectile-curr))))
-                         (cats/run-project-hook project-root frame-name)))))
-               (error
-                (progn
-                  (set-frame-parameter nil 'cats/projectile-dir-root nil)
-                  (set-frame-parameter nil 'cats/projectile-dir-base nil))
-                nil)))
-           (set-frame-parameter nil 'cats//projectile-switching-project-by-name nil)))
+                    ;; (princ (format "current-buffer: `%s''\n" cb))
+                    ;; (princ (format "origin-buffer-file-name: `%s'\n" origin-buffer-file-name))
+                    (projectile-project-root)
+                    (let* ((project-root (projectile-project-root))
+                           (proj-dir-root (directory-file-name
+                                            (projectile-project-root)))
+                           (proj-dir-base (file-name-nondirectory
+                                            (directory-file-name
+                                              (projectile-project-root)))))
+                      ;; (princ (format "project-root: `%s'\n" project-root))
+                      ;; (princ (format "cats//projectile-curr: `%s''\n" cats//projectile-curr))
+                      (when (and project-root
+                              (not (string= project-root
+                                     (frame-parameter frame 'cats//projectile-curr))))
+                        (cats/run-project-hook project-root frame-name)))))
+                (error
+                  (progn
+                    (set-frame-parameter frame 'cats/projectile-dir-root nil)
+                    (set-frame-parameter frame 'cats/projectile-dir-base nil))
+                  nil)))
+            (set-frame-parameter frame
+              'cats//projectile-switching-project-by-name nil))))
 
       (defadvice switch-to-buffer (after cats/switch-to-buffer activate)
         ;; (princ (format "defadvice: switch-to-buffer\n"))

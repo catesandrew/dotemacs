@@ -611,6 +611,7 @@ you should place you code here."
     (cats//initialize-frame-transparency)
 
     (let* ((frame (selected-frame)))
+      (cats//initialize-frame-uuid frame)
       (cats//toggle-frame-fonts frame)
       (cats//toggle-frame-size frame)
       (cats/toggle-transparency frame))

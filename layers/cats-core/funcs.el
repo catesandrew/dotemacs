@@ -194,33 +194,78 @@ symbols, emojis, greek letters, as well as fall backs for."
   "Use ."
   ;; (unless (cats//current-buffer-remote-p))
   (condition-case err
-      (let ((projectile-require-project-root t))
-        (projectile-project-root)
-        (let ((project-root (projectile-project-root))
-              (proj-dir-root (directory-file-name (projectile-project-root)))
-              (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))))
-          ;; (message "project-root:%s" project-root)
-          ;; (message "cats//projectile-curr: %s" cats//projectile-curr)
-          (when (and project-root
-                  (not (string= project-root (frame-parameter nil 'cats//projectile-curr))))
-            (let ((projectile-switch-project-action 'cats//do-nothing)
+    (let* ((frame (selected-frame))
+            (frame-name (cats//get-frame-name frame))
+            (projectile-require-project-root t))
+      (projectile-project-root)
+      (let* ((project-root (projectile-project-root))
+              (proj-dir-root (directory-file-name
+                               (projectile-project-root)))
+              (proj-dir-base (file-name-nondirectory
+                               (directory-file-name
+                                 (projectile-project-root)))))
+        ;; (message "project-root:%s" project-root)
+        ;; (message "cats//projectile-curr: %s" cats//projectile-curr)
+        (when (and project-root
+                (not (string= project-root
+                       (frame-parameter frame
+                         'cats//projectile-curr))))
+          (let* ((projectile-switch-project-action 'cats//do-nothing)
                   (projectile-before-switch-project-hook 'cats//do-nothing)
-                  (projectile-after-switch-project-hook 'cats//do-nothing)
-                  (frame-name (cats//get-frame-name nil)))
-              ;; (message "Project Base %s" proj-dir-base)
-              ;; (message "Project Dir %s" proj-dir-root)
-              ;; (message "Buffer Name %s" buffer-file-name)
-              ;; (princ (format "frame-name: `%s''\n" frame-name))
-              (set-frame-parameter nil 'cats//projectile-switching-project-by-name t)
-              (projectile-switch-project-by-name project-root)
-              (set-frame-parameter nil 'cats/projectile-dir-root proj-dir-root)
-              (set-frame-parameter nil 'cats/projectile-dir-base proj-dir-base)
-              (cats/run-project-hook project-root frame-name)))))
-    (error
-     (progn
-       (set-frame-parameter nil 'cats/projectile-dir-root nil)
-       (set-frame-parameter nil 'cats/projectile-dir-base nil))
-     nil)))
+                  (projectile-after-switch-project-hook 'cats//do-nothing))
+            ;; (message "Project Base %s" proj-dir-base)
+            ;; (message "Project Dir %s" proj-dir-root)
+            ;; (message "Buffer Name %s" buffer-file-name)
+            ;; (princ (format "frame-name: `%s''\n" frame-name))
+            (set-frame-parameter frame
+              'cats//projectile-switching-project-by-name t)
+            (projectile-switch-project-by-name project-root)
+            (set-frame-parameter frame
+              'cats/projectile-dir-root proj-dir-root)
+            (set-frame-parameter frame
+              'cats/projectile-dir-base proj-dir-base)
+            (cats/run-project-hook project-root frame-name)))))
+      (error
+        (progn
+          (set-frame-parameter frame 'cats/projectile-dir-root nil)
+          (set-frame-parameter frame 'cats/projectile-dir-base nil))
+        nil)))
+
+;; (wrong-type-argument stringp nil)
+;;   format-message(nil nil)
+;;   apply(format-message (nil nil))
+;;   error(nil nil)
+;;   (let ((projectile-require-project-root t) (frame (selected-frame))) (projectile-project-root) (let ((project-root (projectile-project-root)) (proj-dir-root (directory-file-name (projectile-project-root))) (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))) (frame-name (cats//get-frame-name frame))) (if (and project-root (not (string= project-root (frame-parameter frame 'cats//projectile-curr)))) (progn (let ((projectile-switch-project-action 'cats//do-nothing) (projectile-before-switch-project-hook 'cats//do-nothing) (projectile-after-switch-project-hook 'cats//do-nothing)) (set-frame-parameter frame 'cats//projectile-switching-project-by-name t) (projectile-switch-project-by-name project-root) (set-frame-parameter frame 'cats/projectile-dir-root proj-dir-root) (set-frame-parameter frame 'cats/projectile-dir-base proj-dir-base) (cats/run-project-hook project-root frame-name))))) (error (progn (set-frame-parameter frame 'cats/projectile-dir-root nil) (set-frame-parameter frame 'cats/projectile-dir-base nil)) nil))
+;;   (condition-case err (let ((projectile-require-project-root t) (frame (selected-frame))) (projectile-project-root) (let ((project-root (projectile-project-root)) (proj-dir-root (directory-file-name (projectile-project-root))) (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))) (frame-name (cats//get-frame-name frame))) (if (and project-root (not (string= project-root (frame-parameter frame 'cats//projectile-curr)))) (progn (let ((projectile-switch-project-action 'cats//do-nothing) (projectile-before-switch-project-hook 'cats//do-nothing) (projectile-after-switch-project-hook 'cats//do-nothing)) (set-frame-parameter frame 'cats//projectile-switching-project-by-name t) (projectile-switch-project-by-name project-root) (set-frame-parameter frame 'cats/projectile-dir-root proj-dir-root) (set-frame-parameter frame 'cats/projectile-dir-base proj-dir-base) (cats/run-project-hook project-root frame-name))))) (error (progn (set-frame-parameter frame 'cats/projectile-dir-root nil) (set-frame-parameter frame 'cats/projectile-dir-base nil)) nil)))
+;;   cats/find-file-hook-to-project()
+;;   ad-Advice-switch-to-prev-buffer(#f(compiled-function (&optional window bury-or-kill) "In WINDOW switch to previous buffer.\nWINDOW must be a live window and defaults to the selected one.\nReturn the buffer switched to, nil if no suitable buffer could be\nfound.\n\nOptional argument BURY-OR-KILL non-nil means the buffer currently\nshown in WINDOW is about to be buried or killed and consequently\nshall not be switched to in future invocations of this command.\n\nAs a special case, if BURY-OR-KILL equals `append', this means to\nmove the buffer to the end of WINDOW's previous buffers list so a\nfuture invocation of `switch-to-prev-buffer' less likely switches\nto it." (interactive nil) #<bytecode 0x4008d743>))
+;;   apply(ad-Advice-switch-to-prev-buffer #f(compiled-function (&optional window bury-or-kill) "In WINDOW switch to previous buffer.\nWINDOW must be a live window and defaults to the selected one.\nReturn the buffer switched to, nil if no suitable buffer could be\nfound.\n\nOptional argument BURY-OR-KILL non-nil means the buffer currently\nshown in WINDOW is about to be buried or killed and consequently\nshall not be switched to in future invocations of this command.\n\nAs a special case, if BURY-OR-KILL equals `append', this means to\nmove the buffer to the end of WINDOW's previous buffers list so a\nfuture invocation of `switch-to-prev-buffer' less likely switches\nto it." (interactive nil) #<bytecode 0x4008d743>) nil)
+;;   switch-to-prev-buffer()
+;;   previous-buffer()
+;;   funcall-interactively(previous-buffer)
+;;   call-interactively(previous-buffer nil nil)
+;;   command-execute(previous-buffer)
+
+
+
+
+;; (wrong-type-argument framep "ba980e2d-9139-4642-8069-dac30262538c")
+;;   frame-parameter("ba980e2d-9139-4642-8069-dac30262538c" cats//projectile-curr)
+;;   (string= project-root (frame-parameter frame-name 'cats//projectile-curr))
+;;   (not (string= project-root (frame-parameter frame-name 'cats//projectile-curr)))
+;;   (and project-root (not (string= project-root (frame-parameter frame-name 'cats//projectile-curr))))
+;;   (if (and project-root (not (string= project-root (frame-parameter frame-name 'cats//projectile-curr)))) (progn (let ((projectile-switch-project-action 'cats//do-nothing) (projectile-before-switch-project-hook 'cats//do-nothing) (projectile-after-switch-project-hook 'cats//do-nothing)) (set-frame-parameter frame 'cats//projectile-switching-project-by-name t) (projectile-switch-project-by-name project-root) (set-frame-parameter frame 'cats/projectile-dir-root proj-dir-root) (set-frame-parameter frame 'cats/projectile-dir-base proj-dir-base) (cats/run-project-hook project-root frame-name))))
+;;   (let ((project-root (projectile-project-root)) (proj-dir-root (directory-file-name (projectile-project-root))) (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))) (frame-name (cats//get-frame-name frame))) (if (and project-root (not (string= project-root (frame-parameter frame-name 'cats//projectile-curr)))) (progn (let ((projectile-switch-project-action 'cats//do-nothing) (projectile-before-switch-project-hook 'cats//do-nothing) (projectile-after-switch-project-hook 'cats//do-nothing)) (set-frame-parameter frame 'cats//projectile-switching-project-by-name t) (projectile-switch-project-by-name project-root) (set-frame-parameter frame 'cats/projectile-dir-root proj-dir-root) (set-frame-parameter frame 'cats/projectile-dir-base proj-dir-base) (cats/run-project-hook project-root frame-name)))))
+;;   (let ((projectile-require-project-root t) (frame (selected-frame))) (projectile-project-root) (let ((project-root (projectile-project-root)) (proj-dir-root (directory-file-name (projectile-project-root))) (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))) (frame-name (cats//get-frame-name frame))) (if (and project-root (not (string= project-root (frame-parameter frame-name 'cats//projectile-curr)))) (progn (let ((projectile-switch-project-action 'cats//do-nothing) (projectile-before-switch-project-hook 'cats//do-nothing) (projectile-after-switch-project-hook 'cats//do-nothing)) (set-frame-parameter frame 'cats//projectile-switching-project-by-name t) (projectile-switch-project-by-name project-root) (set-frame-parameter frame 'cats/projectile-dir-root proj-dir-root) (set-frame-parameter frame 'cats/projectile-dir-base proj-dir-base) (cats/run-project-hook project-root frame-name))))) (error (progn (set-frame-parameter frame 'cats/projectile-dir-root nil) (set-frame-parameter frame 'cats/projectile-dir-base nil)) nil))
+;;   (condition-case err (let ((projectile-require-project-root t) (frame (selected-frame))) (projectile-project-root) (let ((project-root (projectile-project-root)) (proj-dir-root (directory-file-name (projectile-project-root))) (proj-dir-base (file-name-nondirectory (directory-file-name (projectile-project-root)))) (frame-name (cats//get-frame-name frame))) (if (and project-root (not (string= project-root (frame-parameter frame-name 'cats//projectile-curr)))) (progn (let ((projectile-switch-project-action 'cats//do-nothing) (projectile-before-switch-project-hook 'cats//do-nothing) (projectile-after-switch-project-hook 'cats//do-nothing)) (set-frame-parameter frame 'cats//projectile-switching-project-by-name t) (projectile-switch-project-by-name project-root) (set-frame-parameter frame 'cats/projectile-dir-root proj-dir-root) (set-frame-parameter frame 'cats/projectile-dir-base proj-dir-base) (cats/run-project-hook project-root frame-name))))) (error (progn (set-frame-parameter frame 'cats/projectile-dir-root nil) (set-frame-parameter frame 'cats/projectile-dir-base nil)) nil)))
+;;   cats/find-file-hook-to-project()
+;;   ad-Advice-switch-to-prev-buffer(#f(compiled-function (&optional window bury-or-kill) "In WINDOW switch to previous buffer.\nWINDOW must be a live window and defaults to the selected one.\nReturn the buffer switched to, nil if no suitable buffer could be\nfound.\n\nOptional argument BURY-OR-KILL non-nil means the buffer currently\nshown in WINDOW is about to be buried or killed and consequently\nshall not be switched to in future invocations of this command.\n\nAs a special case, if BURY-OR-KILL equals `append', this means to\nmove the buffer to the end of WINDOW's previous buffers list so a\nfuture invocation of `switch-to-prev-buffer' less likely switches\nto it." (interactive nil) #<bytecode 0x4008d743>))
+;;   apply(ad-Advice-switch-to-prev-buffer #f(compiled-function (&optional window bury-or-kill) "In WINDOW switch to previous buffer.\nWINDOW must be a live window and defaults to the selected one.\nReturn the buffer switched to, nil if no suitable buffer could be\nfound.\n\nOptional argument BURY-OR-KILL non-nil means the buffer currently\nshown in WINDOW is about to be buried or killed and consequently\nshall not be switched to in future invocations of this command.\n\nAs a special case, if BURY-OR-KILL equals `append', this means to\nmove the buffer to the end of WINDOW's previous buffers list so a\nfuture invocation of `switch-to-prev-buffer' less likely switches\nto it." (interactive nil) #<bytecode 0x4008d743>) nil)
+;;   switch-to-prev-buffer()
+;;   previous-buffer()
+;;   funcall-interactively(previous-buffer)
+;;   call-interactively(previous-buffer nil nil)
+;;   command-execute(previous-buffer)
 
 
 ;; other funcs
