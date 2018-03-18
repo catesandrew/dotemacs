@@ -1,4 +1,4 @@
-;;; packages.el --- cats-emacs-lisp: Packages
+;;; packages.el --- cats-lisp: Packages
 
 ;;; Commentary:
 
@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(defconst cats-emacs-lisp-packages
+(defconst cats-lisp-packages
   '(
      buttercup
      flycheck
@@ -17,32 +17,32 @@
 
 
 ;; org
-(defun cats-emacs-lisp/pre-init-org ()
+(defun cats-lisp/pre-init-org ()
   (spacemacs|use-package-add-hook org
     :post-config
     (add-to-list 'org-babel-load-languages '(lisp . t))))
 
 
 ;; flycheck
-(defun cats-emacs-lisp/post-init-flycheck ()
+(defun cats-lisp/post-init-flycheck ()
   (setq flycheck-emacs-lisp-load-path nil))
 
-(defun cats-emacs-lisp/init-flycheck-cask ()
+(defun cats-lisp/init-flycheck-cask ()
   (use-package flycheck-cask
     :defer t
     :init (add-hook 'flycheck-mode-hook #'flycheck-cask-setup)))
 
-(defun cats-emacs-lisp/init-flycheck-package ()
+(defun cats-lisp/init-flycheck-package ()
   (use-package flycheck-package
     :defer t
     :after flycheck
     :init (flycheck-package-setup)))
 
-(defun cats-emacs-lisp/init-buttercup ()
+(defun cats-lisp/init-buttercup ()
   (use-package buttercup
     :defer t
     :init
-    (defun cats-emacs-lisp/is-buttercup-buffer ()
+    (defun cats-lisp/is-buttercup-buffer ()
       (and (buffer-file-name)
            (string-match-p (rx "/test-" (1+ (not (any "/"))) ".el" eos)
                            (buffer-file-name))))
@@ -50,7 +50,7 @@
     ;; Load buttercup automatically for proper indentation in specs
     (add-hook 'emacs-lisp-mode-hook
               (lambda ()
-                (when (cats-emacs-lisp/is-buttercup-buffer)
+                (when (cats-lisp/is-buttercup-buffer)
                   (require 'buttercup))))))
 
 ;;; packages.el ends here

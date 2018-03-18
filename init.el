@@ -167,7 +167,7 @@ values."
      cats-core
      cats-file
      cats-programming
-     cats-emacs-lisp
+     cats-lisp
      cats-javascript
      cats-utils
      cats-web
