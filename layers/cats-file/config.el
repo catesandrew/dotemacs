@@ -16,6 +16,8 @@
   '(
     ".coverage"                            ; python
     ".git"                                 ; git
+    ".circleci"                            ; circle ci
+    ".nyc_output"                          ; nyc
     ".hg"                                  ; mercurial
     ".idea"                                ; various
     "build"                                ; various
