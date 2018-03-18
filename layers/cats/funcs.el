@@ -268,4 +268,13 @@ many times might take a long time."
     (call-interactively command))
   (magit-refresh))
 
+
+;; gh
+(defun cats//toggle-gh-profile (dir frame-name)
+  (when (string= frame-name (cats//get-frame-name nil))
+    (let* ((remote (git-link--select-remote))
+            (id (gh-profile-get-remote-profile (git-link--remote-url remote))))
+      (when id
+        (setq gh-profile-default-profile id)))))
+
 ;;; funcs.el ends here
