@@ -8,6 +8,11 @@
 
 
 ;; funcs
+(defun cats/newline-for-code ()
+  "Inserts a newline character, but from the end of the current line."
+  (interactive)
+  (move-end-of-line 1)
+  (newline-and-indent))
 
 (defun cats/disable-electric-indent-mode ()
   (if (fboundp 'electric-indent-local-mode)
@@ -120,6 +125,12 @@
 
     (spacemacs/toggle-auto-fill-comments-mode-on)
     (cats/highlight-TODO-words)
+
+    ;; Since paredit and other modes automatically insert final characters like
+    ;; semi-colons and parenthesis, what I really want is to hit return from the
+    ;; end of the line. Pretty simple function. And we can bind that to the
+    ;; free, Meta-Return:
+    ;; (global-set-key (kbd "M-RET") 'cats/newline-for-code)
 
     ;; prettify and enable locally
     (add-pragmatapro-prettify-symbols-alist)
