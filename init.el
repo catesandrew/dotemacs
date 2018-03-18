@@ -107,7 +107,6 @@ values."
      csv
      neotree
      docker
-     pdf-tools
      rebox
      (ranger :variables
        ranger-show-preview t)
