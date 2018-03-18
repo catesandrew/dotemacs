@@ -125,7 +125,6 @@
         (setq projectile-require-project-root t))
 
       (defadvice winum-select-window-by-number (after cats/winum-select-window-by-number (&optional arg))
-        ;; (princ (format "defadvice: winum-select-window-by-number %s\n" arg))
         (let* ((n (cond
                    ((integerp arg) arg)
                    (arg (winum-get-number))
@@ -137,20 +136,15 @@
                    (t (winum-get-number))))
                (w (winum-get-window-by-number (abs n))))
 
-          ;; (princ (format "w: %s\n" w))
-          ;; (princ (format "n: %s\n" n))
-          ;; (princ (format "(> 0 n): %s\n" (> n 0)))
           (when (and w (and (buffer-file-name) (> n 0)))
             (cats/find-file-hook-to-project))))
       (ad-activate 'winum-select-window-by-number)
 
       (defadvice spacemacs/alternate-buffer (after cats/spacemacs/alternate-buffer activate)
-        ;; (princ (format "defadvice: spacemacs/alternate-buffer\n"))
         (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
       (defadvice spacemacs/alternate-window (after cats/spacemacs/alternate-window activate)
-        ;; (princ (format "defadvice: spacemacs/alternate-window\n"))
         (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
@@ -160,15 +154,12 @@
                   (frame-name (cats//get-frame-name frame)))
             (unless (frame-parameter frame
                       'cats//projectile-switching-project-by-name)
-              ;; (message "defadvice: projectile-after-switch-project-hook")
               (condition-case err
                 (save-excursion
                   (select-window (selected-window))
                   (let* ((cb (current-buffer))   ;; save current-buffer
                          (origin-buffer-file-name (buffer-file-name))
                          (projectile-require-project-root t))
-                    ;; (princ (format "current-buffer: `%s''\n" cb))
-                    ;; (princ (format "origin-buffer-file-name: `%s'\n" origin-buffer-file-name))
                     (projectile-project-root)
                     (let* ((project-root (projectile-project-root))
                            (proj-dir-root (directory-file-name
@@ -176,8 +167,6 @@
                            (proj-dir-base (file-name-nondirectory
                                             (directory-file-name
                                               (projectile-project-root)))))
-                      ;; (princ (format "project-root: `%s'\n" project-root))
-                      ;; (princ (format "cats//projectile-curr: `%s''\n" cats//projectile-curr))
                       (when (and project-root
                               (not (string= project-root
                                      (frame-parameter frame 'cats//projectile-curr))))
@@ -191,35 +180,25 @@
               'cats//projectile-switching-project-by-name nil))))
 
       (defadvice switch-to-buffer (after cats/switch-to-buffer activate)
-        ;; (princ (format "defadvice: switch-to-buffer\n"))
         (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
       (defadvice switch-to-prev-buffer (after cats/switch-to-prev-buffer activate)
-        ;; (princ (format "defadvice: switch-to-prev-buffer\n"))
         (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
       (defadvice switch-to-next-buffer (after cats/switch-to-next-buffer activate)
-        ;; (princ (format "defadvice: switch-to-next-buffer\n"))
         (when (buffer-file-name)
           (cats/find-file-hook-to-project)))
 
       (add-hook 'projectile-find-file-hook
          (lambda ()
-           ;; (message "defadvice: projectile-find-file-hook")
            (cats/find-file-hook-to-project)))
 
       (add-hook 'find-file-hook
-         (lambda ()
-           ;; (message "defadvice: find-file-hook")
-           (cond
-            (projectile-mode
-             ;; (message "find-file-hook: projectile-mode on")
-             (cats/find-file-hook-to-project))
-            (t
-             ;; (message "find-file-hook: projectile-mode off")
-             ))) t))))
+        (lambda ()
+          (when (bound-and-true-p projectile-mode)
+            (cats/find-file-hook-to-project))) t))))
 
 
 ;; desktop
