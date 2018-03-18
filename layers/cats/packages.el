@@ -14,57 +14,51 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-packages
-  '(focus-autosave-mode
-    exec-path-from-shell
-    ibuffer
-    evil
-    linum-relative
-    nlinum-relative
-    dash
-    spaceline
-    remember
-    ;; Editing
-    whitespace
-    hungry-delete
-    copyright
-    beacon
-    writeroom-mode
-    company
-    company-emoji
-    ;; Tools
-    flycheck
-    git-commit
-    magit
-    (magit-repos :location built-in)
-    fancy-battery
-    list-environment
-    ;; Applications
-    doc-view
-    paradox
-    (dired :location built-in)
-    sx
-    dash
-    (delsel :location built-in)
-    ;; visual-fill-column
-    copyright
-    editorconfig
-    hardhat
-    (tramp :location built-in)
-    (grep :location built-in)
-    (locate :location built-in)
-    ;; helm-ag
-    (calendar :location built-in)
-    (time :location built-in)
-    (conf-mode :location built-in)
-    disable-mouse
-    helm
-    helm-projectile
-    helm-ls-git
-    helm-open-github
-    encourage-mode
-    engine-mode
-    which-key
-    ))
+  '(beacon
+     (calendar :location built-in)
+     company
+     company-emoji
+     (conf-mode :location built-in)
+     copyright
+     dash
+     (delsel :location built-in)
+     (dired :location built-in)
+     disable-mouse
+     doc-view
+     editorconfig
+     encourage-mode
+     engine-mode
+     evil
+     exec-path-from-shell
+     fancy-battery
+     flycheck
+     focus-autosave-mode
+     git-commit
+     gh
+     (grep :location built-in)
+     hardhat
+     helm
+     helm-ls-git
+     helm-open-github
+     helm-projectile
+     hungry-delete
+     ibuffer
+     linum-relative
+     list-environment
+     (locate :location built-in)
+     magit
+     (magit-repos :location built-in)
+     nlinum-relative
+     paradox
+     remember
+     spaceline
+     sx
+     (time :location built-in)
+     (tramp :location built-in)
+     which-key
+     whitespace
+     writeroom-mode
+     ))
 
 
 ;; conf-mode
@@ -481,6 +475,15 @@
 (defun cats/post-init-git-commit ()
   ;; Support Git Commit Mode for external `git commit'
   (global-git-commit-mode))
+
+
+;; gh
+(defun cats/init-gh ()
+  (use-package gh
+    :ensure t
+    :defer t
+    :init (progn)
+    :config (progn)))
 
 
 ;; magit-repos
