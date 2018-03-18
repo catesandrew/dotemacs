@@ -58,8 +58,17 @@
      (tramp :location built-in)
      which-key
      whitespace
+     window-purpose
      writeroom-mode
      ))
+
+
+;; window-purpose
+(defun cats/pre-init-window-purpose ()
+  (spacemacs|use-package-add-hook window-purpose
+    :post-init
+    (with-eval-after-load 'magit
+      (purpose-x-magit-multi-on))))
 
 
 ;; autoinsert
@@ -547,9 +556,6 @@
   (spacemacs|use-package-add-hook magit
     :post-init
     (progn
-      (with-eval-after-load 'window-purpose
-        (purpose-x-magit-multi-on))
-
       (setq magit-revision-show-gravatars nil)
       ;; For annotated tags prepare message with commit messages since last tag.
       (add-hook 'git-commit-mode-hook
