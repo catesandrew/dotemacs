@@ -33,7 +33,6 @@
      fancy-battery
      flycheck
      focus-autosave-mode
-     git-commit
      gh
      (grep :location built-in)
      hardhat
@@ -471,10 +470,6 @@
       (add-hook 'cats/tidy-executable-hook
          'cats//set-tidy-executable)
       (setq flycheck-global-modes t))))
-
-(defun cats/post-init-git-commit ()
-  ;; Support Git Commit Mode for external `git commit'
-  (global-git-commit-mode))
 
 
 ;; gh
