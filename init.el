@@ -96,9 +96,7 @@ values."
           ;; Shut up, Magit
           magit-save-repository-buffers 'dontask
           ;; See commit counts for all branches and tags
-          magit-refs-show-commit-count 'all
-          ;; This is really creepy magit
-          magit-revision-show-gravatars nil)
+          magit-refs-show-commit-count 'all)
      github
      ;; Development tools
      restclient
