@@ -547,6 +547,9 @@
   (spacemacs|use-package-add-hook magit
     :post-init
     (progn
+      (with-eval-after-load 'window-purpose
+        (purpose-x-magit-multi-on))
+
       (setq magit-revision-show-gravatars nil)
       ;; For annotated tags prepare message with commit messages since last tag.
       (add-hook 'git-commit-mode-hook
