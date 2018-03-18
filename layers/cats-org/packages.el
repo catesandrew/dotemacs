@@ -20,7 +20,7 @@
      ;; org-ehtml
      ;; org-brain
      ;; (org-expiry :location built-in)
-     ;; org-journal
+     org-journal
      ;; org-download
      ;; org-mime
      ;; org-pomodoro
@@ -429,14 +429,36 @@
 (defun cats-org/pre-init-org-journal ()
   (spacemacs|use-package-add-hook org-journal
     :post-init
-    ()))
+    (progn
+      ;; the time stamp for the files name is YYYY-MM-DD
+      (add-to-list 'auto-mode-alist
+        '("\\(?1:[0-9]\\{4\\}\\)-\\(?2:[0-9][0-9]\\)-\\(?3:[0-9][0-9]\\)\\'" . org-journal-mode))
+
+      ;; where journal files are stored, `~/org/journal`
+      (setq org-journal-dir cats//org-journal-dir)
+      ;; *Warning:* setting `org-journal-file-format` to include a file
+      ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
+      (setq org-journal-file-format "%Y-%m-%d")
+
+      (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+        "h" 'cats/journal-file-insert)
+
+      ;; To use the agenda search, you can add all the calendar files to your
+      ;; org-agenda by adding org-journal-dir to org-agenda-files and setting
+      ;; org-agenda-file-regexp to include files with an YYYY-MM-DD name. That
+      ;; way, you can use org-agenda to search for TODO items or tagged items in
+      ;; your org-journal.
+      (with-eval-after-load 'org-agenda
+        (cats//add-to-org-agenda-files
+          (list org-journal-dir))
+        (setq org-agenda-file-regexp
+          "\\`[^.].*\\.org\\'\\|\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")))))
 
 
 ;; default-cats-org-config
 (defun cats-org/init-default-cats-org-config ()
   "Add org mode hooks."
   (with-eval-after-load 'org
-    (provide 'emacs-orgmode-config)
     ;; (require 'org-agenda)
 
     ;; (define-key org-mode-map "\C-c\S-n" 'cats/find-next-BEGIN_SRC_block)
@@ -444,9 +466,6 @@
 
     ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
     ;; (add-hook 'org-insert-heading-hook 'cats/insert-heading-inactive-timestamp 'append)
-
-    (setq org-journal-dir cats//org-journal-dir)
-    (setq org-journal-file-format "%Y-%m-%d")
 
     (setq org-tag-persistent-alist
       '((:startgroup . nil)

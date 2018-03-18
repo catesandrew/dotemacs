@@ -483,5 +483,25 @@ background of code to whatever theme I'm using's background"
     (org-html-format-headline-default-function
       todo todo-type priority new-text tags info)))
 
+
+;; org-journal
+
+(defun cats/journal-file-insert ()
+  "Insert's the journal heading based on the file's name.
+
+In case I decide to export my journal, I wanted each file to have
+a title with the date. Also, I really wanted to have this
+information inserted automatically without having to trigger the
+snippet."
+  (interactive)
+  (when (string-match "\\`\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\)\\'"
+          (buffer-name))
+    (let ((year  (string-to-number (match-string 1 (buffer-name))))
+           (month (string-to-number (match-string 2 (buffer-name))))
+           (day   (string-to-number (match-string 3 (buffer-name))))
+           (datim nil))
+      (setq datim (encode-time 0 0 0 day month year))
+      (insert (format-time-string
+                "#+TITLE: Journal Entry- %Y-%b-%d (%A)\n\n" datim)))))
 
 ;;; funcs.el ends here

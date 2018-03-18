@@ -41,6 +41,9 @@
 (defvar cats//org-notes-file
   (concat cats//org-dir "/notes.org"))
 
+(defvar cats//org-journal-file
+  (concat cats//org-dir "/journal.org"))
+
 (defvar cats//keep-clock-running nil)
 
 (defvar cats//org-properties-string "
