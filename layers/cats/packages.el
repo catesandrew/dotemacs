@@ -67,8 +67,13 @@
 (defun cats/pre-init-window-purpose ()
   (spacemacs|use-package-add-hook window-purpose
     :post-init
-    (with-eval-after-load 'magit
-      (purpose-x-magit-multi-on))))
+    (progn
+      (require 'window-purpose-x))
+    :post-config
+    (progn
+      (with-eval-after-load 'magit
+        (purpose-x-magit-multi-on))
+      )))
 
 
 ;; autoinsert
