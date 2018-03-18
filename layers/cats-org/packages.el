@@ -265,12 +265,13 @@
   "Add `org-projectile' mode hooks."
   (spacemacs|use-package-add-hook org-projectile
     :pre-init
-    (with-eval-after-load 'org-agenda
-      (require 'org-projectile)
-      ;; (push (org-projectile-todo-files) org-agenda-files)
-      (cats//add-to-org-agenda-files (org-projectile-todo-files)))
+    (progn)
     :post-config
     (progn
+      (let* ((files (org-projectile-todo-files)))
+        (dolist (file files)
+          (cats//register-org-agenda-file file)))
+
       (setq org-confirm-elisp-link-function nil)
       ;; (setq org-projectile-capture-template
       ;;       (format "%s%s" "* TODO %?" cats//org-properties-string))
@@ -290,6 +291,8 @@
         (progn
           )))))
 
+
+;; org-projectile-helm
 (defun cats-org/init-org-projectile-helm ()
   "Add `org-projectile-helm' mode hooks."
   (use-package org-projectile-helm
@@ -301,8 +304,92 @@
 (defun cats-org/pre-init-org-agenda ()
   (spacemacs|use-package-add-hook org-agenda
     :post-init
-    ()
+    (progn
+      (cats//register-org-agenda-file cats//org-dir)
+
+      ;; If `org-agenda-start-on-weekday` is set to an integer (by default it's
+      ;; set to 1, corresponding to Monday), and `org-agenda-span` is set to
+      ;; *either* `'week` or `7`, org will always start the agenda on the day
+      ;; specified by `org-agenda-start-on-weekday`. To always start yesterday,
+      ;; you must set `org-agenda-start-day` to `"-1d"` *and* do one of the
+      ;; following:
+      ;; 1. Set `org-agenda-start-on-weekday` to `nil`. Then, the first day of
+      ;;    the agenda will be determined by `org-agenda-start-day`.
+      ;; 2. Set `org-agenda-span` to a value that isn't `'week`. For example,
+      ;;    setting it to `5` will show five days, and then it will respect
+      ;;    `org-agenda-start-day`.
+
+      ;; show five days starting yesterday
+      (setq org-agenda-start-day "-1d")
+      (setq org-agenda-span 5)
+      (setq org-agenda-start-on-weekday nil)
+
+      ;; Start on monadys
+      ;; (setq org-agenda-span 7)
+      ;; (setq org-agenda-start-on-weekday 1)
+
+      (setq org-agenda-skip-scheduled-if-done t)
+      (setq org-agenda-skip-deadline-if-done t))
+    :pre-config
+    (progn
+      (cats//set-org-agenda-files cats//org-agenda-list)
+      ;; (cats//set-org-agenda-file-regexps cats//org-agenda-file-regexp-list)
+      )
     :post-config
+    (progn
+      ;; (add-to-list org-agenda-tag-filter-preset "+PRIORITY<\"C\"")
+      ;; (let ((this-week-high-priority
+      ;;         ;; The < in the following line has behavior that is opposite
+      ;;         ;; to what one might expect.
+      ;;         '(tags-todo "+PRIORITY<\"C\"+DEADLINE<\"<+1w>\"DEADLINE>\"<+0d>\""
+      ;;            ((org-agenda-overriding-header
+      ;;               "Upcoming high priority tasks:"))))
+      ;;        (due-today '(tags-todo
+      ;;                      "+DEADLINE=<\"<+1d>\"|+SCHEDULED=<\"<+0d>\""
+      ;;                      ((org-agenda-overriding-header
+      ;;                         "Due today:"))))
+      ;;        (recently-created '(tags-todo
+      ;;                             "+CREATED=>\"<-30d>\""
+      ;;                             ((org-agenda-overriding-header "Recently created:")
+      ;;                               (org-agenda-cmp-user-defined 'org-cmp-creation-times)
+      ;;                               (org-agenda-sorting-strategy '(user-defined-down)))))
+      ;;        (next '(todo "NEXT"))
+      ;;        (started '(todo "STARTED"))
+      ;;        (missing-deadline
+      ;;          '(tags-todo "-DEADLINE={.}/!"
+      ;;             ((org-agenda-overriding-header
+      ;;                "These don't have deadlines:"))))
+      ;;        (missing-priority
+      ;;          '(tags-todo "-PRIORITY={.}/!"
+      ;;             ((org-agenda-overriding-header
+      ;;                "These don't have priorities:")))))
+
+      ;;   (add-to-list 'org-babel-load-languages '(org . t))
+      ;;   (add-to-list org-agenda-custom-commands )
+
+      ;;   (setq org-agenda-custom-commands
+      ;;     `(("M" "Main agenda view"
+      ;;         ((agenda ""
+      ;;            ((org-agenda-overriding-header "Agenda:")
+      ;;              (org-agenda-ndays 5)
+      ;;              (org-deadline-warning-days 0)))
+      ;;           ,due-today
+      ;;           ,next
+      ;;           ,started
+      ;;           ,this-week-high-priority
+      ;;           ,recently-created)
+      ;;         nil nil)
+      ;;        ,(cons "A" (cons "High priority upcoming" this-week-high-priority))
+      ;;        ,(cons "d" (cons "Overdue tasks and due today" due-today))
+      ;;        ,(cons "r" (cons "Recently created" recently-created))
+      ;;        ("h" "A, B priority:" tags-todo "+PRIORITY<\"C\""
+      ;;          ((org-agenda-overriding-header
+      ;;             "High Priority:")))
+      ;;        ("c" "At least priority C:" tags-todo "+PRIORITY<\"D\""
+      ;;          ((org-agenda-overriding-header
+      ;;             "At least priority C:")))))
+      ;;   )
+      )
     ))
 
 
@@ -448,6 +535,9 @@
 
       ;; where journal files are stored, `~/org/journal`
       (setq org-journal-dir cats//org-journal-dir)
+      (unless (file-exists-p org-journal-dir)
+        (make-directory org-journal-dir))
+
       ;; *Warning:* setting `org-journal-file-format` to include a file
       ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
       (setq org-journal-file-format "%Y-%m-%d")
@@ -460,25 +550,21 @@
       ;; org-agenda-file-regexp to include files with an YYYY-MM-DD name. That
       ;; way, you can use org-agenda to search for TODO items or tagged items in
       ;; your org-journal.
-      (with-eval-after-load 'org-agenda
-        (cats//add-to-org-agenda-files
-          (list org-journal-dir))
-        (setq org-agenda-file-regexp
-          "\\`[^.].*\\.org\\'\\|\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")))))
+      (cats//register-org-agenda-file org-journal-dir)
+      (cats//register-org-agenda-file-regexp
+        "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")
+      )))
 
 
 ;; default-cats-org-config
 (defun cats-org/init-default-cats-org-config ()
   "Add org mode hooks."
   (with-eval-after-load 'org
-    ;; (require 'org-agenda)
-
     ;; (define-key org-mode-map "\C-c\S-n" 'cats/find-next-BEGIN_SRC_block)
     ;; (define-key org-mode-map "\C-c\S-p" 'cats/find-prev-BEGIN_SRC_block)
 
     ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
     ;; (add-hook 'org-insert-heading-hook 'cats/insert-heading-inactive-timestamp 'append)
-
     (setq org-tag-persistent-alist
       '((:startgroup . nil)
         ("HOME" . ?h)
@@ -788,14 +874,6 @@
     (unless (file-exists-p org-directory)
       (make-directory org-directory))
 
-    (cats//add-to-org-agenda-files
-      (list
-        cats//org-gtd-file
-        cats/org-habits-file
-        cats//org-calendar-file
-        cats//org-inbox-file
-        cats//org-refile-file))
-
     (unless (boundp 'org-capture-templates)
       (defvar org-capture-templates nil))
 
@@ -1032,8 +1110,6 @@
 
     (setq helm-org-headings-fontify t)
     (setq org-todo-repeat-to-state "TODO")
-    (setq org-agenda-span 10)
-    (setq org-agenda-start-day "-2d")
     (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
 
     (add-to-list 'org-show-context-detail '(org-goto . lineage))
@@ -1043,16 +1119,6 @@
     (setq org-log-reschedule t)
     (setq org-log-redeadline t)
     (setq org-treat-insert-todo-heading-as-state-change t)
-
-    (when nil
-      ;; Enable appointment notifications.
-      (defadvice org-agenda-to-appt (before wickedcool activate)
-        "Clear the appt-time-msg-list."
-        (setq appt-time-msg-list nil))
-      (appt-activate)
-      (defun org-agenda-to-appt-no-message ()
-        (shut-up (org-agenda-to-appt)))
-      (run-at-time "00:00" 60 'org-agenda-to-appt-no-message))
 
     ;; variable configuration
     (add-to-list 'org-modules 'org-habit)
@@ -1103,64 +1169,8 @@
     (setq org-enforce-todo-dependencies t)
     (setq org-deadline-warning-days 0)
     (setq org-default-priority ?D)
-    (setq org-agenda-skip-scheduled-if-done t)
-    (setq org-agenda-skip-deadline-if-done t)
-    ;;(add-to-list org-agenda-tag-filter-preset "+PRIORITY<\"C\"")
 
     (setq org-imenu-depth 10)
-
-    ;; Stop starting agenda from deleting frame setup!
-    (setq org-agenda-window-setup 'other-window)
-    (define-key mode-specific-map [?a] 'org-agenda)
-    (unbind-key "C-j" org-mode-map)
-
-    (let ((this-week-high-priority
-            ;; The < in the following line has behavior that is opposite
-            ;; to what one might expect.
-            '(tags-todo "+PRIORITY<\"C\"+DEADLINE<\"<+1w>\"DEADLINE>\"<+0d>\""
-               ((org-agenda-overriding-header
-                  "Upcoming high priority tasks:"))))
-           (due-today '(tags-todo
-                         "+DEADLINE=<\"<+1d>\"|+SCHEDULED=<\"<+0d>\""
-                         ((org-agenda-overriding-header
-                            "Due today:"))))
-           (recently-created '(tags-todo
-                                "+CREATED=>\"<-30d>\""
-                                ((org-agenda-overriding-header "Recently created:")
-                                  (org-agenda-cmp-user-defined 'org-cmp-creation-times)
-                                  (org-agenda-sorting-strategy '(user-defined-down)))))
-           (next '(todo "NEXT"))
-           (started '(todo "STARTED"))
-           (missing-deadline
-             '(tags-todo "-DEADLINE={.}/!"
-                ((org-agenda-overriding-header
-                   "These don't have deadlines:"))))
-           (missing-priority
-             '(tags-todo "-PRIORITY={.}/!"
-                ((org-agenda-overriding-header
-                   "These don't have priorities:")))))
-
-      (setq org-agenda-custom-commands
-        `(("M" "Main agenda view"
-            ((agenda ""
-               ((org-agenda-overriding-header "Agenda:")
-                 (org-agenda-ndays 5)
-                 (org-deadline-warning-days 0)))
-              ,due-today
-              ,next
-              ,started
-              ,this-week-high-priority
-              ,recently-created)
-            nil nil)
-           ,(cons "A" (cons "High priority upcoming" this-week-high-priority))
-           ,(cons "d" (cons "Overdue tasks and due today" due-today))
-           ,(cons "r" (cons "Recently created" recently-created))
-           ("h" "A, B priority:" tags-todo "+PRIORITY<\"C\""
-             ((org-agenda-overriding-header
-                "High Priority:")))
-           ("c" "At least priority C:" tags-todo "+PRIORITY<\"D\""
-             ((org-agenda-overriding-header
-                "At least priority C:"))))))
   ))
 
 ;;; packages.el ends here

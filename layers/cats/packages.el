@@ -99,9 +99,11 @@
 
 ;; helm open github
 (defun cats/init-helm-open-github ()
-  ""
   (use-package helm-open-github
-    :commands (helm-open-github-from-commit helm-open-github-from-file helm-open-github-from-issues helm-open-github-from-pull-requests)
+    :commands (helm-open-github-from-commit
+                helm-open-github-from-file
+                helm-open-github-from-issues
+                helm-open-github-from-pull-requests)
     :ensure t
     :init
     (progn
@@ -396,7 +398,7 @@
   ;; Enable Company Emoji everywhere
   (with-eval-after-load 'company
     (add-to-list 'company-backends 'company-emoji))
-  ;; Re-enable unicode emoji.  It's 2015, dammit
+  ;; Re-enable unicode emoji. It's 2018, dammit
   (setq company-emoji-insert-unicode t))
 
 

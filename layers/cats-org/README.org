@@ -13,6 +13,12 @@
 
 ** TODO [[https://raw.githubusercontent.com/IvanMalison/dotfiles/master/dotfiles/emacs.d/README.org][eamcs.d dotfiles]]
 
+** TODO [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text]]
+
+** TODO [[http://cachestocaches.com/2016/9/my-workflow-org-agenda/][my workflow with org-agenda by gjstein]]
+
+*** TODO [[https://github.com/gjstein/emacs.d/blob/master/config/gs-org.el][dotfiles by gjstein]]
+
 * Key bindings
 
 ** Starting org-mode

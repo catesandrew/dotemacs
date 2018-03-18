@@ -402,18 +402,54 @@ alphanumeric characters only."
 
 
 ;; org-agenda
+
+(defun cats//combine-strings (strings &optional separator)
+  "Concatenate the STRINGS, adding the SEPARATOR (default \" \").
+Only some SEPARATORs will work properly."
+  (let* ((sep (or separator " ")))
+    (mapconcat 'identity strings sep)))
+
 (defun cats//get-string-from-file (file-path)
   "Return file-path's file content."
   (with-temp-buffer
     (insert-file-contents file-path)
     (buffer-string)))
 
-(defun cats//add-to-org-agenda-files (incoming-files)
+(defvar cats//org-agenda-file-regexp-list '()
+  "List of all `org-agenda' file regexps.")
+
+(defun cats//register-org-agenda-file-regexp (regexp)
+  "Register REGEXP to the global list."
+  (if (boundp 'org-agenda-file-regexp)
+    (setq org-agenda-file-regexp (concat org-agenda-file-regexp "|" regexp))
+    (unless (member regexp cats//org-agenda-file-regexp-list)
+      (push regexp cats//org-agenda-file-regexp-list))))
+
+(defvar cats//org-agenda-list '()
+  "List of all `org-agenda' files.")
+
+(defun cats//register-org-agenda-file (file)
+  "Register FILE to the global list of FILEs CATS//ORG-AGENDA-LIST."
+  (if (boundp 'org-agenda-files)
+    (let* ((filepath (file-truename file)))
+      (when (and (file-exists-p filepath)
+              (not (member filepath org-agenda-files)))
+        (add-to-list 'org-agenda-files filepath)))
+    (progn
+      (unless (member file cats//org-agenda-list)
+        (push file cats//org-agenda-list)))))
+
+(defun cats//set-org-agenda-file-regexps (incoming-regexps)
+  (setq org-agenda-file-regexp
+    (cats//combine-strings
+      (append (list org-agenda-file-regexp) incoming-regexps) "|")))
+
+(defun cats//set-org-agenda-files (incoming-files)
   (setq org-agenda-files
-        (delete-dups
-         (cl-loop for filepath in (append org-agenda-files incoming-files)
-                  when (and filepath (file-exists-p (file-truename filepath)))
-                  collect (file-truename filepath)))))
+    (delete-dups
+      (cl-loop for filepath in (append org-agenda-files incoming-files)
+        when (and filepath (file-exists-p (file-truename filepath)))
+        collect (file-truename filepath)))))
 
 (defun cats//make-org-linked-todo-template ()
   (cats//make-org-todo-template "[#C] %? %A"))
