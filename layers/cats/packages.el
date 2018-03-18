@@ -14,7 +14,9 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-packages
-  '(beacon
+  '(
+     (autoinsert :location built-in)
+     beacon
      (calendar :location built-in)
      company
      company-emoji
@@ -58,6 +60,19 @@
      whitespace
      writeroom-mode
      ))
+
+
+;; autoinsert
+(defun cats/init-autoinsert ()
+  (use-package autoinsert
+    :init
+    (progn
+      (setq auto-insert-query nil)
+      (add-hook 'find-file-hook 'auto-insert))
+    :config
+    (progn
+      )
+    ))
 
 
 ;; conf-mode

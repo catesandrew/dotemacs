@@ -8,6 +8,7 @@
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-org-packages
   '(
+     autoinsert
      ;; ob, org and org-agenda are installed by `org-plus-contrib' from spacemacs-org
      (ob :location built-in)
      (org :location built-in)   ;; (cats-default-org-config :location built-in)
@@ -423,6 +424,17 @@
   (spacemacs|use-package-add-hook org-mime
     :post-init
     ()))
+
+
+;; autoinsert
+(defun cats-org/pre-init-autoinsert ()
+  (spacemacs|use-package-add-hook autoinsert
+    :post-config
+    (progn
+      (add-to-list 'auto-insert-alist
+        '("[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]$" .
+           cats/journal-file-insert))
+      )))
 
 
 ;; org-journal
