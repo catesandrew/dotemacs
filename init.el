@@ -306,6 +306,23 @@ values."
                          farmhouse-dark
                          spacemacs-dark
                          spacemacs-light
+                         solarized-light
+                         solarized-dark
+                         leuven
+                         monokai
+                         gandalf
+                         ample-light
+                         lenlen
+                         leuven
+                         plan9
+                         twilight-bright
+                         anti-zenburn
+                         moe
+                         espresso
+                         tango-plus
+                         soft-stone
+                         flatui
+                         faff
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -478,7 +495,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
    ;; If non-nil, start an Emacs server if one is not already running.
    dotspacemacs-enable-server t
 
