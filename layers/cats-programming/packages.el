@@ -22,10 +22,50 @@
     :post-init
     (setq ycmd-server-command cats/ycmd-server-command)))
 
+
+;; compile
 (defun cats-programming/post-init-compile ()
-  "Colorize output of compilation mode."
+  ;; if you want the compilation buffer to stop scrolling so that the first error
+  ;; is visible, set compilation-scroll-output to 'first-error
   (setq compilation-ask-about-save nil)
-  (setq compilation-always-kill t))
+  (setq compilation-always-kill t)
+
+  (spacemacs/set-leader-keys-for-major-mode 'compilation-mode
+    "?" 'describe-mode
+    ;; "?" evil-collection-evil-search-backward
+    ;; "gg" 'evil-goto-first-line
+    ;; "0" 'evil-digit-argument-or-evil-beginning-of-line
+    "RET" 'compile-goto-error
+    "S-RET" 'compilation-display-error
+    "C-o" 'compilation-display-error
+    "C-j" 'compilation-next-error
+    "C-J" 'cats/next-error
+    "C-k" 'compilation-previous-error
+    "C-K" 'cats/previous-error
+    "[" 'compilation-previous-file
+    "]" 'compilation-next-file
+    "r" 'recompile))
+
+(defun cats-programming/pre-init-compile ()
+  (spacemacs|use-package-add-hook compile
+    :post-config
+    (progn
+      (evil-set-initial-state 'compilation-mode 'normal)
+      (evil-define-key 'normal compilation-mode-map
+        "g?" 'describe-mode
+        (kbd "<return>") 'compile-goto-error
+        "go" 'compilation-display-error
+        (kbd "C-o") 'compilation-display-error
+        (kbd "S-<return>") 'compilation-display-error
+        "gj" 'compilation-next-error
+        "gk" 'compilation-previous-error
+        (kbd "C-j") 'compilation-next-error
+        (kbd "C-J") 'cats/next-error
+        (kbd "C-k") 'compilation-previous-error
+        (kbd "C-K") 'cats/previous-error
+        "[" 'compilation-previous-file
+        "]" 'compilation-next-file
+        "gr" 'recompile))))
 
 (defun cats-programming/init-hs-minor-mode ()
   "Visit http://stackoverflow.com/questions/1085170 for more info."

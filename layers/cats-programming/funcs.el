@@ -157,4 +157,22 @@
     ;; default
     (string-inflection-ruby-style-cycle))))
 
+
+;; compile
+(defun cats/next-error ()
+  "Move point to next error and highlight it"
+  (interactive)
+  (progn
+    (next-error)
+    (end-of-line-nomark)
+    (beginning-of-line-mark)))
+
+(defun cats/previous-error ()
+  "Move point to previous error and highlight it"
+  (interactive)
+  (progn
+    (previous-error)
+    (end-of-line-nomark)
+    (beginning-of-line-mark)))
+
 ;;; funcs.el ends here
