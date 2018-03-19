@@ -7,14 +7,14 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-programming-packages
-  '(clean-aindent-mode
-    string-inflection
-    evil-string-inflection
-    ;; (hs-minor-mode :location built-in)
-    (prog-mode :location built-in)
-    (auto-fill-comments-mode :location local)
-    (compile :location built-in)
-    ycmd
+  '((auto-fill-comments-mode :location local)
+     clean-aindent-mode
+     (compile :location built-in)
+     evil-string-inflection
+     ;; (hs-minor-mode :location built-in)
+     (prog-mode :location built-in)
+     string-inflection
+     ycmd
     ))
 
 (defun cats-programming/pre-init-ycmd ()
