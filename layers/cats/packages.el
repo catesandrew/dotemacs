@@ -68,9 +68,22 @@
   (spacemacs|use-package-add-hook window-purpose
     :post-init
     (progn
+      (setq purpose-default-layout-file
+        (expand-file-name (concat spacemacs-cache-directory ".purpose-layout")))
+
+      (setq purpose-layout-dirs
+        (list (concat spacemacs-cache-directory "purpose-layouts/")))
+
       (require 'window-purpose-x))
     :post-config
     (progn
+      (assoc-delete-all "*compilation*" popwin:special-display-config)
+      (setq cats//purpose-x-compilation-conf
+        (purpose-conf
+          "compilation"
+          :mode-purposes '((compilation-mode . compile))))
+      (purpose-set-extension-configuration
+        :compilation cats//purpose-x-compilation-conf)
       (with-eval-after-load 'magit
         (purpose-x-magit-multi-on))
       )))

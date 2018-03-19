@@ -41,4 +41,9 @@
   (jka-compr-update)
 )
 
+
+;; window-purpose
+(defvar cats//purpose-x-compilation-conf nil
+  "Configuration that gives compilation mode its own purpose.")
+
 ;;; config.el ends here
