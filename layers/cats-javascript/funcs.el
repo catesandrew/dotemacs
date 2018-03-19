@@ -152,6 +152,15 @@
   "Set the `flycheck-javascript-eslint-executable' setting in `flycheck-mode' with `ESLINT'."
   (setq flycheck-javascript-eslint-executable eslint))
 
+(defun cats/eslint-fix ()
+  "Format the current file with ESLint."
+  (interactive)
+  (if cats//executable-eslint
+    (progn (call-process cats//executable-eslint nil "*ESLint Errors*" nil "--fix" buffer-file-name)
+      (revert-buffer t t t))
+    (message "ESLint not found.")))
+;; (add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix nil t)))
+
 
 ;; coffee
 

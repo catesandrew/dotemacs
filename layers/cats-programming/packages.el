@@ -29,6 +29,9 @@
   ;; is visible, set compilation-scroll-output to 'first-error
   (setq compilation-ask-about-save nil)
   (setq compilation-always-kill t)
+  ;; auto scroll compilation buffer
+  (setq compilation-scroll-output t)
+  (setq compilation-ask-about-save nil)
   (setq compilation-environment '("TERM=xterm-256color"))
 
   (spacemacs/set-leader-keys-for-major-mode 'compilation-mode
@@ -47,10 +50,83 @@
     "]" 'compilation-next-file
     "r" 'recompile))
 
+(defvar java-stack-trace-dir "src/")
+(defun java-stack-trace-regexp-to-filename ()
+  "Generates a relative filename from java-stack-trace regexp match data."
+  (concat java-stack-trace-dir
+    (replace-regexp-in-string "\\." "/" (match-string 1))
+    (match-string 2)))
+
 (defun cats-programming/pre-init-compile ()
   (spacemacs|use-package-add-hook compile
     :post-config
     (progn
+      ;; http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html
+      ;; TODO output json lines if possible
+
+      ;; ;; ansi-color version
+      ;; (add-hook 'compilation-filter-hook
+      ;;    (lambda () (ansi-color-process-output nil)))
+
+      ;; ;; xterm-color version
+      ;; (add-hook 'compilation-start-hook
+      ;;   (lambda (proc)
+      ;;     ;; We need to differentiate between compilation-mode buffers
+      ;;     ;; and running as part of comint (which at this point we assume
+      ;;     ;; has been configured separately for xterm-color)
+      ;;     (when (eq (process-filter proc) 'compilation-filter)
+      ;;       ;; This is a process associated with a compilation-mode buffer.
+      ;;       ;; We may call `xterm-color-filter' before its own filter function.
+      ;;       (set-process-filter
+      ;;         proc
+      ;;         (lambda (proc string)
+      ;;           (funcall 'compilation-filter proc
+      ;;             (xterm-color-filter string)))))))
+
+      ;; Writing that regexp would have been hard, but of course Emacs has a
+      ;; solution. First I found the current value of
+      ;; compilation-error-regexp-alist-alist using describe-variable in order
+      ;; to get an example regexp to start with. Then, in the compilation buffer
+      ;; where my stack trace was, I ran re-builder, which pops up a little mini
+      ;; window where I could tweak my regexp and see immediately whether or not
+      ;; it was matching correctly. Then I just added this to my init.el,
+      ;; evaluated it with eval-region, and my next compile had the errors
+      ;; highlighted correctly, and I could immediately go to the offending code
+      ;; with next-error or by putting the point on the stack trace line in the
+      ;; compilation buffer and pressing RET.
+
+      ;; Add NodeJS error format
+      (add-to-list 'compilation-error-regexp-alist 'node)
+      (add-to-list 'compilation-error-regexp-alist-alist
+        ;; also try '(node "^File \"\\(.*\\)\", line \\([[:digit:]]+\\):$" 1 2)
+        '(node "^[  ]+at \\(?:[^\(\n]+ \(\\)?\\([a-zA-Z\.0-9_/-]+\\):\\([0-9]+\\):\\([0-9]+\\)\)?$"
+                 1 ;; file
+                 2 ;; line
+                 3 ;; column
+                 ))
+
+      ;; Add mocha
+      (add-to-list 'compilation-error-regexp-alist 'mocha)
+      (add-to-list 'compilation-error-regexp-alist-alist
+        '(mocha "at [^ ]+ (\\(.+?\\):\\([[:digit:]]+\\):\\([[:digit:]]+\\)" 1 2 3))
+
+      ;; Add Java/Node stack Trace
+      (add-to-list 'compilation-error-regexp-alist 'java-stack-trace)
+      (add-to-list 'compilation-error-regexp-alist-alist
+        '(java-stack-trace .
+           ("^[[:space:]]*at \\(\\(?:[[:lower:]]+\\.\\)+\\)[^(]+(\\([[:alnum:]]+\\.java\\):\\([[:digit:]]+\\))"
+             java-stack-trace-regexp-to-filename 3)))
+
+      ;; ESLint needs to be ran with `eslint . --format unix`
+      (add-to-list 'compilation-error-regexp-alist-alist
+        '(eslint "^\\(\w+\\):\\([0-9]+\\):\\([0-9]+\\):.*$" 1 2 3))
+      (add-to-list 'compilation-error-regexp-alist 'eslint)
+
+      ;; JSHint
+      (add-to-list 'compilation-error-regexp-alist-alist
+        '(jshint "^\\(.*\\): line \\([0-9]+\\), col \\([0-9]+\\), " 1 2 3))
+      (add-to-list 'compilation-error-regexp-alist 'jshint)
+
       (evil-set-initial-state 'compilation-mode 'normal)
       (evil-define-key 'normal compilation-mode-map
         "g?" 'describe-mode
@@ -66,7 +142,8 @@
         (kbd "C-K") 'cats/previous-error
         "[" 'compilation-previous-file
         "]" 'compilation-next-file
-        "gr" 'recompile))))
+        "gr" 'recompile)
+      )))
 
 (defun cats-programming/init-hs-minor-mode ()
   "Visit http://stackoverflow.com/questions/1085170 for more info."
