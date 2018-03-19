@@ -583,6 +583,34 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; particularly if you want Emacs to handle the pin entry for you.
   ;; (setf epa-pinentry-mode 'loopback)
   (setenv "GPG_AGENT_INFO" nil)
+  ;; reset other shell vars
+  (setenv "PS1" "\\h:\\W \\$ ")
+  (setenv "TERM_PROGRAM" "")
+  (setenv "PROMPT_COMMAND" "")
+  (setenv "HISTCONTROL" "ignoreboth:erasedups")
+  ;; Eternal bash history. Undocumented feature which sets the size to
+  ;; "unlimited", http://stackoverflow.com/questions/9457233
+  (setenv "HISTFILESIZE" "")
+  (setenv "HISTSIZE" "")
+
+  ;; Don't record some commands
+  ;; - `npm +(ls|install|view|update)` will not record `npm ls`, `npm install`, etc.
+  ;; - `ncu -+(a)` will not record `ncu -a`
+  ;; - `* --+(h|he|hel|help)` will not record a single-word command followed by
+  ;;   double dash `--h`, `--he`, etc.
+  ;; - `* -+(h|he|hel|help)` will not record a single-word command followed by
+  ;;   single dash `-h`, `-he`, etc.
+  ;; - `+([-%+.0-9@A-Z_a-z])` - the best one by far since it will not record any
+  ;;   single-word commands, or basically any command executed without parameters.
+  (setenv "HISTIGNORE" "\"npm +(ls|install|view|update):ncu -+(a):cd -:mvim .:em .:* --+(h|he|hel|help):* -+(h|he|hel|help):+([-%+.0-9@A-Z_a-z])\"")
+
+  ;; Useful timestamp format
+  (setenv "HISTTIMEFORMAT" "\"%F %T \"")
+
+  ;; Change the file location because certain bash sessions truncate .bash_history file upon close.
+  ;; http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
+  (setenv "HISTFILE" "~/.bash_eternal_history")
+  (setenv "AUTOFEATURE" "true autotest")
 
   (setq mark-ring-max 64)
   (setq kill-ring-max 200)
