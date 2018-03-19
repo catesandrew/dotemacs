@@ -38,7 +38,7 @@
      skewer-mode
      smartparens
      tern
-     tide
+     ;; tide
      web-beautify
      web-mode
      xref-js2
