@@ -39,6 +39,8 @@
      smartparens
      tern
      ;; tide
+     (tj-mode :location (recipe :fetcher github
+                          :repo "purcell/tj-mode"))
      web-beautify
      web-mode
      xref-js2
@@ -761,6 +763,20 @@
         (when javascript-disable-tern-port-files
           (add-to-list 'tern-command "--no-port-file" 'append))
         (spacemacs//set-tern-key-bindings mode)))))
+
+
+;; tj-mode
+(defun cats-javascript/init-tj-mode ()
+  (use-package tj-mode
+    :commands tj-mode
+    :disabled t
+    :init
+    (progn
+      (dolist (hook '(rjsx-mode-hook
+                       js2-mode-hook
+                       js2-jsx-mode-hook
+                       react-mode-hook))
+        (add-hook hook 'tj-mode)))))
 
 
 ;; web-beautify
