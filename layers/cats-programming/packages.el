@@ -12,6 +12,7 @@
      (compile :location built-in)
      evil-string-inflection
      ;; (hs-minor-mode :location built-in)
+     log-view
      (prog-mode :location built-in)
      string-inflection
      ycmd
@@ -21,6 +22,52 @@
   (spacemacs|use-package-add-hook ycmd
     :post-init
     (setq ycmd-server-command cats/ycmd-server-command)))
+
+
+;; logview
+(defun cats-programming/init-log-view ()
+  (use-package log-view
+    :commands log-view
+    :disabled t
+    :init
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'log-view-mode
+        "q" 'quit-window
+        (kbd "RET") 'log-view-toggle-entry-display
+        "m" 'log-view-toggle-mark-entry
+        "c" 'log-view-modify-change-comment
+        "d" 'log-view-diff
+        "=" 'log-view-diff
+        "D" 'log-view-diff-changeset
+        "a" 'log-view-annotate-version
+        "F" 'log-view-find-revision
+        "gj" 'log-view-msg-next
+        "gk" 'log-view-msg-prev
+        "]" 'log-view-msg-next
+        "[" 'log-view-msg-prev
+        (kbd "C-j") 'log-view-file-next
+        (kbd "C-k") 'log-view-file-prev)
+      )
+    :config
+    (progn
+      ;; (evil-set-initial-state 'log-view-mode 'normal)
+      (evil-define-key 'normal log-view-mode-map
+        "q" 'quit-window
+        (kbd "RET") 'log-view-toggle-entry-display
+        "m" 'log-view-toggle-mark-entry
+        "c" 'log-view-modify-change-comment
+        "d" 'log-view-diff
+        "=" 'log-view-diff
+        "D" 'log-view-diff-changeset
+        "a" 'log-view-annotate-version
+        "F" 'log-view-find-revision
+        "gj" 'log-view-msg-next
+        "gk" 'log-view-msg-prev
+        "]" 'log-view-msg-next
+        "[" 'log-view-msg-prev
+        (kbd "C-j") 'log-view-file-next
+        (kbd "C-k") 'log-view-file-prev)
+      )))
 
 
 ;; compile
