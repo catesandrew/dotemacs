@@ -26,6 +26,7 @@
      js2-refactor
      json-mode
      json-reformat
+     karma
      livid-mode
      mocha
      nodejs-repl
@@ -43,6 +44,14 @@
      xref-js2
      ;; ycmd
      ))
+
+
+
+;; karma
+(defun cats-javascript/init-karma ()
+  "Use the karma test runner."
+  (use-package karma
+    :commands (karma-start karma-run)))
 
 
 ;; org
