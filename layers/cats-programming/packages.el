@@ -29,6 +29,7 @@
   ;; is visible, set compilation-scroll-output to 'first-error
   (setq compilation-ask-about-save nil)
   (setq compilation-always-kill t)
+  (setq compilation-environment '("TERM=xterm-256color"))
 
   (spacemacs/set-leader-keys-for-major-mode 'compilation-mode
     "?" 'describe-mode

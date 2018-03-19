@@ -611,6 +611,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
   (setenv "HISTFILE" "~/.bash_eternal_history")
   (setenv "AUTOFEATURE" "true autotest")
+  (setenv "TERM" "xterm-256color")
 
   (setq mark-ring-max 64)
   (setq kill-ring-max 200)
