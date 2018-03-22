@@ -73,9 +73,7 @@
         (expand-file-name (concat spacemacs-cache-directory ".purpose-layout")))
 
       (setq purpose-layout-dirs
-        (list (concat spacemacs-cache-directory "purpose-layouts/")))
-
-      (require 'window-purpose-x))
+        (list (concat spacemacs-cache-directory "purpose-layouts/"))))
     :post-config
     (progn
       (assoc-delete-all "*compilation*" popwin:special-display-config)
@@ -84,10 +82,7 @@
           "compilation"
           :mode-purposes '((compilation-mode . compile))))
       (purpose-set-extension-configuration
-        :compilation cats//purpose-x-compilation-conf)
-      (with-eval-after-load 'magit
-        (purpose-x-magit-multi-on))
-      )))
+        :compilation cats//purpose-x-compilation-conf))))
 
 
 ;; autoinsert
