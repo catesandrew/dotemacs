@@ -36,6 +36,7 @@
      flycheck
      focus-autosave-mode
      gh
+     git-commit
      (grep :location built-in)
      hardhat
      helm
@@ -525,6 +526,12 @@
       (require 'git-link)
       (add-hook 'cats/project-hook 'cats//toggle-gh-profile))
     :config (progn)))
+
+
+;; git-commit
+(defun cats/post-init-git-commit ()
+  ;; Support Git Commit Mode for external `git commit'
+  (global-git-commit-mode))
 
 
 ;; magit-repos
