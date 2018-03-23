@@ -420,8 +420,11 @@ Only some SEPARATORs will work properly."
 
 (defun cats//register-org-agenda-file-regexp (regexp)
   "Register REGEXP to the global list."
-  (if (boundp 'org-agenda-file-regexp)
-    (setq org-agenda-file-regexp (concat org-agenda-file-regexp "|" regexp))
+  (if (bound-and-true-p org-agenda-file-regexp)
+    (setq org-agenda-file-regexp
+      (reduce (lambda (a b)
+                (concatenate 'string a "\\|" b))
+        (append `(,org-agenda-file-regexp) `(,regexp))))
     (unless (member regexp cats//org-agenda-file-regexp-list)
       (push regexp cats//org-agenda-file-regexp-list))))
 
@@ -430,7 +433,7 @@ Only some SEPARATORs will work properly."
 
 (defun cats//register-org-agenda-file (file)
   "Register FILE to the global list of FILEs CATS//ORG-AGENDA-LIST."
-  (if (boundp 'org-agenda-files)
+  (if (bound-and-true-p org-agenda-files)
     (let* ((filepath (file-truename file)))
       (when (and (file-exists-p filepath)
               (not (member filepath org-agenda-files)))
@@ -439,10 +442,14 @@ Only some SEPARATORs will work properly."
       (unless (member file cats//org-agenda-list)
         (push file cats//org-agenda-list)))))
 
-(defun cats//set-org-agenda-file-regexps (incoming-regexps)
-  (setq org-agenda-file-regexp
-    (cats//combine-strings
-      (append (list org-agenda-file-regexp) incoming-regexps) "|")))
+(defun cats//set-org-agenda-file-regexps (incoming-regexps &optional reset)
+  (if reset
+    (setq org-agenda-file-regexp
+      (reduce (lambda (a b)
+                (concatenate 'string a "\\|" b))
+        (if reset
+          incoming-regexps
+          (append `(,org-agenda-file-regexp) incoming-regexps))))))
 
 (defun cats//set-org-agenda-files (incoming-files)
   (setq org-agenda-files

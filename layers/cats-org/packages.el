@@ -331,9 +331,8 @@
       (setq org-agenda-skip-deadline-if-done t))
     :pre-config
     (progn
-      (cats//set-org-agenda-files cats//org-agenda-list)
-      ;; (cats//set-org-agenda-file-regexps cats//org-agenda-file-regexp-list)
-      )
+      (cats//set-org-agenda-file-regexps cats//org-agenda-file-regexp-list t)
+      (cats//set-org-agenda-files cats//org-agenda-list))
     :post-config
     (progn
       ;; (add-to-list org-agenda-tag-filter-preset "+PRIORITY<\"C\"")
@@ -552,7 +551,8 @@
       (cats//register-org-agenda-file org-journal-dir)
       (cats//register-org-agenda-file-regexp
         "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")
-      )))
+      (cats//register-org-agenda-file-regexp
+        "\\`[^.].*\\.org\\'"))))
 
 
 ;; default-cats-org-config
