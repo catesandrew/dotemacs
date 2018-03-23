@@ -319,12 +319,11 @@
       ;;    setting it to `5` will show five days, and then it will respect
       ;;    `org-agenda-start-day`.
 
-      ;; show five days starting yesterday
+      ;; Setting: show five days starting yesterday
       (setq org-agenda-start-day "-1d")
       (setq org-agenda-span 5)
       (setq org-agenda-start-on-weekday nil)
-
-      ;; Start on monadys
+      ;; Setting: Start on monadys
       ;; (setq org-agenda-span 7)
       ;; (setq org-agenda-start-on-weekday 1)
 
