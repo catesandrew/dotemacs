@@ -403,12 +403,6 @@ alphanumeric characters only."
 
 ;; org-agenda
 
-(defun cats//combine-strings (strings &optional separator)
-  "Concatenate the STRINGS, adding the SEPARATOR (default \" \").
-Only some SEPARATORs will work properly."
-  (let* ((sep (or separator " ")))
-    (mapconcat 'identity strings sep)))
-
 (defun cats//get-string-from-file (file-path)
   "Return file-path's file content."
   (with-temp-buffer
