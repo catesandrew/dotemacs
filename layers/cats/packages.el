@@ -100,6 +100,7 @@
 
 ;; conf-mode
 (defun cats/post-init-conf-mode ()
+  (add-to-list 'auto-mode-alist '("\\.envrc$" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))
 
 
