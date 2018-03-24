@@ -15,6 +15,7 @@
      (org-agenda :location built-in)
      org-super-agenda
      org-jira
+     helm-org-rifle
      ;; org-caldav
      ;; org-notify
      ;; helm-org-rifle
@@ -26,8 +27,8 @@
      ;; org-mime
      ;; org-pomodoro
      ;; org-present
-     ;; org-projectile
-     ;; org-projectile-helm
+     org-projectile
+     (org-projectile-helm :requires org-projectile)
      (ox :toggle org-enable-ox-support :location built-in)
      (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
@@ -265,27 +266,35 @@
   "Add `org-projectile' mode hooks."
   (spacemacs|use-package-add-hook org-projectile
     :pre-init
-    (progn)
+    (progn
+      ;; Use <LEADER po> to go to project TODOs
+      (setq org-confirm-elisp-link-function nil)
+      ;; <LEADER aop> invokes with org-projectile/capture
+      (setq org-projectile-capture-template
+        (format "%s%s" "* TODO %?" cats//org-properties-string)))
     :post-config
     (progn
+      ;; (require 'org-projectile-helm)
+
+      (add-to-list 'org-capture-templates
+        (org-projectile-project-todo-entry
+          :capture-character "l"
+          :capture-heading "Linked Project TODO"))
+
+      (add-to-list 'org-capture-templates
+        (org-projectile-project-todo-entry
+          :capture-character "p"))
+
       (let* ((files (org-projectile-todo-files)))
         (dolist (file files)
           (cats//register-org-agenda-file file)))
 
-      (setq org-confirm-elisp-link-function nil)
-      ;; (setq org-projectile-capture-template
-      ;;       (format "%s%s" "* TODO %?" cats//org-properties-string))
+      (with-eval-after-load 'org-agenda
+        (cats//set-org-agenda-files cats//org-agenda-list))
+
       (if (file-name-absolute-p org-projectile-file)
           ;; one todo for all projects
           (progn
-            ;; (push (org-projectile-project-todo-entry) org-capture-templates)
-            ;; (add-to-list 'org-capture-templates
-            ;;              (org-projectile-project-todo-entry
-            ;;               :capture-character "l"
-            ;;               :capture-heading "Linked Project TODO"))
-            ;; (add-to-list 'org-capture-templates
-            ;;              (org-projectile-project-todo-entry
-            ;;               :capture-character "p"))
             )
         ;; per repo todo files
         (progn
@@ -297,7 +306,18 @@
   "Add `org-projectile-helm' mode hooks."
   (use-package org-projectile-helm
     :after org-projectile
-    :bind (("C-c n p" . org-projectile-helm-template-or-project))))
+    :init
+    (progn
+      ;; TODO: link this to helm-org-rifle, and add the
+      ;; 'org-projectile-helm-template-or-project' to the sources
+      )
+    ))
+
+
+;; helm-org-rifle
+(defun cats-org/init-org-helm-org-rifle ()
+  (use-package helm-org-rifle
+    :bind ("C-c C-h" . helm-org-rifle-agenda-files)))
 
 
 ;; org-agenda
