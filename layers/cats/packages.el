@@ -107,7 +107,9 @@
 (defun cats/post-init-which-key ()
   "Replace rules for better naming of functions."
   (let ((new-descriptions
-          '(("cats/\\(.+\\)" . "\\1"))))
+          '(("cats/\\(.+\\)" . "\\1")
+             ("which-key-\\(.+\\)" . "wk:\\1")
+             ("org-agenda-\\(.+\\)" . "oa:\\1"))))
     (dolist (nd new-descriptions)
       ;; ensure the target matches the whole string
       (push (cons (cons nil (concat "\\`" (car nd) "\\'")) (cons nil (cdr nd)))

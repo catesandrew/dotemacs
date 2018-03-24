@@ -335,58 +335,102 @@
       (cats//set-org-agenda-files cats//org-agenda-list))
     :post-config
     (progn
-      ;; (add-to-list org-agenda-tag-filter-preset "+PRIORITY<\"C\"")
-      ;; (let ((this-week-high-priority
-      ;;         ;; The < in the following line has behavior that is opposite
-      ;;         ;; to what one might expect.
-      ;;         '(tags-todo "+PRIORITY<\"C\"+DEADLINE<\"<+1w>\"DEADLINE>\"<+0d>\""
-      ;;            ((org-agenda-overriding-header
-      ;;               "Upcoming high priority tasks:"))))
-      ;;        (due-today '(tags-todo
-      ;;                      "+DEADLINE=<\"<+1d>\"|+SCHEDULED=<\"<+0d>\""
-      ;;                      ((org-agenda-overriding-header
-      ;;                         "Due today:"))))
-      ;;        (recently-created '(tags-todo
-      ;;                             "+CREATED=>\"<-30d>\""
-      ;;                             ((org-agenda-overriding-header "Recently created:")
-      ;;                               (org-agenda-cmp-user-defined 'org-cmp-creation-times)
-      ;;                               (org-agenda-sorting-strategy '(user-defined-down)))))
-      ;;        (next '(todo "NEXT"))
-      ;;        (started '(todo "STARTED"))
-      ;;        (missing-deadline
-      ;;          '(tags-todo "-DEADLINE={.}/!"
-      ;;             ((org-agenda-overriding-header
-      ;;                "These don't have deadlines:"))))
-      ;;        (missing-priority
-      ;;          '(tags-todo "-PRIORITY={.}/!"
-      ;;             ((org-agenda-overriding-header
-      ;;                "These don't have priorities:")))))
+      ;; My priority system:
+      ;;
+      ;; A - Absolutely MUST, at all costs, be completed by the provided due
+      ;;     date. TODO: implement some type of extreme nagging system that
+      ;;     alerts in an intrusive way for overdue A priority tasks.
+      ;;
+      ;; B - Should be given immediate attention if the due date is any time in
+      ;;     the next two days. Failure to meet due date would be bad but not
+      ;;     catastrophic.
+      ;;
+      ;; C - The highest priority to which tasks for which failure to complete
+      ;;     on time would not have considerable significant consequences. There
+      ;;     is still significant reason to prefer the completion of these tasks
+      ;;     sooner rather than later.
+      ;;
+      ;; D - Failure to complete within a few days (or ever) of any deadline
+      ;;     would be completely okay. As such, any deadline present on such a
+      ;;     task is necessarily self imposed. Still probably worth doing
+      ;;
+      ;; E - Potentially not even worth doing at all, but worth taking a note
+      ;;     about in case it comes up again, or becomes more interesting later.
+      ;;
+      ;; F - Almost certainly not worth attempting in the immediate future. Just
+      ;;     brain dump.
+      ;;
+      ;; Priorities are somewhat contextual within each category. Things in the
+      ;; gtd or work categories are generally regarded as much more important
+      ;; than things with the same priority from the dotfiles category.
+      ;;
+      ;; Items without deadlines or scheduled times of a given priority can be
+      ;; regarded as less important than items that DO have deadlines of that
+      ;; same priority.
 
-      ;;   (add-to-list 'org-babel-load-languages '(org . t))
-      ;;   (add-to-list org-agenda-custom-commands )
+      (setq org-lowest-priority 69) ;; The character E
+      (setq org-enforce-todo-dependencies t)
+      (setq org-deadline-warning-days 0)
+      (setq org-default-priority ?D)
 
-      ;;   (setq org-agenda-custom-commands
-      ;;     `(("M" "Main agenda view"
-      ;;         ((agenda ""
-      ;;            ((org-agenda-overriding-header "Agenda:")
-      ;;              (org-agenda-ndays 5)
-      ;;              (org-deadline-warning-days 0)))
-      ;;           ,due-today
-      ;;           ,next
-      ;;           ,started
-      ;;           ,this-week-high-priority
-      ;;           ,recently-created)
-      ;;         nil nil)
-      ;;        ,(cons "A" (cons "High priority upcoming" this-week-high-priority))
-      ;;        ,(cons "d" (cons "Overdue tasks and due today" due-today))
-      ;;        ,(cons "r" (cons "Recently created" recently-created))
-      ;;        ("h" "A, B priority:" tags-todo "+PRIORITY<\"C\""
-      ;;          ((org-agenda-overriding-header
-      ;;             "High Priority:")))
-      ;;        ("c" "At least priority C:" tags-todo "+PRIORITY<\"D\""
-      ;;          ((org-agenda-overriding-header
-      ;;             "At least priority C:")))))
-      ;;   )
+      (let ((this-week-high-priority
+              ;; The < in the following line has behavior that is opposite
+              ;; to what one might expect.
+              '(tags-todo "+PRIORITY<\"C\"+DEADLINE<\"<+1w>\"DEADLINE>\"<+0d>\""
+                 ((org-agenda-overriding-header
+                    "Upcoming high priority tasks:"))))
+             (due-today '(tags-todo
+                           "+DEADLINE=<\"<+1d>\"|+SCHEDULED=<\"<+0d>\""
+                           ((org-agenda-overriding-header
+                              "Due today:"))))
+             (recently-created '(tags-todo
+                                  "+CREATED=>\"<-30d>\""
+                                  ((org-agenda-overriding-header "Recently created:")
+                                    (org-agenda-cmp-user-defined 'org-cmp-creation-times)
+                                    (org-agenda-sorting-strategy '(user-defined-down)))))
+             (next '(todo "NEXT"))
+             (started '(todo "STARTED"))
+             (missing-deadline
+               '(tags-todo "-DEADLINE={.}/!"
+                  ((org-agenda-overriding-header
+                     "These don't have deadlines:"))))
+             (missing-priority
+               '(tags-todo "-PRIORITY={.}/!"
+                  ((org-agenda-overriding-header
+                     "These don't have priorities:")))))
+
+        (add-to-list 'org-agenda-custom-commands
+          `("h" "A, B priority:" tags-todo "+PRIORITY<\"C\""
+             ((org-agenda-overriding-header
+                "High Priority:"))))
+
+        (add-to-list 'org-agenda-custom-commands
+          `("c" "At least priority C:" tags-todo "+PRIORITY<\"D\""
+             ((org-agenda-overriding-header
+                "At least priority C:"))))
+
+        (add-to-list 'org-agenda-custom-commands
+          `,(cons "r" (cons "Recently created" recently-created)))
+
+        (add-to-list 'org-agenda-custom-commands
+          `,(cons "d" (cons "Overdue tasks and due today" due-today)))
+
+        (add-to-list 'org-agenda-custom-commands
+          `,(cons "A" (cons "High priority upcoming" this-week-high-priority)))
+
+        (add-to-list 'org-agenda-custom-commands
+          `("M" "Main agenda view"
+             ((agenda ""
+                ((org-agenda-overriding-header "Agenda:")
+                  (org-agenda-ndays 5)
+                  (org-deadline-warning-days 0)))
+               ,due-today
+               ,next
+               ,started
+               ,this-week-high-priority
+               ,recently-created)
+             nil nil))
+        )
       )
     ))
 
@@ -1126,49 +1170,6 @@
 
     (setq org-habit-graph-column 50)
     (setq org-habit-show-habits-only-for-today t)
-
-    ;; My priority system:
-
-    ;; A - Absolutely MUST, at all costs, be completed by the provided
-    ;;     due date. TODO: implement some type of extreme nagging
-    ;;     system that alerts in an intrusive way for overdue A
-    ;;     priority tasks.
-
-    ;; B - Should be given immediate attention if the due date is any
-    ;;     time in the next two days. Failure to meet due date would
-    ;;     be bad but not catastrophic.
-
-    ;; C - The highest priority to which tasks for which failure to
-    ;;     complete on time would not have considerable significant
-    ;;     consequences. There is still significant reason to prefer
-    ;;     the completion of these tasks sooner rather than later.
-
-    ;; D - Failure to complete within a few days (or ever) of any
-    ;;     deadline would be completely okay. As such, any deadline
-    ;;     present on such a task is necessarily self imposed. Still
-    ;;     probably worth doing
-
-    ;; E - Potentially not even worth doing at all, but worth taking a
-    ;;     note about in case it comes up again, or becomes more
-    ;;     interesting later.
-
-    ;; F - Almost certainly not worth attempting in the immediate future.
-    ;;     Just brain dump.
-
-    ;; Priorities are somewhat contextual within each category. Things
-    ;; in the gtd or work categories are generally regarded as much
-    ;; more important than things with the same priority from the
-    ;; dotfiles category.
-
-    ;; Items without deadlines or scheduled times of a given priority
-    ;; can be regarded as less important than items that DO have
-    ;; deadlines of that same priority.
-
-    (setq org-lowest-priority 69) ;; The character E
-    (setq org-enforce-todo-dependencies t)
-    (setq org-deadline-warning-days 0)
-    (setq org-default-priority ?D)
-
     (setq org-imenu-depth 10)
   ))
 
