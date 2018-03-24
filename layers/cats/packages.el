@@ -320,10 +320,10 @@
   ;;
   ;; One thing that surprised me considering how complete Evil is, is the lack
   ;; of Vim's Control-d/Control-u for page down/up. Probably because C-u is
-  ;; pretty important in Emacs (it's the shortcut to give a numeric parameter
-  ;; to other commands). I've in fact these mapped on my .vimrc to c-k/c-j
-  ;; (because I think they're more consistent with Vim's j/k movement keys) so
-  ;; that's how I mapped them in Emacs:
+  ;; pretty important in Emacs (it's the shortcut to give a numeric parameter to
+  ;; other commands). I've in fact mapped these on my .vimrc to c-k/c-j (because
+  ;; I think they're more consistent with Vim's j/k movement keys) so that's how
+  ;; I mapped them in Emacs:
   (define-key evil-motion-state-map (kbd "C-k") 'evil-scroll-up)
   (define-key evil-motion-state-map (kbd "C-j") 'evil-scroll-down)
 

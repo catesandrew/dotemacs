@@ -429,10 +429,7 @@
                ,started
                ,this-week-high-priority
                ,recently-created)
-             nil nil))
-        )
-      )
-    ))
+             nil nil))))))
 
 
 ;; org-super-agenda
