@@ -355,6 +355,11 @@
       (cats//set-org-agenda-files cats//org-agenda-list))
     :post-config
     (progn
+      (evilified-state-evilify-map org-agenda-mode-map
+        :mode org-agenda-mode
+        :bindings
+        "q" 'org-agenda-exit)
+
       ;; My priority system:
       ;;
       ;; A - Absolutely MUST, at all costs, be completed by the provided due
@@ -449,7 +454,46 @@
                ,started
                ,this-week-high-priority
                ,recently-created)
-             nil nil))))))
+             nil nil)))
+
+      ;; do not keep org-agenda-files open after generating agenda
+      ;; https://emacs.stackexchange.com/questions/5741
+      (defvar opened-org-agenda-files nil)
+
+      (defun opened-org-agenda-files ()
+        (let ((files (org-agenda-files)))
+          (setq opened-org-agenda-files nil)
+          (mapcar
+            (lambda (x)
+              (when (get-file-buffer x)
+                (push x opened-org-agenda-files)))
+            files)))
+
+      (defun kill-org-agenda-files ()
+        (let ((files (org-agenda-files)))
+          (mapcar
+            (lambda (x)
+              (when
+                (and
+                  (get-file-buffer x)
+                  (not (member x opened-org-agenda-files)))
+                (kill-buffer (get-file-buffer x))))
+            files)))
+
+      (defadvice org-agenda-list (around opened-org-agenda-list-around activate)
+        (opened-org-agenda-files)
+        ad-do-it
+        (kill-org-agenda-files))
+
+      (defadvice org-search-view (around org-search-view-around activate)
+        (opened-org-agenda-files)
+        ad-do-it
+        (kill-org-agenda-files))
+
+      (defadvice org-tags-view (around org-tags-view-around activate)
+        (opened-org-agenda-files)
+        ad-do-it
+        (kill-org-agenda-files)))))
 
 
 ;; org-super-agenda
