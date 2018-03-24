@@ -6,6 +6,7 @@
 
 ;;; Code:
 
+(spacemacs/declare-prefix "mT" "toggles")
 (spacemacs/declare-prefix "to" "personal")
 (spacemacs/declare-prefix "o" "personal")
 (spacemacs/declare-prefix "oe" "eval")
