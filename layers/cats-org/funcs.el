@@ -21,10 +21,6 @@
   (interactive)
   (find-file "~/org/workhours.org"))
 
-(defun cats/org-find-bba ()
-  (interactive)
-  (find-file "~/org/bba.org"))
-
 (defun cats/org-find-work ()
   (interactive)
   (if (equal "work" (getenv "SYSENV"))

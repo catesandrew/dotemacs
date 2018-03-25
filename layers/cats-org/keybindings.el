@@ -10,7 +10,6 @@
 
 ;; File bindings
 (spacemacs/set-leader-keys
-  "oob" 'cats/org-find-bba
   "ooe" 'cats/org-find-emacs
   "oon" 'cats/org-find-notes
   "oop" 'cats/org-find-private
