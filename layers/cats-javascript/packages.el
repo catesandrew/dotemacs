@@ -234,7 +234,12 @@
                 (tide-mode -1))
               (tide-mode))
         :off (tide-mode -1)
-        :documentation "Tide mode.")
+        :documentation "Tide mode."
+        :evil-leader-for-mode
+        (js2-mode . "Tt")
+        (rjsx-mode . "Tt")
+        (js2-jsx-mode . "Tt")
+        (react-mode . "Tt"))
 
       (spacemacs|add-toggle tide-hl-identifier-mode
         :status tide-hl-identifier-mode
@@ -243,15 +248,12 @@
                 (tide-hl-identifier-mode -1))
               (tide-hl-identifier-mode))
         :off (tide-hl-identifier-mode -1)
-        :documentation "Tide identifier mode.")
-
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode react-mode))
-        (spacemacs/declare-prefix-for-mode mode "mT" "toggle")
-        (spacemacs/declare-prefix-for-mode mode "mTt" "tide")
-        (spacemacs/declare-prefix-for-mode mode "mTh" "tide hl")
-        (spacemacs/set-leader-keys-for-major-mode mode
-          "Tt" 'spacemacs/toggle-tide-mode
-          "Th" 'spacemacs/toggle-tide-hl-identifier-mode))
+        :documentation "Tide identifier mode."
+        :evil-leader-for-mode
+        (js2-mode . "Th")
+        (rjsx-mode . "Th")
+        (js2-jsx-mode . "Th")
+        (react-mode . "Th"))
 
       (defadvice tide-mode (after check-flycheck-tide-eslint-checkers activate)
         (if (bound-and-true-p tide-mode)
@@ -260,7 +262,7 @@
 
       (spacemacs|add-company-backends
        :backends company-tide
-       :modes rjsx-mode js2-jsx-mode js2-mode react-mode web-mode))))
+       :modes rjsx-mode js2-jsx-mode js2-mode react-mode))))
 
 
 ;; rjsx
@@ -481,8 +483,11 @@
               (js2-highlight-unused-variables-mode))
         :off (js2-highlight-unused-variables-mode -1)
         :documentation "Highlight unused js vars."
-        :evil-leader "toj"))
-
+        :evil-leader-for-mode
+        (js2-mode . "Tj")
+        (k-mode . "Tj")
+        (c-mode . "Tj")
+        (c++-mode . "Tj")))
     :post-config
     (progn
       (setq-default javascript-indent-lever 2)
