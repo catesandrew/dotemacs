@@ -131,17 +131,18 @@
                 (indium-interaction-mode -1))
               (indium-interaction-mode))
         :off (indium-interaction-mode -1)
-        :documentation "Indium interactive mode.")
+        :documentation "Indium interactive mode."
+        :evil-leader-for-mode
+        (js2-mode . "Ti")
+        (rjsx-mode . "Ti")
+        (js2-jsx-mode . "Ti")
+        (indium-repl-mode . "Ti")
+        (react-mode . "Ti"))
 
       (push "\\*JS REPL\\*" spacemacs-useful-buffers-regexp)
       (push "\\*node process\\*" spacemacs-useless-buffers-regexp)
       (spacemacs|hide-lighter indium-repl-mode)
       (dolist (mode '(indium-repl-mode rjsx-mode js2-mode js2-jsx-mode react-mode))
-        (spacemacs/declare-prefix-for-mode mode "mT" "toggle")
-        (spacemacs/declare-prefix-for-mode mode "mTu" "indium interaction")
-        (spacemacs/set-leader-keys-for-major-mode mode
-          "Ti" 'spacemacs/toggle-indium-interaction-mode)
-
         (spacemacs/declare-prefix-for-mode mode "mu" "indium")
         (spacemacs/set-leader-keys-for-major-mode mode
           "u'" 'cats/indium-start-node-repl
@@ -212,8 +213,7 @@
         "gh" 'indium-inspector-pop
         "gk" 'indium-inspector-previous-reference
         "gj" 'indium-inspector-next-reference
-        "gl" 'indium-follow-link)
-      )))
+        "gl" 'indium-follow-link))))
 
 
 ;; tide
