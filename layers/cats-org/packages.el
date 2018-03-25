@@ -544,8 +544,8 @@
                                     ;; Boolean NOT also has implicit OR between selectors
                                     :not (:regexp "moon" :tag "planet")))))
            ;; Groups supply their own section names when none are given
-           (:todo "WAITING" :order 8)  ; Set order of this section
-           (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
+           (:todo "WAIT" :order 8)  ; Set order of this section
+           (:todo ("EXPIRED" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
              ;; Show this group at the end of the agenda (since it has the
              ;; highest number). If you specified this group last, items with
              ;; these todo keywords that e.g. have priority A would be displayed
@@ -708,24 +708,78 @@
       ;; attempted. This TODO is typically used in contrast to the EXPIRED TODO
       ;; to indicate that the owner is not necessarily to blame.
       (setq org-todo-keywords
-        '(
-           (sequence "IDEA(i!)" "RESEARCH(r!)" "TODO(t!)" "NEXT(n!)"
+        '((sequence "IDEA(i!)" "RESEARCH(r!)" "TODO(t!)" "NEXT(n!)"
              "STARTED(s!)" "WAIT(w!)" "BACKLOG(b!)" "|"
              "DONE(d!)" "HANDLED(h!)" "EXPIRED(e!)" "CANCELLED(c!)")
 
-           ;; (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)")
-           ;; (sequence "|" "CANCELLED(c)" "DELEGATED(l)" "SOMEDAY(f)")
+           ;; (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)")
+           ;; (sequence "|" "CANCELLED(c)" "HANDLED(h)" "EXPIRED(e)")
 
            ;; (sequence "TODO(t)" "NEXT(n@)" "|" "DONE(d)")
-           ;; (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")
+           ;; (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)")
            ))
 
+      ;; Tag changes that should be triggered by TODO state changes.
       (setq org-todo-state-tags-triggers
         ' (("CANCELLED" ("CANCELLED" . t))
-            ("WAITING" ("WAITING" . t))
-            ("TODO" ("WAITING") ("CANCELLED"))
-            ("NEXT" ("WAITING") ("CANCELLED"))
-            ("DONE" ("WAITING") ("CANCELLED"))))
+            ("WAIT" ("WAIT" . t))
+            ("TODO" ("WAIT") ("CANCELLED"))
+            ("NEXT" ("WAIT") ("CANCELLED"))
+            ("DONE" ("WAIT") ("CANCELLED"))))
+
+      ;; Faces for specific TODO keywords.
+      (setq org-todo-keyword-faces
+        '(
+           ("CANCELLED" . (:foreground "LimeGreen" :weight bold))
+           ("HANDLED" . (:foreground "LimeGreen" :weight bold))
+           ("EXPIRED" . (:foreground "LimeGreen" :weight bold))
+           ("DONE" . (:foreground "green" :weight bold))
+           ("IDEA" . (:foreground "GoldenRod" :weight bold))
+           ("IMPEDED" . (:foreground "red" :weight bold))
+           ("INPR" . (:foreground "yellow" :weight bold))
+           ("NEXT" . (:foreground "IndianRed1" :weight bold))
+           ("STARTED" . (:foreground "OrangeRed" :weight bold))
+           ("WAIT" . (:foreground "coral" :weight bold))))
+
+      ;; Tags always available in Org files.
+      (setq org-tag-persistent-alist
+        '((:startgroup . nil)
+           ("HOME" . ?h)
+           ("RESEARCH" . ?r)
+           ("TEACHING" . ?t)
+           (:endgroup . nil)
+           (:startgroup . nil)
+           ("OS" . ?o)
+           ("DEV" . ?d)
+           ("WWW" . ?w)
+           (:endgroup . nil)
+           (:startgroup . nil)
+           ("EASY" . ?e)
+           ("MEDIUM" . ?m)
+           ("HARD" . ?a)
+           (:endgroup . nil)
+           ("URGENT" . ?u)
+           ("KEY" . ?k)
+           ("BONUS" . ?b)
+           ("noexport" . ?x)))
+
+    ;; Faces for specific tags.
+    (setq org-tag-faces
+      '(
+        ("HOME" . (:foreground "GoldenRod" :weight bold))
+        ("RESEARCH" . (:foreground "GoldenRod" :weight bold))
+        ("TEACHING" . (:foreground "GoldenRod" :weight bold))
+        ("OS" . (:foreground "IndianRed1" :weight bold))
+        ("DEV" . (:foreground "IndianRed1" :weight bold))
+        ("WWW" . (:foreground "IndianRed1" :weight bold))
+        ("URGENT" . (:foreground "Red" :weight bold))
+        ("KEY" . (:foreground "Red" :weight bold))
+        ("EASY" . (:foreground "OrangeRed" :weight bold))
+        ("MEDIUM" . (:foreground "OrangeRed" :weight bold))
+        ("HARD" . (:foreground "OrangeRed" :weight bold))
+        ("BONUS" . (:foreground "GoldenRod" :weight bold))
+        ("noexport" . (:foreground "LimeGreen" :weight bold))))
+
       )
     :pre-init
     (progn
@@ -825,56 +879,6 @@
 
     ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
     ;; (add-hook 'org-insert-heading-hook 'cats/insert-heading-inactive-timestamp 'append)
-    (setq org-tag-persistent-alist
-      '((:startgroup . nil)
-        ("HOME" . ?h)
-        ("RESEARCH" . ?r)
-        ("TEACHING" . ?t)
-        (:endgroup . nil)
-        (:startgroup . nil)
-        ("OS" . ?o)
-        ("DEV" . ?d)
-        ("WWW" . ?w)
-        (:endgroup . nil)
-        (:startgroup . nil)
-        ("EASY" . ?e)
-        ("MEDIUM" . ?m)
-        ("HARD" . ?a)
-        (:endgroup . nil)
-        ("URGENT" . ?u)
-        ("KEY" . ?k)
-        ("BONUS" . ?b)
-        ("noexport" . ?x)))
-
-    (setq org-tag-faces
-      '(
-        ("HOME" . (:foreground "GoldenRod" :weight bold))
-        ("RESEARCH" . (:foreground "GoldenRod" :weight bold))
-        ("TEACHING" . (:foreground "GoldenRod" :weight bold))
-        ("OS" . (:foreground "IndianRed1" :weight bold))
-        ("DEV" . (:foreground "IndianRed1" :weight bold))
-        ("WWW" . (:foreground "IndianRed1" :weight bold))
-        ("URGENT" . (:foreground "Red" :weight bold))
-        ("KEY" . (:foreground "Red" :weight bold))
-        ("EASY" . (:foreground "OrangeRed" :weight bold))
-        ("MEDIUM" . (:foreground "OrangeRed" :weight bold))
-        ("HARD" . (:foreground "OrangeRed" :weight bold))
-        ("BONUS" . (:foreground "GoldenRod" :weight bold))
-        ("noexport" . (:foreground "LimeGreen" :weight bold))))
-
-    ;; org-mode colors
-    (setq org-todo-keyword-faces
-      '(
-         ("CANCELLED" . (:foreground "LimeGreen" :weight bold))
-         ("DELEGATED" . (:foreground "LimeGreen" :weight bold))
-         ("DONE" . (:foreground "green" :weight bold))
-         ("IDEA" . (:foreground "GoldenRod" :weight bold))
-         ("IMPEDED" . (:foreground "red" :weight bold))
-         ("INPR" . (:foreground "yellow" :weight bold))
-         ("NEXT" . (:foreground "IndianRed1" :weight bold))
-         ("SOMEDAY" . (:foreground "LimeGreen" :weight bold))
-         ("STARTED" . (:foreground "OrangeRed" :weight bold))
-         ("WAITING" . (:foreground "coral" :weight bold))))
 
     ;; Targets include this file and any file contributing to the agenda - up to
     ;; 9 levels deep
