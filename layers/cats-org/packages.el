@@ -320,19 +320,11 @@
 (defun cats-org/init-org-projectile-helm ()
   "Add `org-projectile-helm' mode hooks."
   (use-package org-projectile-helm
-    :after org-projectile
+    :commands (org-projectile-helm-template-or-project)
     :init
     (progn
-      ;; TODO: link this to helm-org-rifle, and add the
-      ;; 'org-projectile-helm-template-or-project' to the sources
-      )
-    ))
-
-
-;; helm-org-rifle
-(defun cats-org/init-org-helm-org-rifle ()
-  (use-package helm-org-rifle
-    :bind ("C-c C-h" . helm-org-rifle-agenda-files)))
+      (spacemacs/set-leader-keys
+        "pO" 'org-projectile-helm-template-or-project))))
 
 
 ;; org-agenda
