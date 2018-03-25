@@ -657,6 +657,75 @@
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
 
+      ;; What follows is a description of the significance of each of the values
+      ;; available in `org-todo-keywords'. All headings with one of these
+      ;; keywords deal with the concept of the completion of some task or
+      ;; collection of tasks to bring about a particular state of affairs. In
+      ;; some cases, the actual tasks involved may not be known at the time of
+      ;; task creation.
+
+      ;; Incomplete States:
+
+      ;; IDEA - This TODO exists in only the most abstract sense: it is an
+      ;; imagined state of affairs that requires tasks that are either not yet
+      ;; known, or have not thoroughly been considered.
+
+      ;; RESEARCH - This TODO needs to be investigated further before action can
+      ;; be taken to achieve the desired outcome. It is not known how much time
+      ;; and effort will be consumed in the actual completion of the task.
+
+      ;; TODO - The scope and work involved in this TODO are well understood,
+      ;; but for some reason or another, it is not something that should be
+      ;; attempted in the immediate future. Typically this is because the task
+      ;; is not considered a top priority, but it may also be for some other
+      ;; reason.
+
+      ;; NEXT - This TODO is immediately actionable and should be started in the
+      ;; immediate future.
+
+      ;; STARTED - Work on this TODO has already started, further work is
+      ;; immediately actionable.
+
+      ;; WAIT - The work involved in this TODO is well understood, but it is
+      ;; blocked for the time being.
+
+      ;; BACKLOG - While technically actionable, this task is not only not worth
+      ;; pursuing in the immediate future, but the foreseable future. It exists
+      ;; as a task mostly as a note/reminder, in case it becomes higher priority
+      ;; in the future.
+
+      ;; Complete States:
+
+      ;; DONE - This TODO has been completed exactly as imagined.
+
+      ;; HANDLED - This TODO was completed in spirit, though not by the means
+      ;; that were originally imagined/outlined in the TODO.
+
+      ;; EXPIRED - The owner of this TODO failed to take action on it within the
+      ;; appropriate time period, and there is now no point in attempting it.
+
+      ;; CANCELLED - For whatever reason, this TODO should no longer be
+      ;; attempted. This TODO is typically used in contrast to the EXPIRED TODO
+      ;; to indicate that the owner is not necessarily to blame.
+      (setq org-todo-keywords
+        '(
+           (sequence "IDEA(i!)" "RESEARCH(r!)" "TODO(t!)" "NEXT(n!)"
+             "STARTED(s!)" "WAIT(w!)" "BACKLOG(b!)" "|"
+             "DONE(d!)" "HANDLED(h!)" "EXPIRED(e!)" "CANCELLED(c!)")
+
+           ;; (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)")
+           ;; (sequence "|" "CANCELLED(c)" "DELEGATED(l)" "SOMEDAY(f)")
+
+           ;; (sequence "TODO(t)" "NEXT(n@)" "|" "DONE(d)")
+           ;; (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")
+           ))
+
+      (setq org-todo-state-tags-triggers
+        ' (("CANCELLED" ("CANCELLED" . t))
+            ("WAITING" ("WAITING" . t))
+            ("TODO" ("WAITING") ("CANCELLED"))
+            ("NEXT" ("WAITING") ("CANCELLED"))
+            ("DONE" ("WAITING") ("CANCELLED"))))
       )
     :pre-init
     (progn
@@ -796,7 +865,7 @@
     ;; org-mode colors
     (setq org-todo-keyword-faces
       '(
-         ("CANCELED" . (:foreground "LimeGreen" :weight bold))
+         ("CANCELLED" . (:foreground "LimeGreen" :weight bold))
          ("DELEGATED" . (:foreground "LimeGreen" :weight bold))
          ("DONE" . (:foreground "green" :weight bold))
          ("IDEA" . (:foreground "GoldenRod" :weight bold))
@@ -811,79 +880,6 @@
     ;; 9 levels deep
     (setq org-refile-targets '((nil :maxlevel . 9)
                                 (org-agenda-files :maxlevel . 9)))
-
-    ;; What follows is a description of the significance of each of
-    ;; the values available in `org-todo-keywords'. All headings with
-    ;; one of these keywords deal with the concept of the completion
-    ;; of some task or collection of tasks to bring about a particular
-    ;; state of affairs. In some cases, the actual tasks involved may
-    ;; not be known at the time of task creation.
-
-    ;; Incomplete States:
-
-    ;; IDEA - This TODO exists in only the most abstract sense: it is
-    ;; an imagined state of affairs that requires tasks that are
-    ;; either not yet known, or have not thoroughly been considered.
-
-    ;; RESEARCH - This TODO needs to be investigated further before
-    ;; action can be taken to achieve the desired outcome. It is not
-    ;; known how much time and effort will be consumed in the actual
-    ;; completion of the task.
-
-    ;; TODO - The scope and work involved in this TODO are well
-    ;; understood, but for some reason or another, it is not something
-    ;; that should be attempted in the immediate future. Typically
-    ;; this is because the task is not considered a top priority, but
-    ;; it may also be for some other reason.
-
-    ;; NEXT - This TODO is immediately actionable and should be
-    ;; started in the immediate future.
-
-    ;; STARTED - Work on this TODO has already started, further work
-    ;; is immediately actionable.
-
-    ;; WAIT - The work involved in this TODO is well understood, but
-    ;; it is blocked for the time being.
-
-    ;; BACKLOG - While technically actionable, this task is not only
-    ;; not worth pursuing in the immediate future, but the foreseable
-    ;; future. It exists as a task mostly as a note/reminder, in case
-    ;; it becomes higher priority in the future.
-
-    ;; Complete States:
-
-    ;; DONE - This TODO has been completed exactly as imagined.
-
-    ;; HANDLED - This TODO was completed in spirit, though not by the
-    ;; means that were originally imagined/outlined in the TODO.
-
-    ;; EXPIRED - The owner of this TODO failed to take action on it
-    ;; within the appropriate time period, and there is now no point in
-    ;; attempting it.
-
-    ;; CANCELED - For whatever reason, this TODO should no longer be
-    ;; attempted. This TODO is typically used in contrast to the
-    ;; EXPIRED TODO to indicate that the owner is not necessarily to
-    ;; blame.
-    (setq org-todo-keywords
-      '(
-         (sequence "IDEA(i!)" "RESEARCH(r!)" "TODO(t!)" "NEXT(n!)"
-           "STARTED(s!)" "WAIT(w!)" "BACKLOG(b!)" "|"
-           "DONE(d!)" "HANDLED(h!)" "EXPIRED(e!)" "CANCELED(c!)")
-
-         ;; (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)")
-         ;; (sequence "|" "CANCELED(c)" "DELEGATED(l)" "SOMEDAY(f)")
-
-         ;; (sequence "TODO(t)" "NEXT(n@)" "|" "DONE(d)")
-         ;; (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")
-         ))
-
-    (setq org-todo-state-tags-triggers
-      ' (("CANCELLED" ("CANCELLED" . t))
-          ("WAITING" ("WAITING" . t))
-          ("TODO" ("WAITING") ("CANCELLED"))
-          ("NEXT" ("WAITING") ("CANCELLED"))
-          ("DONE" ("WAITING") ("CANCELLED"))))
 
     ;; Tag tasks with GTD contexts
     (setq org-tag-alist '(("@work" . ?b)
