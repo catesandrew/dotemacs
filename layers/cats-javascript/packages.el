@@ -75,7 +75,11 @@
       ;; js-doc style
       (rebox-register-template 247 248 '("/**"
                                         " * box123456"
-                                        " */")))))
+                                          " */"))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "rdq" 'cats/js-doc-reflow))
+      )))
 
 
 ;; exec-path-from-shell

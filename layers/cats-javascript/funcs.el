@@ -468,8 +468,7 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
 ;; javascript mode defaults
 (defun cats/javascript-mode-defaults ()
   "Default javascript hook."
-  (spacemacs/toggle-rainbow-identifier-off)
-  (cats//js-doc-setup))
+  (spacemacs/toggle-rainbow-identifier-off))
 
 (add-hook 'cats/javascript-mode-hook 'cats/javascript-mode-defaults)
 
@@ -537,12 +536,13 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
   (evil-insert-state))
 
 
-;; jsdoc
-(defun cats//js-doc-setup ()
-  (setq-local comment-start "/**")
-  (setq-local comment-end " */")
-  (unless (memq 47 rebox-style-loop)
-    (make-local-variable 'rebox-style-loop)
-    (nconc rebox-style-loop '(47))))
+;; js-doc
+(defun cats/js-doc-reflow ()
+  "Reflow js doc comment blocks."
+  (interactive)
+  (let* ((comment-start "/**")
+          (comment-end " */")
+          (rebox-style-loop '(47)))
+    (rebox-dwim nil)))
 
 ;;; funcs.el ends here
