@@ -15,6 +15,7 @@
      company-tern
      ;; company-ycmd
      emmet-mode
+     (eslint-fix :location built-in)
      evil-matchit
      exec-path-from-shell
      flycheck
@@ -333,8 +334,21 @@
   (add-hook `rjsx-mode `turn-on-evil-matchit-mode))
 
 
-;; babel
+;; eslint-fix
+(defun cats-javascript/init-eslint-fix ()
+  (use-package eslint-fix
+    :disabled t
+    :commands (eslint-fix)
+    :init
+    (progn
+      (add-hook 'cats/eslint-executable-hook
+        'cats//esilnt-set-eslint-fix-executable)
 
+      (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+        (add-hook mode 'cats//eslint-fix-hook)))))
+
+
+;; babel
 (defun cats-javascript/init-babel-repl ()
   (use-package babel-repl
     :ensure t
