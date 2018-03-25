@@ -15,10 +15,9 @@
      (org-agenda :location built-in)
      org-super-agenda
      org-jira
-     helm-org-rifle
      ;; org-caldav
      ;; org-notify
-     ;; helm-org-rifle
+     helm-org-rifle
      ;; org-ehtml
      ;; org-brain
      ;; (org-expiry :location built-in)
@@ -187,9 +186,25 @@
 
 
 ;; helm-org-rifle
-(defun cats-org/init-helm-org-file ()
+(defun cats-org/init-helm-org-rifle ()
   (use-package helm-org-rifle
-    :commands helm-org-rifle-agenda-files))
+    :disabled t
+    :after (org-agenda)
+    :commands (helm-org-rifle
+                helm-org-rifle-agenda-files
+                helm-org-rifle-current-buffer
+                helm-org-rifle-directories
+                helm-org-rifle-files
+                helm-org-rifle-org-directory)
+    :init
+    (progn
+      (spacemacs/set-leader-keys
+        "ooa" 'helm-org-rifle-agenda-files
+        "oor" 'helm-org-rifle
+        "oob" 'helm-org-rifle-current-buffer
+        "ood" 'helm-org-rifle-directories
+        "oof" 'helm-org-rifle-files
+        "ooo" 'helm-org-rifle-org-directory))))
 
 
 ;; org-notify
