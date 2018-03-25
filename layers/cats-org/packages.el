@@ -575,6 +575,21 @@
 (defun cats-org/init-org-jira ()
   (use-package org-jira
     :defer t
+    :commands (org-jira-get-projects
+               org-jira-browse-issue
+               org-jira-get-issues
+               org-jira-get-issues-headonly
+               org-jira-get-issues-from-filter-headonly
+               org-jira-get-issues-from-filter
+               org-jira-update-issue
+               org-jira-progress-issue
+               org-jira-refresh-issue
+               org-jira-create-issue
+               org-jira-copy-current-issue-key
+               org-jira-create-subtask
+               org-jira-get-subtasks
+               org-jira-update-comment
+               org-jira-todo-to-jira)
     :init
     (progn
       ;; (defconst org-jira-progress-issue-flow
@@ -591,11 +606,27 @@
       ;;     ("In Development" . "Ready For Review")
       ;;     ("Code Review" . "Done")
       ;;     ("Done" . "Reopen")))
-      )
-    :config
-    (progn
-      )
-    ))
+      (spacemacs/declare-prefix "aj" "org-jira")
+      (spacemacs/declare-prefix "ajc" "create")
+      (spacemacs/declare-prefix "ajg" "get")
+      (spacemacs/set-leader-keys
+        "ajb" 'org-jira-browse-issue
+        "ajp" 'org-jira-progress-issue
+        "ajr" 'org-jira-refresh-issue
+        "ajt" 'org-jira-todo-to-jira
+        "aju" 'org-jira-update-issue
+        "ajU" 'org-jira-update-comment
+        "ajy" 'org-jira-copy-current-issue-key
+        ;; create
+        "ajci" 'org-jira-create-issue
+        "ajcs" 'org-jira-create-subtask
+        ;; get
+        "ajgf" 'org-jira-get-issues-from-filter-headonly
+        "ajgF" 'org-jira-get-issues-from-filter
+        "ajgh" 'org-jira-get-issues-headonly
+        "ajgi" 'org-jira-get-issues
+        "ajgp" 'org-jira-get-projects
+        "ajgs" 'org-jira-get-subtasks))))
 
 
 ;; org
