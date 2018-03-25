@@ -51,7 +51,7 @@
   "Highlight keywords in comments."
   (interactive)
   (font-lock-add-keywords
-   nil '(("\\<\\(\\(FIX\\(ME\\)?\\|WAITING\\|CANCELLED\\|NEXT\\|IMPEDED\\|DONE\\|INPR\\|TODO\\|NOTE\\|INBOX\\|NOTES\\|MEETING\\|JOURNAL\\)\\>:?\\)"
+    nil '(("\\<\\(\\(IDEA\\|RESEARCH\\|STARTED\\|WAIT\\|WAITING\\|BACKLOG\\|HANDLED\\|EXPIRED\\|DELEGATED\\|SOMEDAY\\|CANCELLED\\|NEXT\\|IMPEDED\\|DONE\\|INPR\\|TODO\\|NOTE\\|INBOX\\|NOTES\\|MEETING\\|JOURNAL\\)\\>:?\\)"
           1 font-lock-warning-face t)))
 
   (font-lock-add-keywords
