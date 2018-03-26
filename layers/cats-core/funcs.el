@@ -176,6 +176,10 @@ symbols, emojis, greek letters, as well as fall backs for."
   "Helper function to extract the name of a `FRAME'."
   (frame-parameter frame 'cats//frame-name))
 
+(defun cats//projectile-curr (frame)
+  "Helper function to extract the name of a `FRAME'."
+  (frame-parameter frame 'cats//projectile-curr))
+
 (defun cats//dabbrev-from-projectile (&optional dir)
   "Use ."
   (add-to-list 'directory-abbrev-alist
