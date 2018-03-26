@@ -15,7 +15,7 @@
      company-tern
      ;; company-ycmd
      emmet-mode
-     (eslint-fix :location built-in)
+     (eslint-fix :location local)
      evil-matchit
      exec-path-from-shell
      flycheck
