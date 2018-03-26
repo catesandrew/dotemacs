@@ -10,7 +10,7 @@
 ;; funcs
 (defun cats//locate-node-from-projectile (dir frame-name)
   "Use local node from `./node_modules` if available."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -24,7 +24,7 @@
 
 (defun cats//locate-jshint-from-projectile (dir frame-name)
   "Use local jshint from `./node_modules` if available."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -38,7 +38,7 @@
 
 (defun cats//locate-jscs-from-projectile (dir frame-name)
   "Use local jscs from `DIR' and `FRAME-NAME' if available."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -52,7 +52,7 @@
 
 (defun cats//locate-eslint-from-projectile (dir frame-name)
   "Use local eslint from `DIR' and `FRAME-NAME' if available."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -66,7 +66,7 @@
 
 (defun cats//locate-tsserver-from-projectile (dir frame-name)
   "Use local tsserver from `./node_modules` if available."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -83,7 +83,7 @@
 
 (defun cats//locate-babel-node-from-projectile (dir frame-name)
   "Use local babel-node from DIR."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -167,7 +167,7 @@
 
 (defun cats//locate-coffeelint-from-projectile (dir frame-name)
   "Use local coffeelint from DIR."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -326,7 +326,7 @@
 ;; mocha
 (defun cats//locate-mocha-from-projectile (dir frame-name)
   "Use local mocha from if available from `DIR' and `FRAME-NAME'."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 
@@ -420,7 +420,7 @@
 ;; skewer mode
 (defun cats//locate-phantomjs-from-projectile (dir frame-name)
   "Use local phantomjs from `DIR' and `FRAME-NAME'."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 

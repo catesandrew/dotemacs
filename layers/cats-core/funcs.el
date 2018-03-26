@@ -172,7 +172,7 @@ symbols, emojis, greek letters, as well as fall backs for."
       (set-frame-parameter nil 'cats//projectile-curr dir)
       (ignore-errors (run-hook-with-args 'cats/project-hook dir frame-name)))))
 
-(defun cats//get-frame-name (frame)
+(defun cats//frame-name (frame)
   "Helper function to extract the name of a `FRAME'."
   (frame-parameter frame 'cats//frame-name))
 
@@ -190,7 +190,7 @@ symbols, emojis, greek letters, as well as fall backs for."
   "Use ."
   (condition-case err
     (let* ((frame (selected-frame))
-            (frame-name (cats//get-frame-name frame))
+            (frame-name (cats//frame-name frame))
             (projectile-require-project-root t))
       (projectile-project-root)         ; try to locate project root
       (let* ((project-root (projectile-project-root))

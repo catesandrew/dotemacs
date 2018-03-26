@@ -39,7 +39,7 @@
 ;; handlebars
 (defun cats//locate-handlebars-from-projectile (dir frame-name)
   "Use local handlebars from DIR."
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (when (empty-string-p dir)
       (setq dir default-directory))
 

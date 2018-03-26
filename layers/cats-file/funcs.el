@@ -175,7 +175,7 @@ none."
 (defun cats//neotree-dir-from-projectile-root (dir frame-name)
   "Neotree responds to projectile root `DIR' when opening if `FRAME-NAME'."
   ;; (princ (format "frame-name: `%s''\n" frame-name))
-  (when (and (string= frame-name (cats//get-frame-name nil))
+  (when (and (string= frame-name (cats//frame-name nil))
           (and (fboundp 'projectile-project-root)
             (fboundp 'neotree-dir)))
     (let ((proj-root (or dir (projectile-project-root)))

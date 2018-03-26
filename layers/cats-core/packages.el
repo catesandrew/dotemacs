@@ -151,7 +151,7 @@
       (add-hook 'projectile-after-switch-project-hook
         (lambda ()
           (let* ((frame (selected-frame))
-                  (frame-name (cats//get-frame-name frame)))
+                  (frame-name (cats//frame-name frame)))
             (unless (frame-parameter frame
                       'cats//projectile-switching-project-by-name)
               (condition-case err

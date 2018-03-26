@@ -860,7 +860,7 @@ which is pretty awesome with: (helm-mode 1)"
 ;; helm-projectile
 (defun cats//on-helm-projectile-project-hook (dir frame-name)
   ;; (princ (format "frame-name: `%s''\n" frame-name))
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (if (empty-string-p dir)
       (helm-projectile-off)
       (helm-projectile-on))))

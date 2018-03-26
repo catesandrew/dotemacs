@@ -271,7 +271,7 @@ many times might take a long time."
 
 ;; gh
 (defun cats//toggle-gh-profile (dir frame-name)
-  (when (string= frame-name (cats//get-frame-name nil))
+  (when (string= frame-name (cats//frame-name nil))
     (let* ((remote (git-link--select-remote))
             (id (gh-profile-get-remote-profile (git-link--remote-url remote))))
       (when id
