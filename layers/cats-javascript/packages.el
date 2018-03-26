@@ -776,15 +776,10 @@
   (spacemacs|use-package-add-hook tern
     :post-init
     (progn
-      (dolist (hook '(rjsx-mode-hook
-                      js2-jsx-mode-hook
-                      react-mode-hook))
-        (add-hook hook 'tern-mode)))
-    :post-config
-    (progn
-      (dolist (mode '(rjsx-mode js2-jsx-mode react-mode))
-        (when javascript-disable-tern-port-files
-          (add-to-list 'tern-command "--no-port-file" 'append))
+      (dolist (hook '(rjsx-mode-hook js2-jsx-mode-hook))
+        (add-hook hook 'tern-mode))
+
+      (dolist (mode '(rjsx-mode js2-jsx-mode))
         (spacemacs//set-tern-key-bindings mode)))))
 
 
