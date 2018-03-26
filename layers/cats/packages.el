@@ -63,6 +63,13 @@
      writeroom-mode
      ))
 
+;; kill annoying are you sure you want to quit messages
+(require 'cl-lib)
+(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+  "Prevent annoying 'Active processes exist' query when you quit Emacs."
+  (cl-letf (((symbol-function #'process-list) (lambda ())))
+    ad-do-it))
+
 
 ;; window-purpose
 (defun cats/pre-init-window-purpose ()
