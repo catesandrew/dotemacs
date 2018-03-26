@@ -332,13 +332,6 @@
 
 
 ;; import-js
-
-;; this uses comint with branch importjsd
-;; https://github.com/kevinkehl/emacs-import-js
-;; https://github.com/Galooshi/emacs-import-js
-;; https://github.com/galooshi/import-js
-;; https://github.com/jakoblind/js-import/tree/master
-
 (defun cats-javascript/init-import-js ()
   (use-package import-js
     :commands (import-js
@@ -347,26 +340,7 @@
                 import-js-import)
     :init
     (progn
-      ;; (dolist (x '(spacemacs-jump-handlers-js2-mode
-      ;;               spacemacs-jump-handlers-js2-jsx-mode
-      ;;               spacemacs-jump-handlers-react-mode
-      ;;               spacemacs-jump-handlers-react-mode))
-      ;;   (add-to-list x 'import-js-import)
-      ;;   )
-
       (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
-        ;; (push '(import-js-goto :async t) (intern (format "spacemacs-jump-handlers-%S" mode)))
-        ;; (message "spacemacs-jump-handlers-%s: %s" mode (eval (intern (format "spacemacs-jump-handlers-%S" mode))))
-        ;; (add-to-list (intern (format "spacemacs-jump-handlers-%S" mode))
-        ;;   '(import-js-goto :async t))
-        ;; (message "spacemacs-jump-handlers-%s: %s" mode (eval (intern (format "spacemacs-jump-handlers-%S" mode))))
-
-        ;; (push 'ac-php-find-symbol-at-point spacemacs-jump-handlers-php-mode)
-        ;; (let ((jumpl (intern (format "spacemacs-jump-handlers-%S" mode)))
-        ;;        (handler '(spacemacs/counsel-gtags-maybe-dwim
-        ;;                    :async spacemacs//counsel-gtags-dwim-success)))
-        ;;   (when (boundp jumpl) (add-to-list jumpl handler 'append)))
-
         (spacemacs/set-leader-keys-for-major-mode mode
           "I" 'import-js-import)
 

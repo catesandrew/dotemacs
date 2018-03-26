@@ -548,7 +548,6 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
 
 
 ;; import-js
-
 (defun cats/run-import-js ()
   (interactive)
   (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
@@ -571,7 +570,7 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
     (when (empty-string-p dir)
       (setq dir default-directory))
 
-    (kill-import-js)
+    (cats/kill-import-js)
     (unless (string= dir import-js-current-project-root)
       (setq import-js-current-project-root dir))
     (let ((default-directory dir))
@@ -586,13 +585,6 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
             (let ((proj-type (projectile-project-type)))
               (when (and proj-type
                       (equal proj-type 'npm))
-                (run-import-js)))
-            )
-          )
-        )
-      )
-    )
-  )
-
+                (cats/run-import-js)))))))))
 
 ;;; funcs.el ends here
