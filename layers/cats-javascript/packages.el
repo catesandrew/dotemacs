@@ -21,6 +21,7 @@
      flycheck
      ggtags
      helm-gtags
+     (import-js :location local)
      indium
      js-doc
      js2-mode
@@ -47,7 +48,6 @@
      xref-js2
      ;; ycmd
      ))
-
 
 
 ;; karma
@@ -330,6 +330,70 @@
 (defun cats-javascript/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'rjsx-mode))
 
+
+;; import-js
+
+;; this uses comint with branch importjsd
+;; https://github.com/kevinkehl/emacs-import-js
+;; https://github.com/Galooshi/emacs-import-js
+;; https://github.com/galooshi/import-js
+;; https://github.com/jakoblind/js-import/tree/master
+
+(defun cats-javascript/init-import-js ()
+  (use-package import-js
+    :commands (import-js
+                run-import-js
+                import-js-goto
+                import-js-import)
+    :init
+    (progn
+      ;; (dolist (x '(spacemacs-jump-handlers-js2-mode
+      ;;               spacemacs-jump-handlers-js2-jsx-mode
+      ;;               spacemacs-jump-handlers-react-mode
+      ;;               spacemacs-jump-handlers-react-mode))
+      ;;   (add-to-list x 'import-js-import)
+      ;;   )
+
+      (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+        ;; (push '(import-js-goto :async t) (intern (format "spacemacs-jump-handlers-%S" mode)))
+        ;; (message "spacemacs-jump-handlers-%s: %s" mode (eval (intern (format "spacemacs-jump-handlers-%S" mode))))
+        ;; (add-to-list (intern (format "spacemacs-jump-handlers-%S" mode))
+        ;;   '(import-js-goto :async t))
+        ;; (message "spacemacs-jump-handlers-%s: %s" mode (eval (intern (format "spacemacs-jump-handlers-%S" mode))))
+
+        ;; (push 'ac-php-find-symbol-at-point spacemacs-jump-handlers-php-mode)
+        ;; (let ((jumpl (intern (format "spacemacs-jump-handlers-%S" mode)))
+        ;;        (handler '(spacemacs/counsel-gtags-maybe-dwim
+        ;;                    :async spacemacs//counsel-gtags-dwim-success)))
+        ;;   (when (boundp jumpl) (add-to-list jumpl handler 'append)))
+
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "I" 'import-js-import)
+
+        (spacemacs/declare-prefix-for-mode mode "mo" "js-import")
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "oi" 'import-js-import
+          "of" 'import-js-fix
+          "og" 'import-js-goto
+          ;;"gG" 'import-js-goto-other-window
+          ;; (kbd "C-g") 'import-js-pop-goto-definition
+          "os" 'cats/run-import-js
+          "ok" 'cats/kill-import-js)))
+    :config
+    (progn
+      (add-hook 'cats/project-hook
+        'cats//locate-importjs-from-projectile)
+
+      ;; initialize the vars
+      (let* ((frame (selected-frame))
+              (name (cats//frame-name frame))
+              (dir (cats//projectile-curr frame)))
+        (when dir
+          (cats//locate-importjs-from-projectile dir name)
+          (setq import-js-current-project-root dir))))))
+
+
+;; evil-matchit
 (defun cats-javascript/post-init-evil-matchit ()
   (add-hook `rjsx-mode `turn-on-evil-matchit-mode))
 

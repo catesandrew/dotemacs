@@ -546,4 +546,53 @@ Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html."
           (rebox-style-loop '(47)))
     (rebox-dwim nil)))
 
+
+;; import-js
+
+(defun cats/run-import-js ()
+  (interactive)
+  (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+    (add-to-list (intern (format "spacemacs-jump-handlers-%S" mode))
+      ;; '(import-js-goto :async t)
+      'import-js-goto))
+  (run-import-js))
+
+(defun cats/kill-import-js ()
+  (interactive)
+  (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+    (let ((handlers (intern (format "spacemacs-jump-handlers-%S" mode))))
+      (when (member 'import-js-goto (eval handlers))
+        (setf (symbol-value handlers) (remove 'import-js-goto (eval handlers))))))
+  (kill-import-js))
+
+(defun cats//locate-importjs-from-projectile (dir frame-name)
+  "Use local importjs from DIR."
+  (when (string= frame-name (cats//frame-name nil))
+    (when (empty-string-p dir)
+      (setq dir default-directory))
+
+    (kill-import-js)
+    (unless (string= dir import-js-current-project-root)
+      (setq import-js-current-project-root dir))
+    (let ((default-directory dir))
+      (async-start
+        `(lambda ()
+           (executable-find "importjsd"))
+        (lambda (result)
+          (when result
+            (unless (string= result import-js-d-program)
+              (setq import-js-d-program result))
+
+            (let ((proj-type (projectile-project-type)))
+              (when (and proj-type
+                      (equal proj-type 'npm))
+                (run-import-js)))
+            )
+          )
+        )
+      )
+    )
+  )
+
+
 ;;; funcs.el ends here
