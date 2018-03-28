@@ -7,16 +7,16 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-file-packages
-  '((files :location built-in)
-    (recentf :location built-in)
-    ignoramus
-    projectile
-    helm-projectile
-    neotree
-    desktop
-    helm
-    (simple :location built-in)
-    ))
+  '(desktop
+     (files :location built-in)
+     helm
+     helm-projectile
+     ignoramus
+     neotree
+     projectile
+     (recentf :location built-in)
+     (recentf-ext :location local)
+     (simple :location built-in)))
 
 (defun cats-file/init-simple ()
   "Auto refresh, auto-revert buffers of changed files."
@@ -100,6 +100,7 @@ Try the repeated popping up to 10 times."
     (spacemacs|use-package-add-hook recentf
       :post-init
       (progn
+        (setq recentf-max-saved-items 5000)
         ;; Cleanup recent files only when Emacs is idle, but not when the mode is
         ;; enabled, because that unnecessarily slows down Emacs. My Emacs idles
         ;; often enough to have the recent files list clean up regularly
@@ -110,6 +111,15 @@ Try the repeated popping up to 10 times."
               (append recentf-exclude
                       (list ignoramus-boring-file-regexp)))))))
 
+
+;; recentf
+(defun cats-file/init-recentf-ext ()
+  "Switching to file buffer considers it as most recent file."
+  (use-package recentf-ext
+    :after recentf))
+
+
+;; projectile
 (defun cats-file/pre-init-projectile ()
   (when (configuration-layer/package-usedp 'ignoramus)
     (spacemacs|use-package-add-hook projectile
@@ -146,7 +156,7 @@ Try the repeated popping up to 10 times."
 
 (defun cats-file/post-init-projectile ()
   "Remove dead projects when Emacs is idle."
-  (run-with-idle-timer 10 nil #'projectile-cleanup-known-projects))
+  (run-with-idle-timer 120 nil #'projectile-cleanup-known-projects))
 
 (defun cats-file/pre-init-helm-projectile ()
   (spacemacs|use-package-add-hook helm-projectile
