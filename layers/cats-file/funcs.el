@@ -228,4 +228,28 @@ Try the repeated popping up to 10 times."
   (setq projectile-indexing-method 'alien
         projectile-generic-command (concat find " . -type f print0")))
 
+
+;; zel/projectile integration
+(defun projectile-zel-frecent ()
+  "Show a list of recently visited files in a project by rank."
+  (interactive)
+  (if (boundp 'zel--frecent-list)
+    (find-file (projectile-expand-root
+                 (projectile-completing-read
+                   "Recently visited files: "
+                   (projectile-zel-frecent-files))))
+    (message "zel is not enabled")))
+
+(defun projectile-zel-frecent-files ()
+  "Return a list of recently visited files in a project by rank."
+  (and (boundp 'zel--frecent-list)
+    (let ((project-root (projectile-project-root))
+           (frecent-list (zel-frecent-file-paths)))
+      (mapcar
+        (lambda (f) (file-relative-name f project-root))
+        (cl-remove-if-not
+          (lambda (f) (string-prefix-p project-root f))
+          frecent-list)))))
+
+
 ;;; funcs.el ends here

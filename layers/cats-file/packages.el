@@ -16,7 +16,9 @@
      projectile
      (recentf :location built-in)
      (recentf-ext :location local)
-     (simple :location built-in)))
+     (simple :location built-in)
+     zel
+     ))
 
 (defun cats-file/init-simple ()
   "Auto refresh, auto-revert buffers of changed files."
@@ -237,5 +239,41 @@ Try the repeated popping up to 10 times."
                                  (concat "*" pat)) ignoramus/file-basename-endings))))
           (setq helm-grep-ignored-directories
                 ignoramus/directory-basename-exact-names))))))
+
+
+;; zel
+(defun cats-file/init-zel ()
+  "zel tracks the most used files, based on frecency.
+
+Zel is basically a port of z in Emacs Lisp."
+  (use-package zel
+    :demand t
+    :bind (("C-c C-r" . zel-find-file-frecent))
+    :init
+    (progn
+      (setq zel-history-file (concat spacemacs-cache-directory "zel-history"))
+      (setq zel--aging-threshold 90000))
+    :config
+    (progn
+      (add-to-list 'zel-exclude-patterns
+        (file-truename spacemacs-cache-directory))
+      (add-to-list 'zel-exclude-patterns (file-truename package-user-dir))
+      (add-to-list 'zel-exclude-patterns "COMMIT_EDITMSG\\'")
+      (with-eval-after-load 'ignoramus
+        (add-to-list 'zel-exclude-patterns ignoramus-boring-file-regexp)
+        ;; (setq zel-exclude-patterns
+        ;;   (append zel-exclude-patterns
+        ;;     (list ignoramus-boring-file-regexp)))
+        )
+      (zel-install)
+      ;; (run-at-time nil (* 5 60) 'recentf-save-list)
+      (run-with-idle-timer (* 5 60) t 'zel-write-history)))
+
+  (spacemacs|use-package-add-hook projectile
+    "List frecent file paths in descending order by their rank."
+    :post-config
+    (progn
+      (spacemacs/set-leader-keys
+        "pz" 'projectile-zel-frecent))))
 
 ;;; packages.el ends here
