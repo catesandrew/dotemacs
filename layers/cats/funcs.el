@@ -176,7 +176,7 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
 
 
 ;; compilation
-(defun spacemacs/open-compilation-window ()
+(defun cats/open-compilation-window ()
   "Open the window containing the '*compilation*' buffer."
   (interactive)
   (with-current-buffer "*compilation*"

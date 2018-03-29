@@ -20,6 +20,7 @@
      (calendar :location built-in)
      company
      company-emoji
+     (compile :location built-in)
      (conf-mode :location built-in)
      copyright
      dash
@@ -433,6 +434,20 @@
     (add-to-list 'company-backends 'company-emoji))
   ;; Re-enable unicode emoji. It's 2018, dammit
   (setq company-emoji-insert-unicode t))
+
+
+;; compile
+(defun cats/init-compile ()
+  (use-package compile
+    :defer t
+    :init
+    (progn
+      (spacemacs/set-leader-keys
+        "co" 'cats/open-compilation-window
+        "ck" 'kill-compilation))
+    :config
+    (progn
+      (define-key compilation-mode-map "h" nil))))
 
 
 ;; editing

@@ -22,7 +22,4 @@
   "toi" 'toggle-input-method
   "oxi" 'set-input-method)
 
-(spacemacs/set-leader-keys
-  "cD" 'spacemacs/open-compilation-window)
-
 ;;; keybindings.el ends here
