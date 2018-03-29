@@ -15,6 +15,7 @@
      company-shell
      desktop
      (eshell :location built-in)
+     (goto-addr :location built-in)
      (prettify-symbols-mode :location built-in)
      projectile
      (shell :location built-in)
@@ -329,6 +330,25 @@
       (require 'em-alias)
       )
     ))
+
+
+;; goto-addr
+(defun cats-core/init-goto-addr ()
+  "Minor mode to buttonize URLs and e-mail addresses in the current buffer."
+  (use-package goto-addr
+    :commands goto-address-mode
+    :init
+    (progn
+      (spacemacs|add-toggle goto-address-mode
+        :status goto-address-mode
+        :on (progn
+              (when (bound-and-true-p goto-address-mode)
+                (goto-address-mode -1))
+              (goto-address-mode))
+        :off (goto-address-mode -1)
+        :documentation "Clickable URLS."
+        :evil-leader "toa"))
+    :config (spacemacs|hide-lighter goto-address-mode)))
 
 
 ;; term
