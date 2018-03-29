@@ -251,6 +251,7 @@ Zel is basically a port of z in Emacs Lisp."
     :bind (("C-c C-r" . zel-find-file-frecent))
     :init
     (progn
+      (push "\\*zel-history\\*" spacemacs-useless-buffers-regexp)
       (setq zel-history-file (concat spacemacs-cache-directory "zel-history"))
       (setq zel--aging-threshold 90000))
     :config
