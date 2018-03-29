@@ -51,6 +51,7 @@
      (locate :location built-in)
      magit
      (magit-repos :location built-in)
+     (man :location built-in)
      nlinum-relative
      paradox
      remember
@@ -612,6 +613,44 @@
                (goto-char (point-min))
                (newline)
                (goto-char (point-min)))))))))
+
+
+;; man
+(defun cats/init-man ()
+  (use-package man
+    :defer t
+    :init
+    (progn
+      (evilified-state-evilify-map Man-mode-map
+        :mode Man-mode
+        :eval-after-load Man-mode
+        :bindings
+        (kbd "q") 'quit-window
+        ))
+    :config
+    (progn
+      (evil-set-initial-state 'Man-mode 'normal)
+      (evil-define-key 'normal Man-mode-map
+        ;; motion
+        (kbd "C-k") 'scroll-up-command
+        (kbd "C-j") 'scroll-down-command
+        (kbd "<tab>") 'forward-button
+        (kbd "<backtab>") 'backward-button
+
+        (kbd "]") 'Man-next-manpage
+        (kbd "[") 'Man-previous-manpage
+        (kbd "gj") 'Man-next-manpage
+        (kbd "gk") 'Man-previous-manpage
+        (kbd "<") 'Man-next-section
+        (kbd ">") 'Man-previous-section
+        ;; goto
+        "gm" 'man
+        "gd" 'Man-goto-section
+        "gR" 'Man-follow-manual-reference
+        "gs" 'Man-goto-see-also-section
+        ;; refresh
+        "gr" 'Man-update-manpage
+        "q" 'quit-window))))
 
 
 ;; fancy-battery
