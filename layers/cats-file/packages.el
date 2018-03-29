@@ -275,6 +275,7 @@ Zel is basically a port of z in Emacs Lisp."
     :post-config
     (progn
       (spacemacs/set-leader-keys
+        "ps" 'projectile-run-project
         "pz" 'projectile-zel-frecent))))
 
 ;;; packages.el ends here
