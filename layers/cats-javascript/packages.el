@@ -34,7 +34,6 @@
      nodejs-repl
      org
      popwin
-     react-mode
      rebox2
      rjsx-mode
      skewer-mode
@@ -510,11 +509,8 @@
 
 
 ;; react mode
-(defun cats-javascript/pre-init-react-mode ()
-  (spacemacs|use-package-add-hook js2-mode
-    :post-init
-    (progn
-      (add-hook 'react-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook))))))
+(when (configuration-layer/layer-used-p 'react)
+  (add-hook 'react-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook))))
 
 
 ;; js2-mode
