@@ -11,8 +11,15 @@
      autoinsert
      ;; ob, org and org-agenda are installed by `org-plus-contrib' from spacemacs-org
      (ob :location built-in)
+     (ob-ditta :location built-in)
      (org :location built-in)   ;; (cats-default-org-config :location built-in)
      (org-agenda :location built-in)
+     (org-faces :location built-in)
+     (org-clock :location built-in)
+     (org-id :location built-in)
+     (org-indent :location built-in)
+     (org-list :location built-in)
+     (org-src :location built-in)
      org-super-agenda
      org-jira
      ;; org-caldav
@@ -36,12 +43,28 @@
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
      (ox-jira :toggle org-enable-jira-support)
      (ox-html :toggle org-enable-ox-html-support :location built-in)
+     (ox-ascii :toggle org-enable-ox-ascii-support :location built-in)
+     ox-reveal
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
 ;; sudo apt-get -y install ipython ipython-notebook
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
+
+
+;; TODO: Commands to consider from http://doc.norang.ca/org-mode.org
+;; (global-set-key (kbd "<f5>") 'cats/org-todo)
+;; (global-set-key (kbd "<f7>") 'cats/set-truncate-lines)
+;; (global-set-key (kbd "<f9> <f9>") 'cats/show-org-agenda)
+;; (global-set-key (kbd "<f9> h") 'cats/hide-other)
+;; (global-set-key (kbd "<f9> n") 'cats/toggle-next-task-display)
+;; (global-set-key (kbd "<f9> o") 'cats/make-org-scratch)
+;; (global-set-key (kbd "<f9> s") 'cats/switch-to-scratch)
+;; (global-set-key (kbd "<f9> t") 'cats/insert-inactive-timestamp)
+;; (global-set-key (kbd "<f9> T") 'cats/toggle-insert-inactive-timestamp)
+;; (global-set-key (kbd "<f9> SPC") 'cats/clock-in-last-task)
+;; (global-set-key (kbd "C-s-<f12>") 'cats/save-then-publish)
 
 
 ;; ox-jira
@@ -70,8 +93,107 @@
 (defun cats-org/init-ox-publish ()
   (use-package ox-publish
     :defer t
-    :init (progn)
-    :config (progn)))
+    :init
+    (progn
+;; Association list to control publishing behavior. Each element of the
+    ;; alist is a publishing project.
+    (setq org-publish-project-alist
+      '(
+         ("html-static"
+           :base-directory "/data/www/static_html/"
+           :base-extension "html\\|xml\\|css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|zip\\|gz\\|csv\\|m"
+           :include (".htaccess")
+           :publishing-directory "/data/www/public_html/"
+           :recursive t
+           :publishing-function org-publish-attachment
+           )
+
+         ("pdf"
+           :base-directory  "/data/org-mode/"
+           :base-extension "org"
+           :publishing-directory "/data/org-mode/pdf"
+           :publishing-function org-latex-publish-to-pdf
+           )
+
+         ("org-notes"
+           :base-directory "/data/www/org"
+           :base-extension "org"
+           :publishing-directory "/data/www/public_html/org"
+           :recursive t
+           :exclude ".*-reveal\.org"        ; exclude org-reveal slides
+           :publishing-function org-html-publish-to-html
+           :headline-levels 2               ; Just the default for this project.
+           :auto-sitemap t                  ; Generate sitemap.org automagically...
+           :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+           :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+           :with-creator nil    ; Disable the inclusion of "Created by Org" in the postamble.
+           :with-email nil      ; Disable the inclusion of "(your email)" in the postamble.
+           :with-author nil       ; Enable the inclusion of "Author: Your Name" in the postamble.
+           :auto-preamble t;         ; Enable auto preamble
+           :auto-postamble t         ; Enable auto postamble
+           :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
+           :toc-levels 2               ; Just the default for this project.
+           :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
+           :html-head-include-default-style nil ;Disable the default css style
+           :html-head-include-scripts nil ;Disable the default javascript snippet
+           :html-head "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.i3s.unice.fr/~malapert/css/worg.min.css\"/>\n<script type=\"text/javascript\" src=\"http://www.i3s.unice.fr/~malapert/js/ga.min.js\"></script>" ;Enable custom css style and other tags
+           :html-link-home "index.html"    ; Just the default for this project.
+           :html-link-up "../index.html"    ; Just the default for this project.
+           )
+
+         ("org-static"
+           :base-directory "/data/www/org"
+           :base-extension "html\\|xml\\|css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|zip\\|gz\\|csv\\|m"
+           :publishing-directory "/data/www/public_html/org/"
+           :recursive t
+           :publishing-function org-publish-attachment
+           :exclude "Rplots.pdf"
+           )
+
+         ("org"
+           :components ("org-notes" "org-static" "html-static")
+           )
+
+         ("_org-notes"
+           :base-directory "/data/www/_org/"
+           :base-extension "org"
+           :publishing-directory "/data/www/private_html/"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 2               ; Just the default for this project.
+           :auto-preamble t
+           :auto-sitemap nil                  ; Do NOT Generate sitemap.org automagically...
+           :with-creator nil    ; Disable the inclusion of "Created by Org" in the postamble.
+           :with-email nil      ; Disable the inclusion of "(your email)" in the postamble.
+           :with-author nil       ; Enable the inclusion of "Author: Your Name" in the postamble.
+           :auto-preamble t;         ; Enable auto preamble
+           :auto-postamble t         ; Enable auto postamble
+           :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
+           :toc-levels 2               ; Just the default for this project.
+           :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
+           :html-head-include-default-style nil ;Disable the default css style
+           :html-head-include-scripts nil ;Disable the default javascript snippet
+           :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.i3s.unice.fr/~malapert/css/worg.min.css\"/>" ;Enable custom css style
+           )
+
+         ("_org-static"
+           :base-directory "/data/www/_org/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|zip\\|gz"
+           :publishing-directory "/data/www/private_html"
+           :recursive t
+           :publishing-function org-publish-attachment
+           :exclude "Rplots.pdf"
+           )
+
+         ("_org"
+           :components ("_org-notes" "_org-static")
+           )
+         )
+      )
+      )
+    :config
+    (progn
+      )))
 
 
 ;; ox-md
@@ -114,8 +236,12 @@
 (defun cats-org/init-ox-latex ()
   (use-package ox-latex
     :defer t
-    :init (progn)
-    :config (progn)))
+    :init
+    (progn
+      ;; LaTeX compiler to use.
+      (setq org-latex-compiler "latexmk"))
+    :config
+    (progn)))
 
 
 ;; ox
@@ -125,7 +251,10 @@
 (defun cats-org/init-ox ()
   (use-package ox
     :defer t
-    :init (progn)
+    :init
+    (progn
+      (setq org-export-with-smart-quotes t)
+      )
     :config (progn)))
 
 
@@ -167,22 +296,79 @@
   (use-package ox-html
     :defer t
     :init
-    (progn)
+    (progn
+      ;; Coding system for HTML export.
+      (setq org-html-coding-system 'utf-8-unix)
+      ;; Non-nil means include the default style in exported HTML files.
+      (setq org-html-head-include-default-style nil)
+      ;; Non-nil means include the JavaScript snippets in exported HTML files.
+      (setq org-html-head-include-scripts nil)
+      )
     :config
     (progn
+      ;; Default attributes and values which will be used in table tags. This is
+      ;; a plist where attributes are symbols, starting with colons, and values
+      ;; are strings.
+      (setq org-html-table-default-attributes '(
+                                                 :border "0"
+                                                 :cellspacing "0"
+                                                 :cellpadding "6"
+                                                 :rules "none"
+                                                 :frame "none"))
+      ;; Options for MathJax setup.
+      (setf org-html-mathjax-options
+        '((path "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+           (scale "100")
+           (align "center")
+           (indent "2em")
+           (mathml nil)))
+
+      ;; The MathJax template.
+      (setf org-html-mathjax-template
+        "<script type=\"text/javascript\" src=\"%PATH\"></script>")
+
       ;; Allow with query params in image extentions
       (setq org-html-inline-image-rules
         '(("file" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")
            ("http" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")
            ("https" . "\\.\\(jpeg\\|jpg\\|png\\|gif\\|svg\\)\\(\\?.*?\\)?\\'")))
 
-      ;; Add link icons in headings that lead to themselves
-      ;; This is set before and cleared afterwards, so that we know when we are
-      ;; generating the text for the headline itself and when we are not.
-      (advice-add 'org-html-headline :before 'cats//set-current-html-headline)
-      (advice-add 'org-html-headline :after 'cats//clear-current-html-headline)
+      ;; Function to format headline text.
       (setq org-html-format-headline-function
-        'cats//org-html-format-heading-function))))
+        'cats//org-html-format-heading-function)
+
+      ;; Add link icons in headings that lead to themselves. This is set before
+      ;; and cleared afterwards, so that we know when we are generating the text
+      ;; for the headline itself and when we are not.
+      (advice-add 'org-html-headline :before 'cats//set-current-html-headline)
+      (advice-add 'org-html-headline :after 'cats//clear-current-html-headline))))
+
+
+;; ox-ascii
+(defun cats-org/pre-init-ox-ascii ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-ascii)))
+
+(defun cats-org/init-ox-ascii ()
+  (use-package ox-ascii
+    :defer t
+    :init
+    (progn
+      (setq org-ascii-headline-spacing (quote (1 . 1)))
+      (setq org-ascii-links-to-notes nil)
+      )
+    :config
+    (progn
+      )))
+
+
+;; ox-reveal
+(defun cats-org/post-init-ox-reveal ()
+  (use-package ox-reveal
+    :init
+    (progn
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
+        (setq org-reveal-root (concat "file://" dir "reveal/reveal.js")))
+      )))
 
 
 ;; helm-org-rifle
@@ -270,9 +456,12 @@
     :defer t
     :config
     (progn
-      (setq org-caldav-url "https://www.google.com/calendar/dav")
-      (setq org-caldav-inbox cats//org-inbox-file)
-      (setq org-caldav-files (list cats//org-calendar-file))
+      (setq org-caldav-url "https://owncloud.cates.io/remote.php/dav/calendars/andrew")
+      (setq org-caldav-calendar-id "bc55b8fa-d797-1034-971f-7b2587ad9c10")
+
+      ;; (setq org-caldav-url "https://www.google.com/calendar/dav")
+      (setq org-caldav-inbox cats//org-calendar-file)
+      ;; (setq org-caldav-files (list cats//org-calendar-file))
       (setq org-icalendar-timezone "America/Los_Angeles"))))
 
 
@@ -633,9 +822,7 @@
 (defun cats-org/pre-init-org ()
   (spacemacs|use-package-add-hook org
     :pre-config
-    (progn
-      (message "ORG PRE CONFIG")
-      )
+    (progn)
     :post-config
     (progn
       ;; https://orgmode.org/worg/org-contrib/babel/languages.html
@@ -650,13 +837,60 @@
       (add-to-list 'org-babel-load-languages '(perl . t))
       (add-to-list 'org-babel-load-languages '(sql . t))
       (add-to-list 'org-babel-load-languages '(sqlite . t))
+
+      (setq org-default-notes-file cats//org-notes-file)
+      (setq org-ellipsis "⤵")
+      (setq org-enable-priority-commands nil)
+
+      ;; Non-nil means fast tag selection exits after first change.
+      (setq org-fast-tag-selection-single-key t)
+
+      ;; Information to record when a task moves to the DONE state.
+      (setq org-log-done t)
+      ;; When non-nil, fontify code in code blocks.
+      (setq org-src-fontify-natively t)
+      ;; Non-nil means switching TODO states with S-cursor counts as state
+      ;; change. This is the default behavior. However, setting this to nil
+      ;; allows a convenient way to select a TODO state and bypass any logging
+      ;; associated with that.
+      (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+      ;; Non-nil means use the fast todo selection scheme with org-todo. This
+      ;; variable describes if and under what circumstances the cycling
+      ;; mechanism for TODO keywords will be replaced by a single-key, direct
+      ;; selection scheme.
+      (setq org-use-fast-todo-selection t)
+
+      ;; The maximum level for Imenu access to Org headlines. This also applied
+      ;; for speedbar access.
+      (setq org-imenu-depth 10)
       )
     :post-init
     (progn
-      (message "ORG POST INIT")
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
 
+      (with-eval-after-load 'ispell
+        (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
+        (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
+        (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
+        )
+
+      )
+    :pre-init
+    (progn
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-utils)))
+        (setq org-plantuml-jar-path (concat dir "plantuml/plantuml.jar")))
+      )
+    )
+
+  (spacemacs|use-package-add-hook org
+    "List of TODO entry keyword sequences and their interpretation. "
+    :pre-config
+    (progn)
+    :post-config
+    (progn)
+    :post-init
+    (progn
       ;; What follows is a description of the significance of each of the values
       ;; available in `org-todo-keywords'. All headings with one of these
       ;; keywords deal with the concept of the completion of some task or
@@ -709,8 +943,8 @@
       ;; to indicate that the owner is not necessarily to blame.
       (setq org-todo-keywords
         '((sequence "IDEA(i!)" "RESEARCH(r!)" "TODO(t!)" "NEXT(n!)"
-             "STARTED(s!)" "WAIT(w!)" "BACKLOG(b!)" "|"
-             "DONE(d!)" "HANDLED(h!)" "EXPIRED(e!)" "CANCELLED(c!)")
+            "STARTED(s!)" "WAIT(w!)" "BACKLOG(b!)" "|"
+            "DONE(d!)" "HANDLED(h!)" "EXPIRED(e!)" "CANCELLED(c!)")
 
            ;; (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)")
            ;; (sequence "|" "CANCELLED(c)" "HANDLED(h)" "EXPIRED(e)")
@@ -739,9 +973,19 @@
            ("INPR" . (:foreground "yellow" :weight bold))
            ("NEXT" . (:foreground "IndianRed1" :weight bold))
            ("STARTED" . (:foreground "OrangeRed" :weight bold))
-           ("WAIT" . (:foreground "coral" :weight bold))))
+           ("WAIT" . (:foreground "coral" :weight bold)))))
+    :pre-init
+    (progn))
 
-      ;; Tags always available in Org files.
+  (spacemacs|use-package-add-hook org
+    "Tags in Org files."
+    :pre-config
+    (progn)
+    :post-config
+    (progn)
+    :post-init
+    (progn
+      ;; Tags always available in Org files
       (setq org-tag-persistent-alist
         '((:startgroup . nil)
            ("HOME" . ?h)
@@ -763,30 +1007,184 @@
            ("BONUS" . ?b)
            ("noexport" . ?x)))
 
-    ;; Faces for specific tags.
-    (setq org-tag-faces
-      '(
-        ("HOME" . (:foreground "GoldenRod" :weight bold))
-        ("RESEARCH" . (:foreground "GoldenRod" :weight bold))
-        ("TEACHING" . (:foreground "GoldenRod" :weight bold))
-        ("OS" . (:foreground "IndianRed1" :weight bold))
-        ("DEV" . (:foreground "IndianRed1" :weight bold))
-        ("WWW" . (:foreground "IndianRed1" :weight bold))
-        ("URGENT" . (:foreground "Red" :weight bold))
-        ("KEY" . (:foreground "Red" :weight bold))
-        ("EASY" . (:foreground "OrangeRed" :weight bold))
-        ("MEDIUM" . (:foreground "OrangeRed" :weight bold))
-        ("HARD" . (:foreground "OrangeRed" :weight bold))
-        ("BONUS" . (:foreground "GoldenRod" :weight bold))
-        ("noexport" . (:foreground "LimeGreen" :weight bold))))
+      ;; Default tags available in Org files. (tasks with GTD contexts)
+      (setq org-tag-alist '(("@work" . ?b)
+                             ("@home" . ?h)
+                             ("@errands" . ?e)
+                             ("@coding" . ?c)
+                             ("@phone" . ?p)
+                             ("@reading" . ?r)
+                             ("@computer" . ?l)))
 
       )
     :pre-init
+    (progn))
+
+  (spacemacs|use-package-add-hook org
+    "Options concerning refiling entries in Org mode."
+    :pre-config
+    (progn)
+    :post-config
+    (progn)
+    :post-init
     (progn
-      (message "ORG PRE INIT")
-      (let ((dir (configuration-layer/get-layer-local-dir 'cats-utils)))
-        (setq org-plantuml-jar-path (concat dir "plantuml/plantuml.jar")))
+      ;; Targets include this file and any file contributing to the agenda,
+      ;; Up to 9 levels deep
+      (setq org-refile-targets '((nil :maxlevel . 9)
+                                  (org-agenda-files :maxlevel . 9)))
       )
+    :pre-init
+    (progn)
+    )
+  )
+
+
+;; org-faces
+(defun cats-org/init-org-faces ()
+  (use-package org-faces
+    :defer t
+    :init
+    (progn
+      ;; Faces for specific tags.
+      (setq org-tag-faces
+        '(
+           ("HOME" . (:foreground "GoldenRod" :weight bold))
+           ("RESEARCH" . (:foreground "GoldenRod" :weight bold))
+           ("TEACHING" . (:foreground "GoldenRod" :weight bold))
+           ("OS" . (:foreground "IndianRed1" :weight bold))
+           ("DEV" . (:foreground "IndianRed1" :weight bold))
+           ("WWW" . (:foreground "IndianRed1" :weight bold))
+           ("URGENT" . (:foreground "Red" :weight bold))
+           ("KEY" . (:foreground "Red" :weight bold))
+           ("EASY" . (:foreground "OrangeRed" :weight bold))
+           ("MEDIUM" . (:foreground "OrangeRed" :weight bold))
+           ("HARD" . (:foreground "OrangeRed" :weight bold))
+           ("BONUS" . (:foreground "GoldenRod" :weight bold))
+           ("noexport" . (:foreground "LimeGreen" :weight bold))))
+      )
+    :config
+    (progn)
+    ))
+
+
+;; org-clock
+(defun cats-org/init-org-clock ()
+  (use-package org-clock
+    :defer t
+    :init
+    (progn
+      ;; Some clock stuff. taken from http://doc.norang.ca/org-mode.org
+      ;;
+      ;; Save the running clock and all clock history when exiting Emacs, load
+      ;; it on startup
+      (setq org-clock-persist t)
+      ;; Resume clocking task when emacs is restarted
+      (org-clock-persistence-insinuate)
+      ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+      (setq org-clock-history-length 23)
+      ;; Resume clocking task on clock-in if the clock is open
+      (setq org-clock-in-resume t)
+      ;; Change tasks to NEXT when clocking in
+      (setq org-clock-in-switch-to-state 'cats//clock-in-to-next)
+      ;; Separate drawers for clocking and logs
+      (setq org-drawers (quote ("PROPERTIES" "LOGBOOK" "RESULTS")))
+      ;; Save clock data and state changes and notes in the LOGBOOK drawer
+      (setq org-clock-into-drawer t)
+      ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+      (setq org-clock-out-remove-zero-time-clocks t)
+      ;; Clock out when moving task to a done state
+      (setq org-clock-out-when-done t)
+      ;; Do not prompt to resume an active clock
+      (setq org-clock-persist-query-resume nil)
+      ;; Enable auto clock resolution for finding open clocks
+      (setq org-clock-auto-clock-resolution 'when-no-clock-is-running)
+      ;; Include current clocking task in clock reports
+      (setq org-clock-report-include-clocking-task t)
+      (setq org-duration-format '(
+                                   :hours "%d"
+                                   :require-hours t
+                                   :minutes ":%02d"
+                                   :require-minutes t))
+      (setq cats//keep-clock-running nil)
+
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "CI" 'cats/punch-in
+        "CO" 'cats/punch-out)
+      )
+    :config
+    (progn)
+    ))
+
+
+;; org-id
+(defun cats-org/init-org-id ()
+  (use-package org-id
+    :defer t
+    :init
+    (progn
+      (setq org-id-method 'uuidgen)
+      )
+    :config
+    (progn)
+    ))
+
+
+;; org-indent
+(defun cats-org/init-org-indent ()
+  (use-package org-indent
+    :defer t
+    :init
+    (progn
+      (setq org-indent-indentation-per-level 2)
+      )
+    :config
+    (progn)
+    ))
+
+
+;; org-list
+(defun cats-org/init-org-list ()
+  (use-package org-list
+    :defer t
+    :init
+    (progn
+      ;; Default bullet type installed when demoting an item. This is an
+      ;; association list, for each bullet type, this alist will point to the
+      ;; bullet that should be used when this item is demoted.
+      (setq org-list-demote-modify-bullet '(
+                                             ("+" . "-")
+                                             ("*" . "-")
+                                             ("1." . "-")
+                                             ("1)" . "a)")))
+      )
+    :config
+    (progn)
+    ))
+
+
+;; org-src
+(defun cats-org/init-org-src ()
+  (use-package org-src
+    :defer t
+    :init
+    (progn
+      ;; If non-nil, the effect of TAB in a code block is as if it were issued in
+      ;; the language major mode buffer.
+      (setq org-src-tab-acts-natively t)
+
+      ;; How the source code edit buffer should be displayed.
+      (setq org-src-window-setup 'current-window)
+
+      ;; IvanMalison/frame-mode: `frame-mode` configures `display-buffer-alist`
+      ;; so that calls to display-buffer that result in a buffer being displayed
+      ;; somewhere that does not replace the current buffer always use a
+      ;; different frame instead of using a different window
+      ;; (when frame-mode
+      ;;   (progn
+      ;;     (setcdr (assoc 'file org-link-frame-setup) 'find-file-other-frame)))
+      )
+    :config
+    (progn)
     ))
 
 
@@ -797,6 +1195,20 @@
     (progn)
     :pre-init
     (progn)))
+
+
+;; ob-ditta
+(defun cats-org/init-ob-ditta ()
+  (use-package ob-ditta
+    :defer t
+    :init
+    (progn
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
+        (setq org-ditaa-jar-path (concat dir "ditta/ditaa0_9.jar")))
+      )
+    :config
+    (progn)
+    ))
 
 
 ;; org-brain
@@ -879,183 +1291,6 @@
 
     ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
     ;; (add-hook 'org-insert-heading-hook 'cats/insert-heading-inactive-timestamp 'append)
-
-    ;; Targets include this file and any file contributing to the agenda - up to
-    ;; 9 levels deep
-    (setq org-refile-targets '((nil :maxlevel . 9)
-                                (org-agenda-files :maxlevel . 9)))
-
-    ;; Tag tasks with GTD contexts
-    (setq org-tag-alist '(("@work" . ?b)
-                           ("@home" . ?h)
-                           ("@errands" . ?e)
-                           ("@coding" . ?c)
-                           ("@phone" . ?p)
-                           ("@reading" . ?r)
-                           ("@computer" . ?l)))
-
-    (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
-    (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
-    (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
-    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-
-    ;; mathjax
-    (setf org-html-mathjax-options
-      '((path "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
-         (scale "100")
-         (align "center")
-         (indent "2em")
-         (mathml nil)))
-    (setf org-html-mathjax-template
-      "<script type=\"text/javascript\" src=\"%PATH\"></script>")
-
-    (setq org-ascii-headline-spacing (quote (1 . 1)))
-    (setq org-ascii-links-to-notes nil)
-    ;; Save the running clock and all clock history when exiting Emacs, load it on startup
-    (setq org-clock-persist t)
-    (setq org-default-notes-file cats//org-notes-file)
-    (setq org-ellipsis "⤵")
-    (setq org-enable-priority-commands nil)
-    (setq org-export-with-smart-quotes t)
-    (setq org-fast-tag-selection-single-key t)
-    (setq org-html-coding-system 'utf-8-unix)
-    (setq org-html-head-include-default-style nil)
-    (setq org-html-head-include-scripts nil)
-    (setq org-html-table-default-attributes '(
-      :border "0"
-      :cellspacing "0"
-      :cellpadding "6"
-      :rules "none"
-      :frame "none"))
-    (setq org-id-method 'uuidgen)
-    (setq org-indent-indentation-per-level 2)
-    (setq org-latex-compiler "latexmk")
-    (setq org-list-demote-modify-bullet '(
-               ("+" . "-")
-               ("*" . "-")
-               ("1." . "-")
-               ("1)" . "a)")))
-    (setq org-log-done t)
-    (setq org-src-fontify-natively t)
-    (setq org-src-tab-acts-natively t)
-    (setq org-treat-S-cursor-todo-selection-as-state-change nil)
-    (setq org-use-fast-todo-selection t)
-
-    ;; use frames
-    (setq org-src-window-setup 'current-window)
-    (when frame-mode
-      (progn
-        (setcdr (assoc 'file org-link-frame-setup) 'find-file-other-frame)))
-
-    ;; ditta and reveal
-    (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
-      (setq org-ditaa-jar-path (concat dir "ditta/ditaa0_9.jar"))
-      (setq org-reveal-root (concat "file://" dir "reveal/reveal.js")))
-
-    ;; Use IDO for both buffer and file completion and ido-everywhere to t
-    (setq org-completion-use-ido t)
-    ;; (setq ido-everywhere t)
-    ;; (setq ido-max-directory-size 100000)
-    ;; (ido-mode 'both)
-    ;; Use the current window when visiting files and buffers with ido
-    ;; (setq ido-default-file-method 'selected-window)
-    ;; (setq ido-default-buffer-method 'selected-window)
-    ;; Use the current window for indirect buffer display
-    ;; (setq org-indirect-buffer-display 'current-window)
-
-    (setq org-publish-project-alist
-      '(
-         ("html-static"
-           :base-directory "/data/www/static_html/"
-           :base-extension "html\\|xml\\|css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|zip\\|gz\\|csv\\|m"
-           :include (".htaccess")
-           :publishing-directory "/data/www/public_html/"
-           :recursive t
-           :publishing-function org-publish-attachment
-           )
-
-         ("pdf"
-           :base-directory  "/data/org-mode/"
-           :base-extension "org"
-           :publishing-directory "/data/org-mode/pdf"
-           :publishing-function org-latex-publish-to-pdf
-           )
-
-         ("org-notes"
-           :base-directory "/data/www/org"
-           :base-extension "org"
-           :publishing-directory "/data/www/public_html/org"
-           :recursive t
-           :exclude ".*-reveal\.org"        ; exclude org-reveal slides
-           :publishing-function org-html-publish-to-html
-           :headline-levels 2               ; Just the default for this project.
-           :auto-sitemap t                  ; Generate sitemap.org automagically...
-           :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-           :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-           :with-creator nil    ; Disable the inclusion of "Created by Org" in the postamble.
-           :with-email nil      ; Disable the inclusion of "(your email)" in the postamble.
-           :with-author nil       ; Enable the inclusion of "Author: Your Name" in the postamble.
-           :auto-preamble t;         ; Enable auto preamble
-           :auto-postamble t         ; Enable auto postamble
-           :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
-           :toc-levels 2               ; Just the default for this project.
-           :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
-           :html-head-include-default-style nil ;Disable the default css style
-           :html-head-include-scripts nil ;Disable the default javascript snippet
-           :html-head "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.i3s.unice.fr/~malapert/css/worg.min.css\"/>\n<script type=\"text/javascript\" src=\"http://www.i3s.unice.fr/~malapert/js/ga.min.js\"></script>" ;Enable custom css style and other tags
-           :html-link-home "index.html"    ; Just the default for this project.
-           :html-link-up "../index.html"    ; Just the default for this project.
-           )
-
-         ("org-static"
-           :base-directory "/data/www/org"
-           :base-extension "html\\|xml\\|css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|zip\\|gz\\|csv\\|m"
-           :publishing-directory "/data/www/public_html/org/"
-           :recursive t
-           :publishing-function org-publish-attachment
-           :exclude "Rplots.pdf"
-           )
-
-         ("org"
-           :components ("org-notes" "org-static" "html-static")
-           )
-
-         ("_org-notes"
-           :base-directory "/data/www/_org/"
-           :base-extension "org"
-           :publishing-directory "/data/www/private_html/"
-           :recursive t
-           :publishing-function org-html-publish-to-html
-           :headline-levels 2               ; Just the default for this project.
-           :auto-preamble t
-           :auto-sitemap nil                  ; Do NOT Generate sitemap.org automagically...
-           :with-creator nil    ; Disable the inclusion of "Created by Org" in the postamble.
-           :with-email nil      ; Disable the inclusion of "(your email)" in the postamble.
-           :with-author nil       ; Enable the inclusion of "Author: Your Name" in the postamble.
-           :auto-preamble t;         ; Enable auto preamble
-           :auto-postamble t         ; Enable auto postamble
-           :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
-           :toc-levels 2               ; Just the default for this project.
-           :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
-           :html-head-include-default-style nil ;Disable the default css style
-           :html-head-include-scripts nil ;Disable the default javascript snippet
-           :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.i3s.unice.fr/~malapert/css/worg.min.css\"/>" ;Enable custom css style
-           )
-
-         ("_org-static"
-           :base-directory "/data/www/_org/"
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|zip\\|gz"
-           :publishing-directory "/data/www/private_html"
-           :recursive t
-           :publishing-function org-publish-attachment
-           :exclude "Rplots.pdf"
-           )
-
-         ("_org"
-           :components ("_org-notes" "_org-static")
-           )
-         )
-      )
 
     ;; Open links and files with RET in normal state
     (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point)
@@ -1173,36 +1408,6 @@
       ("rfc" . "http://tools.ietf.org/rfc/rfc%s.txt")
       ("ads" . "http://adsabs.harvard.edu/cgi-bin/nph-abs_connect?author=%s&db_key=AST")))
 
-    ;; Some clock stuff. taken from http://doc.norang.ca/org-mode.org
-    ;;
-    ;; Resume clocking task when emacs is restarted
-    (org-clock-persistence-insinuate)
-    ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
-    (setq org-clock-history-length 23)
-    ;; Resume clocking task on clock-in if the clock is open
-    (setq org-clock-in-resume t)
-    ;; Change tasks to NEXT when clocking in
-    (setq org-clock-in-switch-to-state 'cats//clock-in-to-next)
-    ;; Separate drawers for clocking and logs
-    (setq org-drawers (quote ("PROPERTIES" "LOGBOOK" "RESULTS")))
-    ;; Save clock data and state changes and notes in the LOGBOOK drawer
-    (setq org-clock-into-drawer t)
-    ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-    (setq org-clock-out-remove-zero-time-clocks t)
-    ;; Clock out when moving task to a done state
-    (setq org-clock-out-when-done t)
-    ;; Do not prompt to resume an active clock
-    (setq org-clock-persist-query-resume nil)
-    ;; Enable auto clock resolution for finding open clocks
-    (setq org-clock-auto-clock-resolution 'when-no-clock-is-running)
-    ;; Include current clocking task in clock reports
-    (setq org-clock-report-include-clocking-task t)
-    (setq org-duration-format '(
-         :hours "%d"
-         :require-hours t
-         :minutes ":%02d"
-         :require-minutes t))
-    (setq cats//keep-clock-running nil)
 
     ;; Use full outline paths for refile targets - we file directly with IDO
     (setq org-refile-use-outline-path t)
@@ -1318,7 +1523,8 @@
 
     (setq org-habit-graph-column 50)
     (setq org-habit-show-habits-only-for-today t)
-    (setq org-imenu-depth 10)
+
+
   ))
 
 ;;; packages.el ends here

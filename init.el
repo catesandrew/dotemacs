@@ -178,6 +178,7 @@ values."
        org-enable-ox-md-support t
        org-enable-ox-publish-support t
        org-enable-ox-html-support t
+       org-enable-ox-ascii-support t
        org-enable-jira-support t)
      cats-scala
      cats-xml
