@@ -375,4 +375,33 @@ Add this to `kill-buffer-query-functions'."
      (push item prettify-symbols-alist))
    new-pretty-symbols))
 
+
+;; term
+(defun cats//term-escape-stay ()
+  "Go back to normal state but don't move cursor backwards.
+Moving cursor backwards is the default Vim behavior but
+it is not appropriate in some cases like terminals."
+  (setq-local evil-move-cursor-back nil))
+
+(defun cats/term-char-mode-insert ()
+  "Switch to `term-char-mode' and enter insert state."
+  (interactive)
+  (term-char-mode)
+  (evil-insert-state))
+
+;; used when synchronizing insert/normal state with char/line-mode.
+(defun cats//term-switch-to-char-mode-on-insert ()
+  "Switch to `term-char-mode' on insert state."
+  (when (get-buffer-process (current-buffer))
+    (term-char-mode)))
+
+(defun cats//term-sync-state-and-mode ()
+  "Sync `term-char-mode' and `term-line-mode' with insert and normal state."
+  (add-hook 'evil-insert-state-entry-hook
+    'cats//term-switch-to-char-mode-on-insert nil t)
+  (add-hook 'evil-insert-state-exit-hook 'term-line-mode nil t))
+
+(defun cats//term-use-utf8 ()
+  (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+
 ;;; funcs.el ends here

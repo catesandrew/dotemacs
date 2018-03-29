@@ -11,10 +11,12 @@
 (defconst cats-core-packages
   '(autorevert
      buffer-move
+     (comint :location built-in)
      company
      company-shell
      desktop
      (eshell :location built-in)
+     exec-path-from-shell
      (goto-addr :location built-in)
      (prettify-symbols-mode :location built-in)
      projectile
@@ -332,6 +334,23 @@
     ))
 
 
+;; exec-path-from-shell
+(defun cats-core/pre-init-exec-path-from-shell ()
+  (spacemacs|use-package-add-hook exec-path-from-shell
+    :pre-config
+    (dolist (var '(
+                    "SHELL"
+                    ) exec-path-from-shell-variables)
+      (unless (or (member var exec-path-from-shell-variables) (getenv var))
+        (push var exec-path-from-shell-variables)))
+    :post-config
+    (let ((shell-term-shell (getenv "SHELL")))
+      (unless (empty-string-p shell-term-shell)
+        (setq shell-term-shell (chomp shell-term-shell))
+        (setq shell-default-term-shell shell-term-shell)
+        (setq multi-term-program shell-term-shell)))))
+
+
 ;; goto-addr
 (defun cats-core/init-goto-addr ()
   "Minor mode to buttonize URLs and e-mail addresses in the current buffer."
@@ -352,6 +371,10 @@
 
 
 ;; term
+
+;; Rebinding ESC has the drawback that programs like vi cannot use it anymore.
+;; Workaround: switch to Emacs state and double-press ESC. Otherwise leave ESC
+;; to "C-c C-j". Or bind char-mode ESC to "C-c C-x"?
 (defun cats-core/pre-init-term ()
   ;; kill buffer after terminal is exited
   (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
@@ -362,30 +385,95 @@
       ad-do-it))
   (ad-activate 'term-sentinel)
 
+  ;; force usage of bash, do not ask me
   (defadvice ansi-term (before force-bash)
     (interactive (list shell-default-term-shell)))
-  (ad-activate 'ansi-term)
+  (ad-activate 'ansi-term))
 
-  (with-eval-after-load 'exec-path-from-shell
-    (let ((shell-term-shell (getenv "SHELL")))
-      (unless (empty-string-p shell-term-shell)
-        (setq shell-term-shell (chomp shell-term-shell))
-        (setq shell-default-term-shell shell-term-shell)
-        (setq multi-term-program shell-term-shell))))
+(defun cats-core/post-init-term ()
+  (evil-set-initial-state 'term-mode 'insert)
+  (if cats-term-sync-state-and-mode-p
+    (add-hook 'term-mode-hook 'cats//term-sync-state-and-mode)
+    (remove-hook 'term-mode-hook 'cats//term-sync-state-and-mode))
 
   ;; display certain characters correctly
-  (defun my-term-use-utf8 ()
-    (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-  (add-hook 'term-exec-hook 'my-term-use-utf8)
-
+  (add-hook 'term-exec-hook 'cats//term-use-utf8)
   ;; clickable urls
-  (defun my-term-hook ()
-    (goto-address-mode))
-  (add-hook 'term-mode-hook 'my-term-hook))
+  (add-hook 'term-mode-hook 'spacemacs/toggle-goto-address-mode-on)
+  (add-hook 'term-mode-hook 'cats//term-escape-stay)
+
+  ;; Evil has some "C-" bindings in insert state that shadow regular terminal bindings.
+  ;; Don't raw-send "C-c" (prefix key) nor "C-h" (help prefix).
+  (evil-define-key 'insert term-raw-map
+    (kbd "C-a") 'term-send-raw
+    (kbd "C-b") 'term-send-raw ; Should not be necessary.
+    (kbd "C-d") 'term-send-raw
+    (kbd "C-e") 'term-send-raw
+    (kbd "C-f") 'term-send-raw ; Should not be necessary.
+    (kbd "C-k") 'term-send-raw
+    (kbd "C-l") 'term-send-raw ; Should not be necessary.
+    (kbd "C-n") 'term-send-raw
+    (kbd "C-o") 'term-send-raw
+    (kbd "C-p") 'term-send-raw
+    (kbd "C-q") 'term-send-raw ; Should not be necessary.
+    (kbd "C-r") 'term-send-raw
+    (kbd "C-s") 'term-send-raw ; Should not be necessary.
+    (kbd "C-t") 'term-send-raw
+    (kbd "C-u") 'term-send-raw ; Should not be necessary.
+    (kbd "C-v") 'term-send-raw ; Should not be necessary.
+    (kbd "C-w") 'term-send-raw
+    (kbd "C-y") 'term-send-raw
+    (kbd "C-z") 'term-send-raw
+    (kbd "C-c C-d") 'term-send-eof
+    (kbd "C-c C-z") 'term-stop-subjob)
+
+  (evil-define-key 'normal term-mode-map
+    (kbd "C-c C-k") 'cats/term-char-mode-insert
+    (kbd "<return>") 'term-send-input
+
+    (kbd "p") 'term-paste
+
+    ;; motion
+    "[" 'term-previous-prompt
+    "]" 'term-next-prompt
+    (kbd "M-k") 'term-previous-prompt
+    (kbd "M-j") 'term-next-prompt
+    "gk" 'term-previous-prompt
+    "gj" 'term-next-prompt
+    ;; "0" 'term-bol ; "0" is meant to really go at the beginning of line.
+    "^" 'term-bol
+    "$" 'term-show-maximum-output))
+
+
+;; comint
+(defun cats-core/pre-init-comint ()
+  (add-hook 'comint-mode-hook 'spacemacs/disable-hl-line-mode)
+  (add-hook 'comint-mode-hook 'spacemacs/toggle-goto-address-mode-on))
+
+(defun cats-core/post-init-comint ()
+  (when evil-want-C-d-scroll
+    (evil-define-key 'normal comint-mode-map
+      (kbd "C-d") #'evil-scroll-down
+      (kbd "C-j") #'evil-scroll-down))
+
+  (evil-define-key 'normal comint-mode-map
+    (kbd "M-j") #'comint-next-input
+    (kbd "M-k") #'comint-previous-input
+    (kbd "gj") #'comint-next-input
+    (kbd "gk") #'comint-previous-input
+    (kbd "]") #'comint-next-input
+    (kbd "[") #'comint-previous-input)
+
+  (evil-define-key 'insert comint-mode-map
+    (kbd "<up>") #'comint-previous-input
+    (kbd "<down>") #'comint-next-input))
 
 
 ;; shell
-(defun cats-core/pre-init-shell ())
+(defun cats-core/pre-init-shell ()
+  ;; shell-mode-map
+  ;; define-derived-mode shell-mode comint-mode "Shell"
+  )
 
 
 ;; xterm-color

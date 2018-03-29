@@ -284,4 +284,12 @@
   :group 'aws-snippets
   :type 'string)
 
+(defcustom cats-term-sync-state-and-mode-p t
+  "Synchronize insert/normal state with char/line-mode respectively.
+When non-nil, going to normal state will automatically switch to
+line-mode. Conversely, going to insert state on the last
+commandline will automatically switch to char-mode. Warning: This
+feature is experimental."
+  :type 'boolean)
+
 ;;; config.el ends here
