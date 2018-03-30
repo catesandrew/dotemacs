@@ -541,12 +541,16 @@
 ;; gh
 (defun cats/init-gh ()
   (use-package gh
-    :commands (gh-profile-get-remote-profile)
+    :commands (gh-profile-get-remote-profile gh-profile-current-profile)
     :init
     (progn
       (require 'git-link)
       (add-hook 'cats/project-hook 'cats//toggle-gh-profile))
-    :config (progn)))
+    :config
+    (progn
+      (defun git-link--remote-url (name)
+        (car (git-link--exec "remote" "get-url" "--all" (format "%s" name))))
+      )))
 
 
 ;; git-commit
