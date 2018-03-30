@@ -9,11 +9,20 @@
 (defconst cats-org-packages
   '(
      autoinsert
+     ;; company                            ;; defined in spacemacs org
+     ;; company-emoji                      ;; defined in spacemacs org
+     ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
+     ;; evil-org                           ;; defined in spacemacs org
+     ;; evil-surround                      ;; defined in spacemacs org
+     ;; gnuplot                            ;; defined in spacemacs org
+     ;; htmlize                            ;; defined in spacemacs org
      ;; ob, org and org-agenda are installed by `org-plus-contrib' from spacemacs-org
-     (ob :location built-in)
+     (ob :location built-in)            ;; defined in spacemacs org
      (ob-ditta :location built-in)
-     (org :location built-in)   ;; (cats-default-org-config :location built-in)
-     (org-agenda :location built-in)
+     (org :location built-in)           ;; defined in spacemacs org
+     (org-agenda :location built-in)    ;; defined in spacemacs org
+     ;; (org-brain :location built-in)     ;; defined in spacemacs org
+     ;; (org-expiry :location built-in)    ;; defined in spacemacs org
      (org-faces :location built-in)
      (org-clock :location built-in)
      (org-id :location built-in)
@@ -30,25 +39,26 @@
      ;; org-notify
      helm-org-rifle
      ;; org-ehtml
-     ;; org-brain
-     ;; (org-expiry :location built-in)
-     org-journal
-     ;; org-download
-     ;; org-mime
-     ;; org-pomodoro
-     ;; org-present
-     org-projectile
+     org-journal                        ;; defined in spacemacs org
+     ;; org-download                       ;; defined in spacemacs org
+     ;; org-mime                           ;; defined in spacemacs org
+     ;; org-pomodoro                       ;; defined in spacemacs org
+     ;; org-present                        ;; defined in spacemacs org
+     org-projectile                     ;; defined in spacemacs org
      (org-projectile-helm :requires org-projectile)
      (ox :toggle org-enable-ox-support :location built-in)
-     (ox-latex :toggle org-enable-ox-latex-support :location built-in)
-     (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
+     (ox-ascii :toggle org-enable-ox-ascii-support :location built-in)
      (ox-beamer :toggle org-enable-ox-beamer-support :location built-in)
+     (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
+     ;; ox-gfm                             ;; defined in spacemacs org
+     (ox-html :toggle org-enable-ox-html-support :location built-in)
+     ;; ox-hugo                            ;; defined in spacemacs org
+     (ox-jira :toggle org-enable-jira-support)
+     (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-md :toggle org-enable-ox-md-support :location built-in)
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
-     (ox-jira :toggle org-enable-jira-support)
-     (ox-html :toggle org-enable-ox-html-support :location built-in)
-     (ox-ascii :toggle org-enable-ox-ascii-support :location built-in)
-     ox-reveal
+     ox-reveal                          ;; defined in spacemacs org
+     ;; ox-twbs                            ;; defined in spacemacs org
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
@@ -272,6 +282,31 @@
 
 ;; org-present
 (defun cats-org/pre-init-org-present ()
+  ;; (use-package org-present
+  ;;   :defer t
+  ;;   :init
+  ;;   (progn
+  ;;     (evilified-state-evilify nil org-present-mode-keymap
+  ;;       "h" 'org-present-prev
+  ;;       "l" 'org-present-next
+  ;;       "q" 'org-present-quit)
+  ;;     (defun spacemacs//org-present-start ()
+  ;;       "Initiate `org-present' mode"
+  ;;       (org-present-big)
+  ;;       (org-display-inline-images)
+  ;;       (org-present-hide-cursor)
+  ;;       (org-present-read-only)
+  ;;       (evil-evilified-state))
+  ;;     (defun spacemacs//org-present-end ()
+  ;;       "Terminate `org-present' mode"
+  ;;       (org-present-small)
+  ;;       (org-remove-inline-images)
+  ;;       (org-present-show-cursor)
+  ;;       (org-present-read-write)
+  ;;       (evil-normal-state))
+  ;;     (add-hook 'org-present-mode-hook 'spacemacs//org-present-start)
+  ;;     (add-hook 'org-present-mode-quit-hook 'spacemacs//org-present-end)))
+
   (spacemacs|use-package-add-hook org-present
     :post-init
     ()))
@@ -279,6 +314,17 @@
 
 ;; org-pomodoro
 (defun cats-org/pre-init-org-pomodoro ()
+  ;; (use-package org-pomodoro
+  ;;   :defer t
+  ;;   :init
+  ;;   (progn
+  ;;     (when (spacemacs/system-is-mac)
+  ;;       (setq org-pomodoro-audio-player "/usr/bin/afplay"))
+  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-mode
+  ;;       "Cp" 'org-pomodoro)
+  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode
+  ;;       "Cp" 'org-pomodoro)))
+
   (spacemacs|use-package-add-hook org-pomodoro
     :post-init
     ()))
@@ -832,6 +878,261 @@
 
 ;; org
 (defun cats-org/pre-init-org ()
+;; (use-package org
+;;     :defer t
+;;     :commands (orgtbl-mode)
+;;     :init
+;;     (progn
+;;       (setq org-clock-persist-file (concat spacemacs-cache-directory
+;;                                            "org-clock-save.el")
+;;             org-id-locations-file (concat spacemacs-cache-directory
+;;                                           ".org-id-locations")
+;;             org-publish-timestamp-directory (concat spacemacs-cache-directory
+;;                                                     ".org-timestamps/")
+;;             org-startup-with-inline-images t
+;;             org-image-actual-width nil)
+
+;;       ;; Insert key for org-mode and markdown a la C-h k
+;;       ;; from SE endless http://emacs.stackexchange.com/questions/2206/i-want-to-have-the-kbd-tags-for-my-blog-written-in-org-mode/2208#2208
+;;       (defun spacemacs/insert-keybinding-org (key)
+;;         "Ask for a key then insert its description.
+;; Will work on both org-mode and any mode that accepts plain html."
+;;         (interactive "kType key sequence: ")
+;;         (let* ((tag "@@html:<kbd>@@ %s @@html:</kbd>@@"))
+;;           (if (null (equal key "\r"))
+;;               (insert
+;;                (format tag (help-key-description key nil)))
+;;             (insert (format tag ""))
+;;             (forward-char -8))))
+
+;;       (dolist (prefix '(
+;;                          ("mb" . "babel")
+;;                          ("mC" . "clocks")
+;;                          ("md" . "dates")
+;;                          ("me" . "export")
+;;                          ("mi" . "insert")
+;;                          ("miD" . "download")
+;;                          ("ms" . "trees/subtrees")
+;;                          ("mT" . "toggles")
+;;                          ("mt" . "tables")
+;;                          ("mtd" . "delete")
+;;                          ("mti" . "insert")
+;;                          ("mtt" . "toggle")
+;;                          ("mx" . "text")
+;;                          ))
+;;         (spacemacs/declare-prefix-for-mode 'org-mode (car prefix) (cdr prefix)))
+
+;;       (spacemacs/set-leader-keys-for-major-mode 'org-mode
+;;         "'" 'org-edit-special
+;;         "c" 'org-capture
+;;         "Cc" 'org-clock-cancel
+;;         "Ci" 'org-clock-in
+;;         "Co" 'org-clock-out
+;;         "Cr" 'org-resolve-clocks
+;;         "dd" 'org-deadline
+;;         "ds" 'org-schedule
+;;         "dt" 'org-time-stamp
+;;         "dT" 'org-time-stamp-inactive
+;;         "ee" 'org-export-dispatch
+
+;;         "a" 'org-agenda
+
+;;         "Tc" 'org-toggle-checkbox
+;;         "Te" 'org-toggle-pretty-entities
+;;         "Ti" 'org-toggle-inline-images
+;;         "Tl" 'org-toggle-link-display
+;;         "Tt" 'org-show-todo-tree
+;;         "TT" 'org-todo
+;;         "TV" 'space-doc-mode
+;;         "Tx" 'org-toggle-latex-fragment
+
+;;         ;; More cycling options (timestamps, headlines, items, properties)
+;;         "L" 'org-shiftright
+;;         "H" 'org-shiftleft
+;;         "J" 'org-shiftdown
+;;         "K" 'org-shiftup
+
+;;         ;; Change between TODO sets
+;;         "C-S-l" 'org-shiftcontrolright
+;;         "C-S-h" 'org-shiftcontrolleft
+;;         "C-S-j" 'org-shiftcontroldown
+;;         "C-S-k" 'org-shiftcontrolup
+
+;;         ;; Subtree editing
+;;         "sa" 'org-toggle-archive-tag
+;;         "sA" 'org-archive-subtree
+;;         "sb" 'org-tree-to-indirect-buffer
+;;         "sh" 'org-promote-subtree
+;;         "sj" 'org-move-subtree-down
+;;         "sk" 'org-move-subtree-up
+;;         "sl" 'org-demote-subtree
+;;         "sn" 'org-narrow-to-subtree
+;;         "sN" 'widen
+;;         "sr" 'org-refile
+;;         "ss" 'org-sparse-tree
+;;         "sS" 'org-sort
+
+;;         ;; tables
+;;         "ta" 'org-table-align
+;;         "tb" 'org-table-blank-field
+;;         "tc" 'org-table-convert
+;;         "tdc" 'org-table-delete-column
+;;         "tdr" 'org-table-kill-row
+;;         "te" 'org-table-eval-formula
+;;         "tE" 'org-table-export
+;;         "th" 'org-table-previous-field
+;;         "tH" 'org-table-move-column-left
+;;         "tic" 'org-table-insert-column
+;;         "tih" 'org-table-insert-hline
+;;         "tiH" 'org-table-hline-and-move
+;;         "tir" 'org-table-insert-row
+;;         "tI" 'org-table-import
+;;         "tj" 'org-table-next-row
+;;         "tJ" 'org-table-move-row-down
+;;         "tK" 'org-table-move-row-up
+;;         "tl" 'org-table-next-field
+;;         "tL" 'org-table-move-column-right
+;;         "tn" 'org-table-create
+;;         "tN" 'org-table-create-with-table.el
+;;         "tr" 'org-table-recalculate
+;;         "ts" 'org-table-sort-lines
+;;         "ttf" 'org-table-toggle-formula-debugger
+;;         "tto" 'org-table-toggle-coordinate-overlays
+;;         "tw" 'org-table-wrap-region
+
+;;         ;; Source blocks / org-babel
+;;         "bp" 'org-babel-previous-src-block
+;;         "bn" 'org-babel-next-src-block
+;;         "be" 'org-babel-execute-maybe
+;;         "bo" 'org-babel-open-src-block-result
+;;         "bv" 'org-babel-expand-src-block
+;;         "bu" 'org-babel-goto-src-block-head
+;;         "bg" 'org-babel-goto-named-src-block
+;;         "br" 'org-babel-goto-named-result
+;;         "bb" 'org-babel-execute-buffer
+;;         "bs" 'org-babel-execute-subtree
+;;         "bd" 'org-babel-demarcate-block
+;;         "bt" 'org-babel-tangle
+;;         "bf" 'org-babel-tangle-file
+;;         "bc" 'org-babel-check-src-block
+;;         "bj" 'org-babel-insert-header-arg
+;;         "bl" 'org-babel-load-in-session
+;;         "bi" 'org-babel-lob-ingest
+;;         "bI" 'org-babel-view-src-block-info
+;;         "bz" 'org-babel-switch-to-session
+;;         "bZ" 'org-babel-switch-to-session-with-code
+;;         "ba" 'org-babel-sha1-hash
+;;         "bx" 'org-babel-do-key-sequence-in-edit-buffer
+;;         "b." 'spacemacs/org-babel-transient-state/body
+
+;;         ;; Multi-purpose keys
+;;         (or dotspacemacs-major-mode-leader-key ",") 'org-ctrl-c-ctrl-c
+;;         "*" 'org-ctrl-c-star
+;;         "-" 'org-ctrl-c-minus
+;;         "#" 'org-update-statistics-cookies
+;;         "RET"   'org-ctrl-c-ret
+;;         "M-RET" 'org-meta-return
+;;         ;; attachments
+;;         "A" 'org-attach
+;;         ;; insertion
+;;         "id" 'org-insert-drawer
+;;         "ie" 'org-set-effort
+;;         "if" 'org-footnote-new
+;;         "ih" 'org-insert-heading
+;;         "iH" 'org-insert-heading-after-current
+;;         "iK" 'spacemacs/insert-keybinding-org
+;;         "il" 'org-insert-link
+;;         "ip" 'org-set-property
+;;         "is" 'org-insert-subheading
+;;         "it" 'org-set-tags
+;;         ;; region manipulation
+;;         "xb" (spacemacs|org-emphasize spacemacs/org-bold ?*)
+;;         "xc" (spacemacs|org-emphasize spacemacs/org-code ?~)
+;;         "xi" (spacemacs|org-emphasize spacemacs/org-italic ?/)
+;;         "xo" 'org-open-at-point
+;;         "xr" (spacemacs|org-emphasize spacemacs/org-clear ? )
+;;         "xs" (spacemacs|org-emphasize spacemacs/org-strike-through ?+)
+;;         "xu" (spacemacs|org-emphasize spacemacs/org-underline ?_)
+;;         "xv" (spacemacs|org-emphasize spacemacs/org-verbatim ?=))
+
+;;       ;; Add global evil-leader mappings. Used to access org-agenda
+;;       ;; functionalities – and a few others commands – from any other mode.
+;;       (spacemacs/declare-prefix "ao" "org")
+;;       (spacemacs/declare-prefix "aok" "clock")
+;;       (spacemacs/set-leader-keys
+;;         ;; org-agenda
+;;         "ao#" 'org-agenda-list-stuck-projects
+;;         "ao/" 'org-occur-in-agenda-files
+;;         "aoa" 'org-agenda-list
+;;         "aoc" 'org-capture
+;;         "aoe" 'org-store-agenda-views
+;;         "aokg" 'org-clock-goto
+;;         "aoki" 'org-clock-in-last
+;;         "aokj" 'org-clock-jump-to-current-clock
+;;         "aoko" 'org-clock-out
+;;         "aokr" 'org-resolve-clocks
+;;         "aol" 'org-store-link
+;;         "aom" 'org-tags-view
+;;         "aoo" 'org-agenda
+;;         "aos" 'org-search-view
+;;         "aot" 'org-todo-list
+;;         ;; SPC C- capture/colors
+;;         "Cc" 'org-capture)
+
+;;       (define-key global-map "\C-cl" 'org-store-link)
+;;       (define-key global-map "\C-ca" 'org-agenda)
+;;       (define-key global-map "\C-cc" 'org-capture))
+;;     :config
+;;     (progn
+;;       ;; We add this key mapping because an Emacs user can change
+;;       ;; `dotspacemacs-major-mode-emacs-leader-key' to `C-c' and the key binding
+;;       ;; C-c ' is shadowed by `spacemacs/default-pop-shell', effectively making
+;;       ;; the Emacs user unable to exit src block editing.
+;;       (define-key org-src-mode-map
+;;         (kbd (concat dotspacemacs-major-mode-emacs-leader-key " '"))
+;;         'org-edit-src-exit)
+
+;;       ;; Evilify the calendar tool on C-c .
+;;       (unless (eq 'emacs dotspacemacs-editing-style)
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-h")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-backward-day 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-l")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-forward-day 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-k")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-backward-week 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-j")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-forward-week 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-H")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-backward-month 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-L")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-forward-month 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-K")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-backward-year 1))))
+;;         (define-key org-read-date-minibuffer-local-map (kbd "M-J")
+;;           (lambda () (interactive)
+;;             (org-eval-in-calendar '(calendar-forward-year 1)))))
+
+;;       (spacemacs|define-transient-state org-babel
+;;         :title "Org Babel Transient state"
+;;         :doc "
+;; [_j_/_k_] navigate src blocks         [_e_] execute src block
+;; [_g_] goto named block                [_'_] edit src block
+;; [_q_] quit"
+;;         :bindings
+;;         ("q" nil :exit t)
+;;         ("j" org-babel-next-src-block)
+;;         ("k" org-babel-previous-src-block)
+;;         ("g" org-babel-goto-named-src-block)
+;;         ("e" org-babel-execute-maybe :exit t)
+;;         ("'" org-edit-special :exit t))))
+
   (spacemacs|use-package-add-hook org
     :pre-config
     (progn)
@@ -894,7 +1195,8 @@
       ;; selection scheme.
       (setq org-use-fast-todo-selection t)
       ;; The maximum level for Imenu access to Org headlines. This also applied
-      ;; for speedbar access.
+      ;; for speedbar access. This is consistent with the value of
+      ;; `helm-org-headings-max-depth'.
       (setq org-imenu-depth 10)
       ;; hide emphasis-markers
       (setq org-hide-emphasis-markers t)
@@ -1317,6 +1619,12 @@
     (progn
       ;; Alist mapping languages to their major mode.
       (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+
+      ;; (spacemacs/set-leader-keys-for-minor-mode 'org-src-mode
+      ;;   dotspacemacs-major-mode-leader-key 'org-edit-src-exit
+      ;;   "c" 'org-edit-src-exit
+      ;;   "a" 'org-edit-src-abort
+      ;;   "k" 'org-edit-src-abort)
       )
     ))
 
@@ -1333,6 +1641,14 @@
       ;; Templates for the creation of new entries.
       (unless (boundp 'org-capture-templates)
         (defvar org-capture-templates nil))
+
+      ;; Follow the confirm and abort conventions
+      ;; (spacemacs/set-leader-keys-for-minor-mode 'org-capture-mode
+      ;;   dotspacemacs-major-mode-leader-key 'org-capture-finalize
+      ;;   "a" 'org-capture-kill
+      ;;   "c" 'org-capture-finalize
+      ;;   "k" 'org-capture-kill
+      ;;   "r" 'org-capture-refile)
 
       (add-to-list 'org-capture-templates
         `("c" "Calendar entry" entry
@@ -1472,6 +1788,9 @@
     :init
     (progn
       (setq helm-org-headings-fontify t)
+      (setq helm-org-headings-max-depth 10)
+
+
       )
     :config
     (progn
@@ -1504,6 +1823,14 @@
 
 ;; org-brain
 (defun cats-org/pre-init-org-brain ()
+  ;; (use-package org-brain
+  ;;   :defer t
+  ;;   :init
+  ;;   (progn
+  ;;     (spacemacs/set-leader-keys
+  ;;       "aob" 'org-brain-visualize)
+  ;;     (evil-set-initial-state 'org-brain-visualize-mode 'emacs)))
+
   (uspacemacs|use-package-add-hook org-brain
     :post-init
     ()))
@@ -1511,12 +1838,34 @@
 
 ;; org-expiry
 (defun cats-org/pre-init-org-expiry ()
+  ;; (use-package org-expiry
+  ;;   :commands (org-expiry-insinuate
+  ;;               org-expiry-deinsinuate
+  ;;               org-expiry-insert-created
+  ;;               org-expiry-insert-expiry
+  ;;               org-expiry-add-keyword
+  ;;               org-expiry-archive-subtree
+  ;;               org-expiry-process-entry
+  ;;               org-expiry-process-entries))
+
   (spacemacs|use-package-add-hook org-expiry
     ))
 
 
 ;; org-download
 (defun cats-org/pre-init-org-download ()
+  ;; (use-package org-download
+  ;;   :commands (org-download-enable
+  ;;               org-download-yank
+  ;;               org-download-screenshot)
+  ;;   :init
+  ;;   (progn
+  ;;     (add-hook 'org-mode-hook 'org-download-enable)
+  ;;     (spacemacs/declare-prefix-for-mode 'org-mode "miD" "download")
+  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-mode
+  ;;       "iDy" 'org-download-yank
+  ;;       "iDs" 'org-download-screenshot)))
+
   (spacemacs|use-package-add-hook org-download
     :post-init
     ()))
@@ -1524,6 +1873,15 @@
 
 ;; org-mime
 (defun cats-org/pre-init-org-mime ()
+  ;; (use-package org-mime
+  ;;   :defer t
+  ;;   :init
+  ;;   (progn
+  ;;     (spacemacs/set-leader-keys-for-major-mode 'message-mode
+  ;;       "em" 'org-mime-htmlize)
+  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-mode
+  ;;       "em" 'org-mime-org-buffer-htmlize)))
+
   (spacemacs|use-package-add-hook org-mime
     :post-init
     ()))
@@ -1571,14 +1929,5 @@
         "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")
       (cats//register-org-agenda-file-regexp
         "\\`[^.].*\\.org\\'"))))
-
-
-;; default-cats-org-config
-(defun cats-org/init-default-cats-org-config ()
-  "Add org mode hooks."
-  (with-eval-after-load 'org
-
-
-  ))
 
 ;;; packages.el ends here
