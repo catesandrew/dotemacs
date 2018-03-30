@@ -20,6 +20,10 @@
      (org-indent :location built-in)
      (org-list :location built-in)
      (org-src :location built-in)
+     (org-capture :location built-in)
+     (org-habit :location built-in)
+     (org-mobile :location built-in)
+     (helm-org :location built-in)
      org-super-agenda
      org-jira
      ;; org-caldav
@@ -253,7 +257,15 @@
     :defer t
     :init
     (progn
+      ;; Activate smart quotes during export
       (setq org-export-with-smart-quotes t)
+      ;; Underscore in export
+      (setq org-export-with-sub-superscripts nil)
+      ;; The last level which is still exported as a headline.
+      (setq org-export-headline-levels 3)
+      ;; Set Background Color of Source Blocks for Export.This was taken from
+      ;; [[http://emacs.stackexchange.com/questions/3374/][here]].
+      (add-hook 'org-export-before-processing-hook 'cats//org-inline-css-hook)
       )
     :config (progn)))
 
@@ -838,13 +850,35 @@
       (add-to-list 'org-babel-load-languages '(sql . t))
       (add-to-list 'org-babel-load-languages '(sqlite . t))
 
+      ;; Alist between context and visibility span when revealing a location.
+      (add-to-list 'org-show-context-detail '(org-goto . lineage))
+
+      ;; (define-key org-mode-map "\C-c\S-n" 'cats/find-next-BEGIN_SRC_block)
+      ;; (define-key org-mode-map "\C-c\S-p" 'cats/find-prev-BEGIN_SRC_block)
+
+      ;; Modules that should always be loaded together with org.el.
+      (add-to-list 'org-modules 'org-habit)
+      (add-to-list 'org-modules 'org-expiry)
+      (add-to-list 'org-modules 'org-notify))
+    :post-init
+    (progn
+      (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
+        (setq org-export-async-init-file (concat dir "org-async-init.el")))
+
+      ;; Directory with Org files.
+      (setq org-directory cats//org-dir)
+      ;; Create org-directory
+      (unless (file-exists-p org-directory)
+        (make-directory org-directory))
+
+      ;; Default target for storing notes.
       (setq org-default-notes-file cats//org-notes-file)
       (setq org-ellipsis "⤵")
+      ;; When nil, these commands will be disabled, so that you never
+      ;; accidentally set a priority.
       (setq org-enable-priority-commands nil)
-
       ;; Non-nil means fast tag selection exits after first change.
       (setq org-fast-tag-selection-single-key t)
-
       ;; Information to record when a task moves to the DONE state.
       (setq org-log-done t)
       ;; When non-nil, fontify code in code blocks.
@@ -859,21 +893,64 @@
       ;; mechanism for TODO keywords will be replaced by a single-key, direct
       ;; selection scheme.
       (setq org-use-fast-todo-selection t)
-
       ;; The maximum level for Imenu access to Org headlines. This also applied
       ;; for speedbar access.
       (setq org-imenu-depth 10)
-      )
-    :post-init
-    (progn
-      (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
-        (setq org-export-async-init-file (concat dir "org-async-init.el")))
+      ;; hide emphasis-markers
+      (setq org-hide-emphasis-markers t)
+      ;; Check if in invisible region before inserting or deleting a character.
+      (setq org-catch-invisible-edits 'smart)
+      ;; https://github.com/dakrone/eos/blob/master/eos-org.org
+      ;; Special begin/end of line to skip tags and stars, `C-a' and `C-e' behave
+      ;; specially in headlines and items.
+      (setq org-special-ctrl-a/e t)
+      ;; Special keys for killing a headline. Non-nil means `C-k' will behave
+      ;; specially in headlines.
+      (setq org-special-ctrl-k t)
+      ;; Provide control over stripping of leading/trailing blank lines from code
+      ;; blocks. Blank lines are removed when exiting the code edit buffer
+      (setq org-src-strip-leading-and-trailing-blank-lines t)
+      ;; Return on a link breaks the link? Just follow it. Non-nil means on links
+      ;; RET will follow the link. In tables, the special behavior of RET has
+      ;; precedence."
+      (setq org-return-follows-link t)
+      ;; Smart yanking:
+      ;; https://www.gnu.org/software/emacs/manual/html_node/org/Structure-editing.html
+      (setq org-yank-adjusted-subtree t)
+      ;; The column to which tags should be indented in a headline.
+      (setq org-tags-column -80)
+      ;; Non-nil means entering Org mode will switch to OVERVIEW.
+      (setq org-startup-folded t)
+      ;; Indentation for the content of a source code block.
+      (setq org-edit-src-content-indentation 0)
+      ;; The default interface to be used for `org-goto'.
+      (setq org-goto-interface 'outline-path-completion)
+      ;; Maximum target level when running `org-goto' with refile interface."
+      (setq org-goto-max-level 10)
+      ;; List of property/value pairs that can be inherited by any entry.
+      (setq org-global-properties
+        '(quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                  ("STYLE_ALL" . "habit"))))
+      ;; The TODO state to which a repeater should return the repeating task.
+      (setq org-todo-repeat-to-state "TODO")
+      ;; The default column format, if no other format has been defined. This
+      ;; variable can be set on the per-file basis by inserting a line
+      (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+      ;; Name of the log drawer, as a string, or nil.
+      (setq org-log-into-drawer t)
+      ;; Information to record when the scheduling date of a tasks is modified.
+      (setq org-log-reschedule t)
+      ;; Information to record when the deadline date of a tasks is modified.
+      (setq org-log-redeadline t)
+      ;; Non-nil means inserting a TODO heading is treated as state change.
+      (setq org-treat-insert-todo-heading-as-state-change t)
+
+      ;; (add-hook 'org-insert-heading-hook 'cats/insert-heading-inactive-timestamp 'append)
 
       (with-eval-after-load 'ispell
         (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
         (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
-        (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))
-        )
+        (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE")))
 
       )
     :pre-init
@@ -1032,10 +1109,60 @@
       ;; Up to 9 levels deep
       (setq org-refile-targets '((nil :maxlevel . 9)
                                   (org-agenda-files :maxlevel . 9)))
+      ;; Use full outline paths for refile targets - we file directly with IDO
+      (setq org-refile-use-outline-path t)
+      ;; Targets complete directly with IDO
+      (setq org-outline-path-complete-in-steps nil)
+      ;; Allow refile to create parent tasks with confirmation
+      (setq org-refile-allow-creating-parent-nodes 'confirm)
+      (setq org-refile-target-verify-function 'cats//verify-refile-target)
       )
     :pre-init
     (progn)
     )
+
+  (spacemacs|use-package-add-hook org
+    "Links in Org files."
+    :post-config
+    (progn
+      ;; YouTube videos
+      ;;
+      ;; To use this, just write your org links in the following way (optionally
+      ;; adding a description). [[yt:A3JAlWM8qRM]]
+      ;;
+      ;; When you export to HTML, this will produce that same inlined snippet that
+      ;; Youtube specifies. The advantage (over simply writing out the iframe) is
+      ;; that this link can be clicked in org-mode, and can be exported to other
+      ;; formats as well.
+      (org-link-set-parameters "yt"
+        :follow (lambda (handle)
+                  (browse-url
+                    (concat "https://www.youtube.com/embed/"
+                      handle)))
+        :export (lambda (path desc backend)
+                  (cl-case backend
+                    (html (format cats//org-yt-iframe-format
+                            path (or desc "")))
+                    (latex (format "\href{%s}{%s}"
+                             path (or desc "video"))))))
+      )
+    :post-init
+    (progn
+      ;; Define some handy link abbreviations
+      ;; example: [[bmap:space needle]]
+      (setq org-link-abbrev-alist '(
+         ("bing" . "http://www.bing.com/search?q=%sform=OSDSRC")
+         ("cpan" . "http://search.cpan.org/search?query=%s&mode=all")
+         ("google" . "http://www.google.com/search?q=")
+         ("gmap" . "http://maps.google.com/maps?q=%s")
+         ("omap" . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
+         ("bmap" . "http://www.bing.com/maps/default.aspx?q=%s&mkt=en&FORM=HDRSC4")
+         ("wiki" . "http://en.wikipedia.org/wiki/")
+         ("rfc" . "http://tools.ietf.org/rfc/rfc%s.txt")
+         ("ads" . "http://adsabs.harvard.edu/cgi-bin/nph-abs_connect?author=%s&db_key=AST")))
+
+      ))
+
   )
 
 
@@ -1106,7 +1233,7 @@
                                    :minutes ":%02d"
                                    :require-minutes t))
       (setq cats//keep-clock-running nil)
-
+      ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         "CI" 'cats/punch-in
         "CO" 'cats/punch-out)
@@ -1182,9 +1309,173 @@
       ;; (when frame-mode
       ;;   (progn
       ;;     (setcdr (assoc 'file org-link-frame-setup) 'find-file-other-frame)))
+
+      ;; If non-nil preserve leading whitespace characters on export.
+      (setq org-src-preserve-indentation t)
       )
     :config
-    (progn)
+    (progn
+      ;; Alist mapping languages to their major mode.
+      (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+      )
+    ))
+
+
+;; org-capture
+(defun cats-org/init-org-capture ()
+  (use-package org-capture
+    :defer t
+    :init
+    (progn
+      )
+    :config
+    (progn
+      ;; Templates for the creation of new entries.
+      (unless (boundp 'org-capture-templates)
+        (defvar org-capture-templates nil))
+
+      (add-to-list 'org-capture-templates
+        `("c" "Calendar entry" entry
+           ,(format "%s\n%s\n%s" "* %?" cats//org-properties-string "%^T")))
+
+      (add-to-list 'org-capture-templates
+        `("C" "Calendar entry (Linked)" entry
+           (file ,cats//org-calendar-file)
+           ,(format "%s%s\n%s" "* %? %A" cats//org-properties-string "%^T")))
+
+      (add-to-list 'org-capture-templates
+        `("G" "GTD Todo (Linked)" entry (file ,cats//org-gtd-file)
+           (function cats//make-org-linked-todo-template)))
+
+      (add-to-list 'org-capture-templates
+        `("g" "GTD Todo" entry (file ,cats//org-gtd-file)
+           (function cats//make-org-todo-template)))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("h" "Habit" entry
+      ;;      (file ,cats/org-habits-file)
+      ;;      "* TODO\nSCHEDULED: %^t\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:END:"))
+
+      (add-to-list 'org-capture-templates
+        `("j" "Journal" entry
+           (file+olp+datetree ,cats//org-journal-file)
+           "* %?\n%U\n"))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("j" "Journal" entry
+      ;;      (file+datetree ,cats//org-journal-file)
+      ;;      "* %?\n%U\n"
+      ;;      :clock-in t
+      ;;      :clock-resume t))
+
+      (add-to-list 'org-capture-templates
+        `("l" "Logbook" entry
+           (file ,cats//org-logbook-file)
+           "* LOGBOOK %? :LOGBOOK:\n%U"))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("l" "Links (it)" entry
+      ;;      (file+headline ,cats//org-refile-file "Links")
+      ;;      "** %c\n\n  %u\n  %i"
+      ;;      :empty-lines 1))
+
+      (add-to-list 'org-capture-templates
+        `("m" "Meeting" entry
+           (file ,cats//org-inbox-file)
+           "* MEETING %? :MEETING:\n%U"))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("m" "Meeting" entry
+      ;;      (file ,cats//org-refile-file)
+      ;;      "* MEETING with %? :MEETING:\n%U"
+      ;;      :clock-in t
+      ;;      :clock-resume t))
+
+      (add-to-list 'org-capture-templates
+        `("n" "Note" entry
+           (file+headline ,cats//org-inbox-file "NOTES")
+           "* %? :NOTE:\n%U\n%a\n"))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("n" "note" entry
+      ;;      (file+headline ,cats//org-refile-file "Note")
+      ;;      "* NOTE %?\n%U\n\n\n%i\n\n%a"))
+
+      (add-to-list 'org-capture-templates
+        `("p" "Protocol" entry
+           (file+headline ,cats//org-capture-file "Inbox")
+           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?"))
+
+      (add-to-list 'org-capture-templates
+        `("P" "Protocol Link" entry
+           (file+headline ,cats//org-capture-file "Inbox")
+           "* %? [[%:link][%:description]]\n"))
+
+      (add-to-list 'org-capture-templates
+        `("t" "Todo" entry
+           (file+headline ,cats//org-inbox-file "INBOX")
+           "* TODO %?\n%U\n%a\n"))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("t" "todo" entry
+      ;;      (file+headline ,cats//org-refile-file "Tasks")
+      ;;      "* TODO %^{Task}\n%U\n\n\n%i\n\n%a\n\n%?"))
+
+      ;; (add-to-list 'org-capture-templates
+      ;;   `("w" "work todo" entry
+      ;;      (file+headline "~/workorg/work.org" "Tasks")
+      ;;      "* TODO %^{Task}\n%U\n\n\n%i\n%a\n\n%?"))
+
+      )
+    ))
+
+
+;; org-habit
+(defun cats-org/init-org-habit ()
+  (use-package org-habit
+    :defer t
+    :init
+    (progn
+      ;; The absolute column at which to insert habit consistency graphs. Note
+      ;; that consistency graphs will overwrite anything else in the buffer."
+      (setq org-habit-graph-column 50)
+      ;; If non-nil, only show habits on today's agenda, and not for future
+      ;; days. Note that even when shown for future days, the graph is always
+      ;; relative to the current effective date.
+      (setq org-habit-show-habits-only-for-today t)
+      )
+    :config
+    (progn
+      )
+    ))
+
+
+;; org-mobile
+(defun cats-org/init-org-mobile ()
+  (use-package org-mobile
+    :defer t
+    :init
+    (progn
+      (setq org-mobile-inbox-for-pull cats//org-mobile-inbox-file)
+      (setq org-mobile-directory cats//org-mobile-dir)
+      )
+    :config
+    (progn
+      )
+    ))
+
+
+;; helm-org
+(defun cats-org/init-helm-org ()
+  (use-package helm-org
+    :defer t
+    :init
+    (progn
+      (setq helm-org-headings-fontify t)
+      )
+    :config
+    (progn
+      )
     ))
 
 
@@ -1286,243 +1577,6 @@
 (defun cats-org/init-default-cats-org-config ()
   "Add org mode hooks."
   (with-eval-after-load 'org
-    ;; (define-key org-mode-map "\C-c\S-n" 'cats/find-next-BEGIN_SRC_block)
-    ;; (define-key org-mode-map "\C-c\S-p" 'cats/find-prev-BEGIN_SRC_block)
-
-    ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
-    ;; (add-hook 'org-insert-heading-hook 'cats/insert-heading-inactive-timestamp 'append)
-
-    ;; Open links and files with RET in normal state
-    (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point)
-
-    ;; create org-directory
-    (setq org-directory cats//org-dir)
-    (unless (file-exists-p org-directory)
-      (make-directory org-directory))
-
-    (unless (boundp 'org-capture-templates)
-      (defvar org-capture-templates nil))
-
-    (add-to-list 'org-capture-templates
-      `("c" "Calendar entry" entry
-         ,(format "%s\n%s\n%s" "* %?" cats//org-properties-string "%^T")))
-
-    (add-to-list 'org-capture-templates
-      `("C" "Calendar entry (Linked)" entry
-         (file ,cats//org-calendar-file)
-         ,(format "%s%s\n%s" "* %? %A" cats//org-properties-string "%^T")))
-
-    (add-to-list 'org-capture-templates
-      `("G" "GTD Todo (Linked)" entry (file ,cats//org-gtd-file)
-         (function cats//make-org-linked-todo-template)))
-
-    (add-to-list 'org-capture-templates
-      `("g" "GTD Todo" entry (file ,cats//org-gtd-file)
-         (function cats//make-org-todo-template)))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("h" "Habit" entry
-    ;;      (file ,cats/org-habits-file)
-    ;;      "* TODO\nSCHEDULED: %^t\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:END:"))
-
-    (add-to-list 'org-capture-templates
-      `("j" "Journal" entry
-         (file+olp+datetree ,cats//org-journal-file)
-         "* %?\n%U\n"))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("j" "Journal" entry
-    ;;      (file+datetree ,cats//org-journal-file)
-    ;;      "* %?\n%U\n"
-    ;;      :clock-in t
-    ;;      :clock-resume t))
-
-    (add-to-list 'org-capture-templates
-      `("l" "Logbook" entry
-         (file ,cats//org-logbook-file)
-         "* LOGBOOK %? :LOGBOOK:\n%U"))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("l" "Links (it)" entry
-    ;;      (file+headline ,cats//org-refile-file "Links")
-    ;;      "** %c\n\n  %u\n  %i"
-    ;;      :empty-lines 1))
-
-    (add-to-list 'org-capture-templates
-      `("m" "Meeting" entry
-         (file ,cats//org-inbox-file)
-         "* MEETING %? :MEETING:\n%U"))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("m" "Meeting" entry
-    ;;      (file ,cats//org-refile-file)
-    ;;      "* MEETING with %? :MEETING:\n%U"
-    ;;      :clock-in t
-    ;;      :clock-resume t))
-
-    (add-to-list 'org-capture-templates
-      `("n" "Note" entry
-         (file+headline ,cats//org-inbox-file "NOTES")
-         "* %? :NOTE:\n%U\n%a\n"))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("n" "note" entry
-    ;;      (file+headline ,cats//org-refile-file "Note")
-    ;;      "* NOTE %?\n%U\n\n\n%i\n\n%a"))
-
-    (add-to-list 'org-capture-templates
-      `("p" "Protocol" entry
-         (file+headline ,cats//org-capture-file "Inbox")
-         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?"))
-
-    (add-to-list 'org-capture-templates
-      `("P" "Protocol Link" entry
-         (file+headline ,cats//org-capture-file "Inbox")
-         "* %? [[%:link][%:description]]\n"))
-
-    (add-to-list 'org-capture-templates
-      `("t" "Todo" entry
-         (file+headline ,cats//org-inbox-file "INBOX")
-         "* TODO %?\n%U\n%a\n"))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("t" "todo" entry
-    ;;      (file+headline ,cats//org-refile-file "Tasks")
-    ;;      "* TODO %^{Task}\n%U\n\n\n%i\n\n%a\n\n%?"))
-
-    ;; (add-to-list 'org-capture-templates
-    ;;   `("w" "work todo" entry
-    ;;      (file+headline "~/workorg/work.org" "Tasks")
-    ;;      "* TODO %^{Task}\n%U\n\n\n%i\n%a\n\n%?"))
-
-    ;; Define some handy link abbreviations
-    ;; example: [[bmap:space needle]]
-    (setq org-link-abbrev-alist '(
-      ("bing" . "http://www.bing.com/search?q=%sform=OSDSRC")
-      ("cpan" . "http://search.cpan.org/search?query=%s&mode=all")
-      ("google" . "http://www.google.com/search?q=")
-      ("gmap" . "http://maps.google.com/maps?q=%s")
-      ("omap" . "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
-      ("bmap" . "http://www.bing.com/maps/default.aspx?q=%s&mkt=en&FORM=HDRSC4")
-      ("wiki" . "http://en.wikipedia.org/wiki/")
-      ("rfc" . "http://tools.ietf.org/rfc/rfc%s.txt")
-      ("ads" . "http://adsabs.harvard.edu/cgi-bin/nph-abs_connect?author=%s&db_key=AST")))
-
-
-    ;; Use full outline paths for refile targets - we file directly with IDO
-    (setq org-refile-use-outline-path t)
-    ;; Targets complete directly with IDO
-    (setq org-outline-path-complete-in-steps nil)
-    ;; Allow refile to create parent tasks with confirmation
-    (setq org-refile-allow-creating-parent-nodes 'confirm)
-    (setq org-refile-target-verify-function 'cats//verify-refile-target)
-
-    ;; YouTube videos
-    ;;
-    ;; To use this, just write your org links in the following way (optionally
-    ;; adding a description). [[yt:A3JAlWM8qRM]]
-    ;;
-    ;; When you export to HTML, this will produce that same inlined snippet that
-    ;; Youtube specifies. The advantage (over simply writing out the iframe) is
-    ;; that this link can be clicked in org-mode, and can be exported to other
-    ;; formats as well.
-    (org-add-link-type
-      "yt"
-      (lambda (handle)
-        (browse-url
-          (concat "https://www.youtube.com/embed/"
-            handle)))
-      (lambda (path desc backend)
-        (cl-case backend
-          (html (format cats//org-yt-iframe-format
-                  path (or desc "")))
-          (latex (format "\href{%s}{%s}"
-                   path (or desc "video"))))))
-
-    ;; hide emphasis-markers
-    (setq org-hide-emphasis-markers t)
-    (setq org-catch-invisible-edits 'smart)
-
-    ;; underscore in export
-    (setq org-export-with-sub-superscripts nil)
-
-    ;; https://github.com/dakrone/eos/blob/master/eos-org.org
-    ;; Special begin/end of line to skip tags and stars
-    (setq org-special-ctrl-a/e t)
-
-    ;; Special keys for killing a headline
-    (setq org-special-ctrl-k t)
-
-    ;; blank lines are removed when exiting the code edit buffer
-    (setq org-src-strip-leading-and-trailing-blank-lines t)
-
-    ;; Return on a link breaks the link? Just follow it.
-    (setq org-return-follows-link t)
-
-    ;; Smart yanking:
-    ;; https://www.gnu.org/software/emacs/manual/html_node/org/Structure-editing.html
-    (setq org-yank-adjusted-subtree t)
-    (setq org-tags-column -102)
-
-    ;; use emacs as default. Otherwise executables without extension get
-    ;; executed instead of opened.
-    (setq org-file-apps '((auto-mode . emacs)
-                          ("\\.mm\\'" . default)
-                          ("\\.x?html?\\'" . default)
-                          ("\\.pdf\\'" . default)
-                          (t . emacs)))
-
-    ;; abbreviation Watching
-    ;; [[https://www.youtube.com/watch?v%3DFtieBc3KptU][Emacs For Writers]] by
-    ;; [[https://github.com/incandescentman][Jay Dixit]] I had to configure
-    ;; abbreviations.
-    ;; (if (file-exists-p abbrev-file-name)
-    ;;     (quietly-read-abbrev-file))
-    ;; (set-default 'abbrev-mode t)
-    ;; (abbrev-mode)
-    ;; (setq save-abbrevs 'silently)
-
-    ;; https://github.com/IvanMalison/dotfiles/blob/master/dotfiles/emacs.d/init.el
-    (setq org-startup-folded t)
-    (setq org-edit-src-content-indentation 0)
-    (setq org-src-preserve-indentation t)
-    (setq org-mobile-inbox-for-pull cats//org-mobile-inbox-file)
-    (setq org-mobile-directory cats//org-mobile-dir)
-    (setq org-goto-interface 'outline-path-completion)
-    (setq org-goto-max-level 10)
-    (setq org-export-headline-levels 3)
-
-    ;; Disable yasnippet in org-mode
-    (add-hook 'org-mode-hook 'spacemacs/toggle-yasnippet-off)
-    (add-hook 'org-mode-hook (lambda () (setq org-todo-key-trigger t)))
-
-    ;; Set Background Color of Source Blocks for Export.This was taken from
-    ;; [[http://emacs.stackexchange.com/questions/3374/][here]].
-    (add-hook 'org-export-before-processing-hook 'cats//org-inline-css-hook)
-
-    (setq org-global-properties
-          '(quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-                   ("STYLE_ALL" . "habit"))))
-
-    (setq helm-org-headings-fontify t)
-    (setq org-todo-repeat-to-state "TODO")
-    (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
-
-    (add-to-list 'org-show-context-detail '(org-goto . lineage))
-    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-
-    (setq org-log-into-drawer t)
-    (setq org-log-reschedule t)
-    (setq org-log-redeadline t)
-    (setq org-treat-insert-todo-heading-as-state-change t)
-
-    ;; variable configuration
-    (add-to-list 'org-modules 'org-habit)
-    (add-to-list 'org-modules 'org-expiry)
-    (add-to-list 'org-modules 'org-notify)
-
-    (setq org-habit-graph-column 50)
-    (setq org-habit-show-habits-only-for-today t)
 
 
   ))
