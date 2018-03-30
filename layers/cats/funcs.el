@@ -275,6 +275,7 @@ many times might take a long time."
     (let* ((remote (git-link--select-remote))
             (id (gh-profile-get-remote-profile (git-link--remote-url remote))))
       (when id
+        (setq gh-profile-current-profile id)
         (setq gh-profile-default-profile id)))))
 
 ;;; funcs.el ends here
