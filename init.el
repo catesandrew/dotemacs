@@ -197,6 +197,14 @@ values."
        ;; yasnippet-snippets
        ;; M-x all-the-icons-install-fonts
        all-the-icons
+
+       ;; People have reported problems getting this to run from git in
+       ;; spacemacs. I believe the cause of this is how require-relative and
+       ;; require-relative-list work.
+       ;; realgud
+       ;; realgud-pry
+       ;; realgud-maxima
+       ;; realgud-node-inspect
        )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()

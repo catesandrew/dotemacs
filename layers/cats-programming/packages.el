@@ -14,10 +14,62 @@
      ;; (hs-minor-mode :location built-in)
      log-view
      (prog-mode :location built-in)
+     ;; realgud
+     ;; (realgud-node-inspect :location
+     ;;   (recipe
+     ;;     :fetcher github
+     ;;     :repo "realgud/realgud-node-inspect"))
      string-inflection
      ycmd
     ))
 
+
+;; realgud-node-inspect
+(defun cats-programming/init-realgud-node-inspect ()
+  (use-package realgud-node-inspect
+    :disable t
+    :after (realgud)
+    :init
+    (progn
+      (let ((default-directory (configuration-layer/get-elpa-package-install-directory 'realgud-node-inspect)))
+        (compile (format "EMACSLOADPATH=:%s:%s ./autogen.sh" (file-name-directory (locate-library "test-simple.elc")) (file-name-directory (locate-library "realgud.el"))))))
+    :config
+    (progn)))
+
+
+;; realgud
+(defun cats-programming/init-realgud()
+  (use-package realgud
+    :disable t
+    :commands (realgud:node-inspect realgud:gdb realgud:nodejs-set-breakpoint)
+    :init
+    (progn
+      ;; This one is to represent `realgud-populate-src-buffer-map-plain'.
+      (evilified-state-evilify-map realgud:shortkey-mode-map
+        :eval-after-load realgud
+        :mode realgud-short-key-mode
+        :bindings
+        "b" 'realgud:cmd-break
+        "u" 'realgud:cmd-delete
+        "X" 'realgud:cmd-clear
+        "-" 'realgud:cmd-disable
+        "+" 'realgud:cmd-enable
+        "T" 'realgud:cmd-backtrace
+        "f" 'realgud:cmd-finish
+        "n" 'realgud:cmd-next
+        "q" 'realgud:cmd-quit
+        "Q" 'realgud:cmd-kill
+        "r" 'realgud:cmd-restart
+        "R" 'realgud:cmd-restart
+        "s" 'realgud:cmd-step
+        "i" 'realgud:cmd-step
+        "!" 'realgud:cmd-shell))
+    :config
+    (progn
+      )))
+
+
+;; ycmd
 (defun cats-programming/pre-init-ycmd ()
   (spacemacs|use-package-add-hook ycmd
     :post-init
