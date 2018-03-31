@@ -19,9 +19,19 @@
      ;;   (recipe
      ;;     :fetcher github
      ;;     :repo "realgud/realgud-node-inspect"))
+     shut-up
      string-inflection
      ycmd
     ))
+
+
+;; shut-up
+(defun cats-programming/init-shut-up ()
+  (use-package shut-up
+    :commands (shut-up)
+    :config
+    (defun cats//shut-up-around (function &rest args)
+      (shut-up (apply function args)))))
 
 
 ;; realgud-node-inspect

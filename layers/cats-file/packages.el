@@ -98,15 +98,20 @@ Try the repeated popping up to 10 times."
                        shell)))))
 
 (defun cats-file/pre-init-recentf ()
+  (spacemacs|use-package-add-hook recentf
+    :post-init
+    (progn
+      (setq recentf-max-saved-items 5000)
+      (setq recentf-max-menu-items 1000)
+      (advice-add 'recentf-cleanup :around 'cats//shut-up-around)
+
+      ;; Cleanup recent files only when Emacs is idle, but not when the mode is
+      ;; enabled, because that unnecessarily slows down Emacs. My Emacs idles
+      ;; often enough to have the recent files list clean up regularly
+      (setq recentf-auto-cleanup 300)))
+
   (when (configuration-layer/package-usedp 'ignoramus)
     (spacemacs|use-package-add-hook recentf
-      :post-init
-      (progn
-        (setq recentf-max-saved-items 5000)
-        ;; Cleanup recent files only when Emacs is idle, but not when the mode is
-        ;; enabled, because that unnecessarily slows down Emacs. My Emacs idles
-        ;; often enough to have the recent files list clean up regularly
-        (setq recentf-auto-cleanup 300))
       :pre-config
       (with-eval-after-load 'ignoramus
         (setq recentf-exclude
