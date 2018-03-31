@@ -1276,17 +1276,35 @@
       ;; CANCELLED - For whatever reason, this TODO should no longer be
       ;; attempted. This TODO is typically used in contrast to the EXPIRED TODO
       ;; to indicate that the owner is not necessarily to blame.
+
+      ;; Each keyword can optionally specify a character for fast state
+      ;; selection and specifiers for state change logging.
+      ;;
+      ;; - "WAIT(w)" says that the WAIT state can be selected with the "w" key.
+      ;; - "WAIT(w!)" indicates to record a time stamp each when selected.
+      ;; - "WAIT(w@/!)"
+      ;;     - "@" means to add a note (with time),
+      ;;     - "!" means to record only the time of the state change.
+      ;;     - With X and Y being either "@" or "!", "X/Y" means use X when
+      ;;       entering the state, and use Y when leaving the state if and only
+      ;;       if the *target* state does not define X.
+      ;;     - You may omit any of the fast-selection key or X or /Y, so
+      ;;       WAIT(w@), WAIT(w/@) and WAIT(@/@) are all valid.
       (setq org-todo-keywords
-        '((sequence "IDEA(i!)" "RESEARCH(r!)" "TODO(t!)" "NEXT(n!)"
-            "STARTED(s!)" "WAIT(w!)" "BACKLOG(b!)" "|"
-            "DONE(d!)" "HANDLED(h!)" "EXPIRED(e!)" "CANCELLED(c!)")
-
-           ;; (sequence "IDEA(i)" "TODO(t)" "STARTED(s)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)")
-           ;; (sequence "|" "CANCELLED(c)" "HANDLED(h)" "EXPIRED(e)")
-
-           ;; (sequence "TODO(t)" "NEXT(n@)" "|" "DONE(d)")
-           ;; (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)")
-           ))
+        '((sequence
+            "IDEA(i!)"
+            "RESEARCH(r!)"
+            "TODO(t!)"
+            "NEXT(n!)"
+            "STARTED(s!)"
+            "WAIT(w!)"
+            "BACKLOG(b!)"
+            "|"
+            "DONE(d!)"
+            "HANDLED(h!)"
+            "EXPIRED(e!)"
+            "CANCELLED(c!)"
+            )))
 
       ;; Tag changes that should be triggered by TODO state changes.
       (setq org-todo-state-tags-triggers
