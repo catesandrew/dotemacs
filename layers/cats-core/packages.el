@@ -16,7 +16,6 @@
      company-shell
      desktop
      (eshell :location built-in)
-     exec-path-from-shell
      (goto-addr :location built-in)
      (prettify-symbols-mode :location built-in)
      projectile
@@ -332,23 +331,6 @@
       (require 'em-alias)
       )
     ))
-
-
-;; exec-path-from-shell
-(defun cats-core/pre-init-exec-path-from-shell ()
-  (spacemacs|use-package-add-hook exec-path-from-shell
-    :pre-config
-    (dolist (var '(
-                    "SHELL"
-                    ) exec-path-from-shell-variables)
-      (unless (or (member var exec-path-from-shell-variables) (getenv var))
-        (push var exec-path-from-shell-variables)))
-    :post-config
-    (let ((shell-term-shell (getenv "SHELL")))
-      (unless (empty-string-p shell-term-shell)
-        (setq shell-term-shell (chomp shell-term-shell))
-        (setq shell-default-term-shell shell-term-shell)
-        (setq multi-term-program shell-term-shell)))))
 
 
 ;; goto-addr

@@ -23,21 +23,19 @@
 
 
 ;; exec-path-from-shell
-(defun cats-langs/pre-init-exec-path-from-shell ()
-  (spacemacs|use-package-add-hook exec-path-from-shell
-    :pre-config
-    (dolist (var '(
-                    "JAVA_OPTS"
-                    "PYENV_HOME"
-                    "PYENV_ROOT"
-                    "PYENV_SHELL"
-                    "PYTHONPATH"
-                    "RBENV_HOME"
-                    "RBENV_ROOT"
-                    "RBENV_SHELL"
-                    ) exec-path-from-shell-variables)
-      (unless (or (member var exec-path-from-shell-variables) (getenv var))
-        (push var exec-path-from-shell-variables)))))
+(defun cats-langs/post-init-exec-path-from-shell ()
+  (dolist (var '(
+                  "JAVA_OPTS"
+                  "PYENV_HOME"
+                  "PYENV_ROOT"
+                  "PYENV_SHELL"
+                  "PYTHONPATH"
+                  "RBENV_HOME"
+                  "RBENV_ROOT"
+                  "RBENV_SHELL"
+                  ) exec-path-from-shell-variables)
+    (unless (member var exec-path-from-shell-variables)
+      (push var exec-path-from-shell-variables))))
 
 
 ;; thrift

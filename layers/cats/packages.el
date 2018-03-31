@@ -343,50 +343,53 @@
 
 ;; exec-path-from-shell
 (defun cats/pre-init-exec-path-from-shell ()
-  (setq-default exec-path-from-shell-check-startup-files nil)
-  (spacemacs|use-package-add-hook exec-path-from-shell
-    :pre-config
-    (progn
-      ;; (setq exec-path-from-shell-check-startup-files nil)
-      (dolist
-        (var '(
-                "ANDROID_HOME"
-                "ANDROID_SDK_ROOT"
-                "BREW_HOME"
-                "EMAIL"
-                "GITHUB_TOKEN"
-                "GITLAB_PRIVATE_TOKEN"
-                "HOME"
-                "HOMEBREW_GITHUB_API_TOKEN"
-                "HTML_TIDY"
-                "IRC_CLIENT"
-                "MANPATH"
-                "SBT_OPTS"
-                "XML_CATALOG_FILES"
-                ) exec-path-from-shell-variables)
-        (unless (or (member var exec-path-from-shell-variables) (getenv var))
-          (push var exec-path-from-shell-variables)))
-
-      ;; Re-initialize the `Info-directory-list' from $INFOPATH.  Since package.el
-      ;; already initializes info, we need to explicitly add the $INFOPATH
-      ;; directories to `Info-directory-list'.  We reverse the list of info paths
-      ;; to prepend them in proper order subsequently
-      (with-eval-after-load 'info
-        (dolist (dir (nreverse (parse-colon-path (getenv "INFOPATH"))))
-          (when dir
-            (add-to-list 'Info-directory-list dir)))))
-    :post-config
-    (exec-path-from-shell-initialize)))
+  (setq exec-path-from-shell-check-startup-files nil))
 
 (defun cats/post-init-exec-path-from-shell ()
-  (cats//locate-email)
-  (cats//locate-name))
+  (dolist
+    (var '(
+            "ANDROID_HOME"
+            "ANDROID_SDK_ROOT"
+            "BREW_HOME"
+            "EMAIL"
+            "GITHUB_TOKEN"
+            "GITLAB_PRIVATE_TOKEN"
+            "HOME"
+            "HOMEBREW_GITHUB_API_TOKEN"
+            "HTML_TIDY"
+            "IRC_CLIENT"
+            "MANPATH"
+            "INFOPATH"
+            "SBT_OPTS"
+            "SHELL"
+            "XML_CATALOG_FILES"
+            ) exec-path-from-shell-variables)
+    (unless (member var exec-path-from-shell-variables)
+      (push var exec-path-from-shell-variables)))
 
+  (with-eval-after-load 'exec-path-from-shell
+    (mapc
+      (lambda (pair)
+        (exec-path-from-shell-setenv (car pair) (cdr pair)))
+      cats-envs)
+    (exec-path-from-shell-initialize)
+    (cats//locate-email)
+    (cats//locate-name)
+    (let ((shell-term-shell (getenv "SHELL")))
+      (unless (empty-string-p shell-term-shell)
+        (setq shell-term-shell (chomp shell-term-shell))
+        (setq shell-default-term-shell shell-term-shell)
+        (setq multi-term-program shell-term-shell)))))
+
+
+;; autosave
 (defun cats/init-focus-autosave-mode ()
   (use-package focus-autosave-mode
     :init (focus-autosave-mode)
     :config (spacemacs|hide-lighter focus-autosave-mode)))
 
+
+;; spaceline
 (defun cats/pre-init-spaceline ()
   (spacemacs|use-package-add-hook spaceline-config
     :post-config
