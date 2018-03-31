@@ -66,20 +66,6 @@
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
 
-
-;; TODO: Commands to consider from http://doc.norang.ca/org-mode.org
-;; (global-set-key (kbd "<f5>") 'cats/org-todo)
-;; (global-set-key (kbd "<f7>") 'cats/set-truncate-lines)
-;; (global-set-key (kbd "<f9> <f9>") 'cats/show-org-agenda)
-;; (global-set-key (kbd "<f9> h") 'cats/hide-other)
-;; (global-set-key (kbd "<f9> n") 'cats/toggle-next-task-display)
-;; (global-set-key (kbd "<f9> o") 'cats/make-org-scratch)
-;; (global-set-key (kbd "<f9> s") 'cats/switch-to-scratch)
-;; (global-set-key (kbd "<f9> t") 'cats/insert-inactive-timestamp)
-;; (global-set-key (kbd "<f9> T") 'cats/toggle-insert-inactive-timestamp)
-;; (global-set-key (kbd "<f9> SPC") 'cats/clock-in-last-task)
-;; (global-set-key (kbd "C-s-<f12>") 'cats/save-then-publish)
-
 
 ;; ox-jira
 (defun cats-org/pre-init-ox-jira ()
@@ -513,14 +499,9 @@
   (use-package org-caldav
     :defer t
     :config
-    (progn
-      (setq org-caldav-url "https://owncloud.cates.io/remote.php/dav/calendars/andrew")
-      (setq org-caldav-calendar-id "bc55b8fa-d797-1034-971f-7b2587ad9c10")
-
-      ;; (setq org-caldav-url "https://www.google.com/calendar/dav")
-      (setq org-caldav-inbox cats//org-calendar-file)
-      ;; (setq org-caldav-files (list cats//org-calendar-file))
-      (setq org-icalendar-timezone "America/Los_Angeles"))))
+    (progn)
+    :init
+    (progn)))
 
 
 ;; org-projectile
@@ -1130,15 +1111,22 @@
       ;; Alist between context and visibility span when revealing a location.
       (add-to-list 'org-show-context-detail '(org-goto . lineage))
 
-      ;; (define-key org-mode-map "\C-c\S-n" 'cats/find-next-BEGIN_SRC_block)
-      ;; (define-key org-mode-map "\C-c\S-p" 'cats/find-prev-BEGIN_SRC_block)
-
       ;; Modules that should always be loaded together with org.el.
       (add-to-list 'org-modules 'org-habit)
       (add-to-list 'org-modules 'org-expiry)
       (add-to-list 'org-modules 'org-notify))
     :post-init
     (progn
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        ;; insertion
+        "iO" 'org-insert-todo-subheading
+        "io" 'org-insert-todo-heading
+        "ia" 'org-insert-habit
+        "iA" 'org-make-habit
+        "iS" 'cats/insert-inactive-timestamp
+        "TS" 'cats/toggle-insert-inactive-timestamp
+        (kbd "T C-t") 'org-todo-force-notes)
+
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
 
@@ -1228,22 +1216,14 @@
       (with-eval-after-load 'ispell
         (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:"))
         (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_SRC" . "#\\+END_SRC"))
-        (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE")))
-
-      )
+        (add-to-list 'ispell-skip-region-alist '("#\\+BEGIN_EXAMPLE" . "#\\+END_EXAMPLE"))))
     :pre-init
     (progn
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-utils)))
-        (setq org-plantuml-jar-path (concat dir "plantuml/plantuml.jar")))
-      )
-    )
+        (setq org-plantuml-jar-path (concat dir "plantuml/plantuml.jar")))))
 
   (spacemacs|use-package-add-hook org
     "List of TODO entry keyword sequences and their interpretation. "
-    :pre-config
-    (progn)
-    :post-config
-    (progn)
     :post-init
     (progn
       ;; What follows is a description of the significance of each of the values
@@ -1328,16 +1308,10 @@
            ("INPR" . (:foreground "yellow" :weight bold))
            ("NEXT" . (:foreground "IndianRed1" :weight bold))
            ("STARTED" . (:foreground "OrangeRed" :weight bold))
-           ("WAIT" . (:foreground "coral" :weight bold)))))
-    :pre-init
-    (progn))
+           ("WAIT" . (:foreground "coral" :weight bold))))))
 
   (spacemacs|use-package-add-hook org
     "Tags in Org files."
-    :pre-config
-    (progn)
-    :post-config
-    (progn)
     :post-init
     (progn
       ;; Tags always available in Org files
@@ -1369,18 +1343,10 @@
                              ("@coding" . ?c)
                              ("@phone" . ?p)
                              ("@reading" . ?r)
-                             ("@computer" . ?l)))
-
-      )
-    :pre-init
-    (progn))
+                             ("@computer" . ?l)))))
 
   (spacemacs|use-package-add-hook org
     "Options concerning refiling entries in Org mode."
-    :pre-config
-    (progn)
-    :post-config
-    (progn)
     :post-init
     (progn
       ;; Targets include this file and any file contributing to the agenda,
@@ -1393,11 +1359,7 @@
       (setq org-outline-path-complete-in-steps nil)
       ;; Allow refile to create parent tasks with confirmation
       (setq org-refile-allow-creating-parent-nodes 'confirm)
-      (setq org-refile-target-verify-function 'cats//verify-refile-target)
-      )
-    :pre-init
-    (progn)
-    )
+      (setq org-refile-target-verify-function 'cats//verify-refile-target)))
 
   (spacemacs|use-package-add-hook org
     "Links in Org files."
