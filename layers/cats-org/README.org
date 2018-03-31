@@ -10,8 +10,9 @@
 
 ** TODO [[https://github.com/fniessen/org-html-themes.git][org html themes]]
 
-** TODO [[https://raw.githubusercontent.com/IvanMalison/dotfiles/master/dotfiles/emacs.d/README.org][eamcs.d dotfiles]]
-
+** DONE [[https://raw.githubusercontent.com/IvanMalison/dotfiles/master/dotfiles/emacs.d/README.org][eamcs.d dotfiles]]
+   CLOSED: [2018-03-30 Fri 22:59]
+   - State "DONE"       from "TODO"       [2018-03-30 Fri 22:59]
 ** TODO [[http://doc.norang.ca/org-mode.html][Organize Your Life In Plain Text]]
 
 ** TODO [[https://orgmode.org/guide/index.htm][The Compact Org-mode Guide]]
@@ -26,8 +27,9 @@
 
 ** TODO [[https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html][Dig into Org Mode]]
 
-** TODO [[https://meta.caspershire.net/spacemacs-and-org-mode/][Spacemacs and Org-mode]]
-
+** DONE [[https://meta.caspershire.net/spacemacs-and-org-mode/][Spacemacs and Org-mode]]
+   CLOSED: [2018-03-30 Fri 22:58]
+   - State "DONE"       from "TODO"       [2018-03-30 Fri 22:58]
 
 * Key bindings
 
