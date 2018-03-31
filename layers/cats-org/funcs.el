@@ -330,23 +330,6 @@ Open the directory of the current ticket in iterm screen via keyboard maestro."
 
 ;; babel
 
-;; Find next and previous =#+BEGIN_SRC sh= block.
-;; Very useful for repetitive literate devops jobs.
-(defun cats/find-next-BEGIN_SRC_block (&optional arg)
-  "Find next BEGIN_SRC sh block."
-  (interactive "p")
-  (kmacro-exec-ring-item '([19 94 35 92 43 66 69 71 73 78 95 83 82 67 32 115 104 down] 0 "%d") arg))
-
-(defun cats/find-prev-BEGIN_SRC_block (&optional arg)
-  "Find previous BEGIN_SRC sh block."
-  (interactive "p")
-  (kmacro-exec-ring-item '([18 94 35 92 43 66 69 71 73 78 95 83 82 67 32 115 104 18 down] 0 "%d") arg))
-
-(defun org-babel-tangle-block()
-  (interactive)
-  (let ((current-prefix-arg '(4)))
-    (call-interactively 'org-babel-tangle)))
-
 
 ;; ox-html
 
