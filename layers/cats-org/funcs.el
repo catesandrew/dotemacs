@@ -398,6 +398,25 @@ alphanumeric characters only."
 
 
 ;; org-agenda
+(defun cats//opened-org-agenda-files ()
+  (let ((files (org-agenda-files)))
+    (setq cats-opened-org-agenda-files nil)
+    (mapcar
+      (lambda (x)
+        (when (get-file-buffer x)
+          (push x cats-opened-org-agenda-files)))
+      files)))
+
+(defun cats//kill-org-agenda-files ()
+  (let ((files (org-agenda-files)))
+    (mapcar
+      (lambda (x)
+        (when
+          (and
+            (get-file-buffer x)
+            (not (member x cats-opened-org-agenda-files)))
+          (kill-buffer (get-file-buffer x))))
+      files)))
 
 (defun cats//get-string-from-file (file-path)
   "Return file-path's file content."
@@ -405,16 +424,10 @@ alphanumeric characters only."
     (insert-file-contents file-path)
     (buffer-string)))
 
-(defvar cats//org-agenda-file-regexp-list '()
-  "List of all `org-agenda' file regexps.")
-
 (defun cats//register-org-agenda-file-regexp (regexp)
   "Register REGEXP to the global list."
   (unless (member regexp cats//org-agenda-file-regexp-list)
     (push regexp cats//org-agenda-file-regexp-list)))
-
-(defvar cats//org-agenda-list '()
-  "List of all `org-agenda' files.")
 
 (defun cats//register-org-agenda-file (file)
   "Register FILE to the global list of FILEs CATS//ORG-AGENDA-LIST."

@@ -710,40 +710,20 @@
                ,recently-created)
              nil nil)))
 
-      (defun opened-org-agenda-files ()
-        (let ((files (org-agenda-files)))
-          (setq opened-org-agenda-files nil)
-          (mapcar
-            (lambda (x)
-              (when (get-file-buffer x)
-                (push x opened-org-agenda-files)))
-            files)))
-
-      (defun kill-org-agenda-files ()
-        (let ((files (org-agenda-files)))
-          (mapcar
-            (lambda (x)
-              (when
-                (and
-                  (get-file-buffer x)
-                  (not (member x opened-org-agenda-files)))
-                (kill-buffer (get-file-buffer x))))
-            files)))
-
       (defadvice org-agenda-list (around opened-org-agenda-list-around activate)
-        (opened-org-agenda-files)
+        (cats//opened-org-agenda-files)
         ad-do-it
-        (kill-org-agenda-files))
+        (cats//kill-org-agenda-files))
 
       (defadvice org-search-view (around org-search-view-around activate)
-        (opened-org-agenda-files)
+        (cats//opened-org-agenda-files)
         ad-do-it
-        (kill-org-agenda-files))
+        (cats//kill-org-agenda-files))
 
       (defadvice org-tags-view (around org-tags-view-around activate)
-        (opened-org-agenda-files)
+        (cats//opened-org-agenda-files)
         ad-do-it
-        (kill-org-agenda-files)))))
+        (cats//kill-org-agenda-files)))))
 
 
 ;; org-super-agenda

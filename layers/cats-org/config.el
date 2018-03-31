@@ -48,7 +48,13 @@
 
 ;; do not keep org-agenda-files open after generating agenda
 ;; https://emacs.stackexchange.com/questions/5741
-(defvar opened-org-agenda-files nil)
+(defvar cats-opened-org-agenda-files nil)
+
+(defvar cats//org-agenda-file-regexp-list '()
+  "List of all `org-agenda' file regexps.")
+
+(defvar cats//org-agenda-list '()
+  "List of all `org-agenda' files.")
 
 (defvar cats//org-properties-string "
 :PROPERTIES:
