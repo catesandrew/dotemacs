@@ -251,5 +251,4 @@ Try the repeated popping up to 10 times."
           (lambda (f) (string-prefix-p project-root f))
           frecent-list)))))
 
-
 ;;; funcs.el ends here

@@ -79,6 +79,24 @@ Otherwise insert the date as Mar 04, 2014."
 
 
 ;; helm
+(defun cats//helm-wrap-with-boring-buffer-regexp-list (orig-fun &rest args)
+  (let* ((helm-boring-buffer-regexp-list
+           (append
+             (butlast spacemacs-useless-buffers-regexp)
+             helm-boring-buffer-regexp-list))
+          (helm-ff-skip-boring-files t)
+          )
+    (apply orig-fun args)))
+
+(defun cats//add-advice-around-helm-buffers-list ()
+  (advice-add 'helm-buffers-list :around 'cats//helm-wrap-with-boring-buffer-regexp-list))
+
+(defun cats//add-advice-around-helm-mini ()
+  (advice-add 'helm-mini :around 'cats//helm-wrap-with-boring-buffer-regexp-list))
+
+(defun cats//add-advice-around-helm-multi-files ()
+  (advice-add 'helm-multi-files :around 'cats//helm-wrap-with-boring-buffer-regexp-list))
+
 (defun helm-projectile-git-ls-files ()
   "Runs `helm-multi-files`, but first primes the `helm-ls-git` file lists."
   (interactive)
@@ -86,7 +104,6 @@ Otherwise insert the date as Mar 04, 2014."
   (helm-multi-files))
 
 (defun cats/helm-ls-git-ls ()
-  (interactive)
   (when (not (helm-ls-git-not-inside-git-repo))
     (unless (and helm-source-ls-git
                  helm-source-ls-git-buffers)

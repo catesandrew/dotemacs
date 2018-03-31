@@ -904,6 +904,11 @@ which is pretty awesome with: (helm-mode 1)"
       (with-eval-after-load 'helm-config
         (warn "`helm-config' loaded! Get rid of it ASAP!"))
 
+      (with-eval-after-load 'helm-files
+        (cats//add-advice-around-helm-buffers-list)
+        (cats//add-advice-around-helm-multi-files)
+        (cats//add-advice-around-helm-mini))
+
       ;; NOTE: Apple OS X users also need a version of grep that accepts --exclude-dir
       ;; brew tap homebrew/dupes
       ;; brew install homebrew/dupes/grep
