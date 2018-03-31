@@ -84,8 +84,7 @@ Otherwise insert the date as Mar 04, 2014."
            (append
              (butlast spacemacs-useless-buffers-regexp)
              helm-boring-buffer-regexp-list))
-          (helm-ff-skip-boring-files t)
-          )
+          (helm-ff-skip-boring-files t))
     (apply orig-fun args)))
 
 (defun cats//add-advice-around-helm-buffers-list ()
