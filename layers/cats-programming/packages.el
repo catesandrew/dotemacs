@@ -12,6 +12,7 @@
      (compile :location built-in)
      evil-string-inflection
      ;; (hs-minor-mode :location built-in)
+     helm-fontawesome
      log-view
      (prog-mode :location built-in)
      ;; realgud
@@ -32,6 +33,13 @@
     :config
     (defun cats//shut-up-around (function &rest args)
       (shut-up (apply function args)))))
+
+
+;; helm-fontawesome
+(defun cats-programming/init-helm-fontawesome ()
+  (use-package fontawesome
+    :ensure t
+    :commands (helm-fontawesome)))
 
 
 ;; realgud-node-inspect
