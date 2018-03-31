@@ -410,27 +410,16 @@ alphanumeric characters only."
 
 (defun cats//register-org-agenda-file-regexp (regexp)
   "Register REGEXP to the global list."
-  (if (bound-and-true-p org-agenda-file-regexp)
-    (setq org-agenda-file-regexp
-      (reduce (lambda (a b)
-                (concatenate 'string a "\\|" b))
-        (append `(,org-agenda-file-regexp) `(,regexp))))
-    (unless (member regexp cats//org-agenda-file-regexp-list)
-      (push regexp cats//org-agenda-file-regexp-list))))
+  (unless (member regexp cats//org-agenda-file-regexp-list)
+    (push regexp cats//org-agenda-file-regexp-list)))
 
 (defvar cats//org-agenda-list '()
   "List of all `org-agenda' files.")
 
 (defun cats//register-org-agenda-file (file)
   "Register FILE to the global list of FILEs CATS//ORG-AGENDA-LIST."
-  (if (bound-and-true-p org-agenda-files)
-    (let* ((filepath (file-truename file)))
-      (when (and (file-exists-p filepath)
-              (not (member filepath org-agenda-files)))
-        (add-to-list 'org-agenda-files filepath)))
-    (progn
-      (unless (member file cats//org-agenda-list)
-        (push file cats//org-agenda-list)))))
+  (unless (member file cats//org-agenda-list)
+    (push file cats//org-agenda-list)))
 
 (defun cats//set-org-agenda-file-regexps (incoming-regexps &optional reset)
   (if reset

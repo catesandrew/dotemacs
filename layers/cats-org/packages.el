@@ -710,10 +710,6 @@
                ,recently-created)
              nil nil)))
 
-      ;; do not keep org-agenda-files open after generating agenda
-      ;; https://emacs.stackexchange.com/questions/5741
-      (defvar opened-org-agenda-files nil)
-
       (defun opened-org-agenda-files ()
         (let ((files (org-agenda-files)))
           (setq opened-org-agenda-files nil)

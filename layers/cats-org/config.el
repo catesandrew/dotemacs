@@ -46,6 +46,10 @@
 
 (defvar cats//keep-clock-running nil)
 
+;; do not keep org-agenda-files open after generating agenda
+;; https://emacs.stackexchange.com/questions/5741
+(defvar opened-org-agenda-files nil)
+
 (defvar cats//org-properties-string "
 :PROPERTIES:
 :CREATED: %U
