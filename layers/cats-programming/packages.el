@@ -27,12 +27,12 @@
 
 
 ;; shut-up
+(defun cats//shut-up-around (function &rest args)
+  (shut-up (apply function args)))
+
 (defun cats-programming/init-shut-up ()
   (use-package shut-up
-    :commands (shut-up)
-    :config
-    (defun cats//shut-up-around (function &rest args)
-      (shut-up (apply function args)))))
+    :commands (shut-up)))
 
 
 ;; helm-fontawesome
