@@ -603,7 +603,8 @@
       (evilified-state-evilify-map org-agenda-mode-map
         :mode org-agenda-mode
         :bindings
-        "q" 'org-agenda-exit)
+        (kbd "q") 'org-agenda-exit
+        (kbd "gr") 'org-agenda-redo)
 
       ;; My priority system:
       ;;
@@ -1127,6 +1128,11 @@
       (add-to-list 'org-modules 'org-notify))
     :post-init
     (progn
+      (evilified-state-evilify-map org-mode-map
+        :mode org-mode
+        :bindings
+        (kbd "gr") 'org-reload)
+
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         ;; insertion
         "iO" 'org-insert-todo-subheading
