@@ -13,6 +13,7 @@
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
      ;; evil-org                           ;; defined in spacemacs org
+     (evil-org-agenda :location built-in)
      ;; evil-surround                      ;; defined in spacemacs org
      ;; gnuplot                            ;; defined in spacemacs org
      ;; htmlize                            ;; defined in spacemacs org
@@ -65,6 +66,15 @@
 ;; sudo apt-get -y install ipython ipython-notebook
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
+
+
+;; evil-org-agenda
+(defun cats-org/init-evil-org-agenda ()
+  (use-package evil-org-agenda
+    :after evil-org
+    :commands (evil-org-agenda-set-keys)
+    :init
+    (evil-org-agenda-set-keys)))
 
 
 ;; ox-jira
