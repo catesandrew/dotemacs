@@ -38,6 +38,7 @@
 ;; helm-fontawesome
 (defun cats-programming/init-helm-fontawesome ()
   (use-package fontawesome
+    :disable t
     :ensure t
     :commands (helm-fontawesome)))
 
