@@ -25,8 +25,10 @@
 
 ** TODO [[http://www.howardism.org/Technical/Learning/index.html][Teching Programming to Kids]]
 
-** TODO [[https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html][Dig into Org Mode]]
+** DONE [[https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html][Dig into Org Mode]]
+   CLOSED: [2018-04-02 Mon 07:49]
 
+   - State "DONE"       from "TODO"       [2018-04-02 Mon 07:49]
 ** DONE [[https://meta.caspershire.net/spacemacs-and-org-mode/][Spacemacs and Org-mode]]
    CLOSED: [2018-03-30 Fri 22:58]
    - State "DONE"       from "TODO"       [2018-03-30 Fri 22:58]
