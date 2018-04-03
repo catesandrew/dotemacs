@@ -12,7 +12,7 @@
      (compile :location built-in)
      evil-string-inflection
      ;; (hs-minor-mode :location built-in)
-     helm-fontawesome
+     ;; helm-fontawesome
      log-view
      (prog-mode :location built-in)
      ;; realgud
