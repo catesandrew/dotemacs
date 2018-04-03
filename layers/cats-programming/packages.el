@@ -38,7 +38,7 @@
 ;; helm-fontawesome
 (defun cats-programming/init-helm-fontawesome ()
   (use-package fontawesome
-    :disable t
+    :disabled t
     :ensure t
     :commands (helm-fontawesome)))
 
@@ -46,7 +46,7 @@
 ;; realgud-node-inspect
 (defun cats-programming/init-realgud-node-inspect ()
   (use-package realgud-node-inspect
-    :disable t
+    :disabled t
     :after (realgud)
     :init
     (progn
@@ -59,7 +59,7 @@
 ;; realgud
 (defun cats-programming/init-realgud()
   (use-package realgud
-    :disable t
+    :disabled t
     :commands (realgud:node-inspect realgud:gdb realgud:nodejs-set-breakpoint)
     :init
     (progn
