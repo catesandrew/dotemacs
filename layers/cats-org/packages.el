@@ -1106,6 +1106,11 @@
     (progn)
     :post-config
     (progn
+      (evilified-state-evilify-map org-mode-map
+        :mode org-mode
+        :bindings
+        (kbd "gr") 'org-reload)
+
       ;; https://orgmode.org/worg/org-contrib/babel/languages.html
       (add-to-list 'org-babel-load-languages '(org . t))
       (add-to-list 'org-babel-load-languages '(C . t))
@@ -1128,11 +1133,6 @@
       (add-to-list 'org-modules 'org-notify))
     :post-init
     (progn
-      (evilified-state-evilify-map org-mode-map
-        :mode org-mode
-        :bindings
-        (kbd "gr") 'org-reload)
-
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         ;; insertion
         "iO" 'org-insert-todo-subheading
