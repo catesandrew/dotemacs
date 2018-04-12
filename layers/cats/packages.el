@@ -250,6 +250,24 @@
       )))
 
 
+;; evil
+(defun cats/pre-init-evil ()
+  (with-eval-after-load 'evil
+    ;; I like to save the buffer when I exit the insert-mode: (edited: do not
+    ;; ask to save when there is no associated file for this buffer, like when
+    ;; in a scratch or a magit buffer)
+    (add-hook 'evil-insert-state-exit-hook 'cats//save-buffer)
+
+    (define-key evil-normal-state-map [escape] 'keyboard-quit)
+    (define-key evil-visual-state-map [escape] 'keyboard-quit)
+    (define-key minibuffer-local-map [escape] 'cats//minibuffer-keyboard-quit)
+    (define-key minibuffer-local-ns-map [escape] 'cats//minibuffer-keyboard-quit)
+    (define-key minibuffer-local-completion-map [escape] 'cats//minibuffer-keyboard-quit)
+    (define-key minibuffer-local-must-match-map [escape] 'cats//minibuffer-keyboard-quit)
+    (define-key minibuffer-local-isearch-map [escape] 'cats//minibuffer-keyboard-quit)
+    (global-set-key [escape] 'evil-exit-emacs-state)))
+
+
 ;; editorconfig
 (defun cats/pre-init-editorconfig ()
   "EditorConfig plugin for emacs."
