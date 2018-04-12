@@ -834,11 +834,11 @@ Install mudraw with brew install mupdf-tools"))))))
     (progn
       ;; https://xivilization.net/~marek/blog/2015/06/22/disabling-mouse-in-spacemacs/
       ;; Every time I switch focus to Emacs by clicking in a random place on the
-      ;; window, the cursor moves to this place. Incredibly inconvenient, since I
-      ;; don’t want to move my cursor accidentally. Since I never use the mouse
-      ;; for anything in my editor anyway, I decided to disable it. Turn’s out, it
-      ;; is not that easy, since it is not a global key binding, but one that is
-      ;; local to the Evil mode. Frustrating to figure out.
+      ;; window, the cursor moves to this place. Incredibly inconvenient, since
+      ;; I don’t want to move my cursor accidentally. Since I never use the
+      ;; mouse for anything in my editor anyway, I decided to disable it. Turn’s
+      ;; out, it is not that easy, since it is not a global key binding, but one
+      ;; that is local to the Evil mode. Frustrating to figure out.
       (defun dotemacs/silence ()
         (interactive))
 

@@ -200,7 +200,8 @@
       (add-hook 'find-file-hook
         (lambda ()
           (when (bound-and-true-p projectile-mode)
-            (cats/find-file-hook-to-project))) t))))
+            (cats/find-file-hook-to-project))) t)
+      )))
 
 
 ;; desktop
