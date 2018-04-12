@@ -22,7 +22,6 @@
      company-emoji
      (compile :location built-in)
      (conf-mode :location built-in)
-     copyright
      dash
      (delsel :location built-in)
      (dired :location built-in)
@@ -257,15 +256,6 @@
   (spacemacs|use-package-add-hook editorconfig
     :post-init (add-to-list 'auto-mode-alist '("\\.editorconfig" . conf-unix-mode))))
 
-(defun cats/init-copyright ()
-  "Deal with copyright notices."
-  (use-package copyright
-    ;; Update copyright when visiting files
-    :init (add-hook 'find-file-hook 'copyright-update)
-    ;; Use ranges to denote consecutive years
-    :config (setq copyright-year-ranges t
-                  copyright-names-regexp (regexp-quote user-full-name))))
-
 (defun cats/init-visual-fill-column ()
   "Emacs mode for wrapping function `visual-line-mode' buffers at `fill-column'."
   (use-package visual-fill-column
@@ -481,21 +471,6 @@
 
 (defun cats/post-init-hungry-delete ()
   (global-hungry-delete-mode))
-
-(defun cats/init-copyright ()
-  (use-package copyright
-    :defer t
-    :init
-    (progn
-      (defun cats/copyright-update ()
-        (interactive)
-        (unless buffer-read-only
-          (copyright-update nil 'interactive)
-          (unless copyright-update
-            ;; Fix years when the copyright was updated
-            (copyright-fix-years))))
-      (add-hook 'find-file-hook #'cats/copyright-update))
-    :config (setq copyright-year-ranges t)))
 
 (defun cats/init-beacon ()
   (use-package beacon
