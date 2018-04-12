@@ -584,7 +584,12 @@
   (spacemacs|use-package-add-hook magit
     :post-init
     (progn
-      (setq magit-revision-show-gravatars nil)
+      ;; Shut up, Magit
+      (setq magit-save-repository-buffers 'dontask)
+      ;; See commit counts for all branches and tags
+      (setq magit-refs-show-commit-count 'all)
+      ;; Whether to show gravatar images in revision buffers.
+      (setq magit-revision-show-gravatars t)
       ;; For annotated tags prepare message with commit messages since last tag.
       (add-hook 'git-commit-mode-hook
          (lambda()

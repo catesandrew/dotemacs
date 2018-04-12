@@ -92,11 +92,7 @@ values."
                       version-control-diff-tool 'diff-hl)
      (git :variables
           ;; Magit in fullscreen
-          git-magit-status-fullscreen t
-          ;; Shut up, Magit
-          magit-save-repository-buffers 'dontask
-          ;; See commit counts for all branches and tags
-          magit-refs-show-commit-count 'all)
+          git-magit-status-fullscreen nil)
      github
      ;; Development tools
      restclient
