@@ -50,10 +50,6 @@ Try the repeated popping up to 10 times."
     :init
     (progn
       (setq view-read-only t) ; View read-only files
-      (add-hook 'find-file-hook
-                (lambda ()
-                  (unless (eq major-mode 'org-mode)
-                    (setq show-trailing-whitespace t))))
       (add-to-list 'find-file-not-found-functions 'cats//create-non-existent-directory))))
 
 (defun cats-file/init-ignoramus ()
