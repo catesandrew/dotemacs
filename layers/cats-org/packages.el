@@ -12,7 +12,7 @@
      ;; company                            ;; defined in spacemacs org
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
-     ;; evil-org                           ;; defined in spacemacs org
+     evil-org                           ;; defined in spacemacs org
      (evil-org-agenda :location built-in)
      ;; evil-surround                      ;; defined in spacemacs org
      ;; gnuplot                            ;; defined in spacemacs org
@@ -68,13 +68,40 @@
 ;; or, brew install jupyter
 
 
+;; evil-org
+(defun cats-org/pre-init-evil-org ()
+  (spacemacs|use-package-add-hook evil-org
+    :post-init
+    (progn)
+    :post-config
+    (progn
+      (require 'evil-org-agenda)
+      (evil-org-agenda-set-keys))
+    )
+  )
+
+;; (defun org/init-evil-org ()
+;;   (defun spacemacs//evil-org-mode ()
+;;     (evil-org-mode)
+;;     (evil-normalize-keymaps))
+
+;;   (use-package evil-org
+;;     :defer t
+;;     :init
+;;     (progn
+;;       (add-hook 'org-mode-hook 'spacemacs//evil-org-mode)
+;;       (setq evil-org-use-additional-insert t
+;;         evil-org-key-theme `(textobjects
+;;                               navigation
+;;                               additional
+;;                               ,@(when org-want-todo-bindings '(todo)))))
+;;     :config
+;;     (spacemacs|hide-lighter evil-org-mode)))
+
+
 ;; evil-org-agenda
 (defun cats-org/init-evil-org-agenda ()
-  (use-package evil-org-agenda
-    :after evil-org
-    :commands (evil-org-agenda-set-keys)
-    :init
-    (evil-org-agenda-set-keys)))
+  (use-package evil-org-agenda))
 
 
 ;; ox-jira
@@ -327,9 +354,6 @@
 
 
 ;; org-ehtml
-(defun cats-org/pre-init-org-ehtml ()
-  (spacemacs|use-package-add-hook org :post-config (require 'org-ehtml)))
-
 (defun cats-org/init-org-html ()
   (use-package org-ehtml
     :defer t
@@ -600,11 +624,11 @@
       (cats//set-org-agenda-files cats//org-agenda-list))
     :post-config
     (progn
-      (evilified-state-evilify-map org-agenda-mode-map
-        :mode org-agenda-mode
-        :bindings
-        (kbd "q") 'org-agenda-exit
-        (kbd "gr") 'org-agenda-redo)
+      ;; (evilified-state-evilify-map org-agenda-mode-map
+      ;;   :mode org-agenda-mode
+      ;;   :bindings
+      ;;   (kbd "q") 'org-agenda-exit
+      ;;   (kbd "gr") 'org-agenda-redo)
 
       ;; My priority system:
       ;;
@@ -784,9 +808,6 @@
 
 
 ;; org-jira
-(defun cats-org/pre-init-org-jira ()
-  (spacemacs|use-package-add-hook org :post-config (require 'org-jira)))
-
 (defun cats-org/init-org-jira ()
   (use-package org-jira
     :defer t
@@ -860,168 +881,7 @@
 ;;             org-startup-with-inline-images t
 ;;             org-image-actual-width nil)
 
-;;       ;; Insert key for org-mode and markdown a la C-h k
-;;       ;; from SE endless http://emacs.stackexchange.com/questions/2206/i-want-to-have-the-kbd-tags-for-my-blog-written-in-org-mode/2208#2208
-;;       (defun spacemacs/insert-keybinding-org (key)
-;;         "Ask for a key then insert its description.
-;; Will work on both org-mode and any mode that accepts plain html."
-;;         (interactive "kType key sequence: ")
-;;         (let* ((tag "@@html:<kbd>@@ %s @@html:</kbd>@@"))
-;;           (if (null (equal key "\r"))
-;;               (insert
-;;                (format tag (help-key-description key nil)))
-;;             (insert (format tag ""))
-;;             (forward-char -8))))
-
-;;       (dolist (prefix '(
-;;                          ("mb" . "babel")
-;;                          ("mC" . "clocks")
-;;                          ("md" . "dates")
-;;                          ("me" . "export")
-;;                          ("mi" . "insert")
-;;                          ("miD" . "download")
-;;                          ("ms" . "trees/subtrees")
-;;                          ("mT" . "toggles")
-;;                          ("mt" . "tables")
-;;                          ("mtd" . "delete")
-;;                          ("mti" . "insert")
-;;                          ("mtt" . "toggle")
-;;                          ("mx" . "text")
-;;                          ))
-;;         (spacemacs/declare-prefix-for-mode 'org-mode (car prefix) (cdr prefix)))
-
-;;       (spacemacs/set-leader-keys-for-major-mode 'org-mode
-;;         "'" 'org-edit-special
-;;         "c" 'org-capture
-;;         "Cc" 'org-clock-cancel
-;;         "Ci" 'org-clock-in
-;;         "Co" 'org-clock-out
-;;         "Cr" 'org-resolve-clocks
-;;         "dd" 'org-deadline
-;;         "ds" 'org-schedule
-;;         "dt" 'org-time-stamp
-;;         "dT" 'org-time-stamp-inactive
-;;         "ee" 'org-export-dispatch
-
-;;         "a" 'org-agenda
-
-;;         "Tc" 'org-toggle-checkbox
-;;         "Te" 'org-toggle-pretty-entities
-;;         "Ti" 'org-toggle-inline-images
-;;         "Tl" 'org-toggle-link-display
-;;         "Tt" 'org-show-todo-tree
-;;         "TT" 'org-todo
-;;         "TV" 'space-doc-mode
-;;         "Tx" 'org-toggle-latex-fragment
-
-;;         ;; More cycling options (timestamps, headlines, items, properties)
-;;         "L" 'org-shiftright
-;;         "H" 'org-shiftleft
-;;         "J" 'org-shiftdown
-;;         "K" 'org-shiftup
-
-;;         ;; Change between TODO sets
-;;         "C-S-l" 'org-shiftcontrolright
-;;         "C-S-h" 'org-shiftcontrolleft
-;;         "C-S-j" 'org-shiftcontroldown
-;;         "C-S-k" 'org-shiftcontrolup
-
-;;         ;; Subtree editing
-;;         "sa" 'org-toggle-archive-tag
-;;         "sA" 'org-archive-subtree
-;;         "sb" 'org-tree-to-indirect-buffer
-;;         "sh" 'org-promote-subtree
-;;         "sj" 'org-move-subtree-down
-;;         "sk" 'org-move-subtree-up
-;;         "sl" 'org-demote-subtree
-;;         "sn" 'org-narrow-to-subtree
-;;         "sN" 'widen
-;;         "sr" 'org-refile
-;;         "ss" 'org-sparse-tree
-;;         "sS" 'org-sort
-
-;;         ;; tables
-;;         "ta" 'org-table-align
-;;         "tb" 'org-table-blank-field
-;;         "tc" 'org-table-convert
-;;         "tdc" 'org-table-delete-column
-;;         "tdr" 'org-table-kill-row
-;;         "te" 'org-table-eval-formula
-;;         "tE" 'org-table-export
-;;         "th" 'org-table-previous-field
-;;         "tH" 'org-table-move-column-left
-;;         "tic" 'org-table-insert-column
-;;         "tih" 'org-table-insert-hline
-;;         "tiH" 'org-table-hline-and-move
-;;         "tir" 'org-table-insert-row
-;;         "tI" 'org-table-import
-;;         "tj" 'org-table-next-row
-;;         "tJ" 'org-table-move-row-down
-;;         "tK" 'org-table-move-row-up
-;;         "tl" 'org-table-next-field
-;;         "tL" 'org-table-move-column-right
-;;         "tn" 'org-table-create
-;;         "tN" 'org-table-create-with-table.el
-;;         "tr" 'org-table-recalculate
-;;         "ts" 'org-table-sort-lines
-;;         "ttf" 'org-table-toggle-formula-debugger
-;;         "tto" 'org-table-toggle-coordinate-overlays
-;;         "tw" 'org-table-wrap-region
-
-;;         ;; Source blocks / org-babel
-;;         "bp" 'org-babel-previous-src-block
-;;         "bn" 'org-babel-next-src-block
-;;         "be" 'org-babel-execute-maybe
-;;         "bo" 'org-babel-open-src-block-result
-;;         "bv" 'org-babel-expand-src-block
-;;         "bu" 'org-babel-goto-src-block-head
-;;         "bg" 'org-babel-goto-named-src-block
-;;         "br" 'org-babel-goto-named-result
-;;         "bb" 'org-babel-execute-buffer
-;;         "bs" 'org-babel-execute-subtree
-;;         "bd" 'org-babel-demarcate-block
-;;         "bt" 'org-babel-tangle
-;;         "bf" 'org-babel-tangle-file
-;;         "bc" 'org-babel-check-src-block
-;;         "bj" 'org-babel-insert-header-arg
-;;         "bl" 'org-babel-load-in-session
-;;         "bi" 'org-babel-lob-ingest
-;;         "bI" 'org-babel-view-src-block-info
-;;         "bz" 'org-babel-switch-to-session
-;;         "bZ" 'org-babel-switch-to-session-with-code
-;;         "ba" 'org-babel-sha1-hash
-;;         "bx" 'org-babel-do-key-sequence-in-edit-buffer
-;;         "b." 'spacemacs/org-babel-transient-state/body
-
-;;         ;; Multi-purpose keys
-;;         (or dotspacemacs-major-mode-leader-key ",") 'org-ctrl-c-ctrl-c
-;;         "*" 'org-ctrl-c-star
-;;         "-" 'org-ctrl-c-minus
-;;         "#" 'org-update-statistics-cookies
-;;         "RET"   'org-ctrl-c-ret
-;;         "M-RET" 'org-meta-return
-;;         ;; attachments
-;;         "A" 'org-attach
-;;         ;; insertion
-;;         "id" 'org-insert-drawer
-;;         "ie" 'org-set-effort
-;;         "if" 'org-footnote-new
-;;         "ih" 'org-insert-heading
-;;         "iH" 'org-insert-heading-after-current
-;;         "iK" 'spacemacs/insert-keybinding-org
-;;         "il" 'org-insert-link
-;;         "ip" 'org-set-property
-;;         "is" 'org-insert-subheading
-;;         "it" 'org-set-tags
-;;         ;; region manipulation
-;;         "xb" (spacemacs|org-emphasize spacemacs/org-bold ?*)
-;;         "xc" (spacemacs|org-emphasize spacemacs/org-code ?~)
-;;         "xi" (spacemacs|org-emphasize spacemacs/org-italic ?/)
-;;         "xo" 'org-open-at-point
-;;         "xr" (spacemacs|org-emphasize spacemacs/org-clear ? )
-;;         "xs" (spacemacs|org-emphasize spacemacs/org-strike-through ?+)
-;;         "xu" (spacemacs|org-emphasize spacemacs/org-underline ?_)
-;;         "xv" (spacemacs|org-emphasize spacemacs/org-verbatim ?=))
+;;       (spacemacs//add-org-keybindings 'org-mode)
 
 ;;       ;; Add global evil-leader mappings. Used to access org-agenda
 ;;       ;; functionalities – and a few others commands – from any other mode.
@@ -1106,10 +966,10 @@
     (progn)
     :post-config
     (progn
-      (evilified-state-evilify-map org-mode-map
-        :mode org-mode
-        :bindings
-        (kbd "gr") 'org-reload)
+      ;; (evilified-state-evilify-map org-mode-map
+      ;;   :mode org-mode
+      ;;   :bindings
+      ;;   (kbd "gr") 'org-reload)
 
       ;; When you perform a text search (the "s" selection from the `org-agenda`
       ;; pop-up), include the archives for all of the files in Org's agenda
@@ -1166,15 +1026,7 @@
       (add-to-list 'org-modules 'org-notify))
     :post-init
     (progn
-      (spacemacs/set-leader-keys-for-major-mode 'org-mode
-        ;; insertion
-        "iO" 'org-insert-todo-subheading
-        "io" 'org-insert-todo-heading
-        "ia" 'org-insert-habit
-        "iA" 'org-make-habit
-        "iS" 'cats/insert-inactive-timestamp
-        "TS" 'cats/toggle-insert-inactive-timestamp
-        (kbd "T C-t") 'org-todo-force-notes)
+      (cats//add-org-keybindings 'org-mode)
 
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
@@ -1186,7 +1038,10 @@
         (make-directory org-directory))
 
       ;; Default target for storing notes.
-      (setq org-default-notes-file cats//org-notes-file)
+      (setq org-default-notes-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-notes-file)))
+
       (setq org-ellipsis "⤵")
       ;; When nil, these commands will be disabled, so that you never
       ;; accidentally set a priority.
@@ -1469,7 +1324,6 @@
          ("ads" . "http://adsabs.harvard.edu/cgi-bin/nph-abs_connect?author=%s&db_key=AST")))
 
       ))
-
   )
 
 
@@ -1640,7 +1494,37 @@
     :defer t
     :init
     (progn
-      )
+      (setq cats//org-gtd-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-gtd-file)))
+
+      (setq cats/org-habits-file
+        (expand-file-name
+          (concat cats//org-dir cats/org-habits-file)))
+
+      (setq cats//org-calendar-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-calendar-file)))
+
+      (setq cats//org-capture-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-capture-file)))
+
+      (setq cats//org-logbook-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-logbook-file)))
+
+      (setq cats//org-inbox-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-inbox-file)))
+
+      (setq cats//org-refile-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-refile-file)))
+
+      (setq cats//org-journal-file
+        (expand-file-name
+          (concat cats//org-dir cats//org-journal-file))))
     :config
     (progn
       ;; Templates for the creation of new entries.
@@ -1678,16 +1562,9 @@
       ;;      "* TODO\nSCHEDULED: %^t\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:END:"))
 
       (add-to-list 'org-capture-templates
-        `("j" "Journal" entry
-           (file+olp+datetree ,cats//org-journal-file)
-           "* %?\n%U\n"))
-
-      ;; (add-to-list 'org-capture-templates
-      ;;   `("j" "Journal" entry
-      ;;      (file+datetree ,cats//org-journal-file)
-      ;;      "* %?\n%U\n"
-      ;;      :clock-in t
-      ;;      :clock-resume t))
+        `("j" "Journal entry" entry
+           (function cats//org-journal-find-location)
+           "* %(format-time-string org-journal-time-format)%\n^{Title}\n%i%?"))
 
       (add-to-list 'org-capture-templates
         `("l" "Logbook" entry
@@ -1777,9 +1654,12 @@
     :defer t
     :init
     (progn
-      (setq org-mobile-inbox-for-pull cats//org-mobile-inbox-file)
-      (setq org-mobile-directory cats//org-mobile-dir)
-      )
+      (setq org-mobile-directory
+        (expand-file-name
+          (concat cats//org-dir cats//org-mobile-dir)))
+      (setq org-mobile-inbox-for-pull
+        (expand-file-name
+          (concat org-mobile-directory cats//org-mobile-inbox-file))))
     :config
     (progn
       )
@@ -1905,6 +1785,9 @@
 
 ;; org-journal
 (defun cats-org/pre-init-org-journal ()
+  ;; fix issue of going to new window after create new journal
+  (spacemacs|use-package-add-hook org :post-config (require 'org-journal))
+
   (spacemacs|use-package-add-hook org-journal
     :post-init
     (progn
@@ -1912,17 +1795,23 @@
       (add-to-list 'auto-mode-alist
         '("\\(?1:[0-9]\\{4\\}\\)-\\(?2:[0-9][0-9]\\)-\\(?3:[0-9][0-9]\\)\\'" . org-journal-mode))
 
-      ;; where journal files are stored, `~/org/journal`
-      (setq org-journal-dir cats//org-journal-dir)
-      (unless (file-exists-p org-journal-dir)
-        (make-directory org-journal-dir))
+      ;; Where journal files are stored, `~/org/journal`
+      (setq org-journal-dir
+        (expand-file-name
+          (concat cats//org-dir cats//org-journal-dir)))
 
       ;; *Warning:* setting `org-journal-file-format` to include a file
       ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
       (setq org-journal-file-format "%Y-%m-%d")
-
-      (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
-        "h" 'cats/journal-file-insert)
+      ;; carry everything over to new entry except for items marked "DONE"
+      (setq org-journal-carryover-items "-TODO=\"DONE\"|-TODO=\"EXPIRED\"|-TODO=\"CANCELLED\"|-TODO=\"HANDLED\"")
+      ;; String that is put before every date at the top of a journal file. By
+      ;; default, this is a org-mode heading. Another good idea would be
+      ;; "#+TITLE: " for org titles.
+      ;; (setq org-journal-date-prefix "#+TITLE: Journal Entry- ")
+      ;; The function to use when opening an entry. Set this to ‘find-file‘ if
+      ;; you don’t want org-journal to split your window.
+      (setq org-journal-find-file 'find-file)
 
       ;; To use the agenda search, you can add all the calendar files to your
       ;; org-agenda by adding org-journal-dir to org-agenda-files and setting
@@ -1933,6 +1822,35 @@
       (cats//register-org-agenda-file-regexp
         "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")
       (cats//register-org-agenda-file-regexp
-        "\\`[^.].*\\.org\\'"))))
+        "\\`[^.].*\\.org\\'")
+
+      (when (configuration-layer/package-usedp 'org-journal)
+        (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+          "j" nil
+          "n" nil
+          "p" nil))
+
+      (spacemacs//add-org-keybindings 'org-journal-mode)
+      (cats//add-org-keybindings 'org-journal-mode)
+
+      (spacemacs|define-transient-state org-journal
+        :title "Org Journal Transient state"
+        :doc "
+[_n_/_p_] navigate entries   [_j_/_k_] navigate entries
+[_i_] new entry              [_/_] search forever
+[_q_] quit"
+        :bindings
+        ("q" nil :exit t)
+        ("j" org-journal-open-next-entry)
+        ("k" org-journal-open-previous-entry)
+        ("n" org-journal-open-next-entry)
+        ("p" org-journal-open-previous-entry)
+        ("i" org-journal-new-entry)
+        ("/" org-journal-search-forever))
+      )
+    :post-config
+    (progn
+      (unless (file-exists-p org-journal-dir)
+        (make-directory org-journal-dir)))))
 
 ;;; packages.el ends here

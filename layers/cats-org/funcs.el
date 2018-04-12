@@ -503,14 +503,15 @@ background of code to whatever theme I'm using's background"
 
 
 ;; org-journal
-
 (defun cats/journal-file-insert ()
   "Insert's the journal heading based on the file's name.
 
 In case I decide to export my journal, I wanted each file to have
 a title with the date. Also, I really wanted to have this
 information inserted automatically without having to trigger the
-snippet."
+snippet.
+
+This is similar to `org-journal-date-prefix' but offers more flexibility."
   (interactive)
   (when (string-match "\\`\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\)\\'"
           (buffer-name))
@@ -519,7 +520,197 @@ snippet."
            (day   (string-to-number (match-string 3 (buffer-name))))
            (datim nil))
       (setq datim (encode-time 0 0 0 day month year))
-      (insert (format-time-string
-                "#+TITLE: Journal Entry- %Y-%b-%d (%A)\n\n" datim)))))
+      (insert ("%s %s\n\n" cats-org-journal-date-prefix
+                (format-time-string "%s %Y-%b-%d (%A)" datim))))))
+
+
+;; org-capture
+(defun cats//org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order
+  ;; to inhibit inserting the heading; org-capture will insert the
+  ;; heading.
+  (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  (goto-char (point-min)))
+
+
+
+;; misc
+(defun spacemacs//add-org-keybindings (mode)
+  "Add shortcuts for org to `MODE' from spacemacs."
+  (dolist (prefix '(
+                     ("mb" . "babel")
+                     ("mC" . "clocks")
+                     ("md" . "dates")
+                     ("me" . "export")
+                     ("mi" . "insert")
+                     ("miD" . "download")
+                     ("ms" . "trees/subtrees")
+                     ("mT" . "toggles")
+                     ("mt" . "tables")
+                     ("mtd" . "delete")
+                     ("mti" . "insert")
+                     ("mtt" . "toggle")
+                     ("mx" . "text")))
+    (spacemacs/declare-prefix-for-mode mode (car prefix) (cdr prefix)))
+
+  (spacemacs/set-leader-keys-for-major-mode mode
+    "'" 'org-edit-special
+    "c" 'org-capture
+    "Cc" 'org-clock-cancel
+    "Ci" 'org-clock-in
+    "Co" 'org-clock-out
+    "Cr" 'org-resolve-clocks
+    "dd" 'org-deadline
+    "ds" 'org-schedule
+    "dt" 'org-time-stamp
+    "dT" 'org-time-stamp-inactive
+    "ee" 'org-export-dispatch
+
+    "a" 'org-agenda
+
+    "Tc" 'org-toggle-checkbox
+    "Te" 'org-toggle-pretty-entities
+    "Ti" 'org-toggle-inline-images
+    "Tl" 'org-toggle-link-display
+    "Tt" 'org-show-todo-tree
+    "TT" 'org-todo
+    "TV" 'space-doc-mode
+    "Tx" 'org-toggle-latex-fragment
+
+    ;; More cycling options (timestamps, headlines, items, properties)
+    "L" 'org-shiftright
+    "H" 'org-shiftleft
+    "J" 'org-shiftdown
+    "K" 'org-shiftup
+
+    ;; Change between TODO sets
+    "C-S-l" 'org-shiftcontrolright
+    "C-S-h" 'org-shiftcontrolleft
+    "C-S-j" 'org-shiftcontroldown
+    "C-S-k" 'org-shiftcontrolup
+
+    ;; Subtree editing
+    "sa" 'org-toggle-archive-tag
+    "sA" 'org-archive-subtree
+    "sb" 'org-tree-to-indirect-buffer
+    "sh" 'org-promote-subtree
+    "sj" 'org-move-subtree-down
+    "sk" 'org-move-subtree-up
+    "sl" 'org-demote-subtree
+    "sn" 'org-narrow-to-subtree
+    "sN" 'widen
+    "sr" 'org-refile
+    "ss" 'org-sparse-tree
+    "sS" 'org-sort
+
+    ;; tables
+    "ta" 'org-table-align
+    "tb" 'org-table-blank-field
+    "tc" 'org-table-convert
+    "tdc" 'org-table-delete-column
+    "tdr" 'org-table-kill-row
+    "te" 'org-table-eval-formula
+    "tE" 'org-table-export
+    "th" 'org-table-previous-field
+    "tH" 'org-table-move-column-left
+    "tic" 'org-table-insert-column
+    "tih" 'org-table-insert-hline
+    "tiH" 'org-table-hline-and-move
+    "tir" 'org-table-insert-row
+    "tI" 'org-table-import
+    "tj" 'org-table-next-row
+    "tJ" 'org-table-move-row-down
+    "tK" 'org-table-move-row-up
+    "tl" 'org-table-next-field
+    "tL" 'org-table-move-column-right
+    "tn" 'org-table-create
+    "tN" 'org-table-create-with-table.el
+    "tr" 'org-table-recalculate
+    "ts" 'org-table-sort-lines
+    "ttf" 'org-table-toggle-formula-debugger
+    "tto" 'org-table-toggle-coordinate-overlays
+    "tw" 'org-table-wrap-region
+
+    ;; Source blocks / org-babel
+    "bp" 'org-babel-previous-src-block
+    "bn" 'org-babel-next-src-block
+    "be" 'org-babel-execute-maybe
+    "bo" 'org-babel-open-src-block-result
+    "bv" 'org-babel-expand-src-block
+    "bu" 'org-babel-goto-src-block-head
+    "bg" 'org-babel-goto-named-src-block
+    "br" 'org-babel-goto-named-result
+    "bb" 'org-babel-execute-buffer
+    "bs" 'org-babel-execute-subtree
+    "bd" 'org-babel-demarcate-block
+    "bt" 'org-babel-tangle
+    "bf" 'org-babel-tangle-file
+    "bc" 'org-babel-check-src-block
+    "bj" 'org-babel-insert-header-arg
+    "bl" 'org-babel-load-in-session
+    "bi" 'org-babel-lob-ingest
+    "bI" 'org-babel-view-src-block-info
+    "bz" 'org-babel-switch-to-session
+    "bZ" 'org-babel-switch-to-session-with-code
+    "ba" 'org-babel-sha1-hash
+    "bx" 'org-babel-do-key-sequence-in-edit-buffer
+    "b." 'spacemacs/org-babel-transient-state/body
+
+    ;; Multi-purpose keys
+    (or dotspacemacs-major-mode-leader-key ",") 'org-ctrl-c-ctrl-c
+    "*" 'org-ctrl-c-star
+    "-" 'org-ctrl-c-minus
+    "#" 'org-update-statistics-cookies
+    "RET"   'org-ctrl-c-ret
+    "M-RET" 'org-meta-return
+    ;; attachments
+    "A" 'org-attach
+    ;; insertion
+    "id" 'org-insert-drawer
+    "ie" 'org-set-effort
+    "if" 'org-footnote-new
+    "ih" 'org-insert-heading
+    "iH" 'org-insert-heading-after-current
+
+    "il" 'org-insert-link
+    "ip" 'org-set-property
+    "is" 'org-insert-subheading
+    "it" 'org-set-tags
+    ;; region manipulation
+    "xb" (spacemacs|org-emphasize spacemacs/org-bold ?*)
+    "xc" (spacemacs|org-emphasize spacemacs/org-code ?~)
+    "xi" (spacemacs|org-emphasize spacemacs/org-italic ?/)
+    "xo" 'org-open-at-point
+    "xr" (spacemacs|org-emphasize spacemacs/org-clear ? )
+    "xs" (spacemacs|org-emphasize spacemacs/org-strike-through ?+)
+    "xu" (spacemacs|org-emphasize spacemacs/org-underline ?_)
+    "xv" (spacemacs|org-emphasize spacemacs/org-verbatim ?=)))
+
+(defun cats//add-org-keybindings (mode)
+  "Add shortcuts for org to `MODE'."
+  (dolist (prefix '(
+                     ("mj" . "journal")
+                     ))
+    (spacemacs/declare-prefix-for-mode mode (car prefix) (cdr prefix)))
+
+  (spacemacs/set-leader-keys-for-major-mode mode
+    ;; journal
+    "jh" 'cats/journal-file-insert
+    "js" 'org-journal-search-forever
+    "jj" 'org-journal-new-entry
+    "jn" 'org-journal-open-next-entry
+    "jp" 'org-journal-open-previous-entry
+    "j." 'spacemacs/org-journal-transient-state/body
+
+    ;; insertion
+    "iO" 'org-insert-todo-subheading
+    "io" 'org-insert-todo-heading
+    "ia" 'org-insert-habit
+    "iA" 'org-make-habit
+    "iS" 'cats/insert-inactive-timestamp
+    "TS" 'cats/toggle-insert-inactive-timestamp
+    (kbd "T C-t") 'org-todo-force-notes))
 
 ;;; funcs.el ends here

@@ -6,45 +6,35 @@
 
 ;;; Code:
 
-(defvar cats//org-dir "~/org")
+(defvar cats//org-dir "~/org/")
 
-(defvar cats//org-mobile-dir
-  (concat cats//org-dir "/mobile"))
+(defvar cats//org-mobile-dir "mobile/")
 
-(defvar cats//org-journal-dir
-  (concat cats//org-dir "/journal"))
+(defvar cats//org-journal-dir "journal/")
 
-(defvar cats//org-mobile-inbox-file
-  (concat cats//org-dir "/flagged.org"))
+(defvar cats//org-mobile-inbox-file "flagged.org")
 
-(defvar cats//org-gtd-file
-  (concat cats//org-dir "/gtd.org"))
+(defvar cats//org-gtd-file "gtd.org")
 
-(defvar cats/org-habits-file
-  (concat cats//org-dir "/habits.org"))
+(defvar cats/org-habits-file "habits.org")
 
-(defvar cats//org-calendar-file
-  (concat cats//org-dir "/calendar.org"))
+(defvar cats//org-calendar-file "calendar.org")
 
-(defvar cats//org-capture-file
-  (concat cats//org-dir "/capture.org"))
+(defvar cats//org-capture-file "capture.org")
 
-(defvar cats//org-logbook-file
-  (concat cats//org-dir "/logbook.org"))
+(defvar cats//org-logbook-file "logbook.org")
 
-(defvar cats//org-inbox-file
-  (concat cats//org-dir "/inbox.org"))
+(defvar cats//org-inbox-file "inbox.org")
 
-(defvar cats//org-refile-file
-  (concat cats//org-dir "/refile.org"))
+(defvar cats//org-refile-file "refile.org")
 
-(defvar cats//org-notes-file
-  (concat cats//org-dir "/notes.org"))
+(defvar cats//org-notes-file "notes.org")
 
-(defvar cats//org-journal-file
-  (concat cats//org-dir "/journal.org"))
+(defvar cats//org-journal-file "journal.org")
 
 (defvar cats//keep-clock-running nil)
+
+(defvar cats-org-journal-date-prefix "#+TITLE: Journal Entry- ")
 
 ;; do not keep org-agenda-files open after generating agenda
 ;; https://emacs.stackexchange.com/questions/5741
