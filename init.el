@@ -62,6 +62,7 @@ values."
      ;; System integration
      osx
      spacemacs-purpose
+     spacemacs-evil
      ;; Editing
      helm
      (auto-completion :variables
