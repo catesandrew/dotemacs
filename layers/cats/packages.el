@@ -431,15 +431,15 @@
 
 
 ;; compile
-(defun cats/init-compile ()
-  (use-package compile
-    :defer t
-    :init
-    (progn
-      (spacemacs/set-leader-keys
-        "co" 'cats/open-compilation-window
-        "ck" 'kill-compilation))
-    :config
+(defun cats/post-init-compile ()
+  (progn
+    (spacemacs/set-leader-keys
+      "co" 'cats/open-compilation-window
+      "ck" 'kill-compilation)))
+
+(defun cats/pre-init-compile ()
+  (spacemacs|use-package-add-hook whitespace
+    :post-config
     (progn
       (define-key compilation-mode-map "h" nil))))
 
