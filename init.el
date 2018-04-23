@@ -93,7 +93,7 @@ values."
                       version-control-diff-tool 'diff-hl)
      (git :variables
           ;; Magit in fullscreen
-          git-magit-status-fullscreen nil)
+          git-magit-status-fullscreen t)
      github
      ;; Development tools
      restclient
