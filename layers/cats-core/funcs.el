@@ -167,6 +167,9 @@ symbols, emojis, greek letters, as well as fall backs for."
 ;; projectile
 (defun cats/run-project-hook (dir frame-name)
   "Set `cats//projectile-curr' with `DIR' and `FRAME-NAME'."
+  ;; TODO: This or cats/find-file-hook-to-project causes errors when using
+  ;; org-jira when it tries to open a file from ~/.org-jira with not git dir
+  ;; present, to get around temporarily I created a git folder there.
   (when dir
     (unless (string= dir (frame-parameter nil 'cats//projectile-curr))
       (set-frame-parameter nil 'cats//projectile-curr dir)
