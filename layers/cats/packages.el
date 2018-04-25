@@ -117,8 +117,7 @@
   "Replace rules for better naming of functions."
   (let ((new-descriptions
           '(("cats/\\(.+\\)" . "\\1")
-             ("which-key-\\(.+\\)" . "wk:\\1")
-             ("org-agenda-\\(.+\\)" . "oa:\\1"))))
+             ("which-key-\\(.+\\)" . "wk:\\1"))))
     (dolist (nd new-descriptions)
       ;; ensure the target matches the whole string
       (push (cons (cons nil (concat "\\`" (car nd) "\\'")) (cons nil (cdr nd)))
@@ -821,8 +820,65 @@ Install mudraw with brew install mupdf-tools"))))))
   (use-package calendar
     :defer t
     :init
-    ;; I start on Monday
-    (setq calendar-week-start-day 1)))
+    (progn
+      ;; I start on Monday
+      (setq calendar-week-start-day 1)
+
+      ;; Set up `evil' bindings for `calendar'.
+      (evil-set-initial-state 'calendar-mode 'normal)
+      (evil-define-key 'normal calendar-mode-map
+        ;; motion
+        "h" 'calendar-backward-day
+        "j" 'calendar-forward-week
+        "k" 'calendar-backward-week
+        "l" 'calendar-forward-day
+        "0" 'calendar-beginning-of-week
+        "^" 'calendar-beginning-of-week
+        "$" 'calendar-end-of-week
+        "[" 'calendar-backward-year
+        "]" 'calendar-forward-year
+        (kbd "M-<") 'calendar-beginning-of-year
+        (kbd "M->") 'calendar-end-of-year
+        "(" 'calendar-beginning-of-month
+        ")" 'calendar-end-of-month
+        (kbd "SPC") 'scroll-other-window
+        (kbd "S-SPC") 'scroll-other-window-down
+        (kbd "<delete>") 'scroll-other-window-down
+        "<" 'calendar-scroll-right
+        ">" 'calendar-scroll-left
+        (kbd "C-b") 'calendar-scroll-right-three-months
+        (kbd "C-f") 'calendar-scroll-left-three-months
+        "{" 'calendar-backward-month
+        "}" 'calendar-forward-month
+        (kbd "C-k") 'calendar-backward-month
+        (kbd "C-j") 'calendar-forward-month
+        "gk" 'calendar-backward-month
+        "gj" 'calendar-forward-month
+
+        ;; visual
+        "v" 'calendar-set-mark
+
+        ;; goto
+        "." 'calendar-goto-today
+        "gd" 'calendar-goto-date ; "gd" in evil-org-agenda, "gd" in Emacs.
+
+        ;; show
+        "gm" 'calendar-lunar-phases ; "gm" in evil-org-agenda. TODO: Shadows calendar-mayan.
+        "gs" 'calendar-sunrise-sunset ; "gs" in evil-org-agenda
+        "gh" 'calendar-list-holidays ; "gh" in evil-org-agenda. TODO: Shadows calendar-hebrew.
+        "gc" 'org-calendar-goto-agenda ; "gc" in evil-org-agenda. TODO: Shadows calendar-iso.
+
+        ;; refresh
+        "gr" 'calendar-redraw
+
+        "g?" 'calendar-goto-info-node
+        "?" 'calendar-goto-info-node ; Search is not very useful.
+        (kbd "M-=") 'calendar-count-days-region
+
+        ;; quit
+        "q" 'calendar-exit
+        "ZQ" 'evil-quit
+        "ZZ" 'calendar-exit))))
 
 
 ;; time

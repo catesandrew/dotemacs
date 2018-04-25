@@ -520,8 +520,9 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
            (day   (string-to-number (match-string 3 (buffer-name))))
            (datim nil))
       (setq datim (encode-time 0 0 0 day month year))
-      (insert ("%s %s\n\n" cats-org-journal-date-prefix
-                (format-time-string "%s %Y-%b-%d (%A)" datim))))))
+
+      (insert (format-time-string
+                "#+TITLE: Journal Entry- %Y-%b-%d (%A)\n\n" datim)))))
 
 
 ;; org-capture
@@ -712,5 +713,31 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
     "iS" 'cats/insert-inactive-timestamp
     "TS" 'cats/toggle-insert-inactive-timestamp
     (kbd "T C-t") 'org-todo-force-notes))
+
+
+;; org-jira
+(defun cats//add-org-jira-keybindings (mode)
+  "Add shortcuts for org-jira to `MODE' from spacemacs."
+  (dolist (prefix '(
+                     ("mr" . "jira")))
+    (spacemacs/declare-prefix-for-mode mode (car prefix) (cdr prefix)))
+
+  (spacemacs/set-leader-keys-for-major-mode mode
+    "rb" 'org-jira-browse-issue
+    "rc" 'org-jira-update-comment
+    "rf" 'org-jira-get-issues-from-filter-headonly
+    "rF" 'org-jira-get-issues-from-filter
+    "rh" 'org-jira-get-issues-headonly
+    "ri" 'org-jira-get-issues
+    "rI" 'org-jira-create-issue
+    "rp" 'org-jira-get-projects
+    "rP" 'org-jira-progress-issue
+    "rr" 'org-jira-refresh-issue
+    "rs" 'org-jira-get-subtasks
+    "rS" 'org-jira-create-subtask
+    "rt" 'org-jira-todo-to-jira
+    "ru" 'org-jira-update-issue
+    "ry" 'org-jira-copy-current-issue-key))
+
 
 ;;; funcs.el ends here

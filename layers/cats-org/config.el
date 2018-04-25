@@ -34,8 +34,6 @@
 
 (defvar cats//keep-clock-running nil)
 
-(defvar cats-org-journal-date-prefix "#+TITLE: Journal Entry- ")
-
 ;; do not keep org-agenda-files open after generating agenda
 ;; https://emacs.stackexchange.com/questions/5741
 (defvar cats-opened-org-agenda-files nil)

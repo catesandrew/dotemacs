@@ -60,12 +60,28 @@
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
      ox-reveal                          ;; defined in spacemacs org
      ;; ox-twbs                            ;; defined in spacemacs org
+     which-key
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
 ;; sudo apt-get -y install ipython ipython-notebook
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
+
+
+;; which-key
+(defun cats-org/post-init-which-key ()
+  "Replace rules for better naming of functions."
+  (let ((new-descriptions
+          '(("org-jira-\\(.+\\)" . "or:\\1")
+             ("org-journal-\\(.+\\)" . "oj:\\1")
+             ("org-babel-\\(.+\\)" . "ob:\\1")
+             ("org-table-\\(.+\\)" . "ot:\\1")
+             ("org-agenda-\\(.+\\)" . "oa:\\1"))))
+    (dolist (nd new-descriptions)
+      ;; ensure the target matches the whole string
+      (push (cons (cons nil (concat "\\`" (car nd) "\\'")) (cons nil (cdr nd)))
+        which-key-replacement-alist))))
 
 
 ;; evil-org
@@ -842,27 +858,26 @@
       ;;     ("In Development" . "Ready For Review")
       ;;     ("Code Review" . "Done")
       ;;     ("Done" . "Reopen")))
-      (spacemacs/declare-prefix "aj" "org-jira")
-      (spacemacs/declare-prefix "ajc" "create")
-      (spacemacs/declare-prefix "ajg" "get")
+
+      (cats//add-org-jira-keybindings 'org-mode)
+      (spacemacs/declare-prefix "aor" "org-jira")
       (spacemacs/set-leader-keys
-        "ajb" 'org-jira-browse-issue
-        "ajp" 'org-jira-progress-issue
-        "ajr" 'org-jira-refresh-issue
-        "ajt" 'org-jira-todo-to-jira
-        "aju" 'org-jira-update-issue
-        "ajU" 'org-jira-update-comment
-        "ajy" 'org-jira-copy-current-issue-key
-        ;; create
-        "ajci" 'org-jira-create-issue
-        "ajcs" 'org-jira-create-subtask
-        ;; get
-        "ajgf" 'org-jira-get-issues-from-filter-headonly
-        "ajgF" 'org-jira-get-issues-from-filter
-        "ajgh" 'org-jira-get-issues-headonly
-        "ajgi" 'org-jira-get-issues
-        "ajgp" 'org-jira-get-projects
-        "ajgs" 'org-jira-get-subtasks))))
+        "aorb" 'org-jira-browse-issue
+        "aorc" 'org-jira-update-comment
+        "aorf" 'org-jira-get-issues-from-filter-headonly
+        "aorF" 'org-jira-get-issues-from-filter
+        "aorh" 'org-jira-get-issues-headonly
+        "aori" 'org-jira-get-issues
+        "aorI" 'org-jira-create-issue
+        "aorp" 'org-jira-get-projects
+        "aorP" 'org-jira-progress-issue
+        "aorr" 'org-jira-refresh-issue
+        "aors" 'org-jira-get-subtasks
+        "aorS" 'org-jira-create-subtask
+        "aort" 'org-jira-todo-to-jira
+        "aoru" 'org-jira-update-issue
+        "aory" 'org-jira-copy-current-issue-key
+        ))))
 
 
 ;; org
@@ -1784,25 +1799,22 @@
 
 
 ;; org-journal
+
 (defun cats-org/pre-init-org-journal ()
-  ;; fix issue of going to new window after create new journal
+  ;; *Warning:* setting `org-journal-file-format` to include a file extension
+  ;; like `%Y-%m-%d.org` breaks calender search functionality. The time stamp
+  ;; for the files name is YYYY-MM-DD.
+  (setq-default org-journal-file-format "%Y-%m-%d")
+  ;; Where journal files are stored, `~/org/journal`
+  (setq-default org-journal-dir
+    (expand-file-name
+      (concat cats//org-dir cats//org-journal-dir)))
+
   (spacemacs|use-package-add-hook org :post-config (require 'org-journal))
 
   (spacemacs|use-package-add-hook org-journal
     :post-init
     (progn
-      ;; the time stamp for the files name is YYYY-MM-DD
-      (add-to-list 'auto-mode-alist
-        '("\\(?1:[0-9]\\{4\\}\\)-\\(?2:[0-9][0-9]\\)-\\(?3:[0-9][0-9]\\)\\'" . org-journal-mode))
-
-      ;; Where journal files are stored, `~/org/journal`
-      (setq org-journal-dir
-        (expand-file-name
-          (concat cats//org-dir cats//org-journal-dir)))
-
-      ;; *Warning:* setting `org-journal-file-format` to include a file
-      ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
-      (setq org-journal-file-format "%Y-%m-%d")
       ;; carry everything over to new entry except for items marked "DONE"
       (setq org-journal-carryover-items "-TODO=\"DONE\"|-TODO=\"EXPIRED\"|-TODO=\"CANCELLED\"|-TODO=\"HANDLED\"")
       ;; String that is put before every date at the top of a journal file. By
@@ -1832,6 +1844,8 @@
 
       (spacemacs//add-org-keybindings 'org-journal-mode)
       (cats//add-org-keybindings 'org-journal-mode)
+      (spacemacs/set-leader-keys-for-major-mode 'calendar-mode
+        "RET" 'org-journal-display-entry)
 
       (spacemacs|define-transient-state org-journal
         :title "Org Journal Transient state"
@@ -1846,8 +1860,7 @@
         ("n" org-journal-open-next-entry)
         ("p" org-journal-open-previous-entry)
         ("i" org-journal-new-entry)
-        ("/" org-journal-search-forever))
-      )
+        ("/" org-journal-search-forever)))
     :post-config
     (progn
       (unless (file-exists-p org-journal-dir)
