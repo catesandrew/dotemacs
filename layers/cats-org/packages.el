@@ -1815,8 +1815,21 @@
   (spacemacs|use-package-add-hook org-journal
     :post-init
     (progn
+      ;; the time stamp for the files name is YYYY-MM-DD
+      (add-to-list 'auto-mode-alist
+        '("\\(?1:[0-9]\\{4\\}\\)-\\(?2:[0-9][0-9]\\)-\\(?3:[0-9][0-9]\\)\\'" . org-journal-mode))
+
+      ;; Where journal files are stored, `~/org/journal`
+      (setq org-journal-dir
+        (expand-file-name
+          (concat cats//org-dir cats//org-journal-dir)))
+
+      ;; *Warning:* setting `org-journal-file-format` to include a file
+      ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
+      (setq org-journal-file-format "%Y-%m-%d")
       ;; carry everything over to new entry except for items marked "DONE"
-      (setq org-journal-carryover-items "-TODO=\"DONE\"|-TODO=\"EXPIRED\"|-TODO=\"CANCELLED\"|-TODO=\"HANDLED\"")
+      ;; (setq org-journal-carryover-items "-TODO=\"DONE\"|-TODO=\"EXPIRED\"|-TODO=\"CANCELLED\"|-TODO=\"HANDLED\"")
+      (setq org-journal-carryover-items nil)
       ;; String that is put before every date at the top of a journal file. By
       ;; default, this is a org-mode heading. Another good idea would be
       ;; "#+TITLE: " for org titles.
