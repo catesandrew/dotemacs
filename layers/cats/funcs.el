@@ -296,12 +296,6 @@ many times might take a long time."
 
 
 ;; evil
-(defun cats//save-buffer ()
-  (let ((filename (buffer-file-name (buffer-base-buffer)))
-         (save-silently t))
-    ;; (write-file filename (not bang))
-    (save-buffer)))
-
 (defun cats//minibuffer-keyboard-quit ()
   "Abort recursive edit.
 In Delete Selection mode, if the mark is active, just deactivate it;
