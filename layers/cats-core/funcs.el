@@ -194,38 +194,39 @@ symbols, emojis, greek letters, as well as fall backs for."
   "A function that does nothing.")
 
 (defun cats/find-file-hook-to-project ()
-  "Use ."
-  (condition-case err
-    (let* ((frame (selected-frame))
-            (frame-name (cats//frame-name frame))
-            (projectile-require-project-root t))
-      (projectile-project-root)         ; try to locate project root
-      (let* ((project-root (projectile-project-root))
-              (proj-dir-root (directory-file-name
-                               (projectile-project-root)))
-              (proj-dir-base (file-name-nondirectory
-                               (directory-file-name
-                                 (projectile-project-root)))))
-        (when (and project-root
-                (not (string= project-root
-                       (frame-parameter frame
-                         'cats//projectile-curr))))
-          (let* ((projectile-switch-project-action 'cats//do-nothing)
-                  (projectile-before-switch-project-hook 'cats//do-nothing)
-                  (projectile-after-switch-project-hook 'cats//do-nothing))
-            (set-frame-parameter frame
-              'cats//projectile-switching-project-by-name t)
-            (projectile-switch-project-by-name project-root)
-            (set-frame-parameter frame
-              'cats/projectile-dir-root proj-dir-root)
-            (set-frame-parameter frame
-              'cats/projectile-dir-base proj-dir-base)
-            (cats/run-project-hook project-root frame-name)))))
+  "Check if we're in a project."
+  (let* ((frame (selected-frame))
+          (frame-name (cats//frame-name frame))
+          (projectile-require-project-root t))
+    (condition-case nil
+      (progn
+        (projectile-project-root)         ; try to locate project root
+        (let* ((project-root (projectile-project-root))
+                (proj-dir-root (directory-file-name
+                                 (projectile-project-root)))
+                (proj-dir-base (file-name-nondirectory
+                                 (directory-file-name
+                                   (projectile-project-root)))))
+          (when (and project-root
+                  (not (string= project-root
+                         (frame-parameter frame
+                           'cats//projectile-curr))))
+            (let* ((projectile-switch-project-action 'cats//do-nothing)
+                    (projectile-before-switch-project-hook 'cats//do-nothing)
+                    (projectile-after-switch-project-hook 'cats//do-nothing))
+              (set-frame-parameter frame
+                'cats//projectile-switching-project-by-name t)
+              (projectile-switch-project-by-name project-root)
+              (set-frame-parameter frame
+                'cats/projectile-dir-root proj-dir-root)
+              (set-frame-parameter frame
+                'cats/projectile-dir-base proj-dir-base)
+              (cats/run-project-hook project-root frame-name)))))
       (error
         (progn
           (set-frame-parameter frame 'cats/projectile-dir-root nil)
           (set-frame-parameter frame 'cats/projectile-dir-base nil))
-        nil)))
+        nil))))
 
 
 ;; other funcs
