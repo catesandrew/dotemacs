@@ -620,9 +620,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setenv "AUTOFEATURE" "true autotest")
   (setenv "TERM" "xterm-256color")
 
-  (setq mark-ring-max 64)
-  (setq kill-ring-max 200)
-  (setq global-mark-ring-max 128)
+  (setq mark-ring-max 256)
+  (setq kill-ring-max 960)
+  (setq global-mark-ring-max 256)
 
   ;; find aspell and hunspell automatically
   ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
