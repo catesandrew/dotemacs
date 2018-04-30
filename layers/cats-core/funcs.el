@@ -221,6 +221,28 @@ symbols, emojis, greek letters, as well as fall backs for."
           (set-frame-parameter frame 'cats/projectile-dir-base nil))
         nil))))
 
+(defun cats//init-project-hook (frame)
+  "Init to check if we're in a project with FRAME."
+  (let* ((name (cats//frame-name frame))
+          (projectile-curr (cats//projectile-curr frame))
+          (origin-buffer-file-name (buffer-file-name))
+          (projectile-require-project-root t))
+    (condition-case nil
+      (progn
+        (projectile-project-root)
+        (let* ((project-root (projectile-project-root))
+                (proj-dir-root (directory-file-name
+                                 (projectile-project-root)))
+                (proj-dir-base (file-name-nondirectory
+                                 (directory-file-name
+                                   (projectile-project-root)))))
+          (when (and project-root
+                  (not (string= project-root projectile-curr)))
+            (cats/run-project-hook project-root name))))
+      (error
+        (message "Project Hook Initialization Failed")
+        nil))))
+
 
 ;; other funcs
 

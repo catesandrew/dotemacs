@@ -716,29 +716,11 @@ you should place you code here."
 
     (pupo/update-purpose-config)
 
-    (condition-case err
-      (let* ((frame (selected-frame))
-              (name (cats//frame-name frame))
-              (projectile-curr (cats//projectile-curr frame))
-              (origin-buffer-file-name (buffer-file-name))
-              (projectile-require-project-root t))
-          (projectile-project-root)
-          (let* ((project-root (projectile-project-root))
-                  (proj-dir-root (directory-file-name
-                                   (projectile-project-root)))
-                  (proj-dir-base (file-name-nondirectory
-                                   (directory-file-name
-                                     (projectile-project-root)))))
-            (when (and project-root
-                    (not (string= project-root projectile-curr)))
-              (cats/run-project-hook project-root name))))
-      (error
-        (message "Project Hook Initialization Failed")
-        nil))
-
     ;; Autosave buffers when focus is lost, see
     (when buffer/force-save-some-buffers
-      (add-hook 'focus-out-hook 'cats//force-save-some-buffers))))
+      (add-hook 'focus-out-hook 'cats//force-save-some-buffers))
+
+    (cats//init-project-hook (selected-frame))))
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)
