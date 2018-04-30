@@ -15,6 +15,7 @@
      company
      company-shell
      desktop
+     edit-server
      (eshell :location built-in)
      (goto-addr :location built-in)
      (prettify-symbols-mode :location built-in)
@@ -281,6 +282,13 @@
         ;; ask user whether to restore desktop at start-up
         ;; (add-hook 'emacs-startup-hook 'cats//desktop-after-init)
         (cats//desktop-after-init)))))
+
+
+;; edit-server
+(defun cats-cor/init-edit-server ()
+  (use-package edit-server
+    :ensure t
+    :commands edit-server-start))
 
 
 ;; prettyify symbols
