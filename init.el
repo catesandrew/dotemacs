@@ -2,6 +2,12 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+(defvar cats-enable-edit-server t
+  "If non-nil, start an Emacs server if one is not already running.")
+
+(defvar cats-edit-server-start-run nil
+  "Whether `edit-server-start' has been run")
+
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -84,7 +90,8 @@ values."
      evil-commentary
      ;; Syntax and spell checking
      (spell-checking :variables
-                     flyspell-default-dictionary "en")
+                     flyspell-default-dictionary "en_US"
+                     spell-checking-enable-auto-dictionary nil)
      (syntax-checking :variables
                       syntax-checking-enable-tooltips t)
      ;; Version control
@@ -509,7 +516,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "pt" "ag" "ack" "grep")
 
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'
@@ -548,7 +555,7 @@ values."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs t))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -562,30 +569,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq compilation-ask-about-save nil)
 
   (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
-  (setq spacemacs-useless-buffers-regexp '("^\\*[^\\*]+\\*$"))
-  (setq spacemacs-useful-buffers-regexp '("\\*scratch\\*" "\\*spacemacs\\*"))
 
   (setq abbrev-file-name
         (expand-file-name (concat spacemacs-cache-directory "abbrev_defs")))
   (setq spacemacs-auto-save-directory
         (expand-file-name (concat spacemacs-cache-directory "auto-save/")))
 
-  ;; Keep backup files out of the way
-  (setq backup-directory-alist `((".*" . ,(concat spacemacs-cache-directory "backups"))))
-  ;; don't create backup~ files
-  (setq backup-by-copying t)
-  (setq create-lockfiles nil)
-
-  ;; Opt out from the startup message in the echo area by simply disabling this
-  ;; ridiculously bizarre thing entirely.
-  (fset 'display-startup-echo-area-message #'ignore)
-
-  ;; Indicate empty lines at the end of a buffer in the fringe, but require a
-  ;; final new line
-  (setq indicate-empty-lines t)
-  (setq require-final-newline t)
-
-  ;; force GPG to not use an external tool for pin entry. That is particularly
+  ;; Force GPG to not use an external tool for pin entry. That is particularly
   ;; useful if you don’t want the default GPG Agent pin entry tool to start,
   ;; particularly if you want Emacs to handle the pin entry for you.
   ;; (setf epa-pinentry-mode 'loopback)
@@ -618,30 +608,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
   (setenv "HISTFILE" "~/.bash_eternal_history")
   (setenv "AUTOFEATURE" "true autotest")
-  (setenv "TERM" "xterm-256color")
-
-  (setq mark-ring-max 256)
-  (setq kill-ring-max 960)
-  (setq global-mark-ring-max 256)
-
-  ;; find aspell and hunspell automatically
-  ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
-  (cond
-    ;; try hunspell at first, if hunspell does NOT exist, use aspell
-    ((executable-find "hunspell")
-      (setq ispell-program-name "hunspell")
-      (setq ispell-local-dictionary "en_US")
-      (setq ispell-local-dictionary-alist
-        ;; Please note the list `("-d" "en_US")` contains ACTUAL parameters
-        ;; passed to hunspell You could use `("-d" "en_US,en_US-med")` to check
-        ;; with multiple dictionaries
-        '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
-           )))
-    ((executable-find "aspell")
-      (setq ispell-program-name "aspell")
-      ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
-      (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US"))))
-  )
+  (setenv "TERM" "xterm-256color"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -651,7 +618,60 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
-  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "❀"))
+  ;; Opt out from the startup message in the echo area by simply disabling this
+  ;; ridiculously bizarre thing entirely.
+  (fset 'display-startup-echo-area-message #'ignore)
+
+  ;; (push "^\\*[^\\*]+\\*$" spacemacs-useless-buffers-regexp)
+  ;; (push "\\*scratch\\*" spacemacs-useful-buffers-regexp)
+  ;; (push "\\*spacemacs\\*" spacemacs-useful-buffers-regexp)
+  ;; (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
+
+  ;; Keep backup files out of the way
+  (setq backup-directory-alist `((".*" . ,(concat spacemacs-cache-directory "backups"))))
+  ;; don't create backup~ files
+  (setq backup-by-copying t)
+  (setq create-lockfiles nil)
+
+  ;; Indicate empty lines at the end of a buffer in the fringe, but require a
+  ;; final new line
+  (setq-default indicate-empty-lines t)
+  (setq-default require-final-newline t)
+
+  (setq mark-ring-max 256)
+  (setq kill-ring-max 960)
+  (setq global-mark-ring-max 256)
+
+  ;; Autosave buffers when focus is lost
+  (when buffer/force-save-some-buffers
+    (add-hook 'focus-out-hook 'cats//force-save-some-buffers))
+
+  ;; find aspell and hunspell automatically
+  ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
+  (async-start
+    `(lambda ()
+       ;; try hunspell at first, if hunspell does NOT exist, use aspell
+       (executable-find "hunspell"))
+    (lambda (result)
+      (if result
+        (with-eval-after-load "ispell"
+          (setq ispell-program-name result)
+          (setq ispell-local-dictionary-alist
+            ;; Please note the list `("-d" "en_US")` contains ACTUAL parameters
+            ;; passed to hunspell You could use `("-d" "en_US,en_US-med")` to check
+            ;; with multiple dictionaries
+            '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+          (setq ispell-local-dictionary "en_US"))
+        (async-start
+          `(lambda ()
+             (executable-find "aspell"))
+          (lambda (result)
+            (when result
+              (with-eval-after-load "ispell"
+                (setq ispell-program-name result)
+                ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
+                (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))))))))
+
   ;; seems to be needed to avoid weird artefacts with first graphical client
   (spacemacs|do-after-display-system-init
     "Ran on *first* instance of emacsclient."
@@ -716,11 +736,11 @@ you should place you code here."
 
     (pupo/update-purpose-config)
 
-    ;; Autosave buffers when focus is lost, see
-    (when buffer/force-save-some-buffers
-      (add-hook 'focus-out-hook 'cats//force-save-some-buffers))
-
-    (cats//init-project-hook (selected-frame))))
+    (cats//kickoff-project-hook (selected-frame))
+    (when cats-enable-edit-server
+      (unless cats-edit-server-start-run
+        (edit-server-start)
+        (setq cats-edit-server-start-run t)))))
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)

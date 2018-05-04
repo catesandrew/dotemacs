@@ -269,7 +269,7 @@ Zel is basically a port of z in Emacs Lisp."
         )
       (zel-install)
       ;; (run-at-time nil (* 5 60) 'recentf-save-list)
-      (run-with-idle-timer (* 5 60) t 'zel-write-history)))
+      (run-with-idle-timer (* 1 60) t 'zel-write-history)))
 
   (spacemacs|use-package-add-hook projectile
     "List frecent file paths in descending order by their rank."

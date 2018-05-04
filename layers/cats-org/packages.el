@@ -22,6 +22,7 @@
      (ob-ditta :location built-in)
      (org :location built-in)           ;; defined in spacemacs org
      (org-agenda :location built-in)    ;; defined in spacemacs org
+     org-bullets
      ;; (org-brain :location built-in)     ;; defined in spacemacs org
      ;; (org-expiry :location built-in)    ;; defined in spacemacs org
      (org-faces :location built-in)
@@ -67,6 +68,13 @@
 ;; sudo apt-get -y install ipython ipython-notebook
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
+
+
+;; org-bullets
+(defun cats-org/pre-init-org-bullets ()
+  (spacemacs|use-package-add-hook org-bullets
+    :post-init
+    (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "❀"))))
 
 
 ;; which-key
@@ -841,27 +849,24 @@
                org-jira-create-subtask
                org-jira-get-subtasks
                org-jira-update-comment
+               org-jira-refresh-issues-in-buffer
+               org-jira-progress-issue-next
+               org-jira-get-issues-by-fixversion
+               org-jira-assign-issue
                org-jira-todo-to-jira)
     :init
     (progn
-      ;; (defconst org-jira-progress-issue-flow
-      ;;   '(("To Do" . "In Progress"
-      ;;      ("In Progress" . "Done"))))
-
-      ;; If your Jira is set up to display a status in the issue differently
-      ;; than what is shown in the button on Jira, your alist may look like this
-      ;; (use the labels shown in the org-jira Status when setting it up, or
-      ;; manually work out the workflows being used through standard C-c iw
-      ;; options/usage):
-      ;; (defconst org-jira-progress-issue-flow
-      ;;   '(("To Do" . "Start Progress")
-      ;;     ("In Development" . "Ready For Review")
-      ;;     ("Code Review" . "Done")
-      ;;     ("Done" . "Reopen")))
+      ;; org-jira-working-dir "~/.org-jira"
+      (setq org-jira-deadline-duedate-sync-p nil)
+      (setq org-jira-worklog-sync-p nil)
+      (setq org-jira-property-overrides nil)
+      ;; Default jql for querying your Jira tickets.
+      (setq org-jira-default-jql cats-jira-default-jql)
 
       (cats//add-org-jira-keybindings 'org-mode)
       (spacemacs/declare-prefix "aor" "org-jira")
       (spacemacs/set-leader-keys
+        "aora" 'org-jira-assign-issue
         "aorb" 'org-jira-browse-issue
         "aorc" 'org-jira-update-comment
         "aorf" 'org-jira-get-issues-from-filter-headonly
@@ -869,13 +874,16 @@
         "aorh" 'org-jira-get-issues-headonly
         "aori" 'org-jira-get-issues
         "aorI" 'org-jira-create-issue
+        "aorn" 'org-jira-progress-issue-next
         "aorp" 'org-jira-get-projects
         "aorP" 'org-jira-progress-issue
         "aorr" 'org-jira-refresh-issue
+        "aorR" 'org-jira-refresh-issues-in-buffer
         "aors" 'org-jira-get-subtasks
         "aorS" 'org-jira-create-subtask
         "aort" 'org-jira-todo-to-jira
         "aoru" 'org-jira-update-issue
+        "aorv" 'org-jira-get-issues-by-fixversion
         "aory" 'org-jira-copy-current-issue-key
         ))))
 

@@ -221,7 +221,7 @@ symbols, emojis, greek letters, as well as fall backs for."
           (set-frame-parameter frame 'cats/projectile-dir-base nil))
         nil))))
 
-(defun cats//init-project-hook (frame)
+(defun cats//kickoff-project-hook (frame)
   "Init to check if we're in a project with FRAME."
   (let* ((name (cats//frame-name frame))
           (projectile-curr (cats//projectile-curr frame))

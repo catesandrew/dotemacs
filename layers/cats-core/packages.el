@@ -285,10 +285,16 @@
 
 
 ;; edit-server
-(defun cats-cor/init-edit-server ()
+(defun cats-core/init-edit-server ()
   (use-package edit-server
-    :ensure t
-    :commands edit-server-start))
+    :commands (edit-server-start)
+    :config
+    :init
+    (progn
+      (with-eval-after-load 'markdown-mode
+        (setq edit-server-default-major-mode 'markdown-mode))
+      (setq edit-server-url-major-mode-alist
+        '(("github\\.com" . gfm-mode))))))
 
 
 ;; prettyify symbols

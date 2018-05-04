@@ -49,6 +49,9 @@
 :CREATED: %U
 :END:")
 
+(defvar cats-jira-default-jql
+  "assignee = currentUser() and resolution = unresolved ORDER BY priority DESC, created ASC")
+
 ;; Thanks to
 ;; [[http://endlessparentheses.com/embedding-youtube-videos-with-org-mode-links.html][endlessparentheses]]:
 ;; Youtube makes it pretty simple to embed videos, they give you the entire
