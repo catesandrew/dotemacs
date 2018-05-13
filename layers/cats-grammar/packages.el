@@ -2,23 +2,10 @@
 
 (setq cats-grammar-packages
   '(
-    writegood-mode
-    langtool
-    flyspell
-    (text-mode :location built-in)
-))
-
-
-;; text-mode
-(defun cats-grammar/init-text-mode ()
-  "Add text mode hooks."
-  (use-package text-mode
-    :init
-    (progn
-      ;; bootstrap with our defaults
-      (add-hook 'cats/text-mode-hook 'cats/text-mode-defaults)
-      ;; run our cats/prog-mod-hooks with text-mode
-      (add-hook 'text-mode-hook (lambda () (run-hooks #'cats/text-mode-hook))))))
+     flyspell
+     langtool
+     writegood-mode
+     ))
 
 
 ;; writegood

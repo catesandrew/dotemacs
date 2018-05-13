@@ -1049,6 +1049,7 @@
       (add-to-list 'org-modules 'org-notify))
     :post-init
     (progn
+      (add-hook 'org-mode-hook 'cats/org-mode-local)
       (cats//add-org-keybindings 'org-mode)
 
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))

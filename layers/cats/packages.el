@@ -56,6 +56,7 @@
      remember
      spaceline
      sx
+     (text-mode :location built-in)
      (time :location built-in)
      (tramp :location built-in)
      which-key
@@ -108,6 +109,7 @@
 
 ;; conf-mode
 (defun cats/post-init-conf-mode ()
+  (add-hook 'conf-mode-hook 'cats/conf-mode-local)
   (add-to-list 'auto-mode-alist '("\\.envrc$" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))
 
@@ -456,34 +458,34 @@
       (define-key compilation-mode-map "h" nil))))
 
 
-;; editing
-(defun cats/whitespace-mode-local ()
-  "Enable `whitespace-mode' after local variables where set up."
-  (add-hook 'hack-local-variables-hook #'whitespace-mode nil 'local))
-
-(defun cats/pre-init-whitespace ()
-  (spacemacs|use-package-add-hook whitespace
-    :post-config
-    (progn
-      ;; Cleanup all whitespace
-      (spacemacs/set-leader-keys "xdw" #'whitespace-cleanup)
-
-      ;; Use less aggressive whitespace highlighting, and disable Spacemacs own
-      ;; whitespace highlighting
-      (setq spacemacs-show-trailing-whitespace nil
-            whitespace-style '(face indentation space-after-tab space-before-tab
-                                    tab-mark empty trailing lines-tail)
-            whitespace-line-column nil))))
-
+;; whitespace
 (defun cats/post-init-whitespace ()
-  ;; Enable whitespace mode after local variables were setup because whitespace
-  ;; mode doesn't handle local variables well :(
-  (spacemacs/add-to-hooks #'cats/whitespace-mode-local
-                          '(prog-mode-hook text-mode-hook conf-mode-hook)))
+  ;; Cleanup all whitespace
+  (spacemacs/set-leader-keys "xdW" 'whitespace-cleanup)
+  ;; Use less aggressive whitespace highlighting, and disable Spacemacs own
+  ;; whitespace highlighting
+  (setq spacemacs-show-trailing-whitespace nil
+    whitespace-style '(face indentation space-after-tab space-before-tab
+                        tab-mark empty trailing lines-tail)
+    whitespace-line-column nil))
 
-(defun cats/post-init-hungry-delete ()
-  (global-hungry-delete-mode))
+
+;; hungry-delete
+(defun cats/pre-init-hungry-delete ()
+  (spacemacs|use-package-add-hook hungry-delete
+    :post-init
+    (spacemacs|add-toggle global-hungry-delete
+      :status global-hungry-delete-mode
+      :on (progn
+            (when (bound-and-true-p global-hungry-delete-mode)
+              (global-hungry-delete-mode -1))
+            (global-hungry-delete-mode))
+      :off (global-hungry-delete-mode -1)
+      :documentation "Hungry delete mode globally."
+      :evil-leader "t C-d")))
 
+
+;; beacon
 (defun cats/init-beacon ()
   (use-package beacon
     :init
@@ -494,7 +496,6 @@
         :off (beacon-mode -1)
         :documentation "Enable point highlighting after scrolling"
         :evil-leader "tob")
-
       (spacemacs/toggle-beacon-on))
     :config (spacemacs|hide-lighter beacon-mode)))
 
@@ -874,6 +875,14 @@ Install mudraw with brew install mupdf-tools"))))))
         "q" 'calendar-exit
         "ZQ" 'evil-quit
         "ZZ" 'calendar-exit))))
+
+
+;; text-mode
+(defun cats/init-text-mode ()
+  "Add text mode hooks."
+  (use-package text-mode
+    :init
+    (add-hook 'text-mode-hook 'cats/text-mode-local)))
 
 
 ;; time

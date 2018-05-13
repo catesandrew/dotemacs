@@ -1,8 +1,5 @@
 ;;; config.el --- Grammar Layer configuration File for Spacemacs
 
-(defvar cats/text-mode-hook nil
-  "Hooks run when `text-mode-hook' is fired.")
-
 (defvar grammar-checking-enable-by-default t
   "Enable grammar checking by default.")
 

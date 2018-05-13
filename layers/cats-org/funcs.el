@@ -34,17 +34,20 @@
     (find-file "~/.emacs.d/org/emacs.org")))
 
 
-;; personal org-mode defaults
-(defun cats/org-mode-defaults ()
-  "Default coding hook, useful with `org-mode'."
-  (unless (bound-and-true-p my-omh-ran)
-    (set (make-local-variable 'my-omh-ran) t)
+;; org-mode
+(defun cats/org-mode-local ()
+  (add-hook 'hack-local-variables-hook 'cats/org-mode-defaults nil 'local))
 
+(defun cats/org-mode-defaults ()
+  ;; Disable whitespace cleanup in org-mode. The reason is that org-mode is a
+  ;; descendant of text-mode (via outline-mode) so it inherits text-mode's
+  ;; snippets too.
+  (spacemacs/toggle-whitespace-cleanup-off)
+
+  ;; prettify and enable locally
+  (when (derived-mode-p 'org-mode)
     (cats/highlight-org-mode-words)
-    ;; prettify and enable locally
-    (when (member major-mode
-                  '(org-mode))
-      (cats/pretty-symbols pretty-symbols/org))
+    (cats/pretty-symbols pretty-symbols/org)
     (spacemacs/toggle-prettify-symbols-mode-on)))
 
 (defun cats/highlight-org-mode-words ()

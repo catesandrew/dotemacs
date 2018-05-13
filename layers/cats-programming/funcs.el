@@ -95,6 +95,7 @@
 
     ;; cleanup whitespace
     (spacemacs/toggle-whitespace-cleanup-on)
+    (spacemacs/toggle-hungry-delete-on)
 
     ;; disable line wrap
     (spacemacs/toggle-truncate-lines-on)

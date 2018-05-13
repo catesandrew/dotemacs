@@ -16,20 +16,37 @@ the directory."
       (concat TeX-build-directory (TeX-region-file extension nondirectory))
     (concat TeX-build-directory (TeX-master-file extension nondirectory))))
 
+
+;; tex-mode
+(defun cats/tex-mode-local ()
+  (add-hook 'hack-local-variables-hook 'cats/tex-mode-defaults nil 'local))
+
 (defun cats/tex-mode-defaults ()
-  "Default latex hook."
-  (unless (bound-and-true-p my-lmh-ran)
-    ;; add buffer-local indicator for whether prog-mode-hook has run.
-    (set (make-local-variable 'my-lmh-ran) t)
+  ;; add buffer-local indicator for whether prog-mode-hook has run.
+  (latex-unicode-simplified)
+  (spacemacs/toggle-prettify-symbols-mode-on))
 
-    (latex-unicode-simplified)
-    (spacemacs/toggle-prettify-symbols-mode-on)))
-
-;; bootstrap with our defaults
-(add-hook 'cats/tex-mode-hook 'cats/tex-mode-defaults)
-;; run our cats/tex-mod-hooks with LaTeX-mode
-(add-hook 'LaTeX-mode-hook (lambda () (run-hooks #'cats/tex-mode-hook)))
-;; run our cats/tex-mod-hooks with latex-mode
-(add-hook 'latex-mode-hook (lambda () (run-hooks #'cats/tex-mode-hook)))
+;; The modes provided by AUCTeX are listed at
+;; <https://www.gnu.org/software/auctex/manual/auctex.html#Modes-and-Hooks> and
+;; they are:
+;;
+;; - `plain-TeX-mode`
+;; - `LaTeX-mode`
+;; - `ams-TeX-mode`
+;; - `ConTeXt-mode`
+;; - `Texinfo-mode`
+;; - `docTeX-mode`
+;;
+;; Instead of:
+;;
+;; - `tex-mode`
+;; - `plain-tex-mode`
+;; - `latex-mode`
+;; - `slitex-mode`
+;; - `doctex-mode`
+;;
+;; (note the different capitalization) are the major modes provided by the [TeX
+;; mode](<https://www.gnu.org/software/emacs/manual/html_node/emacs/TeX-Mode.html>)
+;; package shipped with Emacs.
 
 ;;; funcs.el ends here

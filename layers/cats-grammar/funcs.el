@@ -685,7 +685,6 @@
   :group 'writegood
   :type 'list)
 
-
 
 ;; flyspell
 
@@ -760,19 +759,5 @@ don't want to fix with `SPC', and you can abort completely with
           (message "\"%s\" now expands to \"%s\" %sally"
                    bef aft (if p "loc" "glob")))
       (user-error "No typo at or before point"))))
-
-
-;; text-mode hooks
-(defun cats/text-mode-defaults ()
-  "Default coding hook, useful with any text mode."
-  (unless (bound-and-true-p my-tmh-ran)
-    ;; add buffer-local indicator for whether text-mode-hook has run.
-    (set (make-local-variable 'my-tmh-ran) t)
-
-    ;; `visual-line-mode` is so much better than `auto-fill-mode`. It doesn't
-    ;; actually break the text into multiple lines - it only looks that way.
-    (spacemacs/toggle-auto-fill-mode-off)
-    (spacemacs/toggle-visual-line-navigation-on)))
-
 
 ;;; funcs.el ends here

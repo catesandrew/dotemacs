@@ -306,4 +306,31 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
     (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
     (abort-recursive-edit)))
 
+
+;; conf-mode
+(defun cats/conf-mode-defaults ()
+  (spacemacs/toggle-whitespace-cleanup-on)
+  (spacemacs/toggle-hungry-delete-on))
+
+(defun cats/conf-mode-local ()
+  (add-hook 'hack-local-variables-hook 'cats/conf-mode-defaults nil 'local))
+
+
+;; text-mode
+(defun cats/text-mode-defaults ()
+  "Default text hook, useful with any text mode."
+  (unless (derived-mode-p 'org-mode)
+    (spacemacs/toggle-whitespace-cleanup-on)
+    (spacemacs/toggle-hungry-delete-on)
+    (bug-reference-mode))
+
+  ;; `visual-line-mode` is so much better than `auto-fill-mode`. It doesn't
+  ;; actually break the text into multiple lines - it only looks that way.
+  ;; works for text-mode, outline-mode, org-mode,...
+  (spacemacs/toggle-auto-fill-mode-off)
+  (spacemacs/toggle-visual-line-navigation-on))
+
+(defun cats/text-mode-local ()
+  (add-hook 'hack-local-variables-hook 'cats/text-mode-defaults nil 'local))
+
 ;;; funcs.el ends here
