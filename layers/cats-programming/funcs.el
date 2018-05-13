@@ -120,8 +120,9 @@
           ad-do-it)))
 
     (spacemacs/toggle-rainbow-identifier-on)
-    (unless (bound-and-true-p rainbow-mode)
-      (rainbow-mode))
+    ;; crashes when opening package.json
+    ;; (unless (bound-and-true-p rainbow-mode)
+    ;;   (rainbow-mode))
 
     (spacemacs/toggle-auto-fill-comments-mode-on)
     (cats/highlight-TODO-words)
