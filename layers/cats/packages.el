@@ -53,7 +53,6 @@
      (man :location built-in)
      nlinum-relative
      paradox
-     remember
      spaceline
      (spacemacs-whitespace-cleanup :location local)
      sx
@@ -418,20 +417,6 @@
       ;; override default behavior and disable global whitespace cleanup
       (when dotspacemacs-whitespace-cleanup
         (spacemacs/toggle-global-whitespace-cleanup-off)))))
-
-(defun cats/init-remember ()
-  (use-package remember
-    ;; Persistent scratch buffer. Still disabled because this configuration
-    ;; doesn't yet override *scratch* properly. Need to investigate
-    :disabled t
-    :init
-    (setq initial-buffer-choice 'remember-notes
-          remember-notes-buffer-name "*scratch*")
-    :config
-    (setq remember-data-file (expand-file-name "~/ownCloud/notes.md")
-          remember-notes-initial-major-mode
-          (if (configuration-layer/package-usedp 'markdown-mode)
-              'markdown-mode 'text-mode))))
 
 
 ;; company
