@@ -75,7 +75,6 @@
 
 
 ;; personal prog-mode defaults
-
 (defun add-pragmatapro-prettify-symbols-alist ()
   (dolist (alias pragmatapro-prettify-symbols-alist-width)
     (push alias prettify-symbols-alist)))
@@ -85,6 +84,9 @@
   (when cats/prog-mode-spell-checking
     (spacemacs/toggle-spelling-checking-off)
     (spacemacs/toggle-spelling-checking-on))
+
+  (spacemacs/toggle-encourage-mode-off)
+  (spacemacs/toggle-encourage-mode-on)
 
   (unless (bound-and-true-p my-pmh-ran)
     ;; add buffer-local indicator for whether prog-mode-hook has run.
