@@ -55,6 +55,7 @@
      paradox
      remember
      spaceline
+     (spacemacs-whitespace-cleanup :location local)
      sx
      (text-mode :location built-in)
      (time :location built-in)
@@ -407,6 +408,16 @@
     ;; 2 use utf-8 separators because they look best
     ;; (setq powerline-default-separator 'utf-8)
     ))
+
+
+;; spacemacs-whitespace-cleanup
+(defun cats/pre-init-spacemacs-whitespace-cleanup ()
+  (spacemacs|use-package-add-hook spacemacs-whitespace-cleanup
+    :post-init
+    (with-eval-after-load 'ws-butler
+      ;; override default behavior and disable global whitespace cleanup
+      (when dotspacemacs-whitespace-cleanup
+        (spacemacs/toggle-global-whitespace-cleanup-off)))))
 
 (defun cats/init-remember ()
   (use-package remember
