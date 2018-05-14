@@ -13,7 +13,7 @@
      evil-string-inflection
      ;; (hs-minor-mode :location built-in)
      ;; helm-fontawesome
-     log-view
+     logview
      (prog-mode :location built-in)
      ;; realgud
      ;; (realgud-node-inspect :location
@@ -96,10 +96,9 @@
 
 
 ;; logview
-(defun cats-programming/init-log-view ()
-  (use-package log-view
+(defun cats-programming/init-logview ()
+  (use-package logview
     :commands log-view
-    :disabled t
     :init
     (progn
       (spacemacs/set-leader-keys-for-major-mode 'log-view-mode
@@ -137,8 +136,7 @@
         "]" 'log-view-msg-next
         "[" 'log-view-msg-prev
         (kbd "C-j") 'log-view-file-next
-        (kbd "C-k") 'log-view-file-prev)
-      )))
+        (kbd "C-k") 'log-view-file-prev))))
 
 
 ;; compile
@@ -300,7 +298,7 @@
       ;; bootstrap with our defaults
       (add-hook 'cats/prog-mode-hook 'cats/prog-mode-defaults)
       ;; run our cats/prog-mod-hooks with prog-mode
-      (add-hook 'prog-mode-hook (lambda () (run-hooks #'cats/prog-mode-hook))))))
+      (add-hook 'prog-mode-hook (lambda () (run-hooks 'cats/prog-mode-hook))))))
 
 (defun cats-programming/pre-init-clean-aindent-mode ()
   "Keep track of the last auto-indent operation and trims down white space."
