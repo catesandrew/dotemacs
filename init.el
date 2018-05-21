@@ -124,8 +124,13 @@ values."
                          haskell-completion-backend 'dante)
      (html :variables css-indent-offset 2)
      ipython-notebook
-     javascript
      (latex :variables latex-enable-auto-fill t)
+     (javascript
+       :variables javascript-backend 'tern
+       ;; do not use no-port-file under emacs, it'll mess things up when you
+       ;; are editing multiple files in the same project
+       javascript-disable-tern-port-files nil)
+     (json :variables js-indent-level 2)
      markdown
      python
      (ruby :variables

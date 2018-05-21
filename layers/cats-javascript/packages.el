@@ -8,12 +8,12 @@
 
 (defconst cats-javascript-packages
   '(
-     (js2-menu-extras :location built-in)
      babel-repl
      coffee-mode
      company
-     company-tern
      ;; company-ycmd
+     counsel-gtags
+     eldoc
      emmet-mode
      (eslint-fix :location local)
      evil-matchit
@@ -22,12 +22,14 @@
      ggtags
      helm-gtags
      (import-js :location local)
+     imenu
+     impatient-mode
      indium
      js-doc
      js2-mode
      js2-refactor
-     json-mode
-     json-reformat
+     json-mode ;; todo move into new json layer
+     json-reformat ;; todo move into new json layer
      karma
      livid-mode
      mocha
@@ -46,6 +48,7 @@
      web-mode
      xref-js2
      ;; ycmd
+     yasnippet
      ))
 
 
@@ -78,8 +81,7 @@
                                           " */"))
       (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
-          "rdq" 'cats/js-doc-reflow))
-      )))
+          "rdq" 'cats/js-doc-reflow)))))
 
 
 ;; exec-path-from-shell
@@ -94,6 +96,18 @@
                   ) exec-path-from-shell-variables)
     (unless (member var exec-path-from-shell-variables)
       (push var exec-path-from-shell-variables))))
+
+
+;; impatient
+(defun cats-javascript/post-init-impatient-mode ()
+  (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode
+    "i" 'spacemacs/impatient-mode))
+
+
+;; imenu
+(defun cats-javascript/post-init-imenu ()
+  ;; Required to make imenu functions work correctly
+  (add-hook 'rjsx-mode-hook 'js2-imenu-extras-mode))
 
 
 ;; indium
@@ -260,11 +274,7 @@
       (defadvice tide-mode (after check-flycheck-tide-eslint-checkers activate)
         (if (bound-and-true-p tide-mode)
             (tide-flycheck-setup)
-          (tide-flycheck-teardown)))
-
-      (spacemacs|add-company-backends
-       :backends company-tide
-       :modes rjsx-mode js2-jsx-mode js2-mode react-mode))))
+          (tide-flycheck-teardown))))))
 
 
 ;; rjsx
@@ -279,21 +289,16 @@
 
       (add-hook 'js2-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))
 
-      (add-to-list 'magic-mode-alist
-                   '("\\(import.*from \'react\';\\|\/\/ @flow\nimport.*from \'react\';\\)" . rjsx-mode))
-      )
+      (add-to-list 'magic-mode-alist '("\\(import.*from \'react\';\\|\/\/ @flow\nimport.*from \'react\';\\)" . rjsx-mode))
+
+      ;; setup rjsx backend
+      (spacemacs/add-to-hooks #'cats//rjsx-setup-backend '(rjsx-mode-local-vars-hook))
+      ;; safe values for backend to be used in directory file variables
+      (dolist (value '(lsp tide tern))
+        (add-to-list 'safe-local-variable-values
+          (cons 'rjsx-mode-backend value))))
     :config
     (progn
-      (when (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal)
-        (setf (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal) 'rjsx-mode))
-
-      (when (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal)
-        (setf (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal) 'rjsx-mode))
-
-      (dolist (key '("\\.jsx\\'" "\\.react.js\\'" "\\index.android.js\\'" "\\index.ios.js\\'"))
-        (when (alist-get key auto-mode-alist nil nil #'equal)
-          (setf (alist-get key auto-mode-alist nil nil #'equal) 'rjsx-mode)))
-
       ;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
       ;; Workaround sgml-mode and align closing bracket with opening bracket
       ;; (defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)
@@ -316,14 +321,25 @@
       )))
 
 
+;; eldoc
+(defun cats-javascript/post-init-eldoc ()
+  (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
+    '(rjsx-mode-local-vars-hook) t))
+
+
 ;; emmet-mode
 (defun cats-javascript/post-init-emmet-mode ()
   (add-hook 'rjsx-mode-hook 'emmet-mode)
-  (add-hook 'rjsx-mode-hook 'cats//setup-emmet-mode-for-react))
+  ;; See https://github.com/CestDiego/emmet-mode/commit/3f2904196e856d31b9c95794d2682c4c7365db23
+  (setq-local emmet-expand-jsx-className? t))
 
+
+;; ggtags
 (defun cats-javascript/post-init-ggtags ()
-  (add-hook 'rjsx-mode-hook #'spacemacs/ggtags-mode-enable))
+  (add-hook 'rjsx-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
 
+
+;; helm-gtags
 (defun cats-javascript/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'rjsx-mode))
 
@@ -366,6 +382,11 @@
 
 ;; evil-matchit
 (defun cats-javascript/post-init-evil-matchit ()
+  (with-eval-after-load 'evil-matchit
+    (plist-put evilmi-plugins 'rjsx-mode
+      '((evilmi-simple-get-tag evilmi-simple-jump)
+         (evilmi-javascript-get-tag evilmi-javascript-jump)
+         (evilmi-html-get-tag evilmi-html-jump))))
   (add-hook `rjsx-mode `turn-on-evil-matchit-mode))
 
 
@@ -406,7 +427,7 @@
       (spacemacs/register-repl 'babel-repl 'babel-repl "babel")
       (push "\\*babel-shell\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter babel-shell-mode)
-      (dolist (mode '(js2-mode js2-jsx-mode web-mode))
+      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mb" "babel")
         (spacemacs/set-leader-keys-for-major-mode mode
           "b'" 'babel-start-repl
@@ -440,29 +461,21 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
+  (spacemacs/add-to-hooks #'cats//rjsx-setup-company
+    '(rjsx-mode-local-vars-hook))
+
   (spacemacs|add-company-backends
     :backends company-capf
     :modes
     indium-mode
-    indium-repl-mode)
-
-  (spacemacs|add-company-backends
-   :backends company-tern
-   :modes rjsx-mode js2-jsx-mode))
-
-
-;; company-tern
-(defun cats-javascript/post-init-company-tern ()
-  (spacemacs|add-company-backends
-   :backends company-tern
-   :modes rjsx-mode js2-jsx-mode))
+    indium-repl-mode))
 
 
 ;; company-ycmd
 (defun cats-javascript/post-init-company-ycmd ()
   (spacemacs|add-company-backends
    :backends company-ycmd
-   :modes rjsx-mode js2-jsx-mode js2-mode))
+   :modes js2-mode rjsx-mode js2-jsx-mode))
 
 ;; flycheck
 (defun cats-javascript/post-init-flycheck ()
@@ -473,8 +486,17 @@
      'cats//esilnt-set-eslint-executable)
   (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
 
-  (dolist (mode '(rjsx-mode js2-jsx-mode))
+  (with-eval-after-load 'flycheck
+    (dolist (checker '(javascript-eslint javascript-standard))
+      (flycheck-add-mode checker 'rjsx-mode)))
+
+  (dolist (mode '(rjsx-mode))
     (spacemacs/enable-flycheck mode)))
+
+
+;; counsel-gtags
+(defun cats-javascript/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'rjsx-mode))
 
 
 ;; js-doc
@@ -497,11 +519,10 @@
               js-doc-bottom-line))
 
       (dolist (hook '(rjsx-mode-hook
-                      js2-jsx-mode-hook
-                      react-mode-hook))
+                      js2-jsx-mode-hook))
         (add-hook hook 'spacemacs/js-doc-require))
 
-      (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mrd" "jsdoc")
         (spacemacs/js-doc-set-key-bindings mode)))))
 
@@ -579,27 +600,6 @@
         (add-hook 'js2-jsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active)))))
 
 
-;; js2-menu-extras
-(defun cats-javascript/init-js2-menu-extras ()
-  (use-package js2-imenu-extras
-    :ensure js2-mode
-    :commands (js2-imenu-extras-mode js2-imenu-make-index)
-    :defer t
-    :init
-    (progn
-      (set-default 'imenu-auto-rescan t)
-      ;; required to make `<leader> sj' or `<leader> ij` to work correctly
-      ;; it is tied to `dotemacs/jump-in-buffer`
-      (dolist (hook '(rjsx-mode-hook
-                      js2-jsx-mode-hook
-                      react-mode-hook
-                      js2-mode-hook))
-        (add-hook hook 'js2-imenu-extras-mode)
-        (add-hook hook
-           (lambda ()
-             (setq imenu-create-index-function 'js2-imenu-make-index)))))))
-
-
 ;; js2-refactor
 (defun cats-javascript/post-init-js2-refactor ()
   (dolist (hook '(rjsx-mode-hook
@@ -615,12 +615,10 @@
 
 
 ;; json-reformat
-(defun cats-javascript/init-json-reformat ()
+(defun cats-javascript/pre-init-json-reformat ()
   "Reformat JSON."
-  (use-package json-reformat
-    :ensure t
-    :defer t
-    :init
+  (spacemacs|use-package-add-hook json-reformat
+    :post-init
     (progn
       (setq json-reformat:indent-width 2)
       (setq json-reformat:pretty-string? t)
@@ -628,8 +626,7 @@
       (dolist (mode '(json-mode))
         (spacemacs/declare-prefix-for-mode mode "mr" "reformat")
         (spacemacs/set-leader-keys-for-major-mode mode
-          "rr" 'json-reformat-region)))
-    ))
+          "rr" 'json-reformat-region)))))
 
 
 ;; livid-mode
@@ -654,7 +651,7 @@
     :defer t
     :init
     (progn
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mm" "mocha")
         (spacemacs/set-leader-keys-for-major-mode mode
           "mp" 'mocha-test-project
@@ -696,7 +693,7 @@
       (spacemacs/register-repl 'nodejs-repl 'nodejs-repl "nodejs")
       (push "\\*nodejs\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter nodejs-repl-mode)
-      (dolist (mode '(rjsx-mode js2-mode react-mode js2-jsx-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode react-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mn" "nodejs")
         (spacemacs/set-leader-keys-for-major-mode mode
           "n'" 'nodejs-start-repl
@@ -775,7 +772,7 @@
       (add-hook 'html-mode-hook 'skewer-html-mode))
     :post-config
     (progn
-      (dolist (mode '(rjsx-mode js2-jsx-mode web-mode react-mode css-mode html-mode))
+      (dolist (mode '(rjsx-mode js2-jsx-mode react-mode css-mode html-mode))
         (spacemacs/declare-prefix-for-mode mode "ms" "skewer")
         (spacemacs/declare-prefix-for-mode mode "me" "eval")
         (spacemacs/set-leader-keys-for-major-mode mode
@@ -802,17 +799,19 @@
     (sp-with-modes 'js2-jsx-mode
       (sp-local-pair "<" ">"))))
 
+(defun cats-javascript/post-init-smartparens ()
+  (if dotspacemacs-smartparens-strict-mode
+    (spacemacs/add-to-hooks #'smartparens-strict-mode '(rjsx-mode-hook))
+    (spacemacs/add-to-hooks #'smartparens-mode '(rjsx-mode-hook))))
+
 
 ;; tern
 (defun cats-javascript/pre-init-tern ()
   (spacemacs|use-package-add-hook tern
+    :post-config
+    (spacemacs//set-tern-key-bindings 'rjsx-mode)
     :post-init
-    (progn
-      (dolist (hook '(rjsx-mode-hook js2-jsx-mode-hook))
-        (add-hook hook 'tern-mode))
-
-      (dolist (mode '(rjsx-mode js2-jsx-mode))
-        (spacemacs//set-tern-key-bindings mode)))))
+    (cats//locate-tern)))
 
 
 ;; tj-mode
@@ -846,7 +845,7 @@
       ;; (evilified-state-evilify xref-js2-mode xref-js2-mode-map
       ;;   (kbd "q") 'quit-window)
 
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode web-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
         (spacemacs/declare-prefix-for-mode mode "mj" "jump/join/split")
         (spacemacs/set-leader-keys-for-major-mode mode
           "jg" 'xref-find-definitions
@@ -880,11 +879,20 @@
 
 
 ;; web-mode
-(defun cats-javascript/pre-init-web-mode ()
-  (spacemacs|use-package-add-hook web-mode
-    :post-init
-    (dolist (hook '(rjsx-mode-hook
-                    js2-jsx-mode-hook))
-      (add-hook hook 'spacemacs//setup-react-mode))))
+(defun cats-javascript/post-init-web-mode ()
+  (when (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal)
+    (setf (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal) 'rjsx-mode))
+
+  (when (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal)
+    (setf (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal) 'rjsx-mode))
+
+  (dolist (key '("\\.jsx\\'" "\\.react.js\\'" "\\index.android.js\\'" "\\index.ios.js\\'"))
+    (when (alist-get key auto-mode-alist nil nil #'equal)
+      (setf (alist-get key auto-mode-alist nil nil #'equal) 'rjsx-mode))))
+
+
+;; yasnippet
+(defun cats-javascript/post-init-yasnippet ()
+  (spacemacs/add-to-hooks #'cats/rjsx-yasnippet-setup '(rjsx-mode-hook)))
 
 ;;; packages.el ends here
