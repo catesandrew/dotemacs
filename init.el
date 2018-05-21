@@ -124,13 +124,15 @@ values."
                          haskell-completion-backend 'dante)
      (html :variables css-indent-offset 2)
      ipython-notebook
-     (latex :variables latex-enable-auto-fill t)
      (javascript
        :variables javascript-backend 'tern
        ;; do not use no-port-file under emacs, it'll mess things up when you
        ;; are editing multiple files in the same project
        javascript-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
+     bibtex
+     (latex :variables latex-enable-auto-fill t
+                       latex-enable-folding t)
      markdown
      python
      (ruby :variables
@@ -622,6 +624,10 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
+
+  (setq org-ref-open-pdf-function
+    (lambda (fpath)
+      (start-process "zathura" "*helm-bibtex-zathura*" "/usr/local/bin/zathura" fpath)))
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.
