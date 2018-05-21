@@ -1039,18 +1039,8 @@ which is pretty awesome with: (helm-mode 1)"
 (defun cats/init-encourage-mode ()
   (use-package encourage-mode
     :commands encourage-mode
-    :init
+    :config
     (progn
-      (spacemacs|add-toggle encourage-mode
-        :status encourage-mode
-        :on (progn
-              (when (bound-and-true-p encourage-mode)
-                (encourage-mode -1))
-              (encourage-mode))
-        :off (encourage-mode -1)
-        :documentation "Disable encourage mode."
-        :evil-leader "toe")
-
       (setq encourage-encouragements
         (nconc encourage-encouragements
           '("Excellent!"
@@ -1141,6 +1131,17 @@ which is pretty awesome with: (helm-mode 1)"
              "Believe in yourself."
              "The sky is the limit."
              "Whoa!"))))
+    :init
+    (progn
+      (spacemacs|add-toggle encourage-mode
+        :status encourage-mode
+        :on (progn
+              (when (bound-and-true-p encourage-mode)
+                (encourage-mode -1))
+              (encourage-mode))
+        :off (encourage-mode -1)
+        :documentation "Disable encourage mode."
+        :evil-leader "toe"))
     :config (spacemacs|hide-lighter encourage-mode)))
 
 ;;; packages.el ends here
