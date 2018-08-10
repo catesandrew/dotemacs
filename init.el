@@ -47,7 +47,7 @@ values."
    ;; installation feature and you have to explicitly list a layer in the
    ;; variable `dotspacemacs-configuration-layers' to install it.
    ;; (default 'unused)
-   dotspacemacs-enable-lazy-installation 'unused
+   dotspacemacs-enable-lazy-installation nil
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
@@ -69,6 +69,10 @@ values."
      osx
      spacemacs-purpose
      spacemacs-evil
+     ;; better-defaults
+     ;; clojure
+     ;; extra-langs
+
      ;; Editing
      helm
      (auto-completion :variables
@@ -208,7 +212,13 @@ values."
        ;; yasnippet-snippets
        ;; M-x all-the-icons-install-fonts
        all-the-icons
-
+       ng2-mode
+       ;; graphql-mode
+       ;; eslint-fix
+       ;; oneonone
+       ;; dracula-theme
+       ;; prettier-js
+       ;; nord-theme
        ;; People have reported problems getting this to run from git in
        ;; spacemacs. I believe the cause of this is how require-relative and
        ;; require-relative-list work.
