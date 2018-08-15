@@ -129,10 +129,11 @@ values."
      (html :variables css-indent-offset 2)
      ipython-notebook
      (javascript
-       :variables javascript-backend 'tern
+       :variables javascript-backend 'tern)
+     (tern
        ;; do not use no-port-file under emacs, it'll mess things up when you
        ;; are editing multiple files in the same project
-       javascript-disable-tern-port-files nil)
+       tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
      bibtex
      (latex :variables latex-enable-auto-fill t
