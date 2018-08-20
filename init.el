@@ -139,6 +139,8 @@ values."
        ;; are editing multiple files in the same project
        tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
+     ;; new layer web-beautify extracted from javascript layer
+     web-beautify
      bibtex
      (latex :variables latex-enable-auto-fill t
                        latex-enable-folding t)
