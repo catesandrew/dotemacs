@@ -758,7 +758,10 @@ you should place you code here."
     (when buffer/do-not-kill-important-buffers
       (add-hook 'kill-buffer-query-functions 'cats//do-not-kill-important-buffers))
 
-    (pupo/update-purpose-config)
+    ;; TODO: Look for alternative new updated call in window-purpose package
+    ;; (pupo/update-purpose-config)
+    ;; UPDATE: Is it this?
+    ;; (purpose-compile-user-configuration)
 
     (cats//kickoff-project-hook (selected-frame))
     (when cats-enable-edit-server
