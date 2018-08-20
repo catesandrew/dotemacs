@@ -2,6 +2,10 @@
 
 ;;; Commentary:
 
+;; npm i -g typescript javascript-typescript-langserver flow-language-server
+;; npm i -g js-beautify
+;; npm i -g tern
+
 ;; A personal javascript layer.
 
 ;;; Code:
@@ -12,18 +16,18 @@
      coffee-mode
      company
      ;; company-ycmd
-     counsel-gtags
-     eldoc
+     ;; counsel-gtags
+     ;; eldoc
      emmet-mode
      (eslint-fix :location local)
      evil-matchit
      exec-path-from-shell
      flycheck
-     ggtags
-     helm-gtags
+     ;; ggtags
+     ;; helm-gtags
      (import-js :location local)
-     imenu
-     impatient-mode
+     ;; imenu
+     ;; impatient-mode
      indium
      js-doc
      js2-mode
@@ -37,18 +41,17 @@
      org
      popwin
      rebox2
-     rjsx-mode
+     ;; rjsx-mode
      skewer-mode
-     smartparens
-     tern
+     ;; smartparens
+     ;; tern
      ;; tide
      (tj-mode :location (recipe :fetcher github
                           :repo "purcell/tj-mode"))
-     web-beautify
-     web-mode
+     ;; web-beautify
      xref-js2
      ;; ycmd
-     yasnippet
+     ;; yasnippet
      ))
 
 
@@ -99,15 +102,15 @@
 
 
 ;; impatient
-(defun cats-javascript/post-init-impatient-mode ()
-  (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode
-    "i" 'spacemacs/impatient-mode))
+;; (defun cats-javascript/post-init-impatient-mode ()
+;;   (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode
+;;     "i" 'spacemacs/impatient-mode))
 
 
 ;; imenu
-(defun cats-javascript/post-init-imenu ()
-  ;; Required to make imenu functions work correctly
-  (add-hook 'rjsx-mode-hook 'js2-imenu-extras-mode))
+;; (defun cats-javascript/post-init-imenu ()
+;;   ;; Required to make imenu functions work correctly
+;;   (add-hook 'rjsx-mode-hook 'js2-imenu-extras-mode))
 
 
 ;; indium
@@ -278,53 +281,53 @@
 
 
 ;; rjsx
-(defun cats-javascript/init-rjsx-mode ()
-  (use-package rjsx-mode
-    :defer t
-    :init
-    (progn
-      (advice-add #'js-jsx-indent-line
-                  :after
-                  #'cats//js-jsx-indent-line-align-closing-bracket)
+;; (defun cats-javascript/init-rjsx-mode ()
+;;   (use-package rjsx-mode
+;;     :defer t
+;;     :init
+;;     (progn
+;;       (advice-add #'js-jsx-indent-line
+;;                   :after
+;;                   #'cats//js-jsx-indent-line-align-closing-bracket)
 
-      (add-hook 'js2-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))
+;;       (add-hook 'js2-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook)))
 
-      (add-to-list 'magic-mode-alist '("\\(import.*from \'react\';\\|\/\/ @flow\nimport.*from \'react\';\\)" . rjsx-mode))
+;;       (add-to-list 'magic-mode-alist '("\\(import.*from \'react\';\\|\/\/ @flow\nimport.*from \'react\';\\)" . rjsx-mode))
 
-      ;; setup rjsx backend
-      (spacemacs/add-to-hooks #'cats//rjsx-setup-backend '(rjsx-mode-local-vars-hook))
-      ;; safe values for backend to be used in directory file variables
-      (dolist (value '(lsp tide tern))
-        (add-to-list 'safe-local-variable-values
-          (cons 'rjsx-mode-backend value))))
-    :config
-    (progn
-      ;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
-      ;; Workaround sgml-mode and align closing bracket with opening bracket
-      ;; (defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)
-      ;;   "Workaround sgml-mode and follow airbnb component style."
-      ;;   (let* ((cur-line (buffer-substring-no-properties
-      ;;                     (line-beginning-position)
-      ;;                     (line-end-position))))
-      ;;     (if (string-match "^\\( +\\)\/?> *$" cur-line)
-      ;;         (let* ((empty-spaces (match-string 1 cur-line)))
-      ;;           (replace-regexp empty-spaces
-      ;;                           (make-string (- (length empty-spaces) sgml-basic-offset) 32)
-      ;;                           nil
-      ;;                           (line-beginning-position) (line-end-position))))))
+;;       ;; setup rjsx backend
+;;       (spacemacs/add-to-hooks #'cats//rjsx-setup-backend '(rjsx-mode-local-vars-hook))
+;;       ;; safe values for backend to be used in directory file variables
+;;       (dolist (value '(lsp tide tern))
+;;         (add-to-list 'safe-local-variable-values
+;;           (cons 'rjsx-mode-backend value))))
+;;     :config
+;;     (progn
+;;       ;; Inspired by http://blog.binchen.org/posts/indent-jsx-in-emacs.html
+;;       ;; Workaround sgml-mode and align closing bracket with opening bracket
+;;       ;; (defadvice js-jsx-indent-line (after js-jsx-indent-line-after-hack activate)
+;;       ;;   "Workaround sgml-mode and follow airbnb component style."
+;;       ;;   (let* ((cur-line (buffer-substring-no-properties
+;;       ;;                     (line-beginning-position)
+;;       ;;                     (line-end-position))))
+;;       ;;     (if (string-match "^\\( +\\)\/?> *$" cur-line)
+;;       ;;         (let* ((empty-spaces (match-string 1 cur-line)))
+;;       ;;           (replace-regexp empty-spaces
+;;       ;;                           (make-string (- (length empty-spaces) sgml-basic-offset) 32)
+;;       ;;                           nil
+;;       ;;                           (line-beginning-position) (line-end-position))))))
 
-      (evil-define-key 'insert rjsx-mode-map (kbd "C-d")
-        'cats//rjsx-delete-creates-full-tag-with-insert)
+;;       (evil-define-key 'insert rjsx-mode-map (kbd "C-d")
+;;         'cats//rjsx-delete-creates-full-tag-with-insert)
 
-      (with-eval-after-load 'flycheck
-        (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active))
-      )))
+;;       (with-eval-after-load 'flycheck
+;;         (add-hook 'rjsx-mode-hook 'cats/disable-js2-checks-if-flycheck-active))
+;;       )))
 
 
 ;; eldoc
-(defun cats-javascript/post-init-eldoc ()
-  (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
-    '(rjsx-mode-local-vars-hook) t))
+;; (defun cats-javascript/post-init-eldoc ()
+;;   (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
+;;     '(rjsx-mode-local-vars-hook) t))
 
 
 ;; emmet-mode
@@ -335,13 +338,13 @@
 
 
 ;; ggtags
-(defun cats-javascript/post-init-ggtags ()
-  (add-hook 'rjsx-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+;; (defun cats-javascript/post-init-ggtags ()
+;;   (add-hook 'rjsx-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
 
 
 ;; helm-gtags
-(defun cats-javascript/post-init-helm-gtags ()
-  (spacemacs/helm-gtags-define-keys-for-mode 'rjsx-mode))
+;; (defun cats-javascript/post-init-helm-gtags ()
+;;   (spacemacs/helm-gtags-define-keys-for-mode 'rjsx-mode))
 
 
 ;; import-js
@@ -461,8 +464,8 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
-  (spacemacs/add-to-hooks #'cats//rjsx-setup-company
-    '(rjsx-mode-local-vars-hook))
+  ;; (spacemacs/add-to-hooks #'cats//rjsx-setup-company
+  ;;   '(rjsx-mode-local-vars-hook))
 
   (spacemacs|add-company-backends
     :backends company-capf
@@ -475,7 +478,8 @@
 (defun cats-javascript/post-init-company-ycmd ()
   (spacemacs|add-company-backends
    :backends company-ycmd
-   :modes js2-mode rjsx-mode js2-jsx-mode))
+   :modes js2-mode ;; rjsx-mode
+    js2-jsx-mode))
 
 ;; flycheck
 (defun cats-javascript/post-init-flycheck ()
@@ -486,17 +490,18 @@
      'cats//esilnt-set-eslint-executable)
   (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
 
-  (with-eval-after-load 'flycheck
-    (dolist (checker '(javascript-eslint javascript-standard))
-      (flycheck-add-mode checker 'rjsx-mode)))
+  ;; (with-eval-after-load 'flycheck
+  ;;   (dolist (checker '(javascript-eslint javascript-standard))
+  ;;     (flycheck-add-mode checker 'rjsx-mode)))
 
-  (dolist (mode '(rjsx-mode))
-    (spacemacs/enable-flycheck mode)))
+  ;; (dolist (mode '(rjsx-mode))
+  ;;   (spacemacs/enable-flycheck mode))
+  )
 
 
 ;; counsel-gtags
-(defun cats-javascript/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'rjsx-mode))
+;; (defun cats-javascript/post-init-counsel-gtags ()
+;;   (spacemacs/counsel-gtags-define-keys-for-mode 'rjsx-mode))
 
 
 ;; js-doc
@@ -602,7 +607,7 @@
 
 ;; js2-refactor
 (defun cats-javascript/post-init-js2-refactor ()
-  (dolist (hook '(rjsx-mode-hook
+  (dolist (hook '(;; rjsx-mode-hook
                   js2-jsx-mode-hook))
     (add-hook hook 'spacemacs/js2-refactor-require)))
 
@@ -637,7 +642,7 @@
       (defalias 'js-live-eval 'livid-mode
         "Minor mode for automatic evaluation of a JavaScript buffer on every change")
 
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "ml" "livid")
         (spacemacs/set-leader-keys-for-major-mode mode
           "le" 'js-live-eval)))))
@@ -651,7 +656,7 @@
     :defer t
     :init
     (progn
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mm" "mocha")
         (spacemacs/set-leader-keys-for-major-mode mode
           "mp" 'mocha-test-project
@@ -791,27 +796,28 @@
 
 
 ;; smartparens
-(defun cats-javascript/pre-init-smartparens ()
-  (spacemacs|use-package-add-hook smartparens
-    :post-config
-    (sp-with-modes 'rjsx-mode
-      (sp-local-pair "<" ">"))
-    (sp-with-modes 'js2-jsx-mode
-      (sp-local-pair "<" ">"))))
+;; (defun cats-javascript/pre-init-smartparens ()
+;;   (spacemacs|use-package-add-hook smartparens
+;;     :post-config
+;;     (sp-with-modes 'rjsx-mode
+;;       (sp-local-pair "<" ">"))
+;;     (sp-with-modes 'js2-jsx-mode
+;;       (sp-local-pair "<" ">"))))
 
-(defun cats-javascript/post-init-smartparens ()
-  (if dotspacemacs-smartparens-strict-mode
-    (spacemacs/add-to-hooks #'smartparens-strict-mode '(rjsx-mode-hook))
-    (spacemacs/add-to-hooks #'smartparens-mode '(rjsx-mode-hook))))
+;; (defun cats-javascript/post-init-smartparens ()
+;;   (if dotspacemacs-smartparens-strict-mode
+;;     (spacemacs/add-to-hooks #'smartparens-strict-mode '(rjsx-mode-hook))
+;;     (spacemacs/add-to-hooks #'smartparens-mode '(rjsx-mode-hook))))
 
 
 ;; tern
-(defun cats-javascript/pre-init-tern ()
-  (spacemacs|use-package-add-hook tern
-    :post-config
-    (spacemacs//set-tern-key-bindings 'rjsx-mode)
-    :post-init
-    (cats//locate-tern)))
+;; (defun cats-javascript/pre-init-tern ()
+;;   "Note this has moved into its own layer now."
+;;   (spacemacs|use-package-add-hook tern
+;;     :post-config
+;;     (spacemacs//set-tern-key-bindings 'rjsx-mode)
+;;     :post-init
+;;     (cats//locate-tern)))
 
 
 ;; tj-mode
@@ -829,10 +835,10 @@
 
 
 ;; web-beautify
-(defun cats-javascript/post-init-web-beautify ()
-  (dolist (mode '(rjsx-mode
-                  js2-jsx-mode))
-    (spacemacs/set-leader-keys-for-major-mode mode  "=" 'web-beautify-js)))
+;; (defun cats-javascript/post-init-web-beautify ()
+;;   (dolist (mode '(rjsx-mode
+;;                   js2-jsx-mode))
+;;     (spacemacs/set-leader-keys-for-major-mode mode  "=" 'web-beautify-js)))
 
 
 ;; xref-js2
@@ -878,21 +884,8 @@
       "jY" 'ycmd-goto-imprecise)))
 
 
-;; web-mode
-(defun cats-javascript/post-init-web-mode ()
-  (when (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal)
-    (setf (alist-get "/\\*\\* @jsx .*\\*/" magic-mode-alist nil nil #'equal) 'rjsx-mode))
-
-  (when (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal)
-    (setf (alist-get "import\s+[^\s]+\s+from\s+['\"]react['\"]" magic-mode-alist nil nil #'equal) 'rjsx-mode))
-
-  (dolist (key '("\\.jsx\\'" "\\.react.js\\'" "\\index.android.js\\'" "\\index.ios.js\\'"))
-    (when (alist-get key auto-mode-alist nil nil #'equal)
-      (setf (alist-get key auto-mode-alist nil nil #'equal) 'rjsx-mode))))
-
-
 ;; yasnippet
-(defun cats-javascript/post-init-yasnippet ()
-  (spacemacs/add-to-hooks #'cats/rjsx-yasnippet-setup '(rjsx-mode-hook)))
+;; (defun cats-javascript/post-init-yasnippet ()
+;;   (spacemacs/add-to-hooks #'cats/rjsx-yasnippet-setup '(rjsx-mode-hook)))
 
 ;;; packages.el ends here

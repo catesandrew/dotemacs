@@ -128,6 +128,10 @@ values."
                          haskell-completion-backend 'dante)
      (html :variables css-indent-offset 2)
      ipython-notebook
+     lsp ;; language server protocol layers
+     ;; react layer uses the same backend defined in javascript layer. Options
+     ;; are =tern= and =lsp=
+     react
      (javascript
        :variables javascript-backend 'tern)
      (tern
@@ -156,8 +160,6 @@ values."
      sql
      vimscript
      yaml
-     ;; Frameworks
-     react
      ;; Applications
      (org :variables
           org-enable-org-journal-support t

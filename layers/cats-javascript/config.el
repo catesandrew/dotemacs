@@ -8,7 +8,7 @@
 
 (spacemacs|define-jump-handlers js2-jsx-mode)
 
-(spacemacs|define-jump-handlers rjsx-mode)
+;; (spacemacs|define-jump-handlers rjsx-mode)
 
 (defvar cats/javascript-mode-hook nil
   "Hooks run when javascipt type mode is fired.")
