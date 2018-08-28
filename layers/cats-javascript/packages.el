@@ -47,7 +47,6 @@
      ;; tide
      (tj-mode :location (recipe :fetcher github
                           :repo "purcell/tj-mode"))
-     ;; web-beautify
      xref-js2
      ;; ycmd
      ;; yasnippet
@@ -824,13 +823,6 @@
                        js2-jsx-mode-hook
                        react-mode-hook))
         (add-hook hook 'tj-mode)))))
-
-
-;; web-beautify
-;; (defun cats-javascript/post-init-web-beautify ()
-;;   (dolist (mode '(rjsx-mode
-;;                   js2-jsx-mode))
-;;     (spacemacs/set-leader-keys-for-major-mode mode  "=" 'web-beautify-js)))
 
 
 ;; xref-js2

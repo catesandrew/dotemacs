@@ -20,9 +20,10 @@ values."
    ;; Don't move back the cursor one position when exiting insert mode
    evil-move-cursor-back nil
    evil-jumps-post-jump-hook 'recenter
-   configuration-layer-private-directory
+   spacemacs-private-directory
    (let ((dotspacemacs-configuration-layer-private-directory
-          configuration-layer-private-directory)
+           spacemacs-private-directory)
+
          (dotspacemacs-private-dir
           (when dotspacemacs-directory
             (expand-file-name
@@ -134,12 +135,12 @@ values."
      react
      (javascript
        :variables javascript-backend 'tern)
+     ;; new layer web-beautify extracted from javascript layer
      (tern
        ;; do not use no-port-file under emacs, it'll mess things up when you
        ;; are editing multiple files in the same project
        tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
-     ;; new layer web-beautify extracted from javascript layer
      web-beautify
      bibtex
      (latex :variables latex-enable-auto-fill t
@@ -161,6 +162,7 @@ values."
      shell-scripts
      sql
      vimscript
+     xclipboard
      yaml
      ;; Applications
      (org :variables
