@@ -8,6 +8,13 @@
   '(
     css-eldoc
     css-mode
+     (css-sort-buffer :location (recipe
+                                  :fetcher wiki
+                                  css-sort-buffer))
+     (css-sort :location (recipe
+                           :fetcher github
+                           :repo "diiq/css-sort.el"))
+    com-css-sort
     emmet-mode
     flycheck
     helm-css-scss
@@ -17,6 +24,28 @@
     xah-css-mode
     yasnippet
     ))
+
+
+;; com-css-sort
+(defun cats-web/init-com-css-sort ()
+  (use-package com-css-sort
+    :commands (com-css-sort-attributes-block com-css-sort-attributes-document)
+    :init
+    (progn
+      (setq com-css-sort-sort-type 'type-sort))
+    ))
+
+
+;; css-sort-buffer
+(defun cats-web/init-css-sort-buffer ()
+  (use-package css-sort-buffer
+    :commands (css-sort-buffer)))
+
+
+;; css-sort-buffer
+(defun cats-web/init-css-sort ()
+  (use-package css-sort
+    :commands (css-sort-attributes)))
 
 
 ;; org
