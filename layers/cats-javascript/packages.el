@@ -18,7 +18,6 @@
      ;; company-ycmd
      ;; counsel-gtags
      ;; eldoc
-     emmet-mode
      (eslint-fix :location local)
      evil-matchit
      exec-path-from-shell
@@ -328,13 +327,6 @@
 ;; (defun cats-javascript/post-init-eldoc ()
 ;;   (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
 ;;     '(rjsx-mode-local-vars-hook) t))
-
-
-;; emmet-mode
-(defun cats-javascript/post-init-emmet-mode ()
-  (add-hook 'rjsx-mode-hook 'emmet-mode)
-  ;; See https://github.com/CestDiego/emmet-mode/commit/3f2904196e856d31b9c95794d2682c4c7365db23
-  (setq-local emmet-expand-jsx-className? t))
 
 
 ;; ggtags
