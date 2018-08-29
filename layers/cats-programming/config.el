@@ -17,14 +17,6 @@
 (defvar cats/prog-mode-hook nil
   "Hooks run when `prog-mode-hook' is fired.")
 
-(defvar cats/line-numbers nil
-  "If non nil line numbers are turned on in all `prog-mode' and `text-mode'.
-derivatives.  If set to `relative', also turns on relative line numbers.")
-
-(defvar cats/relative-line-numbers nil
-  "If non nil line numbers are turned on in all `prog-mode' and `text-mode'.
-derivatives.  If set to `relative', also turns on relative line numbers.")
-
 (defvar cats/prog-mode-spell-checking t
   "Enable `prog-mode' spell checking.")
 

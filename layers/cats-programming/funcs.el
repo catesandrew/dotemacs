@@ -102,14 +102,6 @@
     ;; disable line wrap
     (spacemacs/toggle-truncate-lines-on)
 
-    ;; enable line number-mode
-    (when cats/line-numbers
-      (spacemacs/toggle-line-numbers-on))
-
-    (when cats/relative-line-numbers
-      (spacemacs/toggle-line-numbers-on)
-      (spacemacs/linum-relative-toggle))
-
     (spacemacs/toggle-visual-line-navigation-off)
 
     ;; TODO: Check and disable visual-fill-column-mode
