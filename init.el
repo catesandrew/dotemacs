@@ -188,6 +188,7 @@ This function should only modify configuration layer settings."
      asciidoc
      search-engine
      templates
+     pass
      ;; My personal layers
      cats
      cats-core
