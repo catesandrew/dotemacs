@@ -18,7 +18,6 @@
      (autoinsert :location built-in)
      beacon
      (calendar :location built-in)
-     company
      company-emoji
      (compile :location built-in)
      (conf-mode :location built-in)

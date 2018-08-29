@@ -80,6 +80,8 @@ This function should only modify configuration layer settings."
      helm
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence '"jk"
+                      ;; Auto-complete less aggressively
+                      auto-completion-idle-delay 0.5
                       auto-completion-complete-with-key-sequence-delay 0.2
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup t
@@ -706,6 +708,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
+
+  ;; Enable auto-completion everywhere!
+  (global-company-mode)
 
   (setq org-ref-open-pdf-function
     (lambda (fpath)
