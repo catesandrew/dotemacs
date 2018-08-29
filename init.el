@@ -271,12 +271,11 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-    dotspacemacs-enable-emacs-pdumper t
     ;; If non-nil then enable support for the portable dumper. You'll need
     ;; to compile Emacs 27 from source following the instructions in file
     ;; EXPERIMENTAL.org at to root of the git repository.
     ;; (default nil)
-    dotspacemacs-enable-emacs-pdumper nil
+    dotspacemacs-enable-emacs-pdumper t
 
     ;; File path pointing to emacs 27.1 executable compiled with support
     ;; for the portable dumper (this is currently the branch pdumper).
