@@ -180,6 +180,8 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-shell 'shell
             shell-default-term-shell "/bin/bash"
+            shell-default-position 'right
+            shell-default-width 60
             sh-indentation 2
             sh-basic-offset 2)
      ycmd
