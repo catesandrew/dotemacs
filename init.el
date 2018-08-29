@@ -103,13 +103,11 @@ This function should only modify configuration layer settings."
                       syntax-checking-enable-tooltips t)
      ;; Version control
      (version-control :variables
-                      ;; No git-gutter please
-                      version-control-diff-tool 'diff-hl)
+       version-control-diff-tool 'git-gutter)
      (git :variables
           ;; Magit in fullscreen
           git-magit-status-fullscreen t)
      github
-     (source-control :variables git-enable-magit-svn-plugin nil)
      ;; Development tools
      restclient
      dash
