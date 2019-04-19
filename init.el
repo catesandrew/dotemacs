@@ -280,7 +280,7 @@ values."
     ;; File path pointing to emacs 27.1 executable compiled with support
     ;; for the portable dumper (this is currently the branch pdumper).
     ;; (default "emacs-27.0.50")
-    dotspacemacs-emacs-pdumper-executable-file "/usr/local/bin/emacs-27.0.50"
+    dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
 
     ;; Name of the Spacemacs dump file. This is the file will be created by the
     ;; portable dumper in the cache directory under dumps sub-directory.
@@ -657,7 +657,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Don't nag me compile!
   (setq compilation-ask-about-save nil)
 
-  (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
+  ;; (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
 
   (setq abbrev-file-name
         (expand-file-name (concat spacemacs-cache-directory "abbrev_defs")))
@@ -709,7 +709,7 @@ you should place you code here."
 
   (setq org-ref-open-pdf-function
     (lambda (fpath)
-      (start-process "zathura" "*helm-bibtex-zathura*" "/usr/local/bin/zathura" fpath)))
+      (start-process "zathura" "*helm-bibtex-zathura*" "zathura" fpath)))
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.

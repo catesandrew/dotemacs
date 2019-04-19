@@ -118,6 +118,7 @@
         :compile "npm build"
         :test "npm test"
         :run "npm start"
+        :compilation-dir "./"
         :test-suffix ".spec"))
     :post-init
     (progn
