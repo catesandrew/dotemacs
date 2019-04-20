@@ -61,7 +61,7 @@
      which-key
      whitespace
      window-purpose
-     writeroom-mode
+     ;; writeroom-mode
      ))
 
 ;; kill annoying are you sure you want to quit messages
@@ -400,11 +400,7 @@
     (setq spaceline-show-default-input-method t)
     (spacemacs/toggle-mode-line-battery-off)
     (spacemacs/toggle-mode-line-minor-modes-off)
-
-    ;; 1 set srgb to nil to prevent emacs crashing after setting 2 and 3
-    (setq ns-use-srgb-colorspace nil)
-    ;; 2 use utf-8 separators because they look best
-    ;; (setq powerline-default-separator 'utf-8)
+    (setq powerline-default-separator 'utf-8)
     ))
 
 
@@ -417,6 +413,10 @@
       (when dotspacemacs-whitespace-cleanup
         (spacemacs/toggle-global-whitespace-cleanup-off)))))
 
+
+
+;; company-emoji
+(defun cats/post-init-company-emoji ()
 
 ;; company
 (defun cats/pre-init-company ()

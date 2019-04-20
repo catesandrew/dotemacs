@@ -39,7 +39,7 @@
      org-jira
      ;; org-caldav
      ;; org-notify
-     helm-org-rifle
+     ;; helm-org-rifle
      ;; org-ehtml
      org-journal                        ;; defined in spacemacs org
      ;; org-download                       ;; defined in spacemacs org
@@ -864,28 +864,29 @@
       (setq org-jira-default-jql cats-jira-default-jql)
 
       (cats//add-org-jira-keybindings 'org-mode)
-      (spacemacs/declare-prefix "aor" "org-jira")
+      (spacemacs/declare-prefix "aoi" "org-jira")
       (spacemacs/set-leader-keys
-        "aora" 'org-jira-assign-issue
-        "aorb" 'org-jira-browse-issue
-        "aorc" 'org-jira-update-comment
-        "aorf" 'org-jira-get-issues-from-filter-headonly
-        "aorF" 'org-jira-get-issues-from-filter
-        "aorh" 'org-jira-get-issues-headonly
-        "aori" 'org-jira-get-issues
-        "aorI" 'org-jira-create-issue
-        "aorn" 'org-jira-progress-issue-next
-        "aorp" 'org-jira-get-projects
-        "aorP" 'org-jira-progress-issue
-        "aorr" 'org-jira-refresh-issue
-        "aorR" 'org-jira-refresh-issues-in-buffer
-        "aors" 'org-jira-get-subtasks
-        "aorS" 'org-jira-create-subtask
-        "aort" 'org-jira-todo-to-jira
-        "aoru" 'org-jira-update-issue
-        "aorv" 'org-jira-get-issues-by-fixversion
-        "aory" 'org-jira-copy-current-issue-key
-        ))))
+        "aoia" 'org-jira-assign-issue
+        "aoib" 'org-jira-browse-issue
+        "aoic" 'org-jira-update-comment
+        "aoif" 'org-jira-get-issues-from-filter-headonly
+        "aoiF" 'org-jira-get-issues-from-filter
+        "aoih" 'org-jira-get-issues-headonly
+        "aoii" 'org-jira-get-issues
+        "aoiI" 'org-jira-create-issue
+        "aoin" 'org-jira-progress-issue-next
+        "aoip" 'org-jira-get-projects
+        "aoiP" 'org-jira-progress-issue
+        "aoir" 'org-jira-refresh-issue
+        "aoiR" 'org-jira-refresh-issues-in-buffer
+        "aois" 'org-jira-get-subtasks
+        "aoiS" 'org-jira-create-subtask
+        "aoit" 'org-jira-todo-to-jira
+        "aoiu" 'org-jira-update-issue
+        "aoiv" 'org-jira-get-issues-by-fixversion
+        "aoiy" 'org-jira-copy-current-issue-key
+        )
+      )))
 
 
 ;; org

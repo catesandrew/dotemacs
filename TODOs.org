@@ -1,0 +1,6 @@
+
+** https://github.com/preetpalS/emacs-dotenv-mode
+
+** https://github.com/proofit404/envdir-mode
+
+** https://github.com/wbolster/emacs-direnv

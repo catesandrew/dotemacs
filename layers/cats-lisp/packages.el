@@ -11,7 +11,7 @@
      buttercup
      flycheck
      flycheck-cask
-     flycheck-package
+     ;; flycheck-package
      org
      ))
 
