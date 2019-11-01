@@ -11,7 +11,7 @@
      exec-path-from-shell
      haskell-mode
      org
-     thrift
+     ;; thrift
      ))
 
 

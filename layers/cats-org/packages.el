@@ -34,9 +34,9 @@
      (org-capture :location built-in)
      (org-habit :location built-in)
      (org-mobile :location built-in)
-     (helm-org :location built-in)
+     ;; (helm-org :location built-in)
      org-super-agenda
-     org-jira
+     ;; org-jira
      ;; org-caldav
      ;; org-notify
      ;; helm-org-rifle
@@ -55,7 +55,7 @@
      ;; ox-gfm                             ;; defined in spacemacs org
      (ox-html :toggle org-enable-ox-html-support :location built-in)
      ;; ox-hugo                            ;; defined in spacemacs org
-     (ox-jira :toggle org-enable-jira-support)
+     ;; (ox-jira :toggle org-enable-jira-support)
      (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-md :toggle org-enable-ox-md-support :location built-in)
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
