@@ -416,7 +416,8 @@
 
 
 ;; company-emoji
-(defun cats/post-init-company-emoji ()
+;; (defun cats/post-init-company-emoji ()
+
 
 ;; company
 (defun cats/pre-init-company ()

@@ -23,6 +23,8 @@
      shut-up
      string-inflection
      ycmd
+     graphql-mode
+     polymode
     ))
 
 
@@ -33,6 +35,86 @@
 (defun cats-programming/init-shut-up ()
   (use-package shut-up
     :commands (shut-up)))
+
+(defun cats-programming/init-graphql-mode ()
+  (use-package graphql-mode
+    :defer t
+    :config
+    (progn
+      ;; prefixes
+      (spacemacs/declare-prefix-for-mode 'graphql-mode "mh" "documentation")
+      (spacemacs/declare-prefix-for-mode 'graphql-mode "mg" "goto")
+      ;; key bindings
+      (spacemacs/set-leader-keys-for-major-mode 'graphql-mode
+        "w" 'graphql-send-query))
+    )
+  )
+
+(defun cats-programming/init-polymode ()
+  (use-package polymode
+    :commands (poly-js2-mode poly-rjsx-mode)
+    :init
+    (progn
+      (spacemacs|add-toggle poly-rjsx-mode
+        :status poly-rjsx-mode
+        :on (progn
+              (when (bound-and-true-p poly-rjsx-mode)
+                (poly-rjsx-mode -1))
+              (poly-rjsx-mode))
+        :off (poly-rjsx-mode -1)
+        :documentation "Poly RJSX mode."
+        :evil-leader-for-mode
+        (rjsx-mode . "Tp"))
+
+      (spacemacs|add-toggle poly-js2-mode
+        :status poly-js2-mode
+        :on (progn
+              (when (bound-and-true-p poly-js2-mode)
+                (poly-js2-mode -1))
+              (poly-js2-mode))
+        :off (poly-js2-mode -1)
+        :documentation "Poly JS2 mode."
+        :evil-leader-for-mode
+        (js2-mode . "Tp"))
+      )
+    :config
+    (progn
+      (define-innermode poly-cats-root-innermode
+        :mode nil
+        :fallback-mode 'host
+        :head-mode 'host
+        :tail-mode 'host)
+
+      (define-innermode poly-cats-css-innermode poly-cats-root-innermode
+        :mode 'css-mode
+        :head-matcher "css\`\\|styled\.[[:alnum:]]+\`"
+        :tail-matcher "\`"
+        :allow-nested nil)
+
+      (define-innermode poly-cats-graphql-innermode poly-cats-root-innermode
+        :mode 'graphql-mode
+        :head-matcher "gql\`"
+        :tail-matcher "\`"
+        :allow-nested nil)
+
+      (define-hostmode poly-rjsx-hostmode nil
+        "RJSX hostmode."
+        :mode 'rjsx-mode)
+
+      (define-polymode poly-rjsx-mode
+        :hostmode 'poly-rjsx-hostmode
+        :innermodes '(poly-cats-graphql-innermode poly-cats-css-innermode))
+
+      (define-hostmode poly-js2-hostmode poly-rjsx-hostmode
+        "JS2 hostmode"
+        :mode 'js2-mode)
+
+      (define-polymode poly-js2-mode
+        :hostmode 'poly-js2-hostmode
+        :innermodes '(poly-cats-graphql-innermode poly-cats-css-innermode))
+      )
+    )
+  )
 
 
 ;; helm-fontawesome

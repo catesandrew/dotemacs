@@ -109,7 +109,7 @@ This function should only modify configuration layer settings."
      (git :variables
           ;; Magit in fullscreen
           git-magit-status-fullscreen t)
-     github
+     ;; github
      ;; Development tools
      restclient
      dash
@@ -136,9 +136,15 @@ This function should only modify configuration layer settings."
      lsp ;; language server protocol layers
      ;; react layer uses the same backend defined in javascript layer. Options
      ;; are =tern= and =lsp=
+     ;; npm install -g eslint babel-eslint eslint-plugin-react
+     ;; npm install -g js-beautify prettier
      react
-     (javascript
-       :variables javascript-backend 'tern)
+     ;; npm install -g typescript tslint typescript-formatter
+     (typescript :variables
+       typescript-backend 'tide
+       typescript-fmt-tool 'typescript-formatter)
+      (javascript :variables
+        javascript-backend 'tern)
      ;; new layer web-beautify extracted from javascript layer
      (tern
        ;; do not use no-port-file under emacs, it'll mess things up when you
@@ -277,7 +283,7 @@ values."
     ;; to compile Emacs 27 from source following the instructions in file
     ;; EXPERIMENTAL.org at to root of the git repository.
     ;; (default nil)
-    dotspacemacs-enable-emacs-pdumper t
+    ;; dotspacemacs-enable-emacs-pdumper t
 
     ;; File path pointing to emacs 27.1 executable compiled with support
     ;; for the portable dumper (this is currently the branch pdumper).
