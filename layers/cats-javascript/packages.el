@@ -50,6 +50,11 @@
      xref-js2
      ;; ycmd
      ;; yasnippet
+
+     ;; You can toggle semicolons with
+     ;; `js-react-redux-yasnippets-toggle-semicolon` or `setq
+     ;; js-react-redux-yasnippets-want-semicolon`.
+     js-react-redux-yasnippets
      ))
 
 
