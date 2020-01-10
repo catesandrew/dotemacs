@@ -58,12 +58,23 @@
      jest
      ))
 
+(defun cats-javascript/init-js-react-redux-yasnippets ()
+  (use-package js-react-redux-yasnippets
+    :ensure t
+    :init
+    (progn)
+    :config
+    (progn
+      )))
+
 (defun cats-javascript/init-jest ()
   (use-package jest
     :ensure t
     :defer t
     :init
     (progn
+      (add-hook 'jest-mode-hook #'compilation-minor-mode)
+
       (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mt" "jest")
         (spacemacs/set-leader-keys-for-major-mode mode
@@ -90,6 +101,23 @@
       ;; (setq mocha-options "--recursive --reporter dot -t 5000")
       ;; (setq mocha-reporter "spec")
       ;; (setq mocha-project-test-directory "test")
+
+      ;; overwrite TAB with update completion-at-point, it
+      ;; should be in a company backend and is a quick hack.
+      (evilified-state-evilify jest-mode jest-mode-map
+        ;; (kbd "C-g") 'nodejs-repl-quit-or-cancel
+        ;; (kbd "C-u") 'nodejs-repl-clear-line
+        (kbd "TAB") 'completion-at-point
+        ;; (kbd "C-c C-c") 'nodejs-repl-quit-or-cancel
+        "q" 'quit-window)
+
+      (dolist (mode (list jest-mode-map))
+        (evil-define-key 'normal mode
+          ;; (kbd "C-g") 'nodejs-repl-quit-or-cancel
+          ;; (kbd "C-u") 'nodejs-repl-clear-line
+          (kbd "TAB") 'completion-at-point
+          ;; (kbd "C-c C-c") 'nodejs-repl-quit-or-cancel
+          (kbd "q") 'quit-window))
       )))
 
 
