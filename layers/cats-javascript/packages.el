@@ -55,7 +55,42 @@
      ;; `js-react-redux-yasnippets-toggle-semicolon` or `setq
      ;; js-react-redux-yasnippets-want-semicolon`.
      js-react-redux-yasnippets
+     jest
      ))
+
+(defun cats-javascript/init-jest ()
+  (use-package jest
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
+        (spacemacs/declare-prefix-for-mode mode "mt" "jest")
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "tj" 'jest
+          "tp" 'jest-last-failed
+          "tl" 'jest-function
+          "tL" 'jest-function-dwim
+          "tf" 'jest-file
+          "tF" 'jest-file-dwim
+          "tr" 'jest-repeat)))
+    :config
+    (progn
+      ;; (add-hook 'cats/project-hook
+      ;;   'cats//locate-jest-from-projectile)
+
+      ;; (add-hook 'cats/node-executable-hook
+      ;;   'cats//jest-set-node-executable)
+
+      ;; (add-hook 'cats/jest-executable-hook
+      ;;   'cats//set-jest-executable)
+
+      (push "\\*jest\\*" spacemacs-useful-buffers-regexp)
+      ;; (setq mocha-environment-variables "NODE_ENV=test")
+      ;; (setq mocha-options "--recursive --reporter dot -t 5000")
+      ;; (setq mocha-reporter "spec")
+      ;; (setq mocha-project-test-directory "test")
+      )))
 
 
 ;; karma
