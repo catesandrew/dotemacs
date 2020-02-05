@@ -113,6 +113,8 @@ This function should only modify configuration layer settings."
      ;; Development tools
      restclient
      dash
+     java
+     windows-scripts
      vagrant
      ;; Programming and markup languages
      ansible

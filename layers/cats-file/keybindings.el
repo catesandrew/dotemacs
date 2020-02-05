@@ -5,6 +5,7 @@
   ;; Bindings in private key spacpacemacs
   "oR"  'cats/recompile-packages
   "ofd" 'cats/delete-file-and-buffer
+  "off" 'cats/insert-relative-file-name
   "ofD" 'cats/launch-dwim
   "ofr" 'cats/rename-file-and-buffer
   "ofu" 'cats/find-user-init-file-other-window
