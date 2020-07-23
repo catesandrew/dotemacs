@@ -10,7 +10,6 @@
   '(
     play-routes-mode
     sbt-mode
-    ensime
     flycheck
     dash
     ))
@@ -25,16 +24,6 @@
   (with-eval-after-load 'scala-mode2
     (spacemacs/set-leader-keys-for-major-mode 'scala-mode
       "oi" #'cats-scala/pop-to-sbt-frame)))
-
-(defun cats-scala/post-init-ensime ()
-  (with-eval-after-load 'ensime-sbt
-    ;; Unfortunately that's not customisable
-    (advice-add 'ensime-sbt-do-compile :override
-                (lambda ()
-                  "Compile code and tests of this project."
-                  (interactive)
-                  (sbt-command "test:compile"))
-                '((name . cats-sbt-compile-tests)))))
 
 (defun cats-scala/post-init-flycheck ()
   (when (configuration-layer/package-usedp 'dash)

@@ -169,8 +169,9 @@ This function should only modify configuration layer settings."
            ;; Enable auto-completion for Rust
            rust-enable-racer t)
      (scala :variables
-            ;; Automatically insert asterisk in comments
-            scala-auto-insert-asterisk-in-comments t)
+          scala-enable-eldoc nil
+          ;; Automatically insert asterisk in comments
+          scala-auto-insert-asterisk-in-comments t)
      shell-scripts
      sql
      vimscript
@@ -390,7 +391,6 @@ values."
                          monokai
                          gandalf
                          ample-light
-                         lenlen
                          leuven
                          plan9
                          twilight-bright
@@ -417,8 +417,8 @@ values."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("PragmataPro"
-                               :size 10
+   dotspacemacs-default-font '("PragmataPro Nerd Font"
+                               :size 14
                                :weight normal
                                :width normal)
 
@@ -543,11 +543,11 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 96
+   dotspacemacs-active-transparency 98
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 94
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
