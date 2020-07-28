@@ -73,7 +73,6 @@ This function should only modify configuration layer settings."
      spacemacs-purpose
      spacemacs-evil
      ;; better-defaults
-     ;; clojure
      ;; extra-langs
 
      ;; Editing
@@ -113,6 +112,9 @@ This function should only modify configuration layer settings."
      ;; Development tools
      restclient
      dash
+     lua
+     (clojure :variables clojure-enable-fancify-symbols t
+       clojure-enable-linters '(clj-kondo joker))
      java
      windows-scripts
      vagrant

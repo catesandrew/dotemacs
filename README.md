@@ -18,7 +18,7 @@ $ brew install aspell --with-lang-en
 ### Python support ###
 
 ```console
-$ pip install -U --user virtualenv pylint ipython
+$ pip3 install -U --user virtualenv pylint ipython
 ```
 
 ### Haskell support ###
