@@ -82,6 +82,12 @@ Return nil if COMMAND is not found anywhere in DIRECTORY."
     (setq cats//executable-tsserver tsserver)
     (ignore-errors (run-hook-with-args 'cats/tsserver-executable-hook tsserver))))
 
+(defun cats/set-executable-importjsd (importjsd)
+  "Set cats//executable-importjsd to IMPORTJSD."
+  (unless (string= importjsd cats//executable-importjsd)
+    (setq cats//executable-importjsd importjsd)
+    (ignore-errors (run-hook-with-args 'cats/importjsd-executable-hook importjsd))))
+
 
 ;; frame
 (defun cats/toggle-transparency (&optional frame)

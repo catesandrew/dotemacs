@@ -71,6 +71,10 @@
 (defvar cats/tsserver-executable-hook nil
   "Hooks run when cats//executable-tsserver is changed.")
 
+(defvar cats//executable-importjsd nil)
+(defvar cats/importjsd-executable-hook nil
+  "Hooks run when cats//executable-importjsd is changed.")
+
 (defvar cats//frame-width nil
   "Frame width.")
 

@@ -6,120 +6,6 @@
 
 ;;; Code:
 
-;; (defun cats//jsx-setup-backend ()
-;;   "Conditionally setup rjsx backend."
-;;   (pcase javascript-backend
-;;     (`tern (cats//rjsx-setup-tern))
-;;     (`tide (cats//rjsx-setup-tide))
-;;     (`lsp (cats//rjsx-setup-lsp))))
-
-;; (defun cats//rjsx-setup-company ()
-;;   "Conditionally setup company based on backend."
-;;   (pcase javascript-backend
-;;     (`tern (cats//rjsx-setup-tern-company))
-;;     (`tide (cats//rjsx-setup-tide-company))
-;;     (`lsp (cats//rjsx-setup-lsp-company))))
-
-;; (defun cats//rjsx-setup-eldoc ()
-;;   "Conditionally setup eldoc based on backend."
-;;   (pcase javascript-backend
-;;     (`tern (cats//rjsx-setup-tern-eldoc))
-;;     (`tide (cats//rjsx-setup-tide-eldoc))
-;;     (`lsp (cats//rjsx-setup-lsp-eldoc))))
-
-
-;; backend:rjsx
-;; (defun cats//rjsx-setup-tern ()
-;;   "Setup tern backend."
-;;   (if tern-command
-;;     (tern-mode)
-;;     (spacemacs//set-tern-key-bindings 'rjsx-mode)))
-
-;; (defun cats//rjsx-setup-tide ()
-;;   "Setup tide backend."
-;;   (progn
-;;     (evilified-state-evilify tide-references-mode tide-references-mode-map
-;;       (kbd "C-k") 'tide-find-previous-reference
-;;       (kbd "C-j") 'tide-find-next-reference
-;;       (kbd "C-l") 'tide-goto-reference)
-;;     (add-to-list 'spacemacs-jump-handlers-typescript-tsx-mode
-;;       '(tide-jump-to-definition :async t))
-;;     (add-to-list 'spacemacs-jump-handlers-typescript-mode
-;;       '(tide-jump-to-definition :async t))
-;;     (tide-setup)))
-
-;; (defun cats//rjsx-setup-lsp ()
-;;   "Setup lsp backend."
-;;   (if (configuration-layer/layer-used-p 'lsp)
-;;     (progn
-;;       (spacemacs//set-lsp-jump-handler 'rjsx-mode)
-;;       (lsp-javascript-typescript-enable)
-;;       (lsp-javascript-flow-enable))
-;;     (message (concat "`lsp' layer is not installed, "
-;;                "please add `lsp' layer to your dofile."))))
-
-
-;; company:rjsx
-;; (defun cats//rjsx-setup-tern-company ()
-;;   "Setup tern auto-completion."
-;;   (spacemacs|add-company-backends
-;;     :backends company-tern
-;;     :modes rjsx-mode
-;;     :append-hooks nil
-;;     :call-hooks t
-;;     ;; See https://github.com/syl20bnr/spacemacs/issues/8222
-;;     :variables
-;;     company-minimum-prefix-length 2)
-;;   (company-mode))
-
-;; (defun cats//rjsx-setup-tide-company ()
-;;   "Setup tide auto-completion."
-;;   (spacemacs|add-company-backends
-;;     :backends company-tide
-;;     :modes rjsx-mode
-;;     :variables
-;;     company-minimum-prefix-length 2)
-;;   (company-mode))
-
-;; (defun cats//rjsx-setup-lsp-company ()
-;;   "Setup lsp auto-completion."
-;;   (if (configuration-layer/layer-used-p 'lsp)
-;;     (progn
-;;       ;; fix lsp-javascript company prefix
-;;       ;; https://github.com/emacs-lsp/lsp-javascript/issues/9#issuecomment-379515379
-;;       (defun lsp-prefix-company-transformer (candidates)
-;;         (let ((completion-ignore-case t))
-;;           (all-completions (company-grab-symbol) candidates)))
-;;       (make-local-variable 'company-transformers)
-;;       (add-to-list 'company-transformers 'lsp-prefix-company-transformer)
-;;       (spacemacs|add-company-backends
-;;         :backends company-lsp
-;;         :modes rjsx-mode
-;;         :append-hooks nil
-;;         :call-hooks t)
-;;       (company-mode))
-;;     (message (concat "`lsp' layer is not installed, "
-;;                "please add `lsp' layer to your dotfile."))))
-
-
-;; eldoc:rjsx
-;; (defun cats//rjsx-setup-tern-eldoc ()
-;;   "Setup eldoc for LSP."
-;;   (eldoc-mode))
-
-;; (defun cats//rjsx-setup-tide-eldoc ()
-;;   "Setup eldoc for tide."
-;;   (eldoc-mode))
-
-;; (defun cats//rjsx-setup-lsp-eldoc ()
-;;   "Setup eldoc for LSP."
-;;   (eldoc-mode))
-
-
-;; yasnippet
-;; (defun cats/rjsx-yasnippet-setup ()
-;;   ;; Enable js-mode snippets
-;;   (yas-activate-extra-mode 'js-mode))
 
 
 ;; funcs
@@ -670,7 +556,7 @@
 ;; import-js
 (defun cats/run-import-js ()
   (interactive)
-  (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+  (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
     (add-to-list (intern (format "spacemacs-jump-handlers-%S" mode))
       ;; '(import-js-goto :async t)
       'import-js-goto))
@@ -678,7 +564,7 @@
 
 (defun cats/kill-import-js ()
   (interactive)
-  (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+  (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
     (let ((handlers (intern (format "spacemacs-jump-handlers-%S" mode))))
       (when (member 'import-js-goto (eval handlers))
         (setf (symbol-value handlers) (remove 'import-js-goto (eval handlers))))))
@@ -699,12 +585,11 @@
            (executable-find "importjsd"))
         (lambda (result)
           (when result
-            (unless (string= result import-js-d-program)
-              (setq import-js-d-program result))
-
+            (cats/set-executable-importjsd result)
             (let ((proj-type (projectile-project-type)))
               (when (and proj-type
                       (equal proj-type 'npm))
-                (cats/run-import-js)))))))))
+                (cats/run-import-js))))
+          )))))
 
 ;;; funcs.el ends here

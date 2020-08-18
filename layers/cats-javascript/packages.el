@@ -15,18 +15,11 @@
      babel-repl
      coffee-mode
      company
-     ;; company-ycmd
-     ;; counsel-gtags
      ;; eldoc
      (eslint-fix :location local)
-     evil-matchit
      exec-path-from-shell
      flycheck
-     ;; ggtags
-     ;; helm-gtags
-     (import-js :location local)
-     ;; imenu
-     ;; impatient-mode
+     import-js
      indium
      js-doc
      js2-mode
@@ -36,25 +29,21 @@
      karma
      livid-mode
      mocha
-     ;; nodejs-repl
+     nodejs-repl
      org
      popwin
      rebox2
      ;; rjsx-mode
      skewer-mode
-     ;; smartparens
      ;; tern
      ;; tide
      (tj-mode :location (recipe :fetcher github
                           :repo "purcell/tj-mode"))
      xref-js2
-     ;; ycmd
-     ;; yasnippet
-
      ;; You can toggle semicolons with
      ;; `js-react-redux-yasnippets-toggle-semicolon` or `setq
      ;; js-react-redux-yasnippets-want-semicolon`.
-     js-react-redux-yasnippets
+     ;; js-react-redux-yasnippets
      jest
      npm-mode
      ))
@@ -81,7 +70,7 @@
     (progn
       (add-hook 'jest-mode-hook #'compilation-minor-mode)
 
-      (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mt" "jest")
         (spacemacs/set-leader-keys-for-major-mode mode
           "tj" 'jest
@@ -154,7 +143,7 @@
       (rebox-register-template 247 248 '("/**"
                                         " * box123456"
                                           " */"))
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
           "rdq" 'cats/js-doc-reflow)))))
 
@@ -171,18 +160,6 @@
                   ) exec-path-from-shell-variables)
     (unless (member var exec-path-from-shell-variables)
       (push var exec-path-from-shell-variables))))
-
-
-;; impatient
-;; (defun cats-javascript/post-init-impatient-mode ()
-;;   (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode
-;;     "i" 'spacemacs/impatient-mode))
-
-
-;; imenu
-;; (defun cats-javascript/post-init-imenu ()
-;;   ;; Required to make imenu functions work correctly
-;;   (add-hook 'rjsx-mode-hook 'js2-imenu-extras-mode))
 
 
 ;; indium
@@ -223,13 +200,12 @@
         (js2-mode . "Ti")
         (rjsx-mode . "Ti")
         (js2-jsx-mode . "Ti")
-        (indium-repl-mode . "Ti")
-        (react-mode . "Ti"))
+        (indium-repl-mode . "Ti"))
 
       (push "\\*JS REPL\\*" spacemacs-useful-buffers-regexp)
       (push "\\*node process\\*" spacemacs-useless-buffers-regexp)
       (spacemacs|hide-lighter indium-repl-mode)
-      (dolist (mode '(indium-repl-mode rjsx-mode js2-mode js2-jsx-mode react-mode))
+      (dolist (mode '(indium-repl-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mu" "indium")
         (spacemacs/set-leader-keys-for-major-mode mode
           "u'" 'cats/indium-start-node-repl
@@ -329,8 +305,7 @@
         :evil-leader-for-mode
         (js2-mode . "Tt")
         (rjsx-mode . "Tt")
-        (js2-jsx-mode . "Tt")
-        (react-mode . "Tt"))
+        (js2-jsx-mode . "Tt"))
 
       (spacemacs|add-toggle tide-hl-identifier-mode
         :status tide-hl-identifier-mode
@@ -343,8 +318,7 @@
         :evil-leader-for-mode
         (js2-mode . "Th")
         (rjsx-mode . "Th")
-        (js2-jsx-mode . "Th")
-        (react-mode . "Th"))
+        (js2-jsx-mode . "Th"))
 
       (defadvice tide-mode (after check-flycheck-tide-eslint-checkers activate)
         (if (bound-and-true-p tide-mode)
@@ -402,26 +376,12 @@
 ;;     '(rjsx-mode-local-vars-hook) t))
 
 
-;; ggtags
-;; (defun cats-javascript/post-init-ggtags ()
-;;   (add-hook 'rjsx-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
 
-
-;; helm-gtags
-;; (defun cats-javascript/post-init-helm-gtags ()
-;;   (spacemacs/helm-gtags-define-keys-for-mode 'rjsx-mode))
-
-
-;; import-js
-(defun cats-javascript/init-import-js ()
-  (use-package import-js
-    :commands (import-js
-                run-import-js
-                import-js-goto
-                import-js-import)
-    :init
+(defun cats-javascript/post-init-import-js ()
+  (spacemacs|use-package-add-hook import-js
+    :post-init
     (progn
-      (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
           "I" 'import-js-import)
 
@@ -434,7 +394,8 @@
           ;; (kbd "C-g") 'import-js-pop-goto-definition
           "os" 'cats/run-import-js
           "ok" 'cats/kill-import-js)))
-    :config
+
+    :post-config
     (progn
       (add-hook 'cats/project-hook
         'cats//locate-importjs-from-projectile)
@@ -448,16 +409,6 @@
           (setq import-js-current-project-root dir))))))
 
 
-;; evil-matchit
-(defun cats-javascript/post-init-evil-matchit ()
-  (with-eval-after-load 'evil-matchit
-    (plist-put evilmi-plugins 'rjsx-mode
-      '((evilmi-simple-get-tag evilmi-simple-jump)
-         (evilmi-javascript-get-tag evilmi-javascript-jump)
-         (evilmi-html-get-tag evilmi-html-jump))))
-  (add-hook `rjsx-mode `turn-on-evil-matchit-mode))
-
-
 ;; eslint-fix
 (defun cats-javascript/init-eslint-fix ()
   (use-package eslint-fix
@@ -468,7 +419,7 @@
       (add-hook 'cats/eslint-executable-hook
         'cats//esilnt-set-eslint-fix-executable)
 
-      (dolist (mode '(js2-mode js2-jsx-mode react-mode rjsx-mode))
+      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
         (add-hook mode 'cats//eslint-fix-hook)))))
 
 
@@ -529,9 +480,6 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
-  ;; (spacemacs/add-to-hooks #'cats//rjsx-setup-company
-  ;;   '(rjsx-mode-local-vars-hook))
-
   (spacemacs|add-company-backends
     :backends company-capf
     :modes
@@ -539,13 +487,6 @@
     indium-repl-mode))
 
 
-;; company-ycmd
-(defun cats-javascript/post-init-company-ycmd ()
-  (spacemacs|add-company-backends
-   :backends company-ycmd
-   :modes js2-mode ;; rjsx-mode
-    js2-jsx-mode))
-
 ;; flycheck
 (defun cats-javascript/post-init-flycheck ()
   (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
@@ -553,20 +494,7 @@
   (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
   (add-hook 'cats/eslint-executable-hook
      'cats//esilnt-set-eslint-executable)
-  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
-
-  ;; (with-eval-after-load 'flycheck
-  ;;   (dolist (checker '(javascript-eslint javascript-standard))
-  ;;     (flycheck-add-mode checker 'rjsx-mode)))
-
-  ;; (dolist (mode '(rjsx-mode))
-  ;;   (spacemacs/enable-flycheck mode))
-  )
-
-
-;; counsel-gtags
-;; (defun cats-javascript/post-init-counsel-gtags ()
-;;   (spacemacs/counsel-gtags-define-keys-for-mode 'rjsx-mode))
+  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile))
 
 
 ;; js-doc
@@ -595,11 +523,6 @@
       (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mrd" "jsdoc")
         (spacemacs/js-doc-set-key-bindings mode)))))
-
-
-;; react mode
-(when (configuration-layer/layer-used-p 'react)
-  (add-hook 'react-mode-hook (lambda () (run-hooks #'cats/javascript-mode-hook))))
 
 
 ;; js2-mode
@@ -701,16 +624,13 @@
 
 ;; livid-mode
 (defun cats-javascript/pre-init-livid-mode ()
-  (spacemacs|use-package-add-hook livid-mode
-    :post-init
-    (progn
-      (defalias 'js-live-eval 'livid-mode
-        "Minor mode for automatic evaluation of a JavaScript buffer on every change")
-
-      (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
-        (spacemacs/declare-prefix-for-mode mode "ml" "livid")
-        (spacemacs/set-leader-keys-for-major-mode mode
-          "le" 'js-live-eval)))))
+  (when (eq javascript-repl 'skewer)
+    (spacemacs|use-package-add-hook livid-mode
+      :post-init
+      (progn
+        (defalias 'js-live-eval 'livid-mode
+          "Minor mode for automatic evaluation of a JavaScript buffer on every change")
+        ))))
 
 
 ;; mocha
@@ -721,7 +641,7 @@
     :defer t
     :init
     (progn
-      (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mm" "mocha")
         (spacemacs/set-leader-keys-for-major-mode mode
           "mp" 'mocha-test-project
@@ -748,48 +668,34 @@
 
 
 ;; nodejs-repl
+(defun cats-javascript/post-init-nodejs-repl ()
+  (when (eq javascript-repl 'nodejs)
+    (spacemacs|use-package-add-hook nodejs-repl
+      :post-init
+      (progn
+        (setq nodejs-repl-arguments '())
+        (add-hook 'cats/node-executable-hook
+          'cats//nodejs-set-node-executable)
 
-(defun cats-javascript/init-nodejs-repl ()
-  (use-package nodejs-repl
-    :commands (nodejs-repl--get-or-create-process nodejs-repl)
-    :defer t
-    :init
-    (progn
-      (setq nodejs-repl-arguments '())
-
-      (add-hook 'cats/node-executable-hook
-         'cats//nodejs-set-node-executable)
-
-      (spacemacs/register-repl 'nodejs-repl 'nodejs-repl "nodejs")
-      (push "\\*nodejs\\*" spacemacs-useful-buffers-regexp)
-      (spacemacs|hide-lighter nodejs-repl-mode)
-      (dolist (mode '(rjsx-mode js2-mode react-mode js2-jsx-mode))
-        (spacemacs/declare-prefix-for-mode mode "mn" "nodejs")
-        (spacemacs/set-leader-keys-for-major-mode mode
-          "n'" 'nodejs-start-repl
-          "nf" 'nodejs-load-file
-          "nl" 'nodejs-send-line
-          "nb" 'nodejs-send-buffer
-          "nr" 'nodejs-send-region)))
-
-    :config
-    (progn
-      ;; overwrite TAB with update completion-at-point, it
-      ;; should be in a company backend and is a quick hack.
-      (evilified-state-evilify nodejs-repl-mode nodejs-repl-mode-map
-        (kbd "C-g") 'nodejs-repl-quit-or-cancel
-        (kbd "C-u") 'nodejs-repl-clear-line
-        (kbd "TAB") 'completion-at-point
-        (kbd "C-c C-c") 'nodejs-repl-quit-or-cancel
-        "q" 'quit-window)
-
-      (dolist (mode (list nodejs-repl-mode-map))
-        (evil-define-key 'normal mode
+        (push "\\*nodejs\\*" spacemacs-useful-buffers-regexp))
+      :post-config
+      (progn
+        ;; overwrite TAB with update completion-at-point, it
+        ;; should be in a company backend and is a quick hack.
+        (evilified-state-evilify nodejs-repl-mode nodejs-repl-mode-map
           (kbd "C-g") 'nodejs-repl-quit-or-cancel
           (kbd "C-u") 'nodejs-repl-clear-line
           (kbd "TAB") 'completion-at-point
           (kbd "C-c C-c") 'nodejs-repl-quit-or-cancel
-          (kbd "q") 'quit-window)))))
+          "q" 'quit-window)
+
+        (dolist (mode (list nodejs-repl-mode-map))
+          (evil-define-key 'normal mode
+            (kbd "C-g") 'nodejs-repl-quit-or-cancel
+            (kbd "C-u") 'nodejs-repl-clear-line
+            (kbd "TAB") 'completion-at-point
+            (kbd "C-c C-c") 'nodejs-repl-quit-or-cancel
+            (kbd "q") 'quit-window))))))
 
 
 ;; popwin
@@ -827,52 +733,19 @@
 
 ;; skewer-mode
 (defun cats-javascript/pre-init-skewer-mode ()
-  (spacemacs|use-package-add-hook skewer-mode
-    :post-init
-    (progn
-      (dolist (hook '(rjsx-mode-hook
-                      js2-jsx-mode-hook
-                      react-mode-hook))
-        (add-hook hook 'skewer-mode))
-      (add-hook 'cats/phantomjs-executable-hook
-         'cats//skewer-set-phantomjs-executable)
-      (add-hook 'cats/project-hook
-         'cats//locate-phantomjs-from-projectile)
-      (add-hook 'css-mode-hook 'skewer-css-mode)
-      (add-hook 'html-mode-hook 'skewer-html-mode))
-    :post-config
-    (progn
-      (dolist (mode '(rjsx-mode js2-jsx-mode react-mode css-mode html-mode))
-        (spacemacs/declare-prefix-for-mode mode "ms" "skewer")
-        (spacemacs/declare-prefix-for-mode mode "me" "eval")
-        (spacemacs/set-leader-keys-for-major-mode mode
-          "'" 'spacemacs/skewer-start-repl
-          "ee" 'skewer-eval-last-expression
-          "eE" 'skewer-eval-print-last-expression
-          "sb" 'skewer-load-buffer
-          "sB" 'spacemacs/skewer-load-buffer-and-focus
-          "si" 'spacemacs/skewer-start-repl
-          "sf" 'skewer-eval-defun
-          "sF" 'spacemacs/skewer-eval-defun-and-focus
-          "sr" 'spacemacs/skewer-eval-region
-          "sR" 'spacemacs/skewer-eval-region-and-focus
-          "ss" 'skewer-repl)
-        ))))
-
-
-;; smartparens
-;; (defun cats-javascript/pre-init-smartparens ()
-;;   (spacemacs|use-package-add-hook smartparens
-;;     :post-config
-;;     (sp-with-modes 'rjsx-mode
-;;       (sp-local-pair "<" ">"))
-;;     (sp-with-modes 'js2-jsx-mode
-;;       (sp-local-pair "<" ">"))))
-
-;; (defun cats-javascript/post-init-smartparens ()
-;;   (if dotspacemacs-smartparens-strict-mode
-;;     (spacemacs/add-to-hooks #'smartparens-strict-mode '(rjsx-mode-hook))
-;;     (spacemacs/add-to-hooks #'smartparens-mode '(rjsx-mode-hook))))
+  (when (eq javascript-repl 'skewer)
+    (spacemacs|use-package-add-hook skewer-mode
+      :post-init
+      (progn
+        (dolist (hook '(rjsx-mode-hook
+                         js2-jsx-mode-hook))
+          (add-hook hook 'skewer-mode))
+        (add-hook 'cats/phantomjs-executable-hook
+          'cats//skewer-set-phantomjs-executable)
+        (add-hook 'cats/project-hook
+          'cats//locate-phantomjs-from-projectile)
+        (add-hook 'css-mode-hook 'skewer-css-mode)
+        (add-hook 'html-mode-hook 'skewer-html-mode)))))
 
 
 ;; tern
@@ -894,8 +767,7 @@
     (progn
       (dolist (hook '(rjsx-mode-hook
                        js2-mode-hook
-                       js2-jsx-mode-hook
-                       react-mode-hook))
+                       js2-jsx-mode-hook))
         (add-hook hook 'tj-mode)))))
 
 
@@ -909,7 +781,7 @@
       ;; (evilified-state-evilify xref-js2-mode xref-js2-mode-map
       ;;   (kbd "q") 'quit-window)
 
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode react-mode))
+      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mj" "jump/join/split")
         (spacemacs/set-leader-keys-for-major-mode mode
           "jg" 'xref-find-definitions
@@ -919,31 +791,9 @@
 
       (dolist (hook '(rjsx-mode-hook
                       js2-jsx-mode-hook
-                      react-mode-hook
                       js2-mode-hook))
         (add-hook hook
            (lambda ()
              (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))))))
-
-
-;; ycmd
-(defun cats-javascript/post-init-ycmd ()
-  (dolist (hook '(rjsx-mode-hook
-                  js2-jsx-mode-hook
-                  react-mode-hook
-                  js2-mode-hook))
-    (add-hook hook 'ycmd-mode))
-  (add-to-list 'spacemacs-jump-handlers-rjsx-mode '(ycmd-goto :async t))
-  (add-to-list 'spacemacs-jump-handlers-js2-mode '(ycmd-goto :async t))
-  (add-to-list 'spacemacs-jump-handlers-js2-jsx-mode '(ycmd-goto :async t))
-  (dolist (mode '(react-mode rjsx-mode js2-mode js2-jsx-mode))
-    (spacemacs/set-leader-keys-for-major-mode mode
-      "jy" 'ycmd-goto
-      "jY" 'ycmd-goto-imprecise)))
-
-
-;; yasnippet
-;; (defun cats-javascript/post-init-yasnippet ()
-;;   (spacemacs/add-to-hooks #'cats/rjsx-yasnippet-setup '(rjsx-mode-hook)))
 
 ;;; packages.el ends here

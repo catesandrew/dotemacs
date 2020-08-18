@@ -20,9 +20,6 @@
 (defvar cats/prog-mode-spell-checking t
   "Enable `prog-mode' spell checking.")
 
-(defvar cats/ycmd-server-command
-  '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
-
 (defvar cats/prog-syntax-table
   (let ((table (make-syntax-table prog-mode-syntax-table)))
     ;; dash "-" is now a word character in programming mode

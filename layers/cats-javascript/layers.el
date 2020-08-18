@@ -4,6 +4,6 @@
 
 ;;; Code:
 
-(configuration-layer/declare-layers '(html javascript ycmd cats-core))
+(configuration-layer/declare-layers '(html javascript cats-core))
 
 ;;; layers.el ends here

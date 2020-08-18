@@ -1025,14 +1025,11 @@ which is pretty awesome with: (helm-mode 1)"
 
 
 ;; helm-ls-git
-(defun cats/init-helm-ls-git ()
-  (use-package helm-ls-git
-    :defer t
-    :ensure t
-    :commands (helm-ls-git-not-inside-git-repo helm-ls-git-ls helm-browse-project)
-    :init
-    (progn
-      (setq helm-ls-git-show-abs-or-relative 'relative))))
+(defun cats/pre-init-helm-ls-git ()
+ (spacemacs|use-package-add-hook helm-ls-git
+   :post-init
+   (progn
+     (setq helm-ls-git-show-abs-or-relative 'relative))))
 
 
 ;; encourage-mode

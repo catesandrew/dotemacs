@@ -22,7 +22,6 @@
      ;;     :repo "realgud/realgud-node-inspect"))
      shut-up
      string-inflection
-     ycmd
      graphql-mode
      polymode
     ))
@@ -168,13 +167,6 @@
     :config
     (progn
       )))
-
-
-;; ycmd
-(defun cats-programming/pre-init-ycmd ()
-  (spacemacs|use-package-add-hook ycmd
-    :post-init
-    (setq ycmd-server-command cats/ycmd-server-command)))
 
 
 ;; logview

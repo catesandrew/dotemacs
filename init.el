@@ -76,7 +76,10 @@ This function should only modify configuration layer settings."
      ;; extra-langs
 
      ;; Editing
-     helm
+     ;; helm-follow-mode sticky - remembers use of C-c C-f
+     ;; - follow mode previews when scrolling through a helm list
+     (helm :variables
+           helm-follow-mode-persistent t)
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence '"jk"
                       ;; Auto-complete less aggressively
@@ -100,21 +103,41 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      flyspell-default-dictionary "en_US"
                      spell-checking-enable-auto-dictionary nil)
+      ;; Use original flycheck fringe bitmaps
      (syntax-checking :variables
+                      syntax-checking-use-original-bitmaps t
                       syntax-checking-enable-tooltips t)
-     ;; Version control
+     ;; Highlight changes in buffers
+     ;; SPC g . transient state for navigating changes
      (version-control :variables
-       version-control-diff-tool 'git-gutter)
+                      version-control-diff-tool 'git-gutter+
+                      ;; version-control-diff-tool 'diff-hl
+                      version-control-global-margin t)
+
+     ;; opens Magit git client full screen (q restores previous layout)
+     ;; refine hunk 'all highlights characters changed on each line
      (git :variables
-          ;; Magit in fullscreen
-          git-magit-status-fullscreen t)
+          git-magit-status-fullscreen t
+          magit-diff-refine-hunk 'all)
+
      ;; github
      ;; Development tools
      restclient
      dash
      lua
-     (clojure :variables clojure-enable-fancify-symbols t
-       clojure-enable-linters '(clj-kondo joker))
+     ;; (clojure :variables clojure-enable-linters '(clj-kondo joker))
+     (clojure :variables
+              clojure-toplevel-inside-comment-form t
+              cider-overlays-use-font-lock t
+              clojure-enable-fancify-symbols t
+              clojure-enable-linters 'clj-kondo
+              cider-preferred-build-tool 'clojure-cli)
+
+     ;; SPC a L displays key and command history in a separate buffer
+     command-log
+     ;; graphviz - open-source graph declaration system
+     ;; Used to generated graphs of Clojure project dependencies
+     graphviz
      java
      windows-scripts
      vagrant
@@ -124,8 +147,13 @@ This function should only modify configuration layer settings."
      neotree
      docker
      rebox
+     ;; Text-based file manager with preview
      (ranger :variables
-       ranger-show-preview t)
+             ranger-show-preview t
+             ranger-show-hidden t
+             ranger-cleanup-eagerly t
+             ranger-cleanup-on-disable t
+             ranger-ignored-extensions '("mkv" "flv" "iso" "mp4"))
      pandoc
      fasd
      nginx
@@ -147,17 +175,29 @@ This function should only modify configuration layer settings."
      (typescript :variables
        typescript-backend 'tide
        typescript-fmt-tool 'typescript-formatter)
-      (javascript :variables
-        javascript-backend 'tern)
-     ;; new layer web-beautify extracted from javascript layer
+
+     ;; When lsp is set as the backend, but you don’t want to use lsp as the
+     ;; linter, set the variable javascript-lsp-linter to nil in the Javascript
+     ;; layer.
+     (javascript :variables
+                 javascript-fmt-tool 'web-beautify
+                 ;; Repl to be configured by the layer, `skewer' for browser based, `nodejs' for server based development.
+                 javascript-repl 'nodejs
+                 javascript-import-tool 'import-js
+                 javascript-backend 'lsp)
+     ;; npm install -g import-js
+     import-js
      (tern
        ;; do not use no-port-file under emacs, it'll mess things up when you
        ;; are editing multiple files in the same project
        tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
+     ;; new layer web-beautify extracted from javascript layer
      web-beautify
      bibtex
      (latex :variables latex-enable-auto-fill t
+                       latex-build-command "LatexMk"
+                       latex-enable-magic t
                        latex-enable-folding t)
      markdown
      python
@@ -170,12 +210,8 @@ This function should only modify configuration layer settings."
      (rust :variables
            ;; Enable auto-completion for Rust
            rust-enable-racer t)
-     (scala :variables
-          scala-enable-eldoc nil
-          ;; Automatically insert asterisk in comments
-          scala-auto-insert-asterisk-in-comments t)
      shell-scripts
-     sql
+     (sql :variables sql-capitalize-keywords t)
      vimscript
      xclipboard
      yaml
@@ -191,11 +227,14 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-shell 'shell
             shell-default-term-shell "/bin/bash"
-            shell-default-position 'right
-            shell-default-width 60
+            shell-default-height 30
+            shell-default-position 'bottom
             sh-indentation 2
             sh-basic-offset 2)
-     ycmd
+     ;; spacemacs-layouts layer added to set variables
+     (spacemacs-layouts :variables
+                         spacemacs-layouts-restrict-spc-tab t
+                         persp-autokill-buffer-on-remove 'kill-weak)
      asciidoc
      search-engine
      templates
@@ -658,6 +697,14 @@ values."
    ;; (default nil)
    dotspacemacs-pretty-docs t))
 
+(defun dotspacemacs/user-env ()
+  "Environment variables setup.
+This function defines the environment variables for your Emacs session. By
+default it calls `spacemacs/load-spacemacs-env' which loads the environment
+variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+See the header of this file for more information."
+  (spacemacs/load-spacemacs-env))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init', before layer configuration
@@ -668,8 +715,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; Don't nag me compile!
   (setq compilation-ask-about-save nil)
-
-  ;; (setq cats/ycmd-server-command '("/usr/local/bin/python2" "-u" "/usr/local/src/ycmd/ycmd"))
 
   (setq abbrev-file-name
         (expand-file-name (concat spacemacs-cache-directory "abbrev_defs")))
