@@ -56,6 +56,7 @@
      ;; js-react-redux-yasnippets-want-semicolon`.
      js-react-redux-yasnippets
      jest
+     npm-mode
      ))
 
 (defun cats-javascript/init-js-react-redux-yasnippets ()
@@ -66,6 +67,11 @@
     :config
     (progn
       )))
+
+(defun cats-javascript/init-npm-mode ()
+  (use-package npm-mode
+    :ensure t
+    :defer t))
 
 (defun cats-javascript/init-jest ()
   (use-package jest

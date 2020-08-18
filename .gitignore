@@ -74,5 +74,7 @@ snippets/*/GPLv3+
 snippets/*/MIT
 *-pkg.el
 
+.spacemacs.env
+
 # layers/private directory
 /private/cats-private
