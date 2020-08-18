@@ -1,0 +1,16 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: hoc
+# key: hoc
+# uuid: hoc
+# --
+import React from 'react'`(cats/javascript-yasnippets-semicolon)`
+import PropTypes from 'prop-types'`(cats/javascript-yasnippets-semicolon)`
+
+export default (WrappedComponent) => {
+ const hocComponent = ({ ...props }) => <WrappedComponent {...props} />`(cats/javascript-yasnippets-semicolon)`
+
+ hocComponent.propTypes = {
+ }`(cats/javascript-yasnippets-semicolon)`
+
+ return hocComponent`(cats/javascript-yasnippets-semicolon)`
+}

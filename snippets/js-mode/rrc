@@ -1,0 +1,27 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates a React component class connected to redux
+# key: rrc
+# uuid: rrc
+# --
+import React, { Component } from 'react'`(cats/javascript-yasnippets-semicolon)`
+import { connect } from 'react-redux'`(cats/javascript-yasnippets-semicolon)`
+
+function mapStateToProps(state) {
+ return {
+
+ }`(cats/javascript-yasnippets-semicolon)`
+}
+
+class ${1:`(cats/javascript-yasnippets-filename-base)`} extends Component {
+ render() {
+  return (
+   <div>
+    $0
+   </div>
+  )`(cats/javascript-yasnippets-semicolon)`
+ }
+}
+
+export default connect(
+ mapStateToProps,
+)($1)`(cats/javascript-yasnippets-semicolon)`

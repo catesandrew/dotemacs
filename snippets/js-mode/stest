@@ -1,0 +1,18 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: stest
+# key: stest
+# uuid: stest
+# --
+import React from 'react'`(cats/javascript-yasnippets-semicolon)`
+import renderer from 'react-test-renderer'`(cats/javascript-yasnippets-semicolon)`
+
+import { ${1:`(cats/javascript-yasnippets-filename-base)`} } from '../$1'`(cats/javascript-yasnippets-semicolon)`
+
+describe('<$1 />', () => {
+ const defaultProps = {}`(cats/javascript-yasnippets-semicolon)`
+ const wrapper = renderer.create(<$1 {...defaultProps} />)`(cats/javascript-yasnippets-semicolon)`
+
+ test('render', () => {
+  expect(wrapper).toMatchSnapshot()
+ })`(cats/javascript-yasnippets-semicolon)`
+})`(cats/javascript-yasnippets-semicolon)`

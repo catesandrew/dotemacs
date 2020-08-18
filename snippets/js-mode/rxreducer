@@ -1,0 +1,19 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: rxreducer
+# key: rxreducer
+# uuid: rxreducer
+# --
+const initialState = {
+
+}`(cats/javascript-yasnippets-semicolon)`
+
+export default (state = initialState, { type, payload }) => {
+    switch (type) {
+
+    case ${typeName}:
+        return { ...state, ...payload }`(cats/javascript-yasnippets-semicolon)`
+
+    default:
+        return state`(cats/javascript-yasnippets-semicolon)`
+    }
+}

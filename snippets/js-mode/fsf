@@ -1,0 +1,17 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates a stateless React component as a named function with FlowTypes
+# key: fsf
+# uuid: fsf
+# --
+// @flow
+import * as React from 'react'`(cats/javascript-yasnippets-semicolon)`
+type Props = {
+ $0
+}`(cats/javascript-yasnippets-semicolon)`
+export function ${`(cats/javascript-yasnippets-filename-base)`}(props: Props) {
+ return (
+  <div>
+
+  </div>
+ )`(cats/javascript-yasnippets-semicolon)`
+}`(cats/javascript-yasnippets-semicolon)`

@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: imrcp
+# key: imrcp
+# uuid: imrcp
+# --
+import React, { Component } from 'react'`(cats/javascript-yasnippets-semicolon)`
+import PropTypes from 'prop-types'`(cats/javascript-yasnippets-semicolon)`

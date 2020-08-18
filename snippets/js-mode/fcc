@@ -1,0 +1,22 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates a React component class with FlowTypes
+# key: fcc
+# uuid: fcc
+# --
+// @flow
+import * as React from 'react'`(cats/javascript-yasnippets-semicolon)`
+type Props = {
+ $0
+}`(cats/javascript-yasnippets-semicolon)`
+type State = {
+ $1
+}`(cats/javascript-yasnippets-semicolon)`
+export class ${2:`(cats/javascript-yasnippets-filename-base)`} extends React.Component<Props, State>{
+ render() {
+  return (
+   <div>
+
+   </div>
+  )`(cats/javascript-yasnippets-semicolon)`
+ }`(cats/javascript-yasnippets-semicolon)`
+}`(cats/javascript-yasnippets-semicolon)`

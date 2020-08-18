@@ -1,0 +1,16 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates a React Functional Component with ES7 module system
+# key: rfce
+# uuid: rfce
+# --
+import React from 'react'`(cats/javascript-yasnippets-semicolon)`
+
+function ${1:`(cats/javascript-yasnippets-filename-base)`}() {
+ return (
+  <div>
+   $0
+  </div>
+ )`(cats/javascript-yasnippets-semicolon)`
+}
+
+export default $1`(cats/javascript-yasnippets-semicolon)`

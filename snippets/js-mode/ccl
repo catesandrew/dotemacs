@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Clears the console
+# key: ccl
+# uuid: ccl
+# --
+console.clear()`(if (eolp) (cats/javascript-yasnippets-semicolon))`

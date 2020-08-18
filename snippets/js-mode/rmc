@@ -1,0 +1,14 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates a React Memo Function Component with ES7 module system
+# key: rmc
+# uuid: rmc
+# --
+import React, { memo } from 'react'`(cats/javascript-yasnippets-semicolon)`
+
+export default memo(function ${`(cats/javascript-yasnippets-filename-base)`}() {
+ return (
+  <div>
+   $0
+  </div>
+ )`(cats/javascript-yasnippets-semicolon)`
+})`(cats/javascript-yasnippets-semicolon)`

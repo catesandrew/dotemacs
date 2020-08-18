@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: rxconst
+# key: rxconst
+# uuid: rxconst
+# --
+export const ${1:constantName} = '$1'`(if (eolp) (cats/javascript-yasnippets-semicolon))`

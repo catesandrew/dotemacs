@@ -40,10 +40,6 @@
      (tj-mode :location (recipe :fetcher github
                           :repo "purcell/tj-mode"))
      xref-js2
-     ;; You can toggle semicolons with
-     ;; `js-react-redux-yasnippets-toggle-semicolon` or `setq
-     ;; js-react-redux-yasnippets-want-semicolon`.
-     ;; js-react-redux-yasnippets
      jest
      npm-mode
      ))

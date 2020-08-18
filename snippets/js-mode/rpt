@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates empty propTypes declaration
+# key: rpt
+# uuid: rpt
+# --
+${`(cats/javascript-yasnippets-filename-base)`}.propTypes = {
+ $0
+}`(cats/javascript-yasnippets-semicolon)`

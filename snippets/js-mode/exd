@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: exd
+# key: exd
+# uuid: exd
+# --
+export { $2 } from '${1:module}'`(if (eolp) (cats/javascript-yasnippets-semicolon))`

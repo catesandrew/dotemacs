@@ -1,0 +1,25 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: snrtest
+# key: snrtest
+# uuid: snrtest
+# --
+import 'react-native'`(cats/javascript-yasnippets-semicolon)`
+import React from 'react'`(cats/javascript-yasnippets-semicolon)`
+import renderer from 'react-test-renderer'`(cats/javascript-yasnippets-semicolon)`
+import { Provider } from 'react-redux'`(cats/javascript-yasnippets-semicolon)`
+
+import store from 'src/store'`(cats/javascript-yasnippets-semicolon)`
+import ${1:`(cats/javascript-yasnippets-filename-base)`} from '../$1'`(cats/javascript-yasnippets-semicolon)`
+
+describe('<$1 />', () => {
+ const defaultProps = {}`(cats/javascript-yasnippets-semicolon)`
+ const wrapper = renderer.create(
+  <Provider store={store}>
+   <$1 {...defaultProps} />
+  </Provider>,
+ )`(cats/javascript-yasnippets-semicolon)`
+
+ test('render', () => {
+  expect(wrapper).toMatchSnapshot()
+ })`(cats/javascript-yasnippets-semicolon)`
+})`(cats/javascript-yasnippets-semicolon)`

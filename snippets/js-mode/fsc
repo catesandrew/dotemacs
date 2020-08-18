@@ -1,0 +1,17 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Creates a stateless React component with FlowTypes and ES6 module system
+# key: fsc
+# uuid: fsc
+# --
+// @flow
+import * as React from 'react'`(cats/javascript-yasnippets-semicolon)`
+type Props = {
+ $0
+}`(cats/javascript-yasnippets-semicolon)`
+export const ${`(cats/javascript-yasnippets-filename-base)`} = (props: Props) => {
+ return (
+  <div>
+
+  </div>
+ )`(cats/javascript-yasnippets-semicolon)`
+}`(cats/javascript-yasnippets-semicolon)`

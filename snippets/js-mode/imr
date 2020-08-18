@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: imr
+# key: imr
+# uuid: imr
+# --
+import React from 'react'`(if (eolp) (cats/javascript-yasnippets-semicolon))`

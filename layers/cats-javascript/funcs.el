@@ -592,4 +592,29 @@
                 (cats/run-import-js))))
           )))))
 
+
+;; javascript snippets
+(defun js-react-redux-yasnippets-toggle-semicolon ()
+  "Toggle semicolon in javascript snippets."
+  (interactive)
+  (setq cats/javascript-yasnippets-toggle-semicolon
+    (not cats/javascript-yasnippets-toggle-semicolon)))
+
+(defun cats/javascript-yasnippets-capitalize-first-char (&optional string)
+  "Capitalize only the first character of the input STRING."
+  (when (and string (> (length string) 0))
+    (let ((first-char (substring string nil 1))
+           (rest-str   (substring string 1)))
+      (concat (capitalize first-char) rest-str))))
+
+(defun cats/javascript-yasnippets-filename-base ()
+  "Used in snippets. Return buffer base file name, should not throw errors."
+  (when (buffer-file-name)
+    (cats/javascript-yasnippets-capitalize-first-char (file-name-base (buffer-file-name)))))
+
+(defun cats/javascript-yasnippets-semicolon ()
+  "Used in snippets. Return semicolon if cats/javascript-yasnippets-toggle-semicolon is t."
+  (when cats/javascript-yasnippets-toggle-semicolon
+    ";"))
+
 ;;; funcs.el ends here
