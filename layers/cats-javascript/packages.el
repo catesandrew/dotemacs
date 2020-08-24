@@ -29,7 +29,7 @@
      karma
      livid-mode
      mocha
-     nodejs-repl
+     ;; nodejs-repl
      org
      popwin
      rebox2

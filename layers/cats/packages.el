@@ -141,16 +141,17 @@
     :ensure t
     :init
     (progn
-      (spacemacs/declare-prefix "go" "github open")
-      (spacemacs/declare-prefix "gof" "github from file")
-      (spacemacs/declare-prefix "goc" "open from commit")
-      (spacemacs/declare-prefix "goi" "open from issues")
-      (spacemacs/declare-prefix "gop" "open from pull requests")
-      (spacemacs/set-leader-keys
-        "gof" 'helm-open-github-from-file
-        "goc" 'helm-open-github-from-commit
-        "goi" 'helm-open-github-from-issues
-        "gop" 'helm-open-github-from-pull-requests))))
+      ;; (spacemacs/declare-prefix "go" "github open")
+      ;; (spacemacs/declare-prefix "gof" "github from file")
+      ;; (spacemacs/declare-prefix "goc" "open from commit")
+      ;; (spacemacs/declare-prefix "goi" "open from issues")
+      ;; (spacemacs/declare-prefix "gop" "open from pull requests")
+      ;; (spacemacs/set-leader-keys
+      ;;   "gof" 'helm-open-github-from-file
+      ;;   "goc" 'helm-open-github-from-commit
+      ;;   "goi" 'helm-open-github-from-issues
+      ;;   "gop" 'helm-open-github-from-pull-requests)
+      )))
 
 
 ;; search-engine
@@ -425,10 +426,6 @@
     :post-config
     ;; Auto-complete less aggressively
     (setq company-idle-delay 0.5)))
-
-(defun cats/post-init-company ()
-  ;; Enable auto-completion everywhere!
-  (global-company-mode))
 
 
 ;; company-emoji
@@ -958,8 +955,8 @@ which is pretty awesome with: (helm-mode 1)"
   (spacemacs|use-package-add-hook helm
     :post-init
     (progn
-      (with-eval-after-load 'helm-config
-        (warn "`helm-config' loaded! Get rid of it ASAP!"))
+      ;; (with-eval-after-load 'helm-config
+      ;;   (warn "`helm-config' loaded! Get rid of it ASAP!"))
 
       (with-eval-after-load 'helm-files
         (cats//add-advice-around-helm-buffers-list)

@@ -84,8 +84,11 @@ This function should only modify configuration layer settings."
                       auto-completion-complete-with-key-sequence '"jk"
                       ;; Auto-complete less aggressively
                       auto-completion-idle-delay 0.5
+                      auto-completion-minimum-prefix-length 2
                       auto-completion-complete-with-key-sequence-delay 0.2
                       auto-completion-enable-help-tooltip t
+                      auto-completion-enable-help-tooltip 'manual
+                      auto-completion-use-company-box t
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-sort-by-usage t
                       auto-completion-return-key-behavior 'complete
@@ -103,7 +106,7 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      flyspell-default-dictionary "en_US"
                      spell-checking-enable-auto-dictionary nil)
-      ;; Use original flycheck fringe bitmaps
+     ;; Use original flycheck fringe bitmaps
      (syntax-checking :variables
                       syntax-checking-use-original-bitmaps t
                       syntax-checking-enable-tooltips t)
@@ -163,7 +166,15 @@ This function should only modify configuration layer settings."
      (haskell :variables haskell-enable-hindent-style "johan-tibell"
        haskell-enable-ghc-mod-support t
        haskell-completion-backend 'dante)
-     (html :variables css-indent-offset 2)
+     ;; npm i -g vscode-css-languageserver-bin
+     ;; npm install -g vscode-html-languageserver-bin
+     (html :variables
+           css-indent-offset 2
+           web-fmt-tool 'web-beautify
+           css-enable-lsp t
+           less-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
      ipython-notebook
      lsp ;; language server protocol layers
      ;; react layer uses the same backend defined in javascript layer. Options
@@ -193,6 +204,7 @@ This function should only modify configuration layer settings."
        tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
      ;; new layer web-beautify extracted from javascript layer
+     ;; npm install -g js-beautify
      web-beautify
      bibtex
      (latex :variables latex-enable-auto-fill t
@@ -260,13 +272,13 @@ This function should only modify configuration layer settings."
        org-enable-ox-html-support t
        org-enable-ox-ascii-support t
        org-enable-jira-support t)
-     cats-scala
+     ;; cats-scala
      cats-xml
      cats-grammar
      cats-vm
      cats-langs
-     cats-private
-     )
+     ;; cats-private
+    )
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -278,6 +290,7 @@ This function should only modify configuration layer settings."
        ;; M-x all-the-icons-install-fonts
        all-the-icons
        ng2-mode
+       elcord ;; discord
        ;; graphql-mode
        ;; eslint-fix
        ;; oneonone
@@ -763,9 +776,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
-
-  ;; Enable auto-completion everywhere!
-  (global-company-mode)
 
   (setq org-ref-open-pdf-function
     (lambda (fpath)
