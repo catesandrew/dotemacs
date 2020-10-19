@@ -54,7 +54,6 @@ This function should only modify configuration layer settings."
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
 
-   ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path
@@ -170,15 +169,11 @@ This function should only modify configuration layer settings."
      ;; npm install -g vscode-html-languageserver-bin
      (html :variables
            css-indent-offset 2
-           web-fmt-tool 'web-beautify
-           css-enable-lsp t
-           less-enable-lsp t
-           scss-enable-lsp t
-           html-enable-lsp t)
+           web-fmt-tool 'web-beautify)
      ipython-notebook
-     lsp ;; language server protocol layers
-     ;; react layer uses the same backend defined in javascript layer. Options
-     ;; are =tern= and =lsp=
+     tide
+     ;; lsp ;; language server protocol layers
+     ;; react layer uses the same backend defined in javascript layer.
      ;; npm install -g eslint babel-eslint eslint-plugin-react
      ;; npm install -g js-beautify prettier
      react
@@ -186,22 +181,20 @@ This function should only modify configuration layer settings."
      (typescript :variables
        typescript-backend 'tide
        typescript-fmt-tool 'typescript-formatter)
-
-     ;; When lsp is set as the backend, but you don’t want to use lsp as the
-     ;; linter, set the variable javascript-lsp-linter to nil in the Javascript
-     ;; layer.
      (javascript :variables
                  javascript-fmt-tool 'web-beautify
-                 ;; Repl to be configured by the layer, `skewer' for browser based, `nodejs' for server based development.
+                 ;; Repl to be configured by the layer, `skewer' for browser
+                 ;; based, `nodejs' for server based development.
                  javascript-repl 'nodejs
-                 javascript-import-tool 'import-js
-                 javascript-backend 'lsp)
+                 javascript-backend nil
+                 javascript-lsp-linter nil
+                 javascript-import-tool 'import-js)
      ;; npm install -g import-js
      import-js
-     (tern
-       ;; do not use no-port-file under emacs, it'll mess things up when you
-       ;; are editing multiple files in the same project
-       tern-disable-tern-port-files nil)
+     ;; (tern
+     ;;   ;; do not use no-port-file under emacs, it'll mess things up when you
+     ;;   ;; are editing multiple files in the same project
+     ;;   tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
      ;; new layer web-beautify extracted from javascript layer
      ;; npm install -g js-beautify
@@ -290,7 +283,7 @@ This function should only modify configuration layer settings."
        ;; M-x all-the-icons-install-fonts
        all-the-icons
        ng2-mode
-       elcord ;; discord
+       ;; elcord ;; discord
        ;; graphql-mode
        ;; eslint-fix
        ;; oneonone
@@ -340,12 +333,12 @@ values."
     ;; to compile Emacs 27 from source following the instructions in file
     ;; EXPERIMENTAL.org at to root of the git repository.
     ;; (default nil)
-    ;; dotspacemacs-enable-emacs-pdumper t
+    dotspacemacs-enable-emacs-pdumper nil
 
     ;; File path pointing to emacs 27.1 executable compiled with support
     ;; for the portable dumper (this is currently the branch pdumper).
     ;; (default "emacs-27.0.50")
-    dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+    dotspacemacs-emacs-pdumper-executable-file "emacs"
 
     ;; Name of the Spacemacs dump file. This is the file will be created by the
     ;; portable dumper in the cache directory under dumps sub-directory.
@@ -353,7 +346,7 @@ values."
     ;; when invoking Emacs 27.1 executable on the command line, for instance:
     ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
     ;; (default spacemacs.pdmp)
-    dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+    dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -372,6 +365,13 @@ values."
    ;; performance issues due to garbage collection operations.
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
+
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 1024 1024)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
@@ -401,8 +401,10 @@ values."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
-   ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version t
 
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -423,6 +425,11 @@ values."
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
@@ -555,8 +562,10 @@ values."
    ;; source settings. Else, disable fuzzy matching in all sources.
    ;; (default 'always)
    dotspacemacs-helm-use-fuzzy 'always
-   ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
-   ;; several times cycle between the kill ring content. (default nil)
+
+   ;; If non-nil, the paste transient-state is enabled. While enabled, after you
+   ;; paste something, pressing `C-j' and `C-k' several times cycles through the
+   ;; elements in the `kill-ring'. (default nil)
    dotspacemacs-enable-paste-transient-state nil
 
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
@@ -701,6 +710,20 @@ values."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'trailing
 
+    ;; If non nil activate `clean-aindent-mode' which tries to correct
+    ;; virtual indentation of simple modes. This can interfer with mode specific
+    ;; indent handling like has been reported for `go-mode'.
+    ;; If it does deactivate it here.
+    ;; (default t)
+    dotspacemacs-use-clean-aindent-mode t
+
+    ;; If non-nil shift your number row to match the entered keyboard layout
+    ;; (only in insert state). Currently supported keyboard layouts are:
+    ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+    ;; New layouts can be added in `spacemacs-editing' layer.
+    ;; (default nil)
+    dotspacemacs-swap-number-row nil
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -708,7 +731,11 @@ values."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs t))
+    dotspacemacs-pretty-docs t
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.

@@ -476,6 +476,8 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
+  (spacemacs|add-company-backends :backends company-capf :modes js2-mode)
+
   (spacemacs|add-company-backends
     :backends company-capf
     :modes
