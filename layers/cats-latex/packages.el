@@ -38,11 +38,15 @@
             ;; Setup reftex style (RefTeX is supported through extension)
             TeX-source-correlate-method 'synctex)
 
-      (setq-default TeX-master nil        ; Ask for the master file
-                    TeX-engine 'luatex    ; Use a modern engine
+      (setq-default TeX-master nil      ; Ask for the master file
+                    TeX-engine 'xetex   ; Use a modern engine
                     ;; Redundant in 11.88, but keep for older AUCTeX
                     TeX-PDF-mode t)
-      )
+
+      (add-hook 'TeX-mode-hook
+        '(lambda ()
+           (setq TeX-view-program-selection '((output-pdf "skim-viewer")))
+           (setq TeX-command-default "latexmk-osx"))))
     :post-config
     (progn
       ;; Sample `latexmkrc` for OSX that copies the *.pdf file from the `./build` directory
@@ -58,8 +62,52 @@
 
       ;; Skim -- turn on auto-refresh by typing the following into the terminal:
       ;; defaults write -app Skim SKAutoReloadFileUpdate -boolean true
-      (setq TeX-view-program-selection '((output-pdf "pdf-viewer")))
-      (setq TeX-view-program-list '(("pdf-viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))))
+      (add-to-list 'TeX-expand-list
+        '("%(tex-file-name)"
+           (lambda ()
+             (concat "\"" (with-current-buffer TeX-command-buffer buffer-file-name) "\""))))
+
+      (add-to-list 'TeX-expand-list
+        '("%(pdf-file-name)"
+           (lambda () (concat
+                   "\""
+                   (concat
+                     (car (split-string
+                            (with-current-buffer TeX-command-buffer buffer-file-name)
+                            (concat (file-name-base (with-current-buffer TeX-command-buffer buffer-file-name)) "\\.tex")))
+                     "build/"
+                     (file-name-base (with-current-buffer TeX-command-buffer buffer-file-name))
+                     ".pdf") "\""))))
+
+      (add-to-list 'TeX-expand-list
+        '("%(line-number)" (lambda () (format "%d" (line-number-at-pos)))))
+
+      (add-to-list 'TeX-expand-list
+        '("%(latexmkrc-osx)"
+           (lambda ()
+             (let ((shell-home (getenv "HOME")))
+               (concat shell-home "/.latexmkrc")))))
+
+      ;; make latexmk available via C-c C-c
+      ;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
+      (add-to-list 'TeX-command-list
+        '("latexmk-osx" "latexmk -r %(latexmkrc-osx) %t" TeX-run-TeX nil t))
+
+      (add-to-list 'TeX-expand-list
+        '("%(skim-app)" (lambda () "/Applications/Skim.app/Contents/SharedSupport/displayline")))
+
+      (add-to-list 'TeX-command-list
+        '("Skim" "%(skim-app) -g %(line-number) %(pdf-file-name) %(tex-file-name)" TeX-run-TeX nil t))
+
+      (add-to-list 'TeX-view-program-list
+        '("skim-viewer" "%(skim-app) -g %(line-number) %(pdf-file-name) %(tex-file-name)"))
+
+      ;; (add-to-list 'TeX-view-program-list
+      ;;   '("skim-viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %(line-number) %(pdf-file-name) %(tex-file-name)"))
+
+      ;; (add-to-list 'TeX-view-program-list
+      ;;   '("skim-viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n build/%o %b"))
+      ))
 
   (use-package tex-buf
     :ensure auctex

@@ -201,7 +201,7 @@ This function should only modify configuration layer settings."
      web-beautify
      bibtex
      (latex :variables latex-enable-auto-fill t
-                       latex-build-command "LatexMk"
+                       latex-build-command "latexmk-osx"
                        latex-enable-magic t
                        latex-enable-folding t)
      markdown
