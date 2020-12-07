@@ -116,6 +116,7 @@
 (defvar org-enable-jira-support nil)
 (defvar org-enable-ox-html-support nil)
 (defvar org-enable-ox-ascii-support nil)
+(defvar org-enable-ox-confluence-support nil)
 
 ;; (defvar bh/organization-task-id "20140625-424242-424242")
 

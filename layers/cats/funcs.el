@@ -309,6 +309,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; conf-mode
 (defun cats/conf-mode-defaults ()
+  (setq-default dotspacemacs-whitespace-cleanup 'trailing)
   (spacemacs/toggle-whitespace-cleanup-on)
   (spacemacs/toggle-hungry-delete-on))
 
@@ -320,6 +321,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (defun cats/text-mode-defaults ()
   "Default text hook, useful with any text mode."
   (unless (derived-mode-p 'org-mode)
+    (setq-default dotspacemacs-whitespace-cleanup 'trailing)
     (spacemacs/toggle-whitespace-cleanup-on)
     (spacemacs/toggle-hungry-delete-on)
     (bug-reference-mode))

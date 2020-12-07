@@ -50,6 +50,7 @@
      (org-projectile-helm :requires org-projectile)
      (ox :toggle org-enable-ox-support :location built-in)
      (ox-ascii :toggle org-enable-ox-ascii-support :location built-in)
+     (ox-confluence :toggle org-enable-ox-confluence-support :location built-in)
      (ox-beamer :toggle org-enable-ox-beamer-support :location built-in)
      (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
      ;; ox-gfm                             ;; defined in spacemacs org
@@ -458,6 +459,44 @@
       (setq org-ascii-headline-spacing (quote (1 . 1)))
       (setq org-ascii-links-to-notes nil)
       )
+    :config
+    (progn
+      )))
+
+
+;; ox-confluence
+(defun cats-org/pre-init-ox-confluence ()
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-confluence)))
+
+(defun cats-org/init-ox-confluence ()
+  (use-package ox-confluence
+    :defer t
+    :init
+    (add-hook 'org-mode-hook
+      (lambda ()
+        (local-set-key (kbd "C-c C-h") 'org-toggle-link-display)
+
+        (require 'ox-confluence)
+        (defun better-confluence-item (item contents info)
+          (let* ((plain-list (org-export-get-parent item))
+                  (type (org-element-property :type plain-list)))
+            (case type
+              (ordered
+                (concat (make-string (1+ (org-confluence--li-depth item)) ?\#)
+                  " "
+                  (org-trim contents)))
+              (unordered (org-export-with-backend 'confluence item contents info))
+              (descriptive (org-export-with-backend 'confluence item contents info)))))
+
+        (org-export-define-derived-backend 'better-confluence 'confluence
+          :translate-alist '((item . better-confluence-item)))
+
+        (defun org-better-confluence-export-as-conf
+          (&optional async subtreep visible-only body-only ext-plist)
+          (interactive)
+          (org-export-to-buffer 'better-confluence "*org CONFLUENCE Export*"
+            async subtreep visible-only body-only ext-plist (lambda () (text-mode))))
+        (setq org-startup-align-all-tables t)))
     :config
     (progn
       )))

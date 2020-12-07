@@ -95,6 +95,7 @@
     (bug-reference-prog-mode)
 
     ;; cleanup whitespace
+    (setq-default dotspacemacs-whitespace-cleanup 'trailing)
     (spacemacs/toggle-whitespace-cleanup-on)
     (spacemacs/toggle-hungry-delete-on)
 
