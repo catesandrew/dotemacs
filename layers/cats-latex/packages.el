@@ -38,15 +38,22 @@
             ;; Setup reftex style (RefTeX is supported through extension)
             TeX-source-correlate-method 'synctex)
 
-      (setq-default TeX-master nil      ; Ask for the master file
-                    TeX-engine 'xetex   ; Use a modern engine
-                    ;; Redundant in 11.88, but keep for older AUCTeX
-                    TeX-PDF-mode t)
+      (setq-default
+        ;; Ask for the master file
+        TeX-master nil
+        ;; Use a modern engine
+        TeX-engine 'xetex)
 
-      (add-hook 'TeX-mode-hook
+      (add-hook 'LaTeX-mode-hook
         '(lambda ()
-           (setq TeX-view-program-selection '((output-pdf "skim-viewer")))
-           (setq TeX-command-default "latexmk-osx"))))
+           (setq TeX-view-program-selection
+             '((output-dvi "skim-viewer")
+                (output-pdf "skim-viewer")
+                (output-html "skim-viewer"))
+             )
+           (setq TeX-command-default "latexmk-osx")
+           ))
+      )
     :post-config
     (progn
       ;; Sample `latexmkrc` for OSX that copies the *.pdf file from the `./build` directory
@@ -65,19 +72,11 @@
       (add-to-list 'TeX-expand-list
         '("%(tex-file-name)"
            (lambda ()
-             (concat "\"" (with-current-buffer TeX-command-buffer buffer-file-name) "\""))))
+             (concat "\"" (buffer-file-name) "\""))))
 
       (add-to-list 'TeX-expand-list
         '("%(pdf-file-name)"
-           (lambda () (concat
-                   "\""
-                   (concat
-                     (car (split-string
-                            (with-current-buffer TeX-command-buffer buffer-file-name)
-                            (concat (file-name-base (with-current-buffer TeX-command-buffer buffer-file-name)) "\\.tex")))
-                     "build/"
-                     (file-name-base (with-current-buffer TeX-command-buffer buffer-file-name))
-                     ".pdf") "\""))))
+           (lambda () (concat "\"" (cats/pdf-file-name "pdf") "\""))))
 
       (add-to-list 'TeX-expand-list
         '("%(line-number)" (lambda () (format "%d" (line-number-at-pos)))))
@@ -94,26 +93,31 @@
         '("latexmk-osx" "latexmk -r %(latexmkrc-osx) %t" TeX-run-TeX nil t))
 
       (add-to-list 'TeX-expand-list
-        '("%(skim-app)" (lambda () "/Applications/Skim.app/Contents/SharedSupport/displayline")))
+        '("%(displayline)" (lambda () "/Applications/Skim.app/Contents/SharedSupport/displayline")))
 
-      (add-to-list 'TeX-command-list
-        '("Skim" "%(skim-app) -g %(line-number) %(pdf-file-name) %(tex-file-name)" TeX-run-TeX nil t))
+      ;; (add-to-list 'TeX-command-list
+      ;;   '("Skim" "%(displayline) -g %(line-number) %(pdf-file-name) %(tex-file-name)" TeX-run-TeX nil t))
 
       (add-to-list 'TeX-view-program-list
-        '("skim-viewer" "%(skim-app) -g %(line-number) %(pdf-file-name) %(tex-file-name)"))
-
-      ;; (add-to-list 'TeX-view-program-list
-      ;;   '("skim-viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %(line-number) %(pdf-file-name) %(tex-file-name)"))
-
-      ;; (add-to-list 'TeX-view-program-list
-      ;;   '("skim-viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n build/%o %b"))
+        '("skim-viewer" "%(displayline) -b -r -g %(line-number) %(pdf-file-name) %(tex-file-name)"))
       ))
 
   (use-package tex-buf
     :ensure auctex
     :defer t
     ;; Don't ask for confirmation when saving
-    :config (setq TeX-save-query nil))
+    :config
+    (progn
+      (setq TeX-save-query nil)
+      (defun TeX-view ()
+        "Start a viewer without confirmation.
+The viewer is started either on region or master file,
+depending on the last command issued."
+        (interactive)
+        (let ((output-file (cats/pdf-file-name "pdf")))
+          (if (file-exists-p output-file)
+	          (TeX-command "View" 'cats/pdf-file-name 0)
+            (message "Output file %S does not exist." output-file))))))
 
   (use-package tex-style
     :ensure auctex
