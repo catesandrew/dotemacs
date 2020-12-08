@@ -63,12 +63,26 @@
      ox-reveal                          ;; defined in spacemacs org
      ;; ox-twbs                            ;; defined in spacemacs org
      which-key
+     deft
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
 ;; sudo apt-get -y install ipython ipython-notebook
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
+
+
+;; deft
+(defun cats-org/pre-init-deft ()
+  (spacemacs|use-package-add-hook deft
+    :pre-init
+    (progn
+      (setq deft-directory "~/deft")
+      (setq deft-extensions '("org" "md" "txt"))
+      )
+    :post-config
+    (progn
+      )))
 
 
 ;; org-bullets
@@ -466,40 +480,40 @@
 
 ;; ox-confluence
 (defun cats-org/pre-init-ox-confluence ()
-  (spacemacs|use-package-add-hook org :post-config (require 'ox-confluence)))
+  (spacemacs|use-package-add-hook org :post-config (require 'ox-confluence))
 
-(defun cats-org/init-ox-confluence ()
-  (use-package ox-confluence
-    :defer t
-    :init
-    (add-hook 'org-mode-hook
-      (lambda ()
-        (local-set-key (kbd "C-c C-h") 'org-toggle-link-display)
-
-        (require 'ox-confluence)
-        (defun better-confluence-item (item contents info)
-          (let* ((plain-list (org-export-get-parent item))
-                  (type (org-element-property :type plain-list)))
-            (case type
-              (ordered
-                (concat (make-string (1+ (org-confluence--li-depth item)) ?\#)
-                  " "
-                  (org-trim contents)))
-              (unordered (org-export-with-backend 'confluence item contents info))
-              (descriptive (org-export-with-backend 'confluence item contents info)))))
-
-        (org-export-define-derived-backend 'better-confluence 'confluence
-          :translate-alist '((item . better-confluence-item)))
-
-        (defun org-better-confluence-export-as-conf
-          (&optional async subtreep visible-only body-only ext-plist)
-          (interactive)
-          (org-export-to-buffer 'better-confluence "*org CONFLUENCE Export*"
-            async subtreep visible-only body-only ext-plist (lambda () (text-mode))))
-        (setq org-startup-align-all-tables t)))
-    :config
+  (spacemacs|use-package-add-hook ox-confluence
+    :post-init
     (progn
-      )))
+      (add-hook 'org-mode-hook
+        (lambda ()
+          (local-set-key (kbd "C-c C-h") 'org-toggle-link-display)
+
+          (defun better-confluence-item (item contents info)
+            (let* ((plain-list (org-export-get-parent item))
+                    (type (org-element-property :type plain-list)))
+              (case type
+                (ordered
+                  (concat (make-string (1+ (org-confluence--li-depth item)) ?\#)
+                    " "
+                    (org-trim contents)))
+                (unordered (org-export-with-backend 'confluence item contents info))
+                (descriptive (org-export-with-backend 'confluence item contents info)))))
+
+          (org-export-define-derived-backend 'better-confluence 'confluence
+            :translate-alist '((item . better-confluence-item)))
+
+          (defun org-better-confluence-export-as-conf
+            (&optional async subtreep visible-only body-only ext-plist)
+            (interactive)
+            (org-export-to-buffer 'better-confluence "*org CONFLUENCE Export*"
+              async subtreep visible-only body-only ext-plist (lambda () (text-mode))))
+          (setq org-startup-align-all-tables t)))
+      )
+    :post-config
+    (progn
+      ))
+  )
 
 
 ;; ox-reveal

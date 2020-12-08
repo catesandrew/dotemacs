@@ -229,6 +229,8 @@ This function should only modify configuration layer settings."
           org-want-todo-bindings t
           org-projectile-file "TODOs.org"
           org-enable-reveal-js-support t)
+     (deft :variables
+          deft-zetteldeft t)
      (shell :variables
             shell-default-shell 'shell
             shell-default-term-shell "/bin/bash"
