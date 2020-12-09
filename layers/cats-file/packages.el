@@ -17,7 +17,7 @@
      (recentf :location built-in)
      (recentf-ext :location local)
      (simple :location built-in)
-     zel
+     ;; zel
      ))
 
 (defun cats-file/init-simple ()
