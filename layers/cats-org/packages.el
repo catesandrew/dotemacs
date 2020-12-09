@@ -69,6 +69,7 @@
      zetteldeft
      org-roam-server
      org-roam-protocol
+     org-roam-bibtex
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
@@ -148,6 +149,35 @@
     (progn)
     )
   )
+
+
+;; org-roam-bibtex
+
+(defun cats-org/init-org-roam-bibtex ()
+  "Use org-roam-bibtex."
+  (use-package org-roam-bibtex
+    :after org-roam
+    :init
+    (progn
+      (setq org-roam-bibtex-preformat-keywords
+        '("=key=" "title" "url" "file" "author-or-editor" "keywords")))
+    :config
+    (progn
+      (setq orb-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+            ""
+            :file-name "${slug}"
+            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+            :unnarrowed t)))
+      )
+    ))
+
 
 
 ;; zetteldeft
