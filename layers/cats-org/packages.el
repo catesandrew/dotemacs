@@ -9,7 +9,8 @@
 (defconst cats-org-packages
   '(
      autoinsert
-     ;; company                            ;; defined in spacemacs org
+     company                            ;; defined in spacemacs org
+     (company-org-roam :requires company)
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
      evil-org                           ;; defined in spacemacs org
@@ -68,6 +69,7 @@
      deft
      zetteldeft
      org-roam-server
+     org-roam-protocol
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
@@ -144,6 +146,28 @@
     ))
 
 
+;; org-roam-protocol
+
+(defun cats-org/init-org-roam-protocol ()
+  "Use org-roam-protocol."
+  (use-package org-roam-protocol
+    :after org-protocol))
+
+
+;; company-org-roam
+(defun cats-org/init-company-org-roam ()
+  "Use company-org-roam."
+  (use-package company-org-roam
+    :defer t))
+
+
+;; company
+(defun cats-org/post-init-company ()
+  (spacemacs|add-company-backends
+    :backends company-org-roamm
+    :modes org-mode))
+
+
 ;; deft
 
 ;; Allows me to quickly search through recently created org-roam files.
@@ -157,13 +181,21 @@
       (unless (file-exists-p deft-directory)
         (make-directory deft-directory t))
 
-      (setq deft-recursive t)
-      (setq deft-use-filter-string-for-filename t)
-      (setq deft-use-filename-as-title t)
-      (setq deft-extensions '("org" "md" "txt"))
-      )
+      (setq
+        deft-recursive t
+        ;; de-couples filename and note title:
+        deft-use-filename-as-title nil
+        deft-use-filter-string-for-filename t
+        ;; converts the filter string into a readable file-name using kebab-case:
+        deft-file-naming-rules
+        '((noslash . "-")
+           (nospace . "-")
+           (case-fn . downcase)))
+
+      (setq deft-extensions '("org" "md" "txt")))
     :post-config
     (progn
+      (add-to-list 'deft-extensions "tex")
       )))
 
 
@@ -370,16 +402,24 @@
   (spacemacs|use-package-add-hook org-roam
     :post-init
     (progn
-      (setq org-roam-directory (concat cats//org-dir "refs/notes"))
+      (setq
+        org-roam-directory (concat cats//org-dir "refs/notes")
+        org-roam-verbose nil
+        ;; make org-roam buffer sticky
+        org-roam-buffer-no-delete-other-windows t)
+
       ;; Create org roam directory
       (unless (file-exists-p org-roam-directory)
         (make-directory org-roam-directory t))
+
+      ;; Hide the mode line in the org-roam buffer, since it serves no purpose.
+      ;; This makes it easier to distinguish among other org buffers.
+      (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
+
       (with-eval-after-load 'org-roam-server
-        (org-roam-server-mode))
-      )
+        (org-roam-server-mode)))
     :post-config
-    (progn
-      )
+    (progn)
     )
   )
 
