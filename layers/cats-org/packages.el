@@ -47,10 +47,12 @@
      ;; org-pomodoro                       ;; defined in spacemacs org
      ;; org-present                        ;; defined in spacemacs org
      org-projectile                     ;; defined in spacemacs org
+     org-roam                           ;; defined in spacemacs
      (org-projectile-helm :requires org-projectile)
      (ox :toggle org-enable-ox-support :location built-in)
      (ox-ascii :toggle org-enable-ox-ascii-support :location built-in)
-     (ox-confluence :toggle org-enable-ox-confluence-support :location built-in)
+     (ox-confluence :location built-in)
+
      (ox-beamer :toggle org-enable-ox-beamer-support :location built-in)
      (ox-bibtex :toggle org-enable-ox-bibtex-support :location built-in)
      ;; ox-gfm                             ;; defined in spacemacs org
@@ -64,6 +66,7 @@
      ;; ox-twbs                            ;; defined in spacemacs org
      which-key
      deft
+     zetteldeft
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
@@ -72,12 +75,64 @@
 ;; or, brew install jupyter
 
 
+;; zetteldeft
+
+(defun cats-org/pre-init-zetteldeft ()
+  (spacemacs|use-package-add-hook zetteldeft
+    :post-init
+    (progn
+      ;; In such Zettelkasten links are often wrapped in square brackets. This
+      ;; can be easily achieved by setting the zetteldeft-link-indicator and
+      ;; zetteldeft-link-suffix.
+      (setq zetteldeft-link-indicator "[["
+            zetteldeft-link-suffix "]]")
+
+      ;; To make sure that your Markdown notes start with correct title syntax,
+      ;; customize the zetteldeft-title-prefix.
+      (setq zetteldeft-title-prefix "# ")
+
+      ;; When using zetteldeft-insert-list-links, you might want to change a
+      ;; list entry to correct Markdown syntax, like so:
+      (setq zetteldeft-list-prefix "- ")
+
+      (with-eval-after-load 'zetteldeft
+        ;; To highlight links you need to set up font-lock keywords for
+        ;; markdown-mode.
+        (font-lock-add-keywords 'markdown-mode
+          `((,zetteldeft-id-regex
+              . font-lock-warning-face)))
+
+        ;; Alternatively, if you want to highlight the brackets as well, you need
+        ;; to escape them like so:
+        (font-lock-add-keywords 'markdown-mode
+          `((,(concat "\\[\\["
+                zetteldeft-id-regex
+                "\\]\\]")
+              . font-lock-warning-face))))
+
+      ;; (setq zetteldeft-link-indicator "§"
+      ;;       zetteldeft-id-format "%Y-%m-%d-%H%M"
+      ;;       zetteldeft-id-regex "[0-9]\\{4\\}\\(-[0-9]\\{2,\\}\\)\\{3\\}"
+      ;;       zetteldeft-tag-regex "[#@][a-z-]+")
+      )))
+
+
 ;; deft
+
+;; Allows me to quickly search through recently created org-roam files.
+;; Configured to only look into my roam folder.
 (defun cats-org/pre-init-deft ()
   (spacemacs|use-package-add-hook deft
-    :pre-init
+    :post-init
     (progn
-      (setq deft-directory "~/deft")
+      (setq deft-directory (concat cats//org-dir "refs/notes"))
+      ;; Create deft directory
+      (unless (file-exists-p deft-directory)
+        (make-directory deft-directory t))
+
+      (setq deft-recursive t)
+      (setq deft-use-filter-string-for-filename t)
+      (setq deft-use-filename-as-title t)
       (setq deft-extensions '("org" "md" "txt"))
       )
     :post-config
@@ -281,6 +336,23 @@
     :defer t
     :init (progn)
     :config (progn)))
+
+
+;; ox-roam
+(defun cats-org/pre-init-org-roam ()
+  (spacemacs|use-package-add-hook org-roam
+    :post-init
+    (progn
+      (setq org-roam-directory (concat cats//org-dir "refs/notes"))
+      ;; Create org roam directory
+      (unless (file-exists-p org-roam-directory)
+        (make-directory org-roam-directory t))
+      )
+    :post-config
+    (progn
+      )
+    )
+  )
 
 
 ;; ox-beamer

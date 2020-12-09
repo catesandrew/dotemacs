@@ -222,6 +222,7 @@ This function should only modify configuration layer settings."
      yaml
      ;; Applications
      (org :variables
+          org-enable-roam-support t
           org-enable-org-journal-support t
           org-enable-bootstrap-support t
           org-enable-github-support t
