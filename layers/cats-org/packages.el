@@ -67,6 +67,7 @@
      which-key
      deft
      zetteldeft
+     org-roam-server
      ))
 
 ;; NOTE: org-capture throws json-readtable-error
@@ -115,6 +116,32 @@
       ;;       zetteldeft-id-regex "[0-9]\\{4\\}\\(-[0-9]\\{2,\\}\\)\\{3\\}"
       ;;       zetteldeft-tag-regex "[#@][a-z-]+")
       )))
+
+
+;; org-roam-server
+
+(defun cats-org/init-org-roam-server ()
+  "Use org-roam-server."
+  (use-package org-roam-server
+    :after org-roam
+    :init
+    (progn
+      (setq org-roam-server-host "127.0.0.1"
+            org-roam-server-port 8080
+            org-roam-server-export-inline-images t
+            org-roam-server-authenticate nil
+            org-roam-server-label-truncate t
+            org-roam-server-label-truncate-length 60
+            org-roam-server-label-wrap-length 20)
+      )
+    :config
+    (progn
+      (defun cats/org-roam-server-open ()
+        "Ensure the server is active, then open the roam graph."
+        (interactive)
+        (org-roam-server-mode 1)
+        (browse-url (format "http://localhost:%d" org-roam-server-port))))
+    ))
 
 
 ;; deft
@@ -347,6 +374,8 @@
       ;; Create org roam directory
       (unless (file-exists-p org-roam-directory)
         (make-directory org-roam-directory t))
+      (with-eval-after-load 'org-roam-server
+        (org-roam-server-mode))
       )
     :post-config
     (progn
