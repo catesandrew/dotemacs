@@ -13,8 +13,6 @@
      (company-org-roam :requires company)
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
-     evil-org                           ;; defined in spacemacs org
-     (evil-org-agenda :location built-in)
      ;; evil-surround                      ;; defined in spacemacs org
      ;; gnuplot                            ;; defined in spacemacs org
      ;; htmlize                            ;; defined in spacemacs org
@@ -210,51 +208,16 @@
 (defun cats-org/post-init-which-key ()
   "Replace rules for better naming of functions."
   (let ((new-descriptions
-          '(("org-jira-\\(.+\\)" . "or:\\1")
+          '(("org-jira-\\(.+\\)" . "oi:\\1")
              ("org-journal-\\(.+\\)" . "oj:\\1")
              ("org-babel-\\(.+\\)" . "ob:\\1")
              ("org-table-\\(.+\\)" . "ot:\\1")
+             ("org-roam-\\(.+\\)" . "or:\\1")
              ("org-agenda-\\(.+\\)" . "oa:\\1"))))
     (dolist (nd new-descriptions)
       ;; ensure the target matches the whole string
       (push (cons (cons nil (concat "\\`" (car nd) "\\'")) (cons nil (cdr nd)))
         which-key-replacement-alist))))
-
-
-;; evil-org
-(defun cats-org/pre-init-evil-org ()
-  (spacemacs|use-package-add-hook evil-org
-    :post-init
-    (progn)
-    :post-config
-    (progn
-      (require 'evil-org-agenda)
-      (evil-org-agenda-set-keys))
-    )
-  )
-
-;; (defun org/init-evil-org ()
-;;   (defun spacemacs//evil-org-mode ()
-;;     (evil-org-mode)
-;;     (evil-normalize-keymaps))
-
-;;   (use-package evil-org
-;;     :defer t
-;;     :init
-;;     (progn
-;;       (add-hook 'org-mode-hook 'spacemacs//evil-org-mode)
-;;       (setq evil-org-use-additional-insert t
-;;         evil-org-key-theme `(textobjects
-;;                               navigation
-;;                               additional
-;;                               ,@(when org-want-todo-bindings '(todo)))))
-;;     :config
-;;     (spacemacs|hide-lighter evil-org-mode)))
-
-
-;; evil-org-agenda
-(defun cats-org/init-evil-org-agenda ()
-  (use-package evil-org-agenda))
 
 
 ;; ox-jira
