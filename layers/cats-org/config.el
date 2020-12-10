@@ -8,6 +8,8 @@
 
 (defvar cats//org-dir "~/org/")
 
+(defvar cats//bibtex-library-dir "~/Zotero/")
+
 (defvar cats//org-mobile-dir "mobile/")
 
 (defvar cats//org-journal-dir "journal/")

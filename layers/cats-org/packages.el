@@ -100,7 +100,18 @@
       (with-eval-after-load 'org-roam-server
         (org-roam-server-mode)))
     :post-config
-    (progn)
+    (progn
+      ;; capture template to grab websites. Requires org-roam protocol.
+;;       (setq org-roam-ref-capture-templates
+;;         '(("r" "ref" plain (function org-roam-capture--get-point)
+;;             "%?"
+;;             :file-name "websites/${slug}"
+;;             :head "#+TITLE: ${title}
+;; #+ROAM_KEY: ${ref}
+;; - source :: ${ref}"
+;;             :unnarrowed t)))
+
+      )
     )
   )
 
@@ -124,8 +135,18 @@
       (unless (file-exists-p (concat cats//org-dir "refs/notes"))
         (make-directory (concat cats//org-dir "refs/notes") t))
 
+      ;; Create org bibtex library directory
+      (unless (file-exists-p cats//bibtex-library-dir)
+        (make-directory cats//bibtex-library-dir t))
+
+      (setq bibtex-format-citation-functions
+        '((org-mode . (lambda (x) (insert (concat
+                                       "\\cite{"
+                                       (mapconcat 'identity x ",")
+                                       "}")) ""))))
+
       (setq
-        bibtex-completion-notes-path (concat cats//org-dir "refs/notes")
+        bibtex-completion-library-path cats//bibtex-library-dir
         bibtex-completion-bibliography (concat cats//org-dir "refs/library.bib")
         bibtex-completion-pdf-field "file"
         bibtex-completion-notes-template-multiple-files (concat
@@ -171,8 +192,14 @@
 
 - tags ::
 - keywords :: ${keywords}
-
-\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+* ${title}
+:PROPERTIES:
+:Custom_ID: ${=key=}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")
+:NOTER_PAGE:
+:END:"
 
             :unnarrowed t)))
       )
@@ -997,13 +1024,15 @@
       (defadvice org-tags-view (around org-tags-view-around activate)
         (cats//opened-org-agenda-files)
         ad-do-it
-        (cats//kill-org-agenda-files)))))
+        (cats//kill-org-agenda-files))
+
+      (org-super-agenda-mode))))
 
 
 ;; org-super-agenda
 (defun cats-org/init-org-super-agenda ()
   (use-package org-super-agenda
-    :defer t
+    :commands (org-super-agenda-mode)
     :init
     (progn
         (spacemacs|add-toggle org-super-agenda
@@ -2077,7 +2106,7 @@
       ;; String that is put before every date at the top of a journal file. By
       ;; default, this is a org-mode heading. Another good idea would be
       ;; "#+TITLE: " for org titles.
-      ;; (setq org-journal-date-prefix "#+TITLE: Journal Entry- ")
+      (setq org-journal-date-prefix "#+TITLE: ")
       ;; The function to use when opening an entry. Set this to ‘find-file‘ if
       ;; you don’t want org-journal to split your window.
       (setq org-journal-find-file 'find-file)
