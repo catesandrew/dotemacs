@@ -36,10 +36,9 @@
      (org-mobile :location built-in)
      ;; (helm-org :location built-in)
      org-super-agenda
-     ;; org-jira
+     org-jira
      ;; org-caldav
      ;; org-notify
-     ;; helm-org-rifle
      ;; org-ehtml
      org-journal                        ;; defined in spacemacs org
      ;; org-download                       ;; defined in spacemacs org
@@ -58,7 +57,7 @@
      ;; ox-gfm                             ;; defined in spacemacs org
      (ox-html :toggle org-enable-ox-html-support :location built-in)
      ;; ox-hugo                            ;; defined in spacemacs org
-     ;; (ox-jira :toggle org-enable-jira-support)
+     (ox-jira :toggle org-enable-jira-support)
      (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-md :toggle org-enable-ox-md-support :location built-in)
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
@@ -237,11 +236,6 @@
                 zetteldeft-id-regex
                 "\\]\\]")
               . font-lock-warning-face))))
-
-      ;; (setq zetteldeft-link-indicator "§"
-      ;;       zetteldeft-id-format "%Y-%m-%d-%H%M"
-      ;;       zetteldeft-id-regex "[0-9]\\{4\\}\\(-[0-9]\\{2,\\}\\)\\{3\\}"
-      ;;       zetteldeft-tag-regex "[#@][a-z-]+")
       )))
 
 
@@ -349,21 +343,13 @@
 
 ;; ox-jira
 (defun cats-org/pre-init-ox-jira ()
-  (spacemacs|use-package-add-hook org :post-config (require 'ox-jira)))
-
-(defun cats-org/init-ox-jira ()
-  (use-package ox-jira
-    :defer t
-    :config
+  (spacemacs|use-package-add-hook ox-jira
+    :post-config
     (progn
       (define-key org-mode-map
         (kbd "M-S w") 'cats/ox-clip-formatted-copy)
       (define-key org-mode-map
-        (kbd "C-c J") 'cats/org-export-jira-clipboard)
-
-      ;; cats/export-jira-org
-      ;; cats/create-ticket-tmp-dir-open-dir-screen
-      )))
+        (kbd "C-c J") 'cats/org-export-jira-clipboard))))
 
 
 ;; ox-publish
@@ -375,7 +361,7 @@
     :defer t
     :init
     (progn
-;; Association list to control publishing behavior. Each element of the
+    ;; Association list to control publishing behavior. Each element of the
     ;; alist is a publishing project.
     (setq org-publish-project-alist
       '(
@@ -548,31 +534,6 @@
 
 ;; org-present
 (defun cats-org/pre-init-org-present ()
-  ;; (use-package org-present
-  ;;   :defer t
-  ;;   :init
-  ;;   (progn
-  ;;     (evilified-state-evilify nil org-present-mode-keymap
-  ;;       "h" 'org-present-prev
-  ;;       "l" 'org-present-next
-  ;;       "q" 'org-present-quit)
-  ;;     (defun spacemacs//org-present-start ()
-  ;;       "Initiate `org-present' mode"
-  ;;       (org-present-big)
-  ;;       (org-display-inline-images)
-  ;;       (org-present-hide-cursor)
-  ;;       (org-present-read-only)
-  ;;       (evil-evilified-state))
-  ;;     (defun spacemacs//org-present-end ()
-  ;;       "Terminate `org-present' mode"
-  ;;       (org-present-small)
-  ;;       (org-remove-inline-images)
-  ;;       (org-present-show-cursor)
-  ;;       (org-present-read-write)
-  ;;       (evil-normal-state))
-  ;;     (add-hook 'org-present-mode-hook 'spacemacs//org-present-start)
-  ;;     (add-hook 'org-present-mode-quit-hook 'spacemacs//org-present-end)))
-
   (spacemacs|use-package-add-hook org-present
     :post-init
     ()))
@@ -580,17 +541,6 @@
 
 ;; org-pomodoro
 (defun cats-org/pre-init-org-pomodoro ()
-  ;; (use-package org-pomodoro
-  ;;   :defer t
-  ;;   :init
-  ;;   (progn
-  ;;     (when (spacemacs/system-is-mac)
-  ;;       (setq org-pomodoro-audio-player "/usr/bin/afplay"))
-  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-mode
-  ;;       "Cp" 'org-pomodoro)
-  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode
-  ;;       "Cp" 'org-pomodoro)))
-
   (spacemacs|use-package-add-hook org-pomodoro
     :post-init
     ()))
@@ -728,28 +678,6 @@
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-reveal-root (concat "file://" dir "reveal/reveal.js")))
       )))
-
-
-;; helm-org-rifle
-(defun cats-org/init-helm-org-rifle ()
-  (use-package helm-org-rifle
-    :disabled t
-    :after (org-agenda)
-    :commands (helm-org-rifle
-                helm-org-rifle-agenda-files
-                helm-org-rifle-current-buffer
-                helm-org-rifle-directories
-                helm-org-rifle-files
-                helm-org-rifle-org-directory)
-    :init
-    (progn
-      (spacemacs/set-leader-keys
-        "ooa" 'helm-org-rifle-agenda-files
-        "oor" 'helm-org-rifle
-        "oob" 'helm-org-rifle-current-buffer
-        "ood" 'helm-org-rifle-directories
-        "oof" 'helm-org-rifle-files
-        "ooo" 'helm-org-rifle-org-directory))))
 
 
 ;; org-notify
@@ -1091,29 +1019,9 @@
 
 
 ;; org-jira
-(defun cats-org/init-org-jira ()
-  (use-package org-jira
-    :defer t
-    :commands (org-jira-get-projects
-               org-jira-browse-issue
-               org-jira-get-issues
-               org-jira-get-issues-headonly
-               org-jira-get-issues-from-filter-headonly
-               org-jira-get-issues-from-filter
-               org-jira-update-issue
-               org-jira-progress-issue
-               org-jira-refresh-issue
-               org-jira-create-issue
-               org-jira-copy-current-issue-key
-               org-jira-create-subtask
-               org-jira-get-subtasks
-               org-jira-update-comment
-               org-jira-refresh-issues-in-buffer
-               org-jira-progress-issue-next
-               org-jira-get-issues-by-fixversion
-               org-jira-assign-issue
-               org-jira-todo-to-jira)
-    :init
+(defun cats-org/pre-init-org-jira ()
+  (spacemacs|use-package-add-hook org-jira
+    :post-init
     (progn
       ;; org-jira-working-dir "~/.org-jira"
       (setq org-jira-deadline-duedate-sync-p nil)
@@ -1122,128 +1030,14 @@
       ;; Default jql for querying your Jira tickets.
       (setq org-jira-default-jql cats-jira-default-jql)
 
-      (cats//add-org-jira-keybindings 'org-mode)
-      (spacemacs/declare-prefix "aoi" "org-jira")
-      (spacemacs/set-leader-keys
-        "aoia" 'org-jira-assign-issue
-        "aoib" 'org-jira-browse-issue
-        "aoic" 'org-jira-update-comment
-        "aoif" 'org-jira-get-issues-from-filter-headonly
-        "aoiF" 'org-jira-get-issues-from-filter
-        "aoih" 'org-jira-get-issues-headonly
-        "aoii" 'org-jira-get-issues
-        "aoiI" 'org-jira-create-issue
-        "aoin" 'org-jira-progress-issue-next
-        "aoip" 'org-jira-get-projects
-        "aoiP" 'org-jira-progress-issue
-        "aoir" 'org-jira-refresh-issue
-        "aoiR" 'org-jira-refresh-issues-in-buffer
-        "aois" 'org-jira-get-subtasks
-        "aoiS" 'org-jira-create-subtask
-        "aoit" 'org-jira-todo-to-jira
-        "aoiu" 'org-jira-update-issue
-        "aoiv" 'org-jira-get-issues-by-fixversion
-        "aoiy" 'org-jira-copy-current-issue-key
-        )
+      )
+    :post-config
+    (progn
       )))
 
 
 ;; org
 (defun cats-org/pre-init-org ()
-;; (use-package org
-;;     :defer t
-;;     :commands (orgtbl-mode)
-;;     :init
-;;     (progn
-;;       (setq org-clock-persist-file (concat spacemacs-cache-directory
-;;                                            "org-clock-save.el")
-;;             org-id-locations-file (concat spacemacs-cache-directory
-;;                                           ".org-id-locations")
-;;             org-publish-timestamp-directory (concat spacemacs-cache-directory
-;;                                                     ".org-timestamps/")
-;;             org-startup-with-inline-images t
-;;             org-image-actual-width nil)
-
-;;       (spacemacs//add-org-keybindings 'org-mode)
-
-;;       ;; Add global evil-leader mappings. Used to access org-agenda
-;;       ;; functionalities – and a few others commands – from any other mode.
-;;       (spacemacs/declare-prefix "ao" "org")
-;;       (spacemacs/declare-prefix "aok" "clock")
-;;       (spacemacs/set-leader-keys
-;;         ;; org-agenda
-;;         "ao#" 'org-agenda-list-stuck-projects
-;;         "ao/" 'org-occur-in-agenda-files
-;;         "aoa" 'org-agenda-list
-;;         "aoc" 'org-capture
-;;         "aoe" 'org-store-agenda-views
-;;         "aokg" 'org-clock-goto
-;;         "aoki" 'org-clock-in-last
-;;         "aokj" 'org-clock-jump-to-current-clock
-;;         "aoko" 'org-clock-out
-;;         "aokr" 'org-resolve-clocks
-;;         "aol" 'org-store-link
-;;         "aom" 'org-tags-view
-;;         "aoo" 'org-agenda
-;;         "aos" 'org-search-view
-;;         "aot" 'org-todo-list
-;;         ;; SPC C- capture/colors
-;;         "Cc" 'org-capture)
-
-;;       (define-key global-map "\C-cl" 'org-store-link)
-;;       (define-key global-map "\C-ca" 'org-agenda)
-;;       (define-key global-map "\C-cc" 'org-capture))
-;;     :config
-;;     (progn
-;;       ;; We add this key mapping because an Emacs user can change
-;;       ;; `dotspacemacs-major-mode-emacs-leader-key' to `C-c' and the key binding
-;;       ;; C-c ' is shadowed by `spacemacs/default-pop-shell', effectively making
-;;       ;; the Emacs user unable to exit src block editing.
-;;       (define-key org-src-mode-map
-;;         (kbd (concat dotspacemacs-major-mode-emacs-leader-key " '"))
-;;         'org-edit-src-exit)
-
-;;       ;; Evilify the calendar tool on C-c .
-;;       (unless (eq 'emacs dotspacemacs-editing-style)
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-h")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-backward-day 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-l")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-forward-day 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-k")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-backward-week 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-j")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-forward-week 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-H")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-backward-month 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-L")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-forward-month 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-K")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-backward-year 1))))
-;;         (define-key org-read-date-minibuffer-local-map (kbd "M-J")
-;;           (lambda () (interactive)
-;;             (org-eval-in-calendar '(calendar-forward-year 1)))))
-
-;;       (spacemacs|define-transient-state org-babel
-;;         :title "Org Babel Transient state"
-;;         :doc "
-;; [_j_/_k_] navigate src blocks         [_e_] execute src block
-;; [_g_] goto named block                [_'_] edit src block
-;; [_q_] quit"
-;;         :bindings
-;;         ("q" nil :exit t)
-;;         ("j" org-babel-next-src-block)
-;;         ("k" org-babel-previous-src-block)
-;;         ("g" org-babel-goto-named-src-block)
-;;         ("e" org-babel-execute-maybe :exit t)
-;;         ("'" org-edit-special :exit t))))
-
   (spacemacs|use-package-add-hook org
     :pre-config
     (progn)
@@ -1606,7 +1400,6 @@
          ("wiki" . "http://en.wikipedia.org/wiki/")
          ("rfc" . "http://tools.ietf.org/rfc/rfc%s.txt")
          ("ads" . "http://adsabs.harvard.edu/cgi-bin/nph-abs_connect?author=%s&db_key=AST")))
-
       ))
   )
 
@@ -1992,14 +1785,6 @@
 
 ;; org-brain
 (defun cats-org/pre-init-org-brain ()
-  ;; (use-package org-brain
-  ;;   :defer t
-  ;;   :init
-  ;;   (progn
-  ;;     (spacemacs/set-leader-keys
-  ;;       "aob" 'org-brain-visualize)
-  ;;     (evil-set-initial-state 'org-brain-visualize-mode 'emacs)))
-
   (uspacemacs|use-package-add-hook org-brain
     :post-init
     ()))
@@ -2007,34 +1792,12 @@
 
 ;; org-expiry
 (defun cats-org/pre-init-org-expiry ()
-  ;; (use-package org-expiry
-  ;;   :commands (org-expiry-insinuate
-  ;;               org-expiry-deinsinuate
-  ;;               org-expiry-insert-created
-  ;;               org-expiry-insert-expiry
-  ;;               org-expiry-add-keyword
-  ;;               org-expiry-archive-subtree
-  ;;               org-expiry-process-entry
-  ;;               org-expiry-process-entries))
-
   (spacemacs|use-package-add-hook org-expiry
     ))
 
 
 ;; org-download
 (defun cats-org/pre-init-org-download ()
-  ;; (use-package org-download
-  ;;   :commands (org-download-enable
-  ;;               org-download-yank
-  ;;               org-download-screenshot)
-  ;;   :init
-  ;;   (progn
-  ;;     (add-hook 'org-mode-hook 'org-download-enable)
-  ;;     (spacemacs/declare-prefix-for-mode 'org-mode "miD" "download")
-  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-mode
-  ;;       "iDy" 'org-download-yank
-  ;;       "iDs" 'org-download-screenshot)))
-
   (spacemacs|use-package-add-hook org-download
     :post-init
     ()))
@@ -2042,15 +1805,6 @@
 
 ;; org-mime
 (defun cats-org/pre-init-org-mime ()
-  ;; (use-package org-mime
-  ;;   :defer t
-  ;;   :init
-  ;;   (progn
-  ;;     (spacemacs/set-leader-keys-for-major-mode 'message-mode
-  ;;       "em" 'org-mime-htmlize)
-  ;;     (spacemacs/set-leader-keys-for-major-mode 'org-mode
-  ;;       "em" 'org-mime-org-buffer-htmlize)))
-
   (spacemacs|use-package-add-hook org-mime
     :post-init
     ()))

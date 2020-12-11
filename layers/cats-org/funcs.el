@@ -717,33 +717,4 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
     "TS" 'cats/toggle-insert-inactive-timestamp
     (kbd "T C-t") 'org-todo-force-notes))
 
-
-;; org-jira
-(defun cats//add-org-jira-keybindings (mode)
-  "Add shortcuts for org-jira to `MODE' from spacemacs."
-  (dolist (prefix '(
-                     ("mr" . "jira")))
-    (spacemacs/declare-prefix-for-mode mode (car prefix) (cdr prefix)))
-
-  (spacemacs/set-leader-keys-for-major-mode mode
-    "ra" 'org-jira-assign-issue
-    "rb" 'org-jira-browse-issue
-    "rc" 'org-jira-update-comment
-    "rf" 'org-jira-get-issues-from-filter-headonly
-    "rF" 'org-jira-get-issues-from-filter
-    "rh" 'org-jira-get-issues-headonly
-    "ri" 'org-jira-get-issues
-    "rI" 'org-jira-create-issue
-    "rn" 'org-jira-progress-issue-next
-    "rp" 'org-jira-get-projects
-    "rP" 'org-jira-progress-issue
-    "rr" 'org-jira-refresh-issue
-    "rR" 'org-jira-refresh-issues-in-buffer
-    "rs" 'org-jira-get-subtasks
-    "rS" 'org-jira-create-subtask
-    "rt" 'org-jira-todo-to-jira
-    "ru" 'org-jira-update-issue
-    "rv" 'org-jira-get-issues-by-fixversion
-    "ry" 'org-jira-copy-current-issue-key))
-
 ;;; funcs.el ends here
