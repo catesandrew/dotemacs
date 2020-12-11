@@ -93,10 +93,6 @@
       (unless (file-exists-p org-roam-directory)
         (make-directory org-roam-directory t))
 
-      ;; Hide the mode line in the org-roam buffer, since it serves no purpose.
-      ;; This makes it easier to distinguish among other org buffers.
-      (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
-
       (with-eval-after-load 'org-roam-server
         (org-roam-server-mode)))
     :post-config
@@ -2097,6 +2093,9 @@
         (expand-file-name
           (concat cats//org-dir cats//org-journal-dir)))
 
+      ;; I create a lot of TODOs to my journal entries so this will
+      ;; automatically add these files to my agenda.
+      (setq org-journal-enable-agenda-integration t)
       ;; *Warning:* setting `org-journal-file-format` to include a file
       ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
       (setq org-journal-file-format "%Y-%m-%d")
@@ -2116,7 +2115,7 @@
       ;; org-agenda-file-regexp to include files with an YYYY-MM-DD name. That
       ;; way, you can use org-agenda to search for TODO items or tagged items in
       ;; your org-journal.
-      (cats//register-org-agenda-file org-journal-dir)
+      ;; (cats//register-org-agenda-file org-journal-dir)
       (cats//register-org-agenda-file-regexp
         "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'")
       (cats//register-org-agenda-file-regexp
