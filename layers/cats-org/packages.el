@@ -10,8 +10,7 @@
   '(
      autoinsert
      helm-bibtex
-     company                            ;; defined in spacemacs org
-     (company-org-roam :requires company)
+     ;; company                            ;; defined in spacemacs org
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
      ;; evil-surround                      ;; defined in spacemacs org
@@ -57,7 +56,7 @@
      ;; ox-gfm                             ;; defined in spacemacs org
      (ox-html :toggle org-enable-ox-html-support :location built-in)
      ;; ox-hugo                            ;; defined in spacemacs org
-     (ox-jira :toggle org-enable-jira-support)
+     ox-jira
      (ox-latex :toggle org-enable-ox-latex-support :location built-in)
      (ox-md :toggle org-enable-ox-md-support :location built-in)
      (ox-publish :toggle org-enable-ox-publish-support :location built-in)
@@ -67,7 +66,7 @@
      deft
      zetteldeft
      org-roam-server
-     org-roam-protocol
+     ;; org-roam-protocol
      org-roam-bibtex
      ))
 
@@ -84,6 +83,8 @@
     (progn
       (setq
         org-roam-directory (concat cats//org-dir "refs/notes")
+        org-roam-dailies-directory (concat cats//org-dir "refs/notes/daily/")
+        org-roam-db-location (concat cats//org-dir "refs/org-roam.db")
         org-roam-verbose nil
         ;; make org-roam buffer sticky
         org-roam-buffer-no-delete-other-windows t)
@@ -92,8 +93,42 @@
       (unless (file-exists-p org-roam-directory)
         (make-directory org-roam-directory t))
 
+      ;; add roam to agenda
+      (cats//register-org-agenda-file org-roam-directory)
+
+      ;; Create org roam dailies directory
+      (unless (file-exists-p org-roam-dailies-directory)
+        (make-directory org-roam-dailies-directory t))
+
+      ;; add dailies to agenda
+      (cats//register-org-agenda-file org-roam-dailies-directory)
+
       (with-eval-after-load 'org-roam-server
-        (org-roam-server-mode)))
+        (org-roam-server-mode))
+
+      (spacemacs/set-leader-keys
+        "aor." 'spacemacs/org-roam-transient-state/body)
+
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "rd." 'spacemacs/org-roam-transient-state/body)
+
+      (spacemacs|define-transient-state org-roam
+        :title "Org Roam Dailies Transient State"
+        :doc "
+[_n_/_p_] navigate notes   [_h_/_j_/_k_] navigate dailies
+[_i_] new entry            [_/_] search forever
+[_q_] quit"
+        :bindings
+        ("q" nil :exit t)
+        ("h" org-roam-dailies-find-today)
+        ("j" org-roam-dailies-find-tomorrow)
+        ("k" org-roam-dailies-find-yesterday)
+        ("n" org-roam-dailies-find-next-note)
+        ("p" org-roam-dailies-find-previous-note)
+        ("i" org-roam-dailies-capture-today)
+        ("/" org-roam-dailies-find-date))
+
+      )
     :post-config
     (progn
       ;; capture template to grab websites. Requires org-roam protocol.
@@ -273,20 +308,6 @@
     :after org-protocol))
 
 
-;; company-org-roam
-(defun cats-org/init-company-org-roam ()
-  "Use company-org-roam."
-  (use-package company-org-roam
-    :defer t))
-
-
-;; company
-(defun cats-org/post-init-company ()
-  (spacemacs|add-company-backends
-    :backends company-org-roamm
-    :modes org-mode))
-
-
 ;; deft
 
 ;; Allows me to quickly search through recently created org-roam files.
@@ -333,6 +354,7 @@
              ("org-journal-\\(.+\\)" . "oj:\\1")
              ("org-babel-\\(.+\\)" . "ob:\\1")
              ("org-table-\\(.+\\)" . "ot:\\1")
+             ("org-roam-dailies-\\(.+\\)" . "ord:\\1")
              ("org-roam-\\(.+\\)" . "or:\\1")
              ("org-agenda-\\(.+\\)" . "oa:\\1"))))
     (dolist (nd new-descriptions)
