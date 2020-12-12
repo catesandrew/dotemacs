@@ -86,6 +86,8 @@
         org-roam-dailies-directory (concat cats//org-dir "refs/notes/daily/")
         org-roam-db-location (concat cats//org-dir "refs/org-roam.db")
         org-roam-verbose nil
+        ;; appends a  `º` to each Roam link.
+        org-roam-link-title-format "%sº"
         ;; make org-roam buffer sticky
         org-roam-buffer-no-delete-other-windows t)
 
