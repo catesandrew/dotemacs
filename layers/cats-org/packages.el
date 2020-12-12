@@ -126,20 +126,94 @@
         ("n" org-roam-dailies-find-next-note)
         ("p" org-roam-dailies-find-previous-note)
         ("i" org-roam-dailies-capture-today)
-        ("/" org-roam-dailies-find-date))
-
-      )
+        ("/" org-roam-dailies-find-date)))
     :post-config
     (progn
-      ;; capture template to grab websites. Requires org-roam protocol.
-;;       (setq org-roam-ref-capture-templates
-;;         '(("r" "ref" plain (function org-roam-capture--get-point)
-;;             "%?"
-;;             :file-name "websites/${slug}"
-;;             :head "#+TITLE: ${title}
-;; #+ROAM_KEY: ${ref}
-;; - source :: ${ref}"
-;;             :unnarrowed t)))
+
+      (setq org-roam-capture-templates
+        ;; project
+        `(("p" "project" entry (function org-roam--capture-get-point)
+            "* Meta
+:PROPERTIES:
+:date_completed: ?
+:date_started: ?
+:file_under: ?
+:intent: ?
+:links: ?
+:related: ?
+:slug: ?
+:state: ?
+:END:
+* Resources
+* Tasks
+* Notes
+
+%?"
+            :file-name "${slug}"
+            :head ,(cats//org-roam-template-head "project")
+            :unnarrowed t)
+
+           ;; research
+           ("r" "research" entry (function org-roam--capture-get-point)
+             "* Meta
+:PROPERTIES:
+:file_under: ?
+:related: ?
+:slug: ?
+:END:
+:LOGBOOK:
+:END:
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "research")
+             :unnarrowed t)
+
+           ;; capture template to grab websites. Requires org-roam protocol.
+           ("w" "website" entry (function org-roam--capture-get-point)
+             "* Meta
+:PROPERTIES:
+:file_under: ?
+:related: ?
+:slug: ?
+:END:
+:LOGBOOK:
+:END:
+* Resources
+* Notes
+
+%?"
+             :file-name "websites/${slug}"
+             :head ,(cats//org-roam-template-ref-head "website")
+             :unnarrowed t)
+
+           ;; log
+           ("l" "log" plain (function org-roam--capture-get-point)
+             "%?"
+             :file-name "log/%<%Y-%m-%d-%H%M>-${slug}"
+             :head ,(cats//org-roam-template-head "log")
+             :unnarrowed t)
+
+           ;; default
+           ("d" "default" plain (function org-roam--capture-get-point)
+             "* Meta
+:PROPERTIES:
+:file_under: ?
+:related: ?
+:slug: ?
+:END:
+:LOGBOOK:
+:END:
+* Notes
+
+%?"
+             :file-name "${slug}" ;; "%<%Y%m%d%H%M%S>-${slug}"
+             :head ,(cats//org-roam-template-head "general")
+             :unnarrowed t)))
+
+
 
       )
     )

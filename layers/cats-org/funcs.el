@@ -538,6 +538,14 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
   ;; will add the new entry as a child entry.
   (goto-char (point-min)))
 
+
+;; org-roam
+
+(defun cats//org-roam-template-head (file-under)
+  (concat "#+TITLE: ${title}\n#+DATE_CREATED: <> \n#+DATE_UPDATED: <> \n#+FIRN_UNDER: " file-under "\n\n"))
+
+(defun cats//org-roam-template-ref-head (file-under)
+  (concat "#+TITLE: ${title}\n#+DATE_CREATED: <> \n#+DATE_UPDATED: <> \n#+FIRN_UNDER: " file-under "\n#+ROAM_KEY: ${ref}\n - source :: ${ref}\n\n"))
 
 
 ;; misc
