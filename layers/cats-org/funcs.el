@@ -540,12 +540,40 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
 
 
 ;; org-roam
+(defun cats//org-roam-template-head (&optional tag)
+  (unless tag
+    (setq extension ""))
+  (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIAS:\n#+ROAM_TAGS: " tag "\n\n"))
 
-(defun cats//org-roam-template-head (file-under)
-  (concat "#+TITLE: ${title}\n#+DATE_CREATED: <> \n#+DATE_UPDATED: <> \n#+FIRN_UNDER: " file-under "\n\n"))
+(defun cats//org-roam-template-ref-head (&optional tag)
+  (unless tag
+    (setq extension ""))
+  (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIAS:\n#+ROAM_TAGS: " tag "\n#+ROAM_KEY: ${ref}\n - source :: ${ref}\n\n"))
 
-(defun cats//org-roam-template-ref-head (file-under)
-  (concat "#+TITLE: ${title}\n#+DATE_CREATED: <> \n#+DATE_UPDATED: <> \n#+FIRN_UNDER: " file-under "\n#+ROAM_KEY: ${ref}\n - source :: ${ref}\n\n"))
+(defun cats/org-roam-insert-replace-region-with-link-and-follow ()
+  "To turn a selected region into a link to a new note and edit it I now use."
+  (interactive)
+  (let ((title (buffer-substring (mark) (point)) )
+         (top (current-buffer)))
+    (org-roam-find-file title)
+    (let ((target-file (buffer-file-name (buffer-base-buffer)))
+           (note-buffer (current-buffer)))
+      (switch-to-buffer top nil t)
+      (kill-region (mark) (point))
+      (insert (concat "[[" target-file "][" title "]]"))
+      (switch-to-buffer note-buffer nil t)
+      (save-buffer))))
+
+(defun cats/remove-linked-org-roam-note ()
+  "To delete a linked note."
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (org-open-maybe)
+    (if (not (eq (current-buffer) buffer))
+      (progn
+        (crux-delete-file-and-buffer)
+        (er/expand-region 1)
+        (kill-region (mark) (point))))))
 
 
 ;; misc

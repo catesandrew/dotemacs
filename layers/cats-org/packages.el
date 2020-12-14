@@ -131,22 +131,14 @@
         ("/" org-roam-dailies-find-date)))
     :post-config
     (progn
-
       (setq org-roam-capture-templates
+
+        #+title: Roam for Product Development
+        "product development" roam Inbox Issues Features General Business "Backlog - WIP" "Backlog - Ready" "Current Sprint" "Done"
+
         ;; project
         `(("p" "project" entry (function org-roam--capture-get-point)
-            "* Meta
-:PROPERTIES:
-:date_completed: ?
-:date_started: ?
-:file_under: ?
-:intent: ?
-:links: ?
-:related: ?
-:slug: ?
-:state: ?
-:END:
-* Resources
+            "* Resources
 * Tasks
 * Notes
 
@@ -157,15 +149,7 @@
 
            ;; research
            ("r" "research" entry (function org-roam--capture-get-point)
-             "* Meta
-:PROPERTIES:
-:file_under: ?
-:related: ?
-:slug: ?
-:END:
-:LOGBOOK:
-:END:
-* Resources
+             "* Resources
 * Notes
 
 %?"
@@ -175,15 +159,7 @@
 
            ;; capture template to grab websites. Requires org-roam protocol.
            ("w" "website" entry (function org-roam--capture-get-point)
-             "* Meta
-:PROPERTIES:
-:file_under: ?
-:related: ?
-:slug: ?
-:END:
-:LOGBOOK:
-:END:
-* Resources
+             "* Resources
 * Notes
 
 %?"
@@ -200,26 +176,13 @@
 
            ;; default
            ("d" "default" plain (function org-roam--capture-get-point)
-             "* Meta
-:PROPERTIES:
-:file_under: ?
-:related: ?
-:slug: ?
-:END:
-:LOGBOOK:
-:END:
-* Notes
+             "* Notes
 
 %?"
              :file-name "${slug}" ;; "%<%Y%m%d%H%M%S>-${slug}"
-             :head ,(cats//org-roam-template-head "general")
+             :head ,(cats//org-roam-template-head "Inbox")
              :unnarrowed t)))
-
-
-
-      )
-    )
-  )
+      )))
 
 
 ;; helm-bibtex
