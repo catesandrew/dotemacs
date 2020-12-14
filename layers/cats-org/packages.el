@@ -133,8 +133,7 @@
     (progn
       (setq org-roam-capture-templates
 
-        #+title: Roam for Product Development
-        "product development" roam Inbox Issues Features General Business "Backlog - WIP" "Backlog - Ready" "Current Sprint" "Done"
+        ;; tags: "Product Development" Inbox Issues Features General Business "Backlog - WIP" "Backlog - Ready" "Current Sprint" "Done"
 
         ;; project
         `(("p" "project" entry (function org-roam--capture-get-point)
