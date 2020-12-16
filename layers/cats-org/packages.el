@@ -68,12 +68,27 @@
      org-roam-server
      ;; org-roam-protocol
      org-roam-bibtex
+     (org-pandoc-import
+       :location (recipe
+                   :fetcher github
+                   :repo "tecosaur/org-pandoc-import"
+                   :files ("*.el" "filters" "confident")))
      ))
+
 
 ;; NOTE: org-capture throws json-readtable-error
 ;; sudo apt-get -y install ipython ipython-notebook
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
+
+
+;; org-pandoc-import
+(defun cats-org/init-org-pandoc-import ()
+  (use-package org-pandoc-import
+    :after org
+    :defer t
+    :init
+    (progn)))
 
 
 ;; ox-roam
