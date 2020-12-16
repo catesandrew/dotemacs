@@ -82,10 +82,10 @@
     :post-init
     (progn
       (setq
-        org-roam-directory (concat cats//org-dir "refs/notes")
-        org-roam-dailies-directory (concat cats//org-dir "refs/notes/daily/")
+        org-roam-directory cats//org-roam-dir
+        org-roam-dailies-directory cats//org-roam-dailies-dir
         org-roam-db-location (concat cats//org-dir "refs/org-roam.db")
-        org-roam-index-file (concat cats//org-dir "refs/notes/index.org")
+        org-roam-index-file (concat cats//org-roam-dir "index.org")
         org-roam-verbose nil
         ;; appends a  `º` to each Roam link.
         org-roam-link-title-format "%sº"
@@ -134,6 +134,21 @@
         ("/" org-roam-dailies-find-date)))
     :post-config
     (progn
+      (setq org-roam-dailies-capture-templates
+        '(
+           ;; default
+           ("d" "default" entry #'org-roam-capture--get-point
+             "* %?"
+             :file-name "daily/%<%Y-%m-%d>"
+             :head "#+title: %<%Y-%m-%d>")
+
+           ("j" "journal entry" plain (function cats//org-journal-find-location)
+             "* %(format-time-string org-journal-time-format)%\n^{Title}\n%i%?"
+             :immediate-finish t
+             :file-name "daily/%<%Y-%m-%d>"
+             :head "#+TITLE: %<%Y-%m-%d>")
+           ))
+
       (setq org-roam-capture-templates
         `(
            ;; bug fixes
@@ -2068,9 +2083,12 @@
   ;; for the files name is YYYY-MM-DD.
   (setq-default org-journal-file-format "%Y-%m-%d")
   ;; Where journal files are stored, `~/org/journal`
+  ;; per https://org-roam.discourse.group/t/org-journal-vs-org-roam-dailies/384/6 use org-journal
+  ;; TODO add check that org-roam is being used first though
+  ;; otherwise use (concat cats//org-dir cats//org-journal-dir)
   (setq-default org-journal-dir
     (expand-file-name
-      (concat cats//org-dir cats//org-journal-dir)))
+      (concat cats//org-roam-dir cats//org-journal-dir)))
 
   (spacemacs|use-package-add-hook org :post-config (require 'org-journal))
 
@@ -2082,16 +2100,19 @@
         '("\\(?1:[0-9]\\{4\\}\\)-\\(?2:[0-9][0-9]\\)-\\(?3:[0-9][0-9]\\)\\'" . org-journal-mode))
 
       ;; Where journal files are stored, `~/org/journal`
+      ;; per https://org-roam.discourse.group/t/org-journal-vs-org-roam-dailies/384/6 use org-journal
+      ;; TODO add check that org-roam is being used first though
+      ;; otherwise use (concat cats//org-dir cats//org-journal-dir)
       (setq org-journal-dir
         (expand-file-name
-          (concat cats//org-dir cats//org-journal-dir)))
+          (concat cats//org-roam-dir cats//org-journal-dir)))
 
       ;; I create a lot of TODOs to my journal entries so this will
       ;; automatically add these files to my agenda.
       (setq org-journal-enable-agenda-integration t)
       ;; *Warning:* setting `org-journal-file-format` to include a file
       ;; extension like `%Y-%m-%d.org` breaks calender search functionality.
-      (setq org-journal-file-format "%Y-%m-%d")
+      (setq org-journal-file-format "%Y-%m-%d.org")
       ;; carry everything over to new entry except for items marked "DONE"
       ;; (setq org-journal-carryover-items "-TODO=\"DONE\"|-TODO=\"EXPIRED\"|-TODO=\"CANCELLED\"|-TODO=\"HANDLED\"")
       (setq org-journal-carryover-items nil)
