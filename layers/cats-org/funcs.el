@@ -550,6 +550,29 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
     (setq extension ""))
   (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIAS:\n#+ROAM_TAGS: " tag "\n#+ROAM_KEY: ${ref}\n - source :: ${ref}\n\n"))
 
+(defun cats//random-alnum ()
+  (let* ((alnum "abcdefghijklmnopqrstuvwxyz0123456789")
+          (i (% (abs (random)) (length alnum))))
+    (substring alnum i (1+ i))))
+
+(defun cats//random-string (n)
+  "Generate a slug of n random alphanumeric characters.
+
+Inefficient implementation; don't use for large n."
+  (if (= 0 n)
+    ""
+    (concat (cats//random-alnum) (cats//random-string (1- n)))))
+
+(defun cats//org-roam-filename (name)
+  "Kebab case the NAME."
+  (concat
+    (replace-regexp-in-string "[\\-]\\{2,\\}" "-"
+      (replace-regexp-in-string (regexp-quote " ") "-"
+        (string-inflection-kebab-case-function name)
+        nil 'literal))
+    "-"
+    (cats//random-string 5)))
+
 (defun cats/org-roam-insert-replace-region-with-link-and-follow ()
   "To turn a selected region into a link to a new note and edit it I now use."
   (interactive)

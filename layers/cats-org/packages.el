@@ -85,6 +85,7 @@
         org-roam-directory (concat cats//org-dir "refs/notes")
         org-roam-dailies-directory (concat cats//org-dir "refs/notes/daily/")
         org-roam-db-location (concat cats//org-dir "refs/org-roam.db")
+        org-roam-index-file (concat cats//org-dir "refs/notes/index.org")
         org-roam-verbose nil
         ;; appends a  `º` to each Roam link.
         org-roam-link-title-format "%sº"
@@ -109,9 +110,11 @@
         (org-roam-server-mode))
 
       (spacemacs/set-leader-keys
+        "aorm" 'org-roam-jump-to-index
         "aor." 'spacemacs/org-roam-transient-state/body)
 
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "rm" 'org-roam-jump-to-index
         "rd." 'spacemacs/org-roam-transient-state/body)
 
       (spacemacs|define-transient-state org-roam
@@ -132,45 +135,34 @@
     :post-config
     (progn
       (setq org-roam-capture-templates
+        `(
+           ;; bug fixes
+           ("b" "bug fixes" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:lead:
+:jira:
+:jira+:
+:END:
 
-        ;; tags: "Product Development" Inbox Issues Features General Business "Backlog - WIP" "Backlog - Ready" "Current Sprint" "Done"
-
-        ;; project
-        `(("p" "project" entry (function org-roam--capture-get-point)
-            "* Resources
-* Tasks
-* Notes
-
-%?"
-            :file-name "${slug}"
-            :head ,(cats//org-roam-template-head "project")
-            :unnarrowed t)
-
-           ;; research
-           ("r" "research" entry (function org-roam--capture-get-point)
-             "* Resources
+* Resources
 * Notes
 
 %?"
              :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "research")
+             :head ,(cats//org-roam-template-head "\"Bug Fixes\"")
              :unnarrowed t)
 
-           ;; capture template to grab websites. Requires org-roam protocol.
-           ("w" "website" entry (function org-roam--capture-get-point)
-             "* Resources
+           ;; business
+           ("B" "business" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
 * Notes
 
 %?"
-             :file-name "websites/${slug}"
-             :head ,(cats//org-roam-template-ref-head "website")
-             :unnarrowed t)
-
-           ;; log
-           ("l" "log" plain (function org-roam--capture-get-point)
-             "%?"
-             :file-name "log/%<%Y-%m-%d-%H%M>-${slug}"
-             :head ,(cats//org-roam-template-head "log")
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "Business")
              :unnarrowed t)
 
            ;; default
@@ -180,7 +172,197 @@
 %?"
              :file-name "${slug}" ;; "%<%Y%m%d%H%M%S>-${slug}"
              :head ,(cats//org-roam-template-head "Inbox")
-             :unnarrowed t)))
+             :unnarrowed t)
+
+           ;; done
+           ("D" "done" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "Done")
+             :unnarrowed t)
+
+           ;; feature
+           ("f" "feature" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:lead:
+:jira:
+:jira+:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "Features")
+             :unnarrowed t)
+
+           ;; general
+           ("g" "general" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "General")
+             :unnarrowed t)
+
+           ;; issue
+           ("i" "issue" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:lead:
+:jira:
+:jira+:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "Issues")
+             :unnarrowed t)
+
+           ;; interviews
+           ("I" "interviews" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "Interviews")
+             :unnarrowed t)
+
+           ;; log
+           ("L" "log" plain (function org-roam--capture-get-point)
+             "%?"
+             :file-name "log/%<%Y-%m-%d-%H%M>-${slug}"
+             :head ,(cats//org-roam-template-head "log")
+             :unnarrowed t)
+
+           ;; product develpment
+           ("p" "project" entry (function org-roam--capture-get-point)
+             "* ${title}%?
+  :PROPERTIES:
+  :FOR_EXPORT_COLUMNS:  %50ITEM %8Effort(Estimate){:}
+  :COLUMNS:  %50ITEM %8Effort(Estimate){:} %8LEAD(Lead) %5CLOCKSUM(Clocked) %10TODO(State)
+  :ID:       %(cats//org-roam-filename \"${title}\")
+  :EXPORT_TITLE: ${title}
+  :EXPORT_OPTIONS: toc:nil
+  :LEAD:
+  :LEAD_ALL: agrandle sbranch jweimer kwhite ajames gmorales acates
+  :EPIC:
+  :FEATURE-FLAG:
+  :FEATURE-FLAG+:
+  :COMPLETE-DATE:
+  :END:
+** Resources
+** Tasks
+*** First task
+    :PROPERTIES:
+    :Effort:   01:00
+    :END:
+    - Simple task
+** Notes
+** Estimates
+#+BEGIN: columnview :hlines 2 :vlines t :id \"%(cats//org-roam-filename \"${title}\")\" :skip-empty-rows t
+
+#+END:
+
+"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "\"Product Development\"")
+             :unnarrowed t)
+
+           ;; backlop - ready
+           ("r" "backlog - ready" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "\"Backlog - Ready\"")
+             :unnarrowed t)
+
+           ;; releases
+           ("R" "releases" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "Releases")
+             :unnarrowed t)
+
+           ;; current sprint
+           ("S" "sprint - current" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "\"Current Sprint\"")
+             :unnarrowed t)
+
+           ;; past sprints
+           ("P" "sprints - past" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "\"Past Sprints\"")
+             :unnarrowed t)
+
+           ;; backlop - wip
+           ("w" "backlog - wip" entry (function org-roam--capture-get-point)
+             ":PROPERTIES:
+:END:
+
+* Resources
+* Notes
+
+%?"
+             :file-name "${slug}"
+             :head ,(cats//org-roam-template-head "\"Backlog - WIP\"")
+             :unnarrowed t)
+
+           ;; capture template to grab websites. Requires org-roam protocol.
+           ("W" "website" entry (function org-roam--capture-get-point)
+             "* Resources
+* Notes
+
+%?"
+             :file-name "websites/${slug}"
+             :head ,(cats//org-roam-template-ref-head "website")
+             :unnarrowed t)
+
+
+           ))
       )))
 
 
@@ -392,6 +574,7 @@
              ("org-journal-\\(.+\\)" . "oj:\\1")
              ("org-babel-\\(.+\\)" . "ob:\\1")
              ("org-table-\\(.+\\)" . "ot:\\1")
+             ("org-roam-jump-to-index" . "or:jump-to-main")
              ("org-roam-dailies-\\(.+\\)" . "ord:\\1")
              ("org-roam-\\(.+\\)" . "or:\\1")
              ("org-agenda-\\(.+\\)" . "oa:\\1"))))
@@ -1525,11 +1708,7 @@
       (setq org-clock-auto-clock-resolution 'when-no-clock-is-running)
       ;; Include current clocking task in clock reports
       (setq org-clock-report-include-clocking-task t)
-      (setq org-duration-format '(
-                                   :hours "%d"
-                                   :require-hours t
-                                   :minutes ":%02d"
-                                   :require-minutes t))
+      (setq org-duration-format '(("d" . nil) ("h" . t) ("min" . t)))
       (setq cats//keep-clock-running nil)
       ;; (add-hook 'org-clock-out-hook 'cats/clock-out-maybe 'append)
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
