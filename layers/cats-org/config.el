@@ -8,6 +8,7 @@
 
 (defvar cats//org-dir "~/org/")
 
+(defvar cats//org-jira-dir (concat cats//org-dir "jira/"))
 (defvar cats//org-roam-dir (concat cats//org-dir "refs/notes/"))
 
 (defvar cats//org-roam-dailies-dir (concat cats//org-roam-dir "daily/"))

@@ -1296,13 +1296,119 @@
   (spacemacs|use-package-add-hook org-jira
     :post-init
     (progn
-      ;; org-jira-working-dir "~/.org-jira"
-      (setq org-jira-deadline-duedate-sync-p nil)
-      (setq org-jira-worklog-sync-p nil)
-      (setq org-jira-property-overrides nil)
-      ;; Default jql for querying your Jira tickets.
-      (setq org-jira-default-jql cats-jira-default-jql)
+      (setq org-jira-working-dir cats//org-jira-dir
+        org-jira-deadline-duedate-sync-p nil
+        org-jira-worklog-sync-p nil
+        org-jira-property-overrides nil
+        ;; Default jql for querying your Jira tickets.
+        org-jira-default-jql cats-jira-default-jql)
 
+      ;; Create org roam dailies directory
+      (unless (file-exists-p org-jira-working-dir)
+        (make-directory org-jira-working-dir t))
+
+      ;; jira req https://jira.int.payoff.com/rest/api/2/issuetype | jq '.[] | .name'
+      ;; issue_types=("Bug" "Improvement" "Epic" "Task" "Sub-task" "Story" "User Story" "Research" "Data Pull" "Dashboard" "Automation" "Reporting" "Change Request" "SoftwareDeployment" "InfrastructureDeployment" "ProductionConfigChange" "PermissionsChange" "QA Sub-task" "Analysis" "Modeling" "Training" "Access" "IT Help" "UIE - Design" "Purchase" "Change" "Fault" "Off-Boarding" "LegacyIssue" "NewPlatformIssue" "MemberDataExport" "MemberDataDelete" "HMA" "Product Task" "Training Task" "QA task" "New Feature" "Service Request")
+      ;; jira req https://jira.int.payoff.com/rest/api/2/priority | jq '.[] | .name'
+      ;; priority_types=("P1" "P2" "P3" "P4" "P5" "Blocker" "High" "Medium" "Low" "Minor")
+      ;; jira req https://jira.int.payoff.com/rest/api/2/status | jq '.[] | .name'
+      ;; done_status_types=("Closed" "Fix_Resolve" "Resolved" "Deployed" "Deploy" "Done" "Cancelled" "Canceled")
+      ;; jira req https://jira.int.payoff.com/rest/api/2/resolution | jq '.[] | .name
+
+      (setq org-jira-custom-jqls
+        '(
+           (:jql " project = UIE AND issuetype in (Story, Task, Bug, Research) AND (Sprint = EMPTY OR Sprint not in (openSprints(), futureSprints())) AND resolution = Unresolved AND status not in ('Canceled', 'Cancelled', 'Closed', 'Deploy', 'Deployed', 'Done', 'Fix_Resolve', 'Resolved') ORDER BY Rank ASC "
+             :limit 200
+             :filename "backlog")
+           (:jql " reporter = currentUser() order by created DESC "
+             :limit 100
+             :filename "reported-by-me")
+           (:jql " assignee = currentUser() AND resolution = Unresolved order by updated DESC "
+             :limit 100
+             :filename "my-open-issues")
+           (:jql " sprint in (openSprints()) AND 'Story Points' is EMPTY AND assignee = currentUser() "
+             :limit 100
+             :filename "my-current-tickets-without-estimates")
+           (:jql " sprint in (futureSprints()) AND 'Story Points' is EMPTY AND assignee = currentUser() "
+             :limit 100
+             :filename "my-future-tickets-without-estimates")
+           (:jql " status changed to done after -1d  AND project in (projectsLeadByUser()) "
+             :limit 100
+             :filename "completed-in-last-24-hours")
+           (:jql " created >= -1d AND project in (projectsLeadByUser()) ORDER BY sprint ASC, created DESC "
+             :limit 100
+             :filename "added-in-the-last-24-hours")
+           (:jql " (summary ~ currentUser() OR description ~ currentUser() OR comment ~ currentUser()) AND status not in ('Canceled', 'Cancelled', 'Closed', 'Deploy', 'Deployed', 'Done', 'Fix_Resolve', 'Resolved') AND updatedDate >= -7d ORDER BY lastViewed ASC "
+             :limit 100
+             :filename "mentions-me")
+           (:jql " (status not in ('Canceled', 'Cancelled', 'Closed', 'Deploy', 'Deployed', 'Done', 'Fix_Resolve', 'Resolved') OR updatedDate >= -7d) AND (assignee in (currentUser()) OR (summary ~ currentUser() OR description ~ currentUser() OR comment ~ currentUser()) AND status not in ('Canceled', 'Cancelled', 'Closed', 'Deploy', 'Deployed', 'Done', 'Fix_Resolve', 'Resolved') AND updatedDate >= -7d AND Sprint in (openSprints())) AND (sprint not in closedSprints() OR sprint is EMPTY) AND issuetype != Epic ORDER BY duedate ASC, priority DESC, updated ASC, createdDate ASC "
+             :limit 100
+             :filename "my-open-tasks")
+           (:jql " sprint in openSprints() AND priority not in (Low, Medium, Minor, P5, P4, P3, P2) AND assignee in (currentUser()) "
+             :limit 100
+             :filename "high-priority-and-in-an-open-sprint")
+           (:jql " updatedDate >= -7d AND Sprint in openSprints() AND assignee in (currentUser()) "
+             :limit 100
+             :filename "recently-updated-and-in-open-sprint")
+           (:jql " project = UIE AND status = Closed AND resolved >= -1w ORDER BY updated DESC "
+             :limit 100
+             :filename "closed-this-week-(awesome-for-weekly-reports)")
+           (:jql " project = UIE AND status not in (Canceled, Cancelled, Closed, Deploy, Deployed, Done, Fix_Resolve, Resolved) AND 'Epic Link' is EMPTY AND type != Epic "
+             :limit 100
+             :filename "open-tickets-without-epics")
+           ;; Tickets created since 2018 which have been closed which did not get dev attention (Duplicate, Won't Fix, Incomplete definition).
+           ;; (:jql " project = UIE AND created >= '2018/01/01 00:00' AND Resolution not in (Complete, Fixed, Done, Passed) AND status in (Canceled, Cancelled, Closed, Deploy, Deployed, Done, Fix_Resolve, Resolved) ORDER BY updated DESC "
+           ;;   :limit 100
+           ;;   :filename "tickets-created-that-been-closed-but-did-not-get-dev-attention")
+           ;; All new tickets opened during the pilot window (includes duplicates, and incomplete tickets reported through the JIRA public feedback form).
+           ;; (:jql " project = UIE AND created >= '2015/02/23 00:00' AND created <= '2015/03/06 00:00' ORDER BY updated DESC "
+           ;;   :limit 100
+           ;;   :filename "all-new-tickets-opened-during-the-pilot-window")
+           ;; Tickets which were closed during the pilot window (regardless of when they were created).
+           ;; (:jql " project = UIE AND resolved >= '2015/02/23 00:00' AND resolved <= '2015/03/06 00:00' ORDER BY updated DESC "
+           ;;   :limit 100
+           ;;   :filename "tickets-which-were-closed-during-the-pilot-window")
+           ;; Tickets that were opened during the a specific window AND resolved during this time.
+           ;; (:jql " project = UIE AND created >= '2015/02/23 00:00' AND resolved <= '2015/03/06 00:00' ORDER BY updated DESC "
+           ;;   :limit 100
+           ;;   :filename "tickets-that-were-opened-during")
+
+           ;; bitbucket props
+           ;; issue.property[development].commits
+           ;; issue.property[development].prs
+           ;; issue.property[development].openprs
+           ;; issue.property[development].reviews
+           ;; issue.property[development].failingbuilds
+           (:jql " project = UIE AND Sprint in openSprints() AND issue.property[development].openprs = 0 "
+             :limit 100
+             :filename "all-current-tasks-without-an-open-pr")
+
+           ;; monitor if any tickets have been created and moved into active sprint (week 1)
+           (:jql " project = UIE AND sprint in openSprints() AND createdDate > startOfWeek() ORDER BY createdDate DESC "
+             :limit 100
+             :filename "tickets-created-and-moved-into-sprint-week1")
+           ;; monitor if any tickets have been created and moved into active sprint (week 2)
+           (:jql " project = UIE AND sprint in openSprints() AND createdDate > startOfWeek(-1) ORDER BY createdDate DESC "
+             :limit 100
+             :filename "tickets-created-and-moved-into-sprint-week2")
+           ;; tickets have been created, worked on, and not moved into sprint (week 1)
+           (:jql " project = UIE AND (Sprint = EMPTY OR Sprint not in (openSprints(), futureSprints())) AND status not in ('Open(Backlog)') AND createdDate > startOfWeek() ORDER BY createdDate DESC "
+             :limit 100
+             :filename "tickets-created-worked-on-not-moved-into-sprint-week1")
+           ;; tickets have been created, worked on, and not moved into sprint (week 2)
+           (:jql " project = UIE AND (Sprint = EMPTY OR Sprint not in (openSprints(), futureSprints())) AND status not in ('Open(Backlog)') AND createdDate > startOfWeek(-1) ORDER BY createdDate DESC "
+             :limit 100
+             :filename "tickets-created-worked-on-not-moved-into-sprint-week2")
+           ;; monitor if any tickets have their status changed during active sprint, but not in it (week 1)
+           (:jql " project = UIE AND (Sprint = EMPTY OR Sprint not in (openSprints(), futureSprints())) AND status not in ('Open(Backlog)') AND status changed after startOfWeek() ORDER BY createdDate DESC "
+             :limit 100
+             :filename "tickets-status-changed-but-not-in-sprint-week1")
+           ;; monitor if any tickets have their status changed during active sprint, but not in it (week 2)
+           ;; status changed during: (startOfWeek(-1), now())
+           (:jql " project = UIE AND (Sprint = EMPTY OR Sprint not in (openSprints(), futureSprints())) AND status not in ('Open(Backlog)') AND status changed after startOfWeek(-1) ORDER BY createdDate DESC "
+             :limit 100
+             :filename "tickets-status-changed-but-not-in-sprint-week2")
+           ))
       )
     :post-config
     (progn
