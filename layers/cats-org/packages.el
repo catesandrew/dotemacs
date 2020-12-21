@@ -1176,6 +1176,62 @@
                   ((org-agenda-overriding-header
                      "These don't have priorities:")))))
 
+        ;; (add-to-list 'org-agenda-custom-commands
+        ;;   `("c" "Current Status" ((agenda ""
+        ;;       ((org-agenda-overriding-header "⚡ Agenda:")
+        ;;        (org-agenda-remove-tags t)
+        ;;        (org-agenda-current-time-string "⮜┈┈┈┈┈┈┈ now")
+        ;;        (org-agenda-prefix-format "  %-12s %-12t %-8c ")
+        ;;        (org-agenda-todo-keyword-format "")))
+        ;;      (todo "WAIT"
+        ;;        ((org-agenda-overriding-header "⚡ Waiting for Someone Else:")
+        ;;         (org-agenda-todo-ignore-deadlines (quote future))
+        ;;         (org-agenda-todo-ignore-scheduled (quote future))
+        ;;         (org-agenda-remove-tags t)
+        ;;         (org-agenda-prefix-format "  %-8c ")
+        ;;         (org-agenda-todo-keyword-format "")))
+        ;;      (tags-todo "@phone|@email"
+        ;;        ((org-agenda-overriding-header "⚡ Phone Calls to Make, Emails to Send:")
+        ;;         (org-agenda-prefix-format "  %-8c ")
+        ;;         (org-agenda-remove-tags t)
+        ;;         (org-agenda-todo-keyword-format "")
+        ;;         (org-agenda-todo-ignore-deadlines (quote all))
+        ;;         (org-agenda-todo-ignore-scheduled (quote all))))
+        ;;      (stuck ""
+        ;;        ((org-agenda-overriding-header "⚡ Stuck Projects:")))
+        ;;      (tags "+inbox+LEVEL=2|+orgzly+LEVEL=1"
+        ;;        ((org-agenda-overriding-header "⚡ Inbox Tasks to Process:")
+        ;;         (org-agenda-prefix-format "  %-8c ")
+        ;;         (org-agenda-todo-keyword-format "")))
+        ;;      (todo "NEXT"
+        ;;        ((org-agenda-overriding-header "⚡ Next Actions:")
+        ;;         (org-agenda-prefix-format "  %-8c ")
+        ;;         (org-agenda-remove-tags t)
+        ;;         (org-agenda-todo-keyword-format "")
+        ;;         (org-agenda-todo-ignore-deadlines (quote all))
+        ;;         (org-agenda-todo-ignore-scheduled (quote all)))))))
+
+        ;; (add-to-list 'org-agenda-custom-commands
+        ;;   `("p" "Project List"
+        ;;      ((tags "+project+LEVEL=3"))))
+
+        ;; (add-to-list 'org-agenda-custom-commands
+        ;;   `("e" "Tasks by Energy Level"
+        ;;      ((tags-todo "5m")
+        ;;        (tags-todo "30m")
+        ;;        (tags-todo "1h"))
+        ;;      ((org-agenda-todo-ignore-deadlines nil))))
+
+        ;; (add-to-list 'org-agenda-custom-commands
+        ;;   `("o" "Offline Tasks"
+        ;;      ((tags-todo "+@offline"))))
+
+        ;; (add-to-list 'org-agenda-custom-commands
+        ;;   `("T" "Travel Schedule"
+        ;;      ((tags "+travel+TIMESTAMP>=\"<now>\""))
+        ;;      ((org-agenda-view-columns-initially t))))
+
+
         (add-to-list 'org-agenda-custom-commands
           `("h" "A, B priority:" tags-todo "+PRIORITY<\"C\""
              ((org-agenda-overriding-header
@@ -1667,6 +1723,10 @@
             "CANCELLED(c!)"
             )))
 
+      ;; '(org-stuck-projects
+      ;;    (quote ("+project+LEVEL=3-notes-TODO=\"DONE\""
+      ;;             ("NEXT" "WAIT" "BACKLOG") nil "")))
+
       ;; Tag changes that should be triggered by TODO state changes.
       (setq org-todo-state-tags-triggers
         ' (("CANCELLED" ("CANCELLED" . t))
@@ -1721,6 +1781,7 @@
                              ("@errands" . ?e)
                              ("@coding" . ?c)
                              ("@phone" . ?p)
+                             ("@email" . ?m)
                              ("@reading" . ?r)
                              ("@computer" . ?l)))))
 
