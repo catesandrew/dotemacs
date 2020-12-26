@@ -533,7 +533,7 @@
     :init
     (progn
       (setq org-roam-server-host "127.0.0.1"
-            org-roam-server-port 8080
+            org-roam-server-port (cats//find-free-service)
             org-roam-server-export-inline-images t
             org-roam-server-authenticate nil
             org-roam-server-label-truncate t

@@ -598,6 +598,31 @@ Inefficient implementation; don't use for large n."
         (er/expand-region 1)
         (kill-region (mark) (point))))))
 
+(defun cats//find-free-service ()
+  "Return a free (unused) TCP port.
+The port is chosen randomly from the ephemeral ports. "
+  (let (myserver
+         (port 50000)) ;; this should be ephemeral base
+    (while
+      (not
+        (processp
+          (condition-case sig
+            (setq myserver
+              (make-network-process
+                :name "*test-proc*"
+                :server 't
+                :nowait nil
+                :host 'local
+                :service port
+                :family 'ipv4))
+            (file-error
+              (if (equal
+                    "Cannot bind server socket address already in use"
+                    (mapconcat 'identity (cdr sig) " "))
+                (setq port (+ 50000 (random 5000)))))))))
+    (delete-process myserver)
+    port))
+
 
 ;; misc
 (defun spacemacs//add-org-keybindings (mode)
