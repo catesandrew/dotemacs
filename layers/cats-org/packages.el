@@ -121,8 +121,8 @@
       ;; add dailies to agenda
       (cats//register-org-agenda-file org-roam-dailies-directory)
 
-      (with-eval-after-load 'org-roam-server
-        (org-roam-server-mode))
+      ;; (with-eval-after-load 'org-roam-server
+      ;;  (org-roam-server-mode))
 
       (spacemacs/set-leader-keys
         "aorm" 'org-roam-jump-to-index
@@ -529,6 +529,7 @@
 (defun cats-org/init-org-roam-server ()
   "Use org-roam-server."
   (use-package org-roam-server
+    :disabled t
     :after org-roam
     :init
     (progn
