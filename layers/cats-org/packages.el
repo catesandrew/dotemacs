@@ -2092,6 +2092,11 @@
       ;;      :empty-lines 1))
 
       (add-to-list 'org-capture-templates
+        `("L" "Protocol Link" entry
+           (file+headline ,cats//org-capture-file "Inbox")
+           "* %? [[%:link][%:description]] \nCaptured On: %U"))
+
+      (add-to-list 'org-capture-templates
         `("m" "Meeting" entry
            (file ,cats//org-inbox-file)
            "* MEETING %? :MEETING:\n%U"))
@@ -2117,11 +2122,6 @@
         `("p" "Protocol" entry
            (file+headline ,cats//org-capture-file "Inbox")
            "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?"))
-
-      (add-to-list 'org-capture-templates
-        `("P" "Protocol Link" entry
-           (file+headline ,cats//org-capture-file "Inbox")
-           "* %? [[%:link][%:description]]\n"))
 
       (add-to-list 'org-capture-templates
         `("t" "Todo" entry
