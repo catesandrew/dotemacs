@@ -8,6 +8,7 @@
     mu4e-drafts-folder "/work/Drafts"
     mu4e-trash-folder  "/work/Trash"
     mu4e-refile-folder "/work/All"
+    mu4e-change-filenames-when-moving t
     mu4e-maildir-shortcuts
     '((:maildir "/work/Inbox"       :key ?i)
        (:maildir "/work/Sent"  :key ?s)
@@ -19,6 +20,7 @@
     mu4e-drafts-folder "/gmail/Drafts"
     mu4e-trash-folder  "/gmail/Trash"
     mu4e-refile-folder "/gmail/All"
+    mu4e-change-filenames-when-moving t
     mu4e-maildir-shortcuts
     '((:maildir "/gmail/Inbox"       :key ?i)
        (:maildir "/gmail/Sent"  :key ?s)

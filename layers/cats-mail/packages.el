@@ -9,6 +9,7 @@
 (defconst cats-mail-packages
   '(
      (mu4e :location site)
+     slack
      ))
 
 
@@ -33,19 +34,6 @@
         ;; mu4e-compose-signature-auto-include nil
         ;; mu4e-view-show-images t
         mu4e-view-show-addresses t)
-
-      ;; Bookmarks
-      (setq mu4e-bookmarks
-        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
-           ("date:today..now" "Today's messages" ?t)
-           ("date:7d..now" "Last 7 days" ?w)
-           ("mime:image/*" "Messages with images" ?p)
-           (,(mapconcat 'identity
-               (mapcar
-                 (lambda (maildir)
-                   (concat "maildir:" (car maildir)))
-                 mu4e-maildir-shortcuts) " OR ")
-             "All inboxes" ?i)))
 
       (setq sendmail-program "msmtp"
         send-mail-function 'smtpmail-send-it
@@ -112,6 +100,97 @@
 	         ;;   :vars '( ( user-mail-address	     . "acates@happymoney.com" )
 		       ;;            ( user-full-name	     . "Andrew Cates" )))
            ))
+
+      ;; Bookmarks
+      (setq mu4e-bookmarks
+        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
+           ("date:today..now" "Today's messages" ?t)
+           ("date:7d..now" "Last 7 days" ?w)
+           ("mime:image/*" "Messages with images" ?p)
+           (,(mapconcat 'identity
+               (mapcar
+                 (lambda (maildir)
+                   (concat "maildir:" (car maildir)))
+                 mu4e-maildir-shortcuts) " OR ")
+             "All inboxes" ?i)))
       )))
 
+
+
+;; slack
+(defun cats-mail/pre-init-slack ()
+  (spacemacs|use-package-add-hook slack
+    :post-init
+    (progn
+      (with-eval-after-load 'alert
+        (add-to-list
+          'alert-user-configuration
+          '(((:message . "@acates\\")
+              (:title . "\\(frontend-eng\\|skynet\\|frontend-eng-redalert\\)")
+              (:category . "slack"))
+             libnotify nil)))
+
+      (with-eval-after-load 'tracking
+        (define-key tracking-mode-map [f11]
+          #'tracking-next-buffer))
+
+      ;; Priorities first. The most important improvement you can implement is
+      ;; install emojify-mode and turn it on for slack chats.
+      ;; (add-hook 'slack-mode-hook #'emojify-mode)
+
+      (setq
+        ;; Ensure the buffer exists when a message arrives on a channel that
+        ;; wasn't open.
+        slack-buffer-create-on-notify t
+        slack-buffer-emojify t
+        slack-prefer-current-team t
+        slack-display-team-name nil))
+    :post-config
+    (progn
+      (slack-register-team
+        :name "happy-money"
+        :default t
+        :client-id "acates@happymoney.com"
+        :token (password-store-get "work/slack-token")
+        :full-and-display-names t
+        ;; :subscribed-channels '(uie frontend-eng skynet)
+        )
+
+      ;; I’ll never know who thought user statuses were a good idea for Slack.
+      ;; But, thanks to a tip by _asummers on HackerNews, I can live in a world
+      ;; where they don’t exist.
+      (defun slack-user-status (_id _team) "")
+
+      ;; I like notifications with minimal titles, and the package is kind enough
+      ;; to make these configurable.
+
+      ;; Channels
+      (setq slack-message-notification-title-format-function
+        (lambda (_team room threadp)
+          (concat (if threadp "Thread in #%s") room)))
+
+      (defun endless/-cleanup-room-name (room-name)
+        "Make group-chat names a bit more human-readable."
+        (replace-regexp-in-string
+          "--" " "
+          (replace-regexp-in-string "#Happy Money -" "" room-name)))
+
+      ;; Private messages and group chats
+      (setq slack-message-im-notification-title-format-function
+        (lambda (_team room threadp)
+          (concat (if threadp "Thread in %s")
+            (endless/-cleanup-room-name room))))
+
+      ;; Go to any channel with `C-x j'.
+      ;; (define-key ctl-x-map "j" #'slack-select-rooms)
+      ;; I thumbs-up a lot. Don't judge me.
+      ;; (define-key slack-mode-map (kbd "C-;") ":+1:")
+
+      ;; Bring up the mentions menu with `@', and insert a space afterwards.
+      (define-key slack-mode-map "@"
+        (defun endless/slack-message-embed-mention ()
+          (interactive)
+          (call-interactively #'slack-message-embed-mention)
+          (insert " ")))
+      )))
 ;;; packages.el ends here
