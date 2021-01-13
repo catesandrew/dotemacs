@@ -21,32 +21,31 @@
   (spacemacs|use-package-add-hook mu4e
     :post-init
     (progn
-
-
       ;; Set up some common mu4e variables
-      (setq mu4e-maildir "~/.mail"
+      (setq mu4e-maildir (expand-file-name "~/.mail")
+        ;; get-mail-command set to true because mail sync is happening via
+        ;; external processes but we still need to re-index the mailstore to
+        ;; realize the updates
+        mu4e-get-mail-command "true"
         ;; mu4e-context-policy 'pick-first
-        ;; mu4e-confirm-quit nil
-        ;; mu4e-get-mail-command "mbsync -a"
-        ;; mu4e-update-interval nil
-        ;; mu4e-update-interval 120
+        mu4e-confirm-quit nil
+        mu4e-update-interval 300
         ;; mu4e-compose-signature-auto-include nil
         ;; mu4e-view-show-images t
-        ;; mu4e-view-show-addresses t
-        )
+        mu4e-view-show-addresses t)
 
       ;; Bookmarks
-      ;; (setq mu4e-bookmarks
-      ;;   `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
-      ;;      ("date:today..now" "Today's messages" ?t)
-      ;;      ("date:7d..now" "Last 7 days" ?w)
-      ;;      ("mime:image/*" "Messages with images" ?p)
-      ;;      (,(mapconcat 'identity
-      ;;          (mapcar
-      ;;            (lambda (maildir)
-      ;;              (concat "maildir:" (car maildir)))
-      ;;            mu4e-maildir-shortcuts) " OR ")
-      ;;        "All inboxes" ?i)))
+      (setq mu4e-bookmarks
+        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
+           ("date:today..now" "Today's messages" ?t)
+           ("date:7d..now" "Last 7 days" ?w)
+           ("mime:image/*" "Messages with images" ?p)
+           (,(mapconcat 'identity
+               (mapcar
+                 (lambda (maildir)
+                   (concat "maildir:" (car maildir)))
+                 mu4e-maildir-shortcuts) " OR ")
+             "All inboxes" ?i)))
 
       (setq sendmail-program "msmtp"
         send-mail-function 'smtpmail-send-it
@@ -55,7 +54,7 @@
         message-send-mail-function 'message-send-mail-with-sendmail))
     :post-config
     (progn
-(setq mu4e-contexts
+      (setq mu4e-contexts
         `(,(make-mu4e-context
              :name "work"
              :enter-func (lambda () (progn
