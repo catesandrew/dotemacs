@@ -33,6 +33,7 @@
      (org-capture :location built-in)
      (org-habit :location built-in)
      (org-mobile :location built-in)
+     (org-mac-link :location built-in)
      ;; (helm-org :location built-in)
      org-super-agenda
      org-jira
@@ -734,6 +735,22 @@
     :config
     (progn
       )))
+
+
+;; org-mac-link
+(defun cats-org/pre-init-org-mac-link ()
+  (spacemacs|use-package-add-hook org :post-config (require 'org-mac-link)))
+
+(defun cats-org/init-org-mac-link ()
+  (use-package org-mac-link
+    :defer t
+    :config
+    (progn
+      (defun org-mac-message-open (message-id _)
+        "Visit the message with MESSAGE-ID.
+This will use the command `open' with the message URL."
+        (start-process (concat "open message:" message-id) nil
+          "open" (concat "message://" message-id))))))
 
 
 ;; ox-md

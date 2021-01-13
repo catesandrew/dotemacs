@@ -247,6 +247,21 @@ This function should only modify configuration layer settings."
      search-engine
      templates
      pass
+     (confluence :variables
+        confluence-url "https://wiki.int.payoff.com/rpc/xmlrpc")
+     (mu4e :variables
+       mu4e-installation-path "/usr/local/share/emacs/site-lisp"
+       mu4e-use-maildirs-extension t
+       mu4e-enable-notifications t
+       mu4e-date-format "%y/%m/%d"
+       mu4e-headers-date-format "%Y/%m/%d"
+       mu4e-view-prefer-html t
+       mu4e-show-images t
+       mu4e-view-image-max-width 800
+       mu4e-enable-mode-line t
+       ;; mu4e-html2text-command "html2text"
+       mu4e-enable-async-operations t
+       )
      ;; My personal layers
      cats
      cats-core
@@ -274,6 +289,7 @@ This function should only modify configuration layer settings."
      cats-grammar
      cats-vm
      cats-langs
+     cats-mail
      ;; cats-private
     )
 
@@ -525,12 +541,12 @@ values."
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
-   ;; Name of the default layout (default "Default")
-   dotspacemacs-default-layout-name "Default"
+   ;; Name of the default layout (default "default")
+   dotspacemacs-default-layout-name "default"
 
    ;; If non-nil the default layout name is displayed in the mode-line.
    ;; (default nil)
-   dotspacemacs-display-default-layout nil
+   dotspacemacs-display-default-layout t
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
