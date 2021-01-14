@@ -125,6 +125,7 @@ This function should only modify configuration layer settings."
      ;; github
      ;; Development tools
      restclient
+     copy-as-format
      dash
      lua
      ;; (clojure :variables clojure-enable-linters '(clj-kondo joker))

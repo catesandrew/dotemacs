@@ -10,6 +10,7 @@
   '(
      (mu4e :location site)
      slack
+     persp-mode
      ))
 
 
@@ -126,35 +127,28 @@
         (add-to-list
           'alert-user-configuration
           '(((:message . "@acates\\")
-              (:title . "\\(frontend-eng\\|skynet\\|frontend-eng-redalert\\)")
+              (:title . "\\(uie\\|frontend-eng\\|skynet\\|frontend-eng-redalert\\)")
               (:category . "slack"))
              libnotify nil)))
 
-      (with-eval-after-load 'tracking
-        (define-key tracking-mode-map [f11]
-          #'tracking-next-buffer))
-
-      ;; Priorities first. The most important improvement you can implement is
-      ;; install emojify-mode and turn it on for slack chats.
-      ;; (add-hook 'slack-mode-hook #'emojify-mode)
-
       (setq
-        ;; Ensure the buffer exists when a message arrives on a channel that
-        ;; wasn't open.
+        ;; Ensure the buffer exists when a message
+        ;; arrives on a channel that wasn't open.
         slack-buffer-create-on-notify t
         slack-buffer-emojify t
+        slack-render-image-p nil
         slack-prefer-current-team t
-        slack-display-team-name nil))
+        slack-display-team-name nil)
+      )
     :post-config
     (progn
       (slack-register-team
-        :name "happy-money"
+        :name "Happy Money"
         :default t
         :client-id "acates@happymoney.com"
         :token (password-store-get "work/slack-token")
         :full-and-display-names t
-        ;; :subscribed-channels '(uie frontend-eng skynet)
-        )
+        :subscribed-channels '(uie frontend-eng))
 
       ;; I’ll never know who thought user statuses were a good idea for Slack.
       ;; But, thanks to a tip by _asummers on HackerNews, I can live in a world
@@ -193,4 +187,18 @@
           (call-interactively #'slack-message-embed-mention)
           (insert " ")))
       )))
+
+(defun cats-mail/pre-init-persp-mode ()
+  (spacemacs|use-package-add-hook persp-mode
+    :post-config
+    (progn
+      (spacemacs|define-custom-layout slack-spacemacs-layout-name
+        :binding slack-spacemacs-layout-binding
+        :body
+        (progn
+          (add-hook 'slack-mode #'spacemacs//slack-buffer-to-persp)
+          (call-interactively 'slack-start)
+          (sleep-for 10)
+          (call-interactively 'slack-channel-select)
+          )))))
 ;;; packages.el ends here
