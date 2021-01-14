@@ -25,6 +25,17 @@
     (progn
       ;; Set up some common mu4e variables
       (setq mu4e-maildir (expand-file-name "~/.mail")
+        mu4e-installation-path "/usr/local/share/emacs/site-lisp"
+        mu4e-use-maildirs-extension t
+        mu4e-enable-notifications t
+        mu4e-date-format "%y/%m/%d"
+        mu4e-headers-date-format "%Y/%m/%d"
+        mu4e-view-prefer-html t
+        mu4e-show-images t
+        mu4e-view-image-max-width 800
+        mu4e-enable-mode-line t
+        ;; mu4e-html2text-command "html2text"
+        mu4e-enable-async-operations t
         ;; get-mail-command set to true because mail sync is happening via
         ;; external processes but we still need to re-index the mailstore to
         ;; realize the updates
