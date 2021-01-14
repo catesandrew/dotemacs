@@ -88,7 +88,7 @@
 ;; org-msg
 (defun cats-org/init-org-msg ()
   (use-package org-msg
-    :commands (org-msg-mode org-msg-mode-mu4e org-msg-mode-notmuch org-msg-mode-gnus)
+    :commands (org-msg-mode org-msg-edit-mode org-msg-mode-mu4e org-msg-mode-notmuch org-msg-mode-gnus)
     :init
     (progn
       (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
