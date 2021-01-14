@@ -74,6 +74,7 @@
                    :fetcher github
                    :repo "tecosaur/org-pandoc-import"
                    :files ("*.el" "filters" "confident")))
+     org-msg
      ))
 
 
@@ -82,6 +83,40 @@
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
 
+
+
+;; org-msg
+(defun cats-org/init-org-msg ()
+  (use-package org-msg
+    :commands (org-msg-mode org-msg-mode-mu4e org-msg-mode-notmuch org-msg-mode-gnus)
+    :init
+    (progn
+      (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+	      org-msg-startup "hidestars indent inlineimages"
+	      org-msg-greeting-fmt "\nHi *%s*,\n\n"
+	      org-msg-greeting-name-limit 3
+	      org-msg-default-alternatives '(text html)
+	      org-msg-convert-citation t
+	      org-msg-signature "
+
+Regards,
+
+#+begin_signature
+-- \\\\
+*Andrew Cates* \\\\
+/One Emacs to rule them all/
+#+end_signature"))
+    :config
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'org-msg-edit-mode
+        dotspacemacs-major-mode-leader-key 'message-send-and-exit
+        "c" 'org-ctrl-c-ctrl-c
+        "k" 'message-kill-buffer
+        "a" 'message-kill-buffer
+        "s" 'message-dont-send         ; saves as draft
+        "f" 'org-msg-attach
+        "p" 'org-msg-preview)
+      )))
 
 ;; org-pandoc-import
 (defun cats-org/init-org-pandoc-import ()

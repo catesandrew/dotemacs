@@ -25,6 +25,22 @@
     (progn
       ;; Set up some common mu4e variables
       (setq mu4e-maildir (expand-file-name "~/.mail")
+        ;; note: org-msg-mode has to be enabled first before composing and set mail user agent to
+        ;; mail-user-agent 'mu4e-user-agent
+        ;; mu4e-org-support nil
+        mu4e-compose-dont-reply-to-self t
+        ;; every new email composition gets its own frame!
+        ;; mu4e-compose-in-new-frame t
+        mu4e-headers-include-related t
+        mu4e-headers-visible-lines 20
+        mu4e-use-fancy-chars t
+        ;; enable inline images
+        mu4e-attachment-dir  (expand-file-name "~/Downloads")
+        mu4e-headers-auto-update nil
+        mu4e-compose-signature-auto-include nil
+        mu4e-compose-format-flowed t
+        ;; don't keep message buffers around
+        message-kill-buffer-on-exit t
         mu4e-installation-path "/usr/local/share/emacs/site-lisp"
         mu4e-use-maildirs-extension t
         mu4e-enable-notifications t
