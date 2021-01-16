@@ -97,6 +97,7 @@
 	      org-msg-greeting-name-limit 3
 	      org-msg-default-alternatives '(text html)
 	      org-msg-convert-citation t
+        org-msg-text-plain-alternative t
 	      org-msg-signature "
 
 Regards,
@@ -2296,7 +2297,12 @@ This will use the command `open' with the message URL."
 (defun cats-org/pre-init-org-mime ()
   (spacemacs|use-package-add-hook org-mime
     :post-init
-    ()))
+    (progn
+      (setq
+        org-mime-export-ascii 'utf-8
+        org-mime-export-options '(:section-numbers nil
+                                   :with-author nil
+                                   :with-toc nil)))))
 
 
 ;; autoinsert

@@ -11,14 +11,26 @@
      (mu4e :location site)
      slack
      persp-mode
+     ;; (markdown-mime :location local)
      ))
+
+
+;; markdown-mime
+(defun cats-mail/init-markdown-mime ()
+  (use-package markdown-mime
+    :defer t
+    :init
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'message-mode
+        "em" 'markdown-mime-htmlize)
+      (spacemacs/set-leader-keys-for-major-mode 'markdown-mode
+        "em" 'markdown-mime-org-buffer-htmlize))))
 
 
 ;; mu4e
 
 ;; mu init --maildir=~/.mail --my-address=catesandrew@gmail.com --my-address=acates@happymoney.com
 ;; mu index
-
 (defun cats-mail/pre-init-mu4e ()
   (spacemacs|use-package-add-hook mu4e
     :post-init
@@ -216,6 +228,7 @@
       )))
 
 (defun cats-mail/pre-init-persp-mode ()
+  ;; add 10 sec delay before showing list of channels
   (spacemacs|use-package-add-hook persp-mode
     :post-config
     (progn
