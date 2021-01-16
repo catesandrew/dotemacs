@@ -251,7 +251,6 @@ This function should only modify configuration layer settings."
      (confluence :variables
         confluence-url "https://wiki.int.payoff.com/rpc/xmlrpc")
      (mu4e :variables
-       mail-org-msg-support t
        org-mu4e-convert-to-html t
        mu4e-org-compose-support t)
      ;; My personal layers

@@ -226,6 +226,27 @@
           (add-hook 'slack-mode #'spacemacs//slack-buffer-to-persp)
           (call-interactively 'slack-start)
           (sleep-for 10)
-          (call-interactively 'slack-channel-select)
-          )))))
+          (call-interactively 'slack-channel-select)))
+
+      ;; add org-msg buffers to perspective
+      (spacemacs|define-custom-layout mu4e-spacemacs-layout-name
+        :binding mu4e-spacemacs-layout-binding
+        :body
+        (progn
+          (defun spacemacs-layouts/add-mu4e-buffer-to-persp ()
+            (persp-add-buffer (current-buffer)
+              (persp-get-by-name
+                mu4e-spacemacs-layout-name)))
+          (spacemacs/add-to-hooks 'spacemacs-layouts/add-mu4e-buffer-to-persp
+            '(mu4e-main-mode-hook
+               mu4e-headers-mode-hook
+               mu4e-view-mode-hook
+               mu4e-compose-mode-hook
+               org-msg-edit-mode-hook))
+          (call-interactively 'mu4e)
+          (call-interactively 'mu4e-update-index)
+
+          (define-advice mu4e~stop (:after nil kill-mu4e-layout-after-mu4e~stop)
+            (when mu4e-spacemacs-kill-layout-on-exit
+              (persp-kill mu4e-spacemacs-layout-name))))))))
 ;;; packages.el ends here
