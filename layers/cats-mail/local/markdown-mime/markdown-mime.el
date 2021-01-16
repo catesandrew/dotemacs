@@ -176,16 +176,6 @@ OPTS is export options."
   (while (re-search-forward (format "class=\"%s\"" class) nil t)
     (replace-match (format "class=\"%s\" style=\"%s\"" class style))))
 
-;; ;; example addition to `markdown-mime-html-hook' adding a dark background
-;; ;; color to <pre> elements
-;; (add-hook 'markdown-mime-html-hook
-;;           (lambda ()
-;;             (markdown-mime-change-element-style
-;;              "pre" (format "color: %s; background-color: %s;"
-;;                            "#E6E1DC" "#232323"))
-;;             (markdown-mime-change-class-style
-;;              "verse" "border-left: 2px solid gray; padding-left: 4px;")))
-
 (defun markdown-mime-file (ext path id)
   "Markup a file with EXT, PATH and ID for attachment."
   (when markdown-mime-debug (message "markdown-mime-file called => %s %s %s" ext path id))
@@ -306,25 +296,9 @@ CURRENT-FILE is used to calculate full path of images."
       str)
      html-images)))
 
-(defun markdown-mime-extract-non-image-files ()
-  "Extract non-image links in current buffer."
-  (cond
-   ((>= (markdown-mime-org-major-version) 9)
-    (org-element-map (org-element-parse-buffer) 'link
-      (lambda (link)
-        (when (and (string= (org-element-property :type link) "file")
-                   (not (string-match
-                         (cdr (assoc "file" org-html-inline-image-rules))
-                         (org-element-property :path link))))
-          (org-element-property :path link)))))
-   (t
-    (message "Warning: org-element-map is not available. File links will not be attached.")
-    nil)))
-
-(defun markdown-mime-insert-html-content (plain file html opts)
+(defun markdown-mime-insert-html-content (plain file html &optional opts)
   "Insert PLAIN into FILE with HTML content and OPTS."
-  (let* ((files (markdown-mime-extract-non-image-files))
-         ;; dvipng for inline latex because MathJax doesn't work in mail
+  (let* (;; dvipng for inline latex because MathJax doesn't work in mail
          ;; Also @see https://github.com/markdown-mime/markdown-mime/issues/16
          ;; (setq org-html-with-latex nil) sometimes useful
          (org-html-with-latex markdown-mime-org-html-with-latex-default)
@@ -340,28 +314,9 @@ CURRENT-FILE is used to calculate full path of images."
          (html-and-images (markdown-mime-replace-images html file))
          (images (cdr html-and-images))
          (html (markdown-mime-apply-html-hook (car html-and-images))))
-
-    ;; If there are files that were attached, we should remove the links,
-    ;; and mark them as attachments. The links don't work in the html file.
-    (when files
-      (mapc (lambda (f)
-              (setq html (replace-regexp-in-string
-                          (format "<a href=\"%s\">%s</a>"
-                                  (regexp-quote f) (regexp-quote f))
-                          (format "%s (attached)" (file-name-nondirectory f))
-                          html)))
-            files))
-
     (insert (markdown-mime-multipart plain
                                 html
-                                (if images (mapconcat 'identity images "\n"))))
-
-    ;; Attach any residual files
-    (when files
-      (mapc (lambda (f)
-              (when markdown-mime-debug (message "attaching: %s" f))
-              (mml-attach-file f))
-            files))))
+                                (if images (mapconcat 'identity images "\n"))))))
 
 (defun markdown-mime-mail-body-begin ()
   "Get begin of mail body."
@@ -378,11 +333,11 @@ CURRENT-FILE is used to calculate full path of images."
 
 ;;;###autoload
 (defun markdown-mime-htmlize ()
-  "Export a portion of an email to html using `org-mode'.
+  "Export a portion of an email to html using `markdown-mode'.
 If called with an active region only export that region, otherwise entire body."
   (interactive)
   (when markdown-mime-debug (message "markdown-mime-htmlize called"))
-  (let* ((region-p (org-region-active-p))
+  (let* ((region-p (region-active-p))
          (html-start (funcall markdown-mime-find-html-start
                               (or (and region-p (region-beginning))
                                   (markdown-mime-mail-body-begin))))
@@ -390,17 +345,8 @@ If called with an active region only export that region, otherwise entire body."
                        (or
                         (markdown-mime-mail-signature-begin)
                         (point-max))))
-         (org-text (buffer-substring html-start html-end))
-;; to hold attachments for inline html images
-         (opts (if (fboundp 'org-export--get-inbuffer-options)
-                   (org-export--get-inbuffer-options)))
-         (ascii-charset (markdown-mime-use-ascii-charset))
-         (plain (if ascii-charset
-                    (progn
-                      (setq org-ascii-charset ascii-charset)
-                      (org-export-string-as (concat markdown-mime-default-header org-text) 'ascii nil opts))
-                  org-text))
-         (html (markdown-mime-export-string (concat markdown-mime-default-header org-text) opts))
+         (md-text (buffer-substring html-start html-end))
+         (html (markdown-mime-export-string (concat markdown-mime-default-header md-text)))
          (file (make-temp-name (expand-file-name
                                 "mail" temporary-file-directory))))
 
@@ -408,361 +354,9 @@ If called with an active region only export that region, otherwise entire body."
     (delete-region html-start html-end)
     (goto-char html-start)
     ;; insert new current
-    (markdown-mime-insert-html-content plain file html opts)))
+    (markdown-mime-insert-html-content md-text file html)))
 
-(defun markdown-mime-apply-html-hook (html)
-  "Apply HTML hook."
-  (if markdown-mime-html-hook
-      (with-temp-buffer
-        (insert html)
-        (goto-char (point-min))
-        (run-hooks 'markdown-mime-html-hook)
-        (buffer-string))
-    html))
-
-(defun markdown-mime--get-buffer-title ()
-  "Get buffer title."
-  (let* ((tmp (if (fboundp 'org-export--get-inbuffer-options)
-                  (plist-get (org-export--get-inbuffer-options) :title))))
-    (when tmp
-      (let ((txt (car tmp)))
-        (set-text-properties 0 (length txt) nil txt)
-        txt))))
-
-(defun markdown-mime-compose (exported file to subject headers subtreep)
-  "Create mail body from EXPORTED in FILE with TO, SUBJECT, HEADERS.
-If SUBTREEP is t, curret org node is subtree."
-  ;; start composing mail
-  (let* ((html (car exported))
-         (plain (cdr exported))
-         (export-opts (markdown-mime-get-export-options subtreep))
-         patched-html)
-    (compose-mail to subject headers nil)
-    (message-goto-body)
-    (setq patched-html (with-temp-buffer
-                         (insert html)
-                         (goto-char (point-min))
-                         (run-hooks 'markdown-mime-pre-html-hook)
-                         (buffer-string)))
-    ;; insert text
-    (markdown-mime-insert-html-content plain file patched-html export-opts)))
-
-(defun markdown-mime-extract-keywords ()
-  "Extract keywords."
-  (cond
-   ((>= (markdown-mime-org-major-version) 9)
-    (org-element-map (org-element-parse-buffer) 'keyword
-      (lambda (keyword)
-        (cons (org-element-property :key keyword)
-              (org-element-property :value keyword)))))
-   (t
-    (message "Warning: org-element-map is not available. File keywords will not work.")
-    '())))
-
-(defun markdown-mime-build-mail-other-headers (cc bcc from)
-  "Build mail header from CC, BCC, and FROM."
-  (let* ((arr (list (cons "Cc" cc) (cons "Bcc" bcc)  (cons "From" from )))
-         rlt)
-    (dolist (e arr)
-      (when (cdr e)
-        (push e rlt)))
-    rlt))
-
-;;;###autoload
-(defun markdown-mime-org-buffer-htmlize ()
-  "Create an email buffer of the current org buffer.
-The email buffer will contain both html and in org formats as mime
-alternatives.
-
-The following file keywords can be used to control the headers:
-#+MAIL_TO: some1@some.place
-#+MAIL_SUBJECT: a subject line
-#+MAIL_CC: some2@some.place
-#+MAIL_BCC: some3@some.place
-#+MAIL_FROM: sender@some.place
-
-The cursor ends in the TO field."
-  (interactive)
-  (run-hooks 'markdown-mime-send-buffer-hook)
-  (let* ((org-html-klipsify-src nil)
-         (region-p (org-region-active-p))
-         (file (buffer-file-name (current-buffer)))
-         (keywords (markdown-mime-extract-keywords))
-         (subject (or (cdr (assoc "MAIL_SUBJECT" keywords))
-                      (markdown-mime--get-buffer-title)
-                      (if (not file) (buffer-name (buffer-base-buffer))
-                        (file-name-sans-extension
-                         (file-name-nondirectory file)))))
-         (exported (markdown-mime-export-buffer-or-subtree nil))
-         (to (cdr (assoc "MAIL_TO" keywords)))
-         (cc (cdr (assoc "MAIL_CC" keywords)))
-         (bcc (cdr (assoc "MAIL_BCC" keywords)))
-         (from (cdr (assoc "MAIL_FROM" keywords)))
-         (other-headers (markdown-mime-build-mail-other-headers cc bcc from)))
-    (markdown-mime-compose exported file to subject other-headers nil)
-    (message-goto-to)))
-
-(defun markdown-mime-org-major-version ()
-  "Get Org major version."
-  (string-to-number (car (split-string (org-release) "\\."))))
-
-(defun markdown-mime-attr (property)
-  "Get org mime PROPERTY."
-  (org-entry-get nil property markdown-mime-use-property-inheritance))
-
-;;;###autoload
-(defun markdown-mime-org-subtree-htmlize (&optional htmlize-first-level)
-  "Create an email buffer from current subtree.
-If HTMLIZE-FIRST-LEVEL is t, first level subtree of current node is htmlized.
-
-Following headline properties can determine the mail headers.
-* subtree heading
-  :PROPERTIES:
-  :MAIL_SUBJECT: mail title
-  :MAIL_TO: person1@gmail.com
-  :MAIL_CC: person2@gmail.com
-  :MAIL_BCC: person3@gmail.com
-  :MAIL_FROM: sender@gmail.com
-  :END:"
-  (interactive "P")
-  (save-excursion
-    (org-back-to-heading)
-
-    (when (and htmlize-first-level
-               (not (string-match "^\\* " (markdown-mime-current-line))))
-      ;; go back to the 1st level substree
-      (re-search-backward "^\\* ")
-      (org-back-to-heading))
-
-    (when (outline-on-heading-p nil)
-      (let* ((file (buffer-file-name (current-buffer)))
-             (subject (or (markdown-mime-attr "MAIL_SUBJECT")
-                          (nth 4 (org-heading-components))))
-             (to (markdown-mime-attr "MAIL_TO"))
-             (cc (markdown-mime-attr "MAIL_CC"))
-             (bcc (markdown-mime-attr "MAIL_BCC"))
-             (from (markdown-mime-attr "MAIL_FROM"))
-             ;; Thanks to Matt Price improving handling of cc & bcc headers
-             (other-headers (markdown-mime-build-mail-other-headers cc bcc from))
-             (org-export-show-temporary-export-buffer nil)
-             (subtree-opts (when (fboundp 'org-export--get-subtree-options)
-                             (org-export--get-subtree-options)))
-             (org-export-show-temporary-export-buffer nil)
-             (org-major-version (markdown-mime-org-major-version))
-             ;; I wrap these bodies in export blocks because in markdown-mime-compose
-             ;; they get exported again. This makes each block conditionally
-             ;; exposed depending on the backend.
-             (exported (save-restriction (org-narrow-to-subtree)
-                                          (markdown-mime-export-buffer-or-subtree t))))
-        (save-restriction
-          (org-narrow-to-subtree)
-          (markdown-mime-compose exported file to subject other-headers t))
-        (message-goto-to)))))
-
-(defun markdown-mime-src--remove-overlay ()
-  "Remove overlay from current source buffer."
-  (when (overlayp markdown-mime-src--overlay)
-    (delete-overlay markdown-mime-src--overlay)))
-
-(defun markdown-mime-edited-code ()
-  "Get edited code."
-  (save-excursion
-    (goto-char (point-min))
-    (search-forward markdown-mime-src--hint (point-max) t)
-    (goto-char (line-beginning-position))
-    (buffer-substring-no-properties (point) (point-max))))
-
-(defun markdown-mime-edit-src-save ()
-  "Save parent buffer with current state source-code buffer."
-  (interactive)
-  (set-buffer-modified-p nil)
-  (let* ((edited-code (markdown-mime-edited-code))
-         (beg markdown-mime-src--beg-marker)
-         (end markdown-mime-src--end-marker)
-         (overlay markdown-mime-src--overlay))
-    (with-current-buffer (marker-buffer markdown-mime-src--beg-marker)
-      (undo-boundary)
-      (goto-char beg)
-      ;; Temporarily disable read-only features of OVERLAY in order to
-      ;; insert new contents.
-      (delete-overlay overlay)
-      (delete-region beg end)
-      (let* ((expecting-bol (bolp)))
-        (insert edited-code)
-        (when (and expecting-bol (not (bolp))) (insert "\n")))
-      (save-buffer)
-      (move-overlay overlay beg (point))))
-  ;; `write-contents-functions' requires the function to return
-  ;; a non-nil value so that other functions are not called.
-  t)
-
-(defun markdown-mime-src-mode-configure-edit-buffer ()
-  "Set up clean up functions when editing source code."
-  (add-hook 'kill-buffer-hook #'markdown-mime-src--remove-overlay nil 'local)
-  (setq buffer-offer-save t)
-  (setq-local write-contents-functions '(markdown-mime-edit-src-save)))
-
-(defvar markdown-mime-src-mode-hook nil
-  "Hook run after switching embedded org code to its `org-mode'.")
-
-(defun markdown-mime-edit-src-exit ()
-  "Kill current sub-editing buffer and return to source buffer."
-  (interactive)
-  (let* ((beg markdown-mime-src--beg-marker)
-         (end markdown-mime-src--end-marker)
-         (edit-buffer (current-buffer))
-         (source-buffer (marker-buffer beg)))
-    (markdown-mime-edit-src-save)
-    (unless source-buffer (error "Source buffer disappeared.  Aborting"))
-    ;; Insert modified code.  Ensure it ends with a newline character.
-    (kill-buffer edit-buffer)
-
-    ;; to the beginning of the block opening line.
-    (goto-char beg)
-
-    ;; Clean up left-over markers and restore window configuration.
-    (set-marker beg nil)
-    (set-marker end nil)
-    (when markdown-mime--saved-temp-window-config
-      (set-window-configuration markdown-mime--saved-temp-window-config)
-      (setq markdown-mime--saved-temp-window-config nil))))
-
-(defvar markdown-mime-src-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") 'markdown-mime-edit-src-exit)
-    (define-key map (kbd "C-x C-s") 'markdown-mime-edit-src-save)
-    map))
-
-(define-minor-mode markdown-mime-src-mode
-  "Minor mode for org major mode buffers generated from mail body."
-  nil " OrgMimeSrc" nil
-  )
-(add-hook 'markdown-mime-src-mode-hook #'markdown-mime-src-mode-configure-edit-buffer)
-
-(defun markdown-mime-src--make-source-overlay (beg end)
-  "Create overlay between BEG and END positions and return it."
-  (let* ((overlay (make-overlay beg end)))
-    (overlay-put overlay 'face 'secondary-selection)
-    (let ((read-only
-           (list
-            (lambda (&rest _)
-              (user-error
-               "Cannot modify an area being edited in a dedicated buffer")))))
-      (overlay-put overlay 'modification-hooks read-only)
-      (overlay-put overlay 'insert-in-front-hooks read-only)
-      (overlay-put overlay 'insert-behind-hooks read-only))
-    overlay))
-
-(defun markdown-mime-edit-mail-in-org-mode ()
-  "Call a special editor to edit the mail body in `org-mode'."
-  (interactive)
-  ;; see `org-src--edit-element'
-  (cond
-   ((eq major-mode 'org-mode)
-    (message "This command is not for `org-mode'."))
-   (t
-    (setq markdown-mime--saved-temp-window-config (current-window-configuration))
-    (let* ((beg (copy-marker (markdown-mime-mail-body-begin)))
-           (end (copy-marker (point-max)))
-           (bufname "OrgMimeMailBody")
-           (buffer (generate-new-buffer bufname))
-           (overlay (markdown-mime-src--make-source-overlay beg end))
-           (text (buffer-substring-no-properties beg end)))
-
-      (setq markdown-mime-src--beg-marker beg)
-      (setq markdown-mime-src--end-marker end)
-      ;; don't use local-variable because only user can't edit multiple emails
-      ;; or multiple embedded org code in one mail
-      (setq markdown-mime-src--overlay overlay)
-
-      (save-excursion
-        (delete-other-windows)
-        (org-switch-to-buffer-other-window buffer)
-        (erase-buffer)
-        (insert markdown-mime-src--hint)
-        (insert text)
-        (goto-char (point-min))
-        (org-mode)
-        (markdown-mime-src-mode))))))
-
-(defun markdown-mime-revert-to-plain-text-mail ()
-  "Revert mail body to plain text."
-  (interactive)
-  (let* ((txt-sep "<#part type=text/plain")
-         (html-sep "<#part type=text/html>")
-         mail-beg
-         mail-text
-         txt-beg
-         txt-end)
-    (save-excursion
-      (goto-char (point-min))
-      (setq mail-beg (search-forward mail-header-separator (point-max) t))
-      (setq txt-beg (search-forward txt-sep (point-max) t))
-      (setq txt-end (search-forward html-sep (point-max) t)))
-    (cond
-     ((and mail-beg txt-beg txt-end (< mail-beg txt-beg txt-end))
-      ;; extract text mail
-      (setq mail-text (buffer-substring-no-properties txt-beg
-                                                      (- txt-end (length html-sep))))
-      ;; delete html mail
-      (delete-region mail-beg (point-max))
-      ;; restore text mail
-      (insert mail-text))
-     (t
-      (message "Can not find plain text mail.")))))
-
-(defun markdown-mime-confirm-when-no-multipart ()
-  "Prompts whether to send email if the buffer is not html-ized."
-  (let ((found-multipart (save-excursion
-                           (save-restriction
-                             (widen)
-                             (goto-char (point-min))
-                             (search-forward "<#multipart type=alternative>" nil t)))))
-    (when (and (not found-multipart)
-               (not (y-or-n-p "It seems `markdown-mime-htmlize' is NOT called; send anyway? ")))
-      (setq quit-flag t))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(defun markdown-mime-multipart-html-message (plain html)
-  "Creates a multipart HTML email with a text part and an html part."
-  (concat "<#multipart type=alternative>\n"
-    "<#part type=text/plain>"
-    plain
-    "<#part type=text/html>\n"
-    html
-    "<#/multipart>\n"))
-
+;; todo need to use convert code below ↓ and move it up into htmlize above ↑
 (defun markdown-mime-convert-message-to-markdown ()
   "Convert the message in the current buffer to a multipart HTML email.
 
@@ -795,29 +389,24 @@ The HTML is rendered by treating the message content as Markdown."
       (newline)
       (insert (markdown-mime-multipart-html-message raw-body html)))))
 
-(defun markdown-mime-message-md-send (&optional arg)
-  "Convert the current buffer and send it.
-If given prefix arg ARG, skips markdown conversion."
-  (interactive "P")
-  (unless arg
-    (markdown-mime-convert-message-to-markdown))
-  (message-send))
+(defun markdown-mime-multipart-html-message (plain html)
+  "Creates a multipart HTML email with a text part and an html part."
+  (concat "<#multipart type=alternative>\n"
+    "<#part type=text/plain>"
+    plain
+    "<#part type=text/html>\n"
+    html
+    "<#/multipart>\n"))
 
-(defun markdown-mime-message-md-send-and-exit (&optional arg)
-  "Convert the current buffer and send it, then exit from mail buffer.
-If given prefix arg ARG, skips markdown conversion."
-  (interactive "P")
-  (unless arg
-    (markdown-mime-convert-message-to-markdown))
-  (message-send-and-exit))
-
-(with-eval-after-load 'message
-  (define-key message-mode-map (kbd "C-c C-s") #'markdown-mime-message-md-send)
-  (define-key message-mode-map (kbd "C-c C-c") #'markdown-mime-message-md-send-and-exit))
-
-
-
-
+(defun markdown-mime-apply-html-hook (html)
+  "Apply HTML hook."
+  (if markdown-mime-html-hook
+    (with-temp-buffer
+      (insert html)
+      (goto-char (point-min))
+      (run-hooks 'markdown-mime-html-hook)
+      (buffer-string))
+    html))
 
 (provide 'markdown-mime)
 ;; Local Variables:
