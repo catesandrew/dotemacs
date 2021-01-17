@@ -10,6 +10,18 @@
 (require 'lisp-mnt)
 (require 'find-func)
 
+
+;; macros
+;; https://github.com/hlissner/doom-emacs/blob/develop/core/core-lib.el
+(defmacro delq! (elt list &optional fetcher)
+  "`delq' ELT from LIST in-place.
+If FETCHER is a function, ELT is used as the key in LIST (an alist)."
+  `(setq ,list
+     (delq ,(if fetcher
+              `(funcall ,fetcher ,elt ,list)
+              elt)
+       ,list)))
+
 (defun cats/insert-page-break-line ()
   "Insert a new line with a page break at point."
   (interactive)

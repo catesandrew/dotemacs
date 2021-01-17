@@ -45,9 +45,10 @@
         ;; mu4e-compose-in-new-frame t
         mu4e-headers-include-related t
         mu4e-headers-visible-lines 20
-        mu4e-use-fancy-chars t
         ;; enable inline images
-        mu4e-attachment-dir  (expand-file-name "~/Downloads")
+        mu4e-attachment-dir
+          (lambda (&rest _)
+            (expand-file-name ".attachments" (mu4e-root-maildir)))
         mu4e-headers-auto-update nil
         mu4e-compose-signature-auto-include nil
         mu4e-compose-format-flowed t
@@ -73,7 +74,27 @@
         mu4e-update-interval 300
         ;; mu4e-compose-signature-auto-include nil
         ;; mu4e-view-show-images t
-        mu4e-view-show-addresses t)
+        mu4e-view-show-addresses t
+        mu4e-headers-fields
+        '((:account . 12)
+           (:human-date . 12)
+           (:flags . 4)
+           (:from . 25)
+           (:subject)))
+
+      ;; Use fancy icons
+      (setq mu4e-use-fancy-chars t
+        mu4e-headers-draft-mark '("D" . "")
+        mu4e-headers-flagged-mark '("F" . "")
+        mu4e-headers-new-mark '("N" . "")
+        mu4e-headers-passed-mark '("P" . "")
+        mu4e-headers-replied-mark '("R" . "")
+        mu4e-headers-seen-mark '("S" . "")
+        mu4e-headers-trashed-mark '("T" . "")
+        mu4e-headers-attach-mark '("a" . "")
+        mu4e-headers-encrypted-mark '("x" . "")
+        mu4e-headers-signed-mark '("s" . "")
+        mu4e-headers-unread-mark '("u" . ""))
 
       (setq sendmail-program "msmtp"
         send-mail-function 'smtpmail-send-it
@@ -82,6 +103,21 @@
         message-send-mail-function 'message-send-mail-with-sendmail))
     :post-config
     (progn
+      ;; Add a column to display what email account the email belongs to.
+      (add-to-list 'mu4e-header-info-custom
+        '(:account
+           :name "Account"
+           :shortname "Account"
+           :help "Which account this email belongs to"
+           :function
+           (lambda (msg)
+             (let ((maildir (mu4e-message-field msg :maildir)))
+               (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
+
+      ;; Html mails might be better rendered in a browser
+      (add-to-list 'mu4e-view-actions '("View in browser" . mu4e-action-view-in-browser))
+
+      (cats/gmail-integration)
       (setq mu4e-contexts
         `(,(make-mu4e-context
              :name "work"
