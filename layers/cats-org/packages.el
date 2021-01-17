@@ -1406,6 +1406,10 @@ This will use the command `open' with the message URL."
   (spacemacs|use-package-add-hook org-jira
     :post-init
     (progn
+      (setq jiralib-url "https://happymoneyinc.atlassian.net")
+      (defconst jiralib-token
+        `("Cookie" . ,(concat "cloud.session.token=" (password-store-get "work/jira-session-token"))))
+
       (setq org-jira-working-dir cats//org-jira-dir
         org-jira-deadline-duedate-sync-p nil
         org-jira-worklog-sync-p nil
