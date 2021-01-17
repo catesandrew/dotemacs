@@ -9,6 +9,64 @@
 (defvar cats//org-dir "~/org/")
 
 (defvar cats//org-jira-dir (concat cats//org-dir "jira/"))
+
+(defvar cats//org-jira-projects '("UIE" "WEL"))
+
+;; (cdr (assoc "UIE" cats//org-jira-projects-issue-types))
+;; (car (rassoc "Bug" (cdr (assoc "UIE" cats//org-jira-projects-issue-types))))
+;; (cdr (assoc "1" (cdr (assoc "UIE" cats//org-jira-projects-issue-types))))
+
+;; jira req https://jira.int.payoff.com/rest/api/2/issuetype | jq '.[] | {id, name}' | jq -r '"(\"\(.id)\" . \"\(.name)\")"'
+(defconst cats//org-jira-projects-issue-types
+  "List of Project to issuetypes"
+  '(("UIE"
+      ("1" . "Bug")
+      ("4" . "Improvement")
+      ("8" . "Epic")
+      ("3" . "Task")
+      ("5" . "Sub-task")
+      ("10800" . "Story")
+      ("7" . "User Story")
+      ("10416" . "Research")
+      ("10412" . "Data Pull")
+      ("10413" . "Dashboard")
+      ("10415" . "Automation")
+      ("10900" . "Reporting")
+      ("11401" . "Change Request")
+      ("10408" . "SoftwareDeployment")
+      ("10409" . "InfrastructureDeployment")
+      ("10410" . "ProductionConfigChange")
+      ("10411" . "PermissionsChange")
+      ("11400" . "QA Sub-task")
+      ("11500" . "Work Logging")
+      ("10418" . "Analysis")
+      ("10414" . "Modeling")
+      ("10417" . "Training")
+      ("10106" . "Access")
+      ("10102" . "IT Help")
+      ("11000" . "UIE - Design")
+      ("10103" . "Purchase")
+      ("10104" . "Change")
+      ("10105" . "Fault")
+      ("10500" . "Off-Boarding")
+      ("10700" . "LegacyIssue")
+      ("10701" . "NewPlatformIssue")
+      ("11200" . "MemberDataExport")
+      ("11201" . "MemberDataDelete")
+      ("11202" . "HMA")
+      ("11203" . "Product Task")
+      ("11204" . "Training Task")
+      ("11300" . "QA task")
+      ("11100" . "New Feature")
+      ("10600" . "Service Request"))
+     ("WEL"
+       ("71" . "Business Question")
+       ("91" . "Reject")
+       ("171" . "Failed Peer Review")
+       ("221" . "Done"))
+     ))
+
+
 (defvar cats//org-roam-dir (concat cats//org-dir "refs/notes/"))
 
 (defvar cats//org-roam-dailies-dir (concat cats//org-roam-dir "daily/"))
