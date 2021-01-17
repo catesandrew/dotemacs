@@ -71,3 +71,45 @@
        (:maildir "/gmail/Sent"  :key ?s)
        (:maildir "/gmail/All"   :key ?a)
        (:maildir "/gmail/Trash" :key ?t))))
+
+
+;; slack to org-mode
+;; [[https://ag91.github.io/blog/2020/09/12/org-mode-links-for-emacs-slack/][Org mode links for Emacs Slack - Where parallels cross]]
+
+
+;; slack quote region
+;; https://medium.com/@justincbarclay/hacking-emacs-to-send-text-to-slack-the-quickening-1f4258b88db8
+(defun cats/slack-quote-region ()
+  (with-temp-buffer
+    (insert region)
+    (goto-char 1)
+    (while (> (point-max) (point))
+      (beginning-of-line)
+      (insert "> ")
+      (forward-line 1))
+    (buffer-string)))
+
+(defun cats//decorate-text (text)
+  (let* ((decorators '(("None" . (lambda (text) text))
+                        ("Code"  . (lambda (text) (concat "```" text "```")))
+                        ("Quote"  . (lambda (text) (cats/slack-quote-region text)))))
+          (decoration (completing-read "Select decoration: "
+                        decorators
+                        nil
+                        t)))
+    (funcall (cdr (assoc decoration decorators)) text)))
+
+(defun cats/send-region-to-slack ()
+  "Send region to slack as code, quote or plain."
+  (interactive)
+  (let* ((team (slack-team-select))
+          (room (slack-room-select
+                  (cl-loop for team in (list team)
+                    append (append (slack-team-ims team)
+                             (slack-team-groups team)
+                             (slack-team-channels team)))
+                  team)))
+    (slack-message-send-internal (cats//decorate-text (filter-buffer-substring
+                                                     (region-beginning) (region-end)))
+      room
+      team)))
