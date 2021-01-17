@@ -8,6 +8,13 @@
 (defvar cats-edit-server-start-run nil
   "Whether `edit-server-start' has been run")
 
+(defvar cats-frame-font-size 14
+  "Frame font size.")
+
+(when (display-graphic-p)
+  (let* ((ffs (if (> (x-display-pixel-width) 2000) 16 14)))
+    (setq cats-frame-font-size ffs)))
+
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -490,8 +497,8 @@ values."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("PragmataPro Nerd Font"
-                               :size 14
+   dotspacemacs-default-font `("PragmataPro Nerd Font"
+                               :size ,cats-frame-font-size
                                :weight normal
                                :width normal)
 
@@ -815,7 +822,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
-
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.
