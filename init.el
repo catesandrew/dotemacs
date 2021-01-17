@@ -253,6 +253,7 @@ This function should only modify configuration layer settings."
      (mu4e :variables
        org-mu4e-convert-to-html t
        mu4e-org-compose-support t)
+     notmuch
      ;; My personal layers
      cats
      cats-core
