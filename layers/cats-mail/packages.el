@@ -51,19 +51,20 @@
           (lambda (&rest _)
             (expand-file-name ".attachments" (mu4e-root-maildir)))
         mu4e-headers-auto-update nil
+        org-mu4e-convert-to-html t
         mu4e-compose-signature-auto-include nil
         mu4e-compose-format-flowed t
         ;; don't keep message buffers around
         message-kill-buffer-on-exit t
         mu4e-installation-path "/usr/local/share/emacs/site-lisp"
         mu4e-use-maildirs-extension t
-        mu4e-enable-notifications t
+        mu4e-enable-notifications nil
         mu4e-date-format "%y/%m/%d"
         mu4e-headers-date-format "%Y/%m/%d"
         mu4e-view-prefer-html t
         mu4e-show-images t
         mu4e-view-image-max-width 800
-        mu4e-enable-mode-line t
+        mu4e-enable-mode-line nil
         ;; mu4e-html2text-command "html2text"
         mu4e-enable-async-operations t
         ;; get-mail-command set to true because mail sync is happening via

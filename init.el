@@ -258,7 +258,7 @@ This function should only modify configuration layer settings."
      (confluence :variables
         confluence-url "https://wiki.int.payoff.com/rpc/xmlrpc")
      (mu4e :variables
-       org-mu4e-convert-to-html t
+       mu4e-enable-mode-line t
        mu4e-org-compose-support t)
      notmuch
      ;; My personal layers
