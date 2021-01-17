@@ -11,6 +11,7 @@
      (mu4e :location site)
      slack
      persp-mode
+     notmuch
      ;; (markdown-mime :location local)
      ))
 
@@ -302,4 +303,40 @@
           (define-advice mu4e~stop (:after nil kill-mu4e-layout-after-mu4e~stop)
             (when mu4e-spacemacs-kill-layout-on-exit
               (persp-kill mu4e-spacemacs-layout-name))))))))
+
+
+;; notmuch
+(defun cats-mail/pre-init-notmuch ()
+  (spacemacs|use-package-add-hook notmuch
+    :post-init
+    (progn
+      (setq notmuch-fcc-dirs nil
+        notmuch-show-logo nil
+        notmuch-message-headers-visible nil
+        message-kill-buffer-on-exit t
+        message-send-mail-function 'message-send-mail-with-sendmail
+        notmuch-search-oldest-first nil
+        send-mail-function 'sendmail-send-it
+        ;; sendmail-program "/usr/local/bin/msmtp"
+        notmuch-search-result-format
+        '(("date" . "%12s ")
+          ("count" . "%-7s ")
+          ("authors" . "%-30s ")
+          ("subject" . "%-72s ")
+          ("tags" . "(%s)"))
+        notmuch-tag-formats
+        '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
+        notmuch-hello-sections
+        '(notmuch-hello-insert-saved-searches
+          notmuch-hello-insert-alltags)
+        notmuch-saved-searches
+        '((:name "inbox"   :query "tag:inbox not tag:trash" :key "i")
+          (:name "flagged" :query "tag:flagged"             :key "f")
+          (:name "sent"    :query "tag:sent"                :key "s")
+          (:name "drafts"  :query "tag:draft"               :key "d"))
+        notmuch-archive-tags '("-inbox" "-unread"))
+      )
+    :post-config
+    (progn)))
+
 ;;; packages.el ends here
