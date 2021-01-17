@@ -598,6 +598,11 @@ Inefficient implementation; don't use for large n."
         (er/expand-region 1)
         (kill-region (mark) (point))))))
 
+;; org-themes
+;; https://github.com/fniessen/org-html-themes
+;; https://commonplace.doubleloop.net/20200821142536-how_i_publish_my_wiki_with_org_publish?stackedNotes=%2F20200515201224-miller_columns.html
+;; https://github.com/jethrokuan/braindump
+
 (defun cats//find-free-service ()
   "Return a free (unused) TCP port.
 The port is chosen randomly from the ephemeral ports. "
