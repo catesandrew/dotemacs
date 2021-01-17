@@ -96,6 +96,10 @@
         mu4e-headers-signed-mark '("s" . "")
         mu4e-headers-unread-mark '("u" . ""))
 
+      ;; My spelling is terrile a little joke
+      (add-hook 'mu4e-compose-mode-hook 'turn-on-flyspell)
+      (add-hook 'mu4e-compose-mode-hook 'turn-on-auto-fill)
+
       (setq sendmail-program "msmtp"
         send-mail-function 'smtpmail-send-it
         message-sendmail-f-is-evil t
