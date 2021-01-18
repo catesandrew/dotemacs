@@ -9,11 +9,7 @@
   (setq mu4e-sent-messages-behavior 'delete
 
     ;; don't need to run cleanup after indexing for gmail
-    mu4e-index-cleanup nil
-
-    ;; because gmail uses labels as folders we can use lazy check since
-    ;; messages don't really "move"
-    mu4e-index-lazy-check t)
+    mu4e-index-cleanup nil)
 
   ;; In my workflow, emails won't be moved at all. Only their flags/labels are
   ;; changed. Se we redefine the trash and refile marks not to do any moving.
