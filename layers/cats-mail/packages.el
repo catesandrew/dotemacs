@@ -66,7 +66,7 @@
         mu4e-view-image-max-width 800
         mu4e-enable-mode-line nil
         ;; mu4e-html2text-command "html2text"
-        mu4e-enable-async-operations t
+        ;; mu4e-enable-async-operations t
         ;; get-mail-command set to true because mail sync is happening via
         ;; external processes but we still need to re-index the mailstore to
         ;; realize the updates
