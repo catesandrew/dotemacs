@@ -12,8 +12,31 @@
      slack
      persp-mode
      notmuch
+     (mu4e-views
+       :location (recipe
+                   :fetcher github
+                   :repo "lordpretzel/mu4e-views"
+                   :upgrade t))
      ;; (markdown-mime :location local)
      ))
+
+
+
+;; mu4e-views
+(defun cats-mail/init-mu4e-views ()
+  (use-package mu4e-views
+    :after mu4e
+    :config
+    ;; use ivy for completion
+    (setq mu4e-views-completion-method 'helm)
+    ;; make xwidgets default
+    (setq mu4e-views-default-view-method "html")
+    ;; when pressing n and p stay in the current window
+    (mu4e-views-mu4e-use-view-msg-method "html")
+    ;; select the default when pressing n and p stay in the current window
+    (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window)
+    ;; automatically open messages when moving in the headers view
+    (setq mu4e-views-auto-view-selected-message t)))
 
 
 ;; markdown-mime
