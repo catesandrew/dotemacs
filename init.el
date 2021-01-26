@@ -197,6 +197,7 @@ This function should only modify configuration layer settings."
                  javascript-backend nil
                  javascript-lsp-linter nil
                  javascript-import-tool 'import-js)
+     tern
      ;; npm install -g import-js
      import-js
      ;; (tern
@@ -880,11 +881,17 @@ you should place you code here."
   ;; seems to be needed to avoid weird artefacts with first graphical client
   (spacemacs|do-after-display-system-init
     "Ran on *first* instance of emacsclient."
-    (spacemacs/set-default-font '("PragmataPro"
-                                   :size 15
-                                   :weight normal
-                                   :width normal
-                                   :powerline-scale 1.0))
+    (progn
+      (when (display-graphic-p)
+        (let* ((ffs (if (> (x-display-pixel-width) 2000) 16 14)))
+          (setq cats-frame-font-size ffs)))
+
+      (spacemacs/set-default-font `("PragmataPro Nerd Font"
+                                     :size ,cats-frame-font-size
+                                     :weight normal
+                                     :width normal
+                                     :powerline-scale 1.0)))
+
 
     ;; initialize frame settings with first graphical client
     (cats//initialize-frame-size)
@@ -911,29 +918,29 @@ dump."
 (spacemacs/defer-until-after-user-config
  '(lambda ()
     (setq-default frame-title-format
-                  '(:eval
-                    (if (cats//current-buffer-remote-p)
-                        (format "%s@%s: %s %s"
-                                (or (file-remote-p default-directory 'user)
-                                    user-real-login-name)
-                                (or (file-remote-p default-directory 'host)
-                                    system-name)
-                                (buffer-name)
-                                (cond
-                                 (buffer-file-truename
-                                  (concat "(" buffer-file-truename ")"))
-                                 (dired-directory
-                                  (concat "{" dired-directory "}"))
-                                 (t
-                                  "[no file]")))
-                      (format "%s"
-                              (cond
-                               (buffer-file-name
-                                (cats/abbreviate-file-name buffer-file-name))
-                               (buffer-file-truename
-                                (cats/abbreviate-file-name buffer-file-truename))
-                               (t
-                                (buffer-name)))))))
+      '(:eval
+         (if (cats//current-buffer-remote-p)
+           (format "%s@%s: %s %s"
+             (or (file-remote-p default-directory 'user)
+               user-real-login-name)
+             (or (file-remote-p default-directory 'host)
+               system-name)
+             (buffer-name)
+             (cond
+               (buffer-file-truename
+                 (concat "(" buffer-file-truename ")"))
+               (dired-directory
+                 (concat "{" dired-directory "}"))
+               (t
+                 "[no file]")))
+           (format "%s"
+             (cond
+               (buffer-file-name
+                 (cats/abbreviate-file-name buffer-file-name))
+               (buffer-file-truename
+                 (cats/abbreviate-file-name buffer-file-truename))
+               (t
+                 (buffer-name)))))))
 
     (setq-default c-basic-offset 2)
     (setq-default tab-width 2)
