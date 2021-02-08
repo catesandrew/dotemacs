@@ -1536,6 +1536,9 @@ This will use the command `open' with the message URL."
     (progn)
     :post-config
     (progn
+      ;; enable easy-templates `<s TAB'
+      (require 'org-tempo)
+
       ;; (evilified-state-evilify-map org-mode-map
       ;;   :mode org-mode
       ;;   :bindings
