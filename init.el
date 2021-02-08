@@ -211,8 +211,10 @@ This function should only modify configuration layer settings."
      bibtex
      (latex :variables latex-enable-auto-fill t
                        latex-build-command "latexmk-osx"
-                       latex-enable-magic t
-                       latex-enable-folding t)
+                       latex-enable-magic nil
+                       latex-enable-folding t
+                       latex-refresh-preview t
+                       latex-nofill-env (append latex-nofill-env '("puml")))
      markdown
      python
      (ruby :variables

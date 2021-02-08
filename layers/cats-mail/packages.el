@@ -96,7 +96,7 @@
         mu4e-get-mail-command "true"
         ;; mu4e-context-policy 'pick-first
         mu4e-confirm-quit nil
-        mu4e-update-interval 300
+        ;; mu4e-update-interval 300
         ;; mu4e-compose-signature-auto-include nil
         ;; mu4e-view-show-images t
         mu4e-view-show-addresses t

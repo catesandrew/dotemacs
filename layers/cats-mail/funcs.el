@@ -6,10 +6,7 @@
 (defun cats/gmail-integration ()
   "Gmail integration"
   ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete
-
-    ;; don't need to run cleanup after indexing for gmail
-    mu4e-index-cleanup nil)
+  (setq mu4e-sent-messages-behavior 'delete)
 
   ;; In my workflow, emails won't be moved at all. Only their flags/labels are
   ;; changed. Se we redefine the trash and refile marks not to do any moving.
