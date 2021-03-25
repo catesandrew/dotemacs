@@ -214,7 +214,8 @@ This function should only modify configuration layer settings."
                        latex-enable-magic nil
                        latex-enable-folding t
                        latex-refresh-preview t
-                       latex-nofill-env (append latex-nofill-env '("puml")))
+                       ;; latex-nofill-env (append latex-nofill-env '("puml"))
+                       )
      markdown
      python
      (ruby :variables
@@ -825,6 +826,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
+
+ (add-to-list 'latex-nofill-env 'code)
+ (add-to-list 'latex-nofill-env 'puml)
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.
