@@ -515,6 +515,7 @@
              (hardhat-buffer-included-p (current-buffer))
              (cats//current-buffer-remote-p))
           ad-do-it))
+      (setq flycheck-textlint-config "~/.config/textlint/textlintrc.json")
       ;; (ad-activate 'flycheck-mode)
 
       (add-hook 'cats/tidy-executable-hook
