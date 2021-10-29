@@ -8,15 +8,11 @@
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-mail-packages
   '(
-     (mu4e :location site)
+     ;; (mu4e :location site)
      slack
      persp-mode
      notmuch
-     (mu4e-views
-       :location (recipe
-                   :fetcher github
-                   :repo "lordpretzel/mu4e-views"
-                   :upgrade t))
+     ;; mu4e-views
      ;; (markdown-mime :location local)
      ))
 

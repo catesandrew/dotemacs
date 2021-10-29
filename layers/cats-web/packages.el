@@ -21,7 +21,7 @@
     org
     smartparens
     web-mode
-    xah-css-mode
+    ;; xah-css-mode
     yasnippet
     ))
 

@@ -13,6 +13,7 @@
 
 (when (display-graphic-p)
   (let* ((ffs (if (> (x-display-pixel-width) 2000) 16 14)))
+    (setq confirm-kill-emacs 'yes-or-no-p)
     (setq cats-frame-font-size ffs)))
 
 (defun dotspacemacs/layers ()
@@ -148,7 +149,11 @@ This function should only modify configuration layer settings."
      ;; graphviz - open-source graph declaration system
      ;; Used to generated graphs of Clojure project dependencies
      graphviz
-     java
+     ;; gradle build --refresh-dependencies (from android)
+     (groovy :variables
+       groovy-backend 'company-groovy)
+     (java :variables
+       java-backend 'meghanada)
      windows-scripts
      vagrant
      ;; Programming and markup languages
@@ -245,7 +250,7 @@ This function should only modify configuration layer settings."
      (deft :variables
           deft-zetteldeft t)
      (shell :variables
-            shell-default-shell 'shell
+            shell-default-shell 'vterm
             shell-default-term-shell "/bin/bash"
             shell-default-height 30
             shell-default-position 'bottom
@@ -253,14 +258,12 @@ This function should only modify configuration layer settings."
             sh-basic-offset 2)
      ;; spacemacs-layouts layer added to set variables
      (spacemacs-layouts :variables
-                         spacemacs-layouts-restrict-spc-tab t
-                         persp-autokill-buffer-on-remove 'kill-weak)
+       spacemacs-layouts-restrict-spc-tab t
+       persp-autokill-buffer-on-remove t)
      asciidoc
      search-engine
      templates
      pass
-     (confluence :variables
-        confluence-url "https://wiki.int.payoff.com/rpc/xmlrpc")
      (mu4e :variables
        mu4e-enable-mode-line t
        mu4e-org-compose-support t)
@@ -352,24 +355,24 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-    ;; If non-nil then enable support for the portable dumper. You'll need
-    ;; to compile Emacs 27 from source following the instructions in file
-    ;; EXPERIMENTAL.org at to root of the git repository.
-    ;; (default nil)
-    dotspacemacs-enable-emacs-pdumper nil
+   ;; If non-nil then enable support for the portable dumper. You'll need
+   ;; to compile Emacs 27 from source following the instructions in file
+   ;; EXPERIMENTAL.org at to root of the git repository.
+   ;; (default nil)
+   dotspacemacs-enable-emacs-pdumper nil
 
-    ;; File path pointing to emacs 27.1 executable compiled with support
-    ;; for the portable dumper (this is currently the branch pdumper).
-    ;; (default "emacs-27.0.50")
-    dotspacemacs-emacs-pdumper-executable-file "emacs"
+   ;; Name of executable file pointing to emacs 27+. This executable must be
+   ;; in your PATH.
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
 
-    ;; Name of the Spacemacs dump file. This is the file will be created by the
-    ;; portable dumper in the cache directory under dumps sub-directory.
-    ;; To load it when starting Emacs add the parameter `--dump-file'
-    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-    ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-    ;; (default spacemacs.pdmp)
-    dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
+   ;; Name of the Spacemacs dump file. This is the file will be created by the
+   ;; portable dumper in the cache directory under dumps sub-directory.
+   ;; To load it when starting Emacs add the parameter `--dump-file'
+   ;; when invoking Emacs 27.1 executable on the command line, for instance:
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default (format "spacemacs-%s.pdmp" emacs-version))
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -398,12 +401,14 @@ values."
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; latest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. Spacelpa is currently in
+   ;; experimental state please use only for testing purposes.
+   ;; (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
-   ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives nil
+   ;; (default t)
+   dotspacemacs-verify-spacelpa-archives t
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -440,14 +445,24 @@ values."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -456,6 +471,14 @@ values."
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
+
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -499,9 +522,13 @@ values."
    dotspacemacs-mode-line-theme '(spacemacs :separator utf-8 :separator-scale 1.0)
    ;; dotspacemacs-mode-line-theme '(all-the-icons :separator-scale 1.0)
 
+   ;; If non-nil the cursor color matches the state color in GUI Emacs.
+   ;; (default t)
+   dotspacemacs-colorize-cursor-according-to-state t
+
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font `("PragmataPro Nerd Font"
+   dotspacemacs-default-font `("PragmataProMonoLiga Nerd Font"
                                :size ,cats-frame-font-size
                                :weight normal
                                :width normal)
@@ -524,8 +551,11 @@ values."
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
    dotspacemacs-major-mode-leader-key "\\"
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
+   ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+   ;; C-M-m also should work in terminal mode, but not in GUI mode.
+   dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-return>" "C-M-m")
+
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
    ;; Setting it to a non-nil value, allows for separate commands under `C-i'
@@ -593,7 +623,7 @@ values."
 
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.1
+   dotspacemacs-which-key-delay 0.4
 
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
@@ -626,10 +656,15 @@ values."
    ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
 
+   ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
+   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
+   ;; borderless fullscreen. (default nil)
+   dotspacemacs-undecorated-at-startup nil
+
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 98
+   dotspacemacs-active-transparency 100
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -651,11 +686,19 @@ values."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
-   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but only visual lines are counted. For example, folded lines will not be
+   ;; counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
+   ;;   :visual nil
    ;;   :disabled-for-modes dired-mode
    ;;                       doc-view-mode
    ;;                       markdown-mode
@@ -663,19 +706,25 @@ values."
    ;;                       pdf-view-mode
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers 'relative
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
 
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
+
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis t
    ;; Select a scope to highlight delimiters. Possible values are `any',
@@ -701,7 +750,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "pt" "ag" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
 
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'
@@ -719,12 +768,18 @@ values."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
+
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -733,19 +788,22 @@ values."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
-    ;; If non nil activate `clean-aindent-mode' which tries to correct
-    ;; virtual indentation of simple modes. This can interfer with mode specific
-    ;; indent handling like has been reported for `go-mode'.
-    ;; If it does deactivate it here.
-    ;; (default t)
-    dotspacemacs-use-clean-aindent-mode t
+   ;; If non-nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfere with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
 
-    ;; If non-nil shift your number row to match the entered keyboard layout
-    ;; (only in insert state). Currently supported keyboard layouts are:
-    ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
-    ;; New layouts can be added in `spacemacs-editing' layer.
-    ;; (default nil)
-    dotspacemacs-swap-number-row nil
+   ;; Accept SPC as y for prompts if non-nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
+
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -757,8 +815,11 @@ values."
     dotspacemacs-pretty-docs t
 
    ;; If nil the home buffer shows the full path of agenda items
-   ;; and todos. If non nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil))
+   ;; and todos. If non-nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile t))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -834,6 +895,9 @@ you should place you code here."
   ;; ridiculously bizarre thing entirely.
   (fset 'display-startup-echo-area-message #'ignore)
 
+  ;; termina-her to use iterm2
+  (setq terminal-here-mac-terminal-command 'iterm2)
+
   ;; (push "^\\*[^\\*]+\\*$" spacemacs-useless-buffers-regexp)
   ;; (push "\\*scratch\\*" spacemacs-useful-buffers-regexp)
   ;; (push "\\*spacemacs\\*" spacemacs-useful-buffers-regexp)
@@ -892,7 +956,7 @@ you should place you code here."
         (let* ((ffs (if (> (x-display-pixel-width) 2000) 16 14)))
           (setq cats-frame-font-size ffs)))
 
-      (spacemacs/set-default-font `("PragmataPro Nerd Font"
+      (spacemacs/set-default-font `("PragmataProMonoLiga Nerd Font"
                                      :size ,cats-frame-font-size
                                      :weight normal
                                      :width normal

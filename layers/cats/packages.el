@@ -21,7 +21,7 @@
      company-emoji
      (compile :location built-in)
      (conf-mode :location built-in)
-     dash
+     ;; dash
      (delsel :location built-in)
      (dired :location built-in)
      disable-mouse
@@ -35,7 +35,7 @@
      flycheck
      focus-autosave-mode
      gh
-     git-commit
+     ;; git-commit
      (grep :location built-in)
      hardhat
      helm
@@ -353,6 +353,8 @@
   (dolist
     (var '(
             "ANDROID_HOME"
+            "JAVA_HOME"
+            "GROOVY_HOME"
             "ANDROID_SDK_ROOT"
             "BREW_HOME"
             "EMAIL"
@@ -539,9 +541,9 @@
 
 
 ;; git-commit
-(defun cats/post-init-git-commit ()
-  ;; Support Git Commit Mode for external `git commit'
-  (global-git-commit-mode))
+;; (defun cats/post-init-git-commit ()
+;;   ;; Support Git Commit Mode for external `git commit'
+;;   (global-git-commit-mode))
 
 
 ;; magit-repos

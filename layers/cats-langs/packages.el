@@ -42,6 +42,9 @@
 (defun cats-langs/post-init-exec-path-from-shell ()
   (dolist (var '(
                   "JAVA_OPTS"
+                  "JAVA_HOME"
+                  "JDK_HOME"
+                  "GROOVY_HOME"
                   "PYENV_HOME"
                   "PYENV_ROOT"
                   "PYENV_SHELL"

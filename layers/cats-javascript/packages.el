@@ -41,7 +41,7 @@
                           :repo "purcell/tj-mode"))
      xref-js2
      jest
-     npm-mode
+     ;; npm-mode
      ))
 
 (defun cats-javascript/init-js-react-redux-yasnippets ()

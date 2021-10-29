@@ -66,7 +66,7 @@
      which-key
      deft
      zetteldeft
-     org-roam-server
+     ;; org-roam-server
      ;; org-roam-protocol
      org-roam-bibtex
      (org-pandoc-import
@@ -134,6 +134,7 @@ Regards,
     :post-init
     (progn
       (setq
+        org-roam-v2-ack t
         org-roam-directory cats//org-roam-dir
         org-roam-dailies-directory cats//org-roam-dailies-dir
         org-roam-db-location (concat cats//org-dir "refs/org-roam.db")

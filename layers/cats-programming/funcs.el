@@ -129,7 +129,7 @@
     ;; (global-set-key (kbd "M-RET") 'cats/newline-for-code)
 
     ;; prettify and enable locally
-    (add-pragmatapro-prettify-symbols-alist)
+    ;; (add-pragmatapro-prettify-symbols-alist)
     (cats/prettify-symbols-auto)
     (spacemacs/toggle-prettify-symbols-mode-on)))
 

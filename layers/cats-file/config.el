@@ -16,6 +16,7 @@
   '(
     ".coverage"                            ; python
     ".git"                                 ; git
+     ".gradle"                             ; gradle
     ".circleci"                            ; circle ci
     ".nyc_output"                          ; nyc
     ".hg"                                  ; mercurial
