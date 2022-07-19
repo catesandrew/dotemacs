@@ -79,6 +79,8 @@
     (push alias prettify-symbols-alist)))
 
 (defun cats/prog-mode-defaults ()
+  (company-mode)
+
   "Default coding hook, useful with any programming language."
   (when cats/prog-mode-spell-checking
     (spacemacs/toggle-spelling-checking-off)
@@ -114,7 +116,9 @@
         (with-syntax-table table
           ad-do-it)))
 
-    (spacemacs/toggle-rainbow-identifier-on)
+    (spacemacs/toggle-rainbow-identifier-off)
+    (spacemacs/toggle-color-identifiers-mode-on)
+    (spacemacs/toggle-color-identifiers-mode-off)
     ;; crashes when opening package.json
     ;; (unless (bound-and-true-p rainbow-mode)
     ;;   (rainbow-mode))

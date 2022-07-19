@@ -24,6 +24,7 @@
      string-inflection
      graphql-mode
      polymode
+     hcl-mode
     ))
 
 
@@ -34,6 +35,10 @@
 (defun cats-programming/init-shut-up ()
   (use-package shut-up
     :commands (shut-up)))
+
+(defun cats-programming/init-hcl-mode ()
+  (use-package hcl-mode
+    :mode "\\.nomad\\'"))
 
 (defun cats-programming/init-graphql-mode ()
   (use-package graphql-mode

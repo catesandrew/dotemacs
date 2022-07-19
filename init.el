@@ -8,11 +8,11 @@
 (defvar cats-edit-server-start-run nil
   "Whether `edit-server-start' has been run")
 
-(defvar cats-frame-font-size 14
+(defvar cats-frame-font-size 16
   "Frame font size.")
 
 (when (display-graphic-p)
-  (let* ((ffs (if (> (x-display-pixel-width) 2000) 16 14)))
+  (let* ((ffs (if (> (x-display-pixel-width) 2000) 18 16)))
     (setq confirm-kill-emacs 'yes-or-no-p)
     (setq cats-frame-font-size ffs)))
 
@@ -135,6 +135,7 @@ This function should only modify configuration layer settings."
      restclient
      copy-as-format
      dash
+     (terraform :variables terraform-auto-format-on-save t)
      lua
      ;; (clojure :variables clojure-enable-linters '(clj-kondo joker))
      (clojure :variables
@@ -668,7 +669,7 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 94
+   dotspacemacs-inactive-transparency 100
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -953,7 +954,7 @@ you should place you code here."
     "Ran on *first* instance of emacsclient."
     (progn
       (when (display-graphic-p)
-        (let* ((ffs (if (> (x-display-pixel-width) 2000) 16 14)))
+        (let* ((ffs (if (> (x-display-pixel-width) 2000) 18 16)))
           (setq cats-frame-font-size ffs)))
 
       (spacemacs/set-default-font `("PragmataProMonoLiga Nerd Font"
@@ -1032,7 +1033,8 @@ dump."
     (when cats-enable-edit-server
       (unless cats-edit-server-start-run
         (edit-server-start)
-        (setq cats-edit-server-start-run t)))))
+        (setq cats-edit-server-start-run t)))
+    (add-to-list 'auto-mode-alist '("\\.env\\..*\\'" . dotenv-mode))))
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)

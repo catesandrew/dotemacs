@@ -476,7 +476,8 @@
 (defun cats/javascript-mode-defaults ()
   "Default javascript hook."
   (company-mode)
-  (spacemacs/toggle-rainbow-identifier-off))
+  ;; (spacemacs/toggle-rainbow-identifier-off)
+  )
 
 (add-hook 'cats/javascript-mode-hook 'cats/javascript-mode-defaults)
 
