@@ -75,6 +75,7 @@
                    :repo "tecosaur/org-pandoc-import"
                    :files ("*.el" "filters" "confident")))
      org-msg
+     persp-mode
      ))
 
 
@@ -2413,5 +2414,13 @@ This will use the command `open' with the message URL."
     (progn
       (unless (file-exists-p org-journal-dir)
         (make-directory org-journal-dir)))))
+
+(defun cats-org/post-init-persp-mode ()
+  (spacemacs|define-custom-layout "@Roam"
+    :binding "r"
+    :body
+    (if org-roam-index-file
+      (progn (find-file org-roam-index-file))
+      (user-error "Error: No org-roam index file configured, nothing to display."))))
 
 ;;; packages.el ends here

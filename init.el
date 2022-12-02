@@ -171,7 +171,6 @@ This function should only modify configuration layer settings."
              ranger-cleanup-on-disable t
              ranger-ignored-extensions '("mkv" "flv" "iso" "mp4"))
      pandoc
-     fasd
      nginx
      emacs-lisp
      common-lisp
@@ -224,6 +223,12 @@ This function should only modify configuration layer settings."
                        )
      markdown
      python
+     php
+     swift
+     (unicode-fonts :variables
+       unicode-fonts-enable-ligatures t
+       unicode-fonts-force-multi-color-on-mac t)
+     octave
      (ruby :variables
         ruby-enable-enh-ruby-mode t
         ruby-test-runner 'rspec
@@ -529,7 +534,7 @@ values."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font `("PragmataProMonoLiga Nerd Font"
+   dotspacemacs-default-font `("PragmataPro Liga"
                                :size ,cats-frame-font-size
                                :weight normal
                                :width normal)
@@ -957,7 +962,7 @@ you should place you code here."
         (let* ((ffs (if (> (x-display-pixel-width) 2000) 18 16)))
           (setq cats-frame-font-size ffs)))
 
-      (spacemacs/set-default-font `("PragmataProMonoLiga Nerd Font"
+      (spacemacs/set-default-font `("PragmataPro Liga"
                                      :size ,cats-frame-font-size
                                      :weight normal
                                      :width normal

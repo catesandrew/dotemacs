@@ -75,8 +75,25 @@
 
 ;; personal prog-mode defaults
 (defun add-pragmatapro-prettify-symbols-alist ()
-  (dolist (alias pragmatapro-prettify-symbols-alist-width)
+  (dolist (alias pragmatapro-prettify-symbols-alist)
     (push alias prettify-symbols-alist)))
+
+;; enable prettified symbols on comments
+(defun setup-compose-predicate ()
+  (setq prettify-symbols-compose-predicate
+    (defun my-prettify-symbols-default-compose-p (start end _match)
+      "Same as `prettify-symbols-default-compose-p', except compose symbols in comments as well."
+      (let* ((syntaxes-beg (if (memq (char-syntax (char-after start)) '(?w ?_))
+                             '(?w ?_) '(?. ?\\)))
+              (syntaxes-end (if (memq (char-syntax (char-before end)) '(?w ?_))
+                              '(?w ?_) '(?. ?\\))))
+        (not (or (memq (char-syntax (or (char-before start) ?\s)) syntaxes-beg)
+               (memq (char-syntax (or (char-after end) ?\s)) syntaxes-end)
+               (nth 3 (syntax-ppss))))))))
+
+(defun pragmatapro-prettify ()
+  (add-pragmatapro-prettify-symbols-alist)
+  (setup-compose-predicate))
 
 (defun cats/prog-mode-defaults ()
   (company-mode)
@@ -124,7 +141,7 @@
     ;;   (rainbow-mode))
 
     (spacemacs/toggle-auto-fill-comments-mode-on)
-    (cats/highlight-TODO-words)
+    ;; (cats/highlight-TODO-words)
 
     ;; Since paredit and other modes automatically insert final characters like
     ;; semi-colons and parenthesis, what I really want is to hit return from the
@@ -133,9 +150,10 @@
     ;; (global-set-key (kbd "M-RET") 'cats/newline-for-code)
 
     ;; prettify and enable locally
-    ;; (add-pragmatapro-prettify-symbols-alist)
+    (pragmatapro-prettify)
     (cats/prettify-symbols-auto)
-    (spacemacs/toggle-prettify-symbols-mode-on)))
+    (spacemacs/toggle-prettify-symbols-mode-on)
+    ))
 
 
 ;; string inflection
