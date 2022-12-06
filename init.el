@@ -90,8 +90,12 @@ This function should only modify configuration layer settings."
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence '"jk"
                       ;; Auto-complete less aggressively
-                      auto-completion-idle-delay 0.5
-                      auto-completion-minimum-prefix-length 2
+                      ;; auto-completion-idle-delay 0.5
+                      ;; Set to 0.0 for optimal results with lsp mode
+                      auto-completion-idle-delay 0.0
+                      ;; auto-completion-minimum-prefix-length 2
+                      ;; Set to 1 for optimal results with lsp mode.
+                      auto-completion-minimum-prefix-length 1
                       auto-completion-complete-with-key-sequence-delay 0.2
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-help-tooltip 'manual
@@ -160,6 +164,9 @@ This function should only modify configuration layer settings."
      ;; Programming and markup languages
      ansible
      csv
+     (cmake :variables
+       cmake-backend 'company-cmake
+       cmake-enable-cmake-ide-support t)
      neotree
      docker
      rebox
@@ -185,15 +192,22 @@ This function should only modify configuration layer settings."
            web-fmt-tool 'web-beautify)
      ipython-notebook
      tide
-     ;; lsp ;; language server protocol layers
+     (lsp :variables
+          lsp-ui-doc-enable nil
+          lsp-ui-sideline-enable nil
+          lsp-modeline-diagnostics-enable nil
+          lsp-lens-enable t)
+
      ;; react layer uses the same backend defined in javascript layer.
      ;; npm install -g eslint babel-eslint eslint-plugin-react
      ;; npm install -g js-beautify prettier
      react
      ;; npm install -g typescript tslint typescript-formatter
      (typescript :variables
-       typescript-backend 'tide
-       typescript-fmt-tool 'typescript-formatter)
+                 typescript-fmt-on-save t
+                 typescript-backend 'lsp
+                 typescript-lsp-linter nil
+                 typescript-fmt-tool 'typescript-formatter)
      (javascript :variables
                  javascript-fmt-tool 'web-beautify
                  ;; Repl to be configured by the layer, `skewer' for browser
@@ -914,6 +928,9 @@ you should place you code here."
   ;; don't create backup~ files
   (setq backup-by-copying t)
   (setq create-lockfiles nil)
+
+  ;; https://github.com/emacs-lsp/lsp-mode/issues/3173
+  (setq lsp-completion-provider :none)
 
   ;; Indicate empty lines at the end of a buffer in the fringe, but require a
   ;; final new line
