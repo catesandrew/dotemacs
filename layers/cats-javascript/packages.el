@@ -15,7 +15,7 @@
      babel-repl
      coffee-mode
      company
-     ;; eldoc
+     eldoc
      (eslint-fix :location local)
      exec-path-from-shell
      flycheck
@@ -42,27 +42,37 @@
      xref-js2
      jest
      ;; npm-mode
-     web-mode
      (tsi :location (recipe :fetcher github
                            :repo "orzechowskid/tsi.el"))
      (tsx-mode :location (recipe :fetcher github
                            :repo "orzechowskid/tsx-mode.el"))
+     (flymake-stylelint :location (recipe :fetcher github
+                                    :repo "orzechowskid/flymake-stylelint"))
+
+     add-node-modules-path
+     emmet-mode
+     smartparens
+     yasnippet
      ))
 
 
-;; web-mode
-(defun cats-javascript/post-init-web-mode ()
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
+(add-hook 'configuration-layer-post-load-hook
+  (lambda () (setq auto-mode-alist (delete '("\\.tsx\\'" . typescript-tsx-mode) auto-mode-alist))))
+
+(add-hook 'configuration-layer-post-load-hook
+  (lambda () (setq auto-mode-alist (delete '("\\.tsx\\'" . tsx-ts-mode) auto-mode-alist))))
+
+
+;; flymake-stylelint
+(defun cats-javascript/init-flymake-stylelint ()
+  (use-package flymake-stylelint
+    :ensure t))
 
 
 ;; tsi
 (defun cats-javascript/init-tsi ()
   (use-package tsi
-    :ensure t
-    :defer t
-    :init
-    (progn)
-    :config))
+    :ensure t))
 
 
 ;; tsx-mode
@@ -70,12 +80,10 @@
   (use-package tsx-mode
     :ensure t
     :requires (tsi)
-    :defer t
-    :init
-    (progn
-      (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
-      )
-    :config
+    ;; :after org
+    :mode "\\.tsx\\'"
+    :interpreter "tsx"
+    ;; :init (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
     ))
 
 
@@ -407,12 +415,21 @@
 
 
 ;; eldoc
-;; (defun cats-javascript/post-init-eldoc ()
-;;   (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
-;;     '(rjsx-mode-local-vars-hook) t))
+(defun cats-javascript/post-init-eldoc ()
+  (spacemacs/add-to-hooks #'spacemacs//typescript-setup-eldoc
+    '(typescript-mode-local-vars-hook
+       typescript-tsx-mode-local-vars-hook) t)
+
+  ;; (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
+  ;;   '(rjsx-mode-local-vars-hook) t)
+  )
 
 
 ;; import-js
+(defun cats-javascript/pre-init-import-js ()
+  (when (eq javascript-import-tool 'import-js)
+    (add-to-list 'spacemacs--import-js-modes (cons 'tsx-mode 'tsx-mode-hook))))
+
 (defun cats-javascript/post-init-import-js ()
   (spacemacs|use-package-add-hook import-js
     :post-init
@@ -516,6 +533,8 @@
 
 ;; company
 (defun cats-javascript/post-init-company ()
+  (spacemacs/add-to-hooks #'spacemacs//typescript-setup-company
+    '(tsx-mode-local-vars-hook))
   (spacemacs|add-company-backends :backends company-capf :modes js2-mode)
 
   (spacemacs|add-company-backends
@@ -525,14 +544,80 @@
     indium-repl-mode))
 
 
+;; add-node-modules-path
+(defun cats-javascript/post-init-add-node-modules-path ()
+  (spacemacs/add-to-hooks #'add-node-modules-path '(tsx-mode-hook)))
+
+
+;; emmet-mode
+(defun cats-javascript/post-init-emmet-mode ()
+  (add-hook 'tsx-mode-hook #'spacemacs/typescript-emmet-mode))
+
+
+;; smartparens
+(defun cats-javascript/post-init-smartparens ()
+  (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(tsx-mode-hook)))
+
+;; yasnippet
+(defun cats-javascript/post-init-yasnippet ()
+  (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(tsx-mode-hook)))
+
+
 ;; flycheck
+(defun cats-javascript/setup-tsx-mode ()
+  (with-eval-after-load 'flycheck
+    ;; try some CSS-in-JS linting magic
+    (flycheck-add-mode 'css-stylelint 'typescript-mode)
+    (flycheck-add-mode 'css-stylelint 'tsx-mode)))
+
+(defun cats-javascript/set-tide-linter ()
+  (with-eval-after-load 'tide
+    (with-eval-after-load 'flycheck
+      (pcase typescript-linter
+        ('tslint (flycheck-add-mode 'typescript-tide 'tsx-mode)
+                 (flycheck-add-mode 'typescript-tslint 'tsx-mode))
+        ('eslint (flycheck-add-mode 'javascript-eslint 'tsx-mode)
+                 (add-to-list 'flycheck-disabled-checkers 'typescript-tslint)
+                 (flycheck-disable-checker 'typescript-tslint)
+                 (flycheck-add-mode 'tsx-tide 'tsx-mode)
+                 (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
+                 (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
+        (_ (message
+            "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
+
+(defun cats-javascript/set-lsp-linter ()
+  (with-eval-after-load 'lsp-ui
+    (with-eval-after-load 'flycheck
+      (pcase typescript-linter
+        ('tslint (flycheck-add-mode 'typescript-tslint 'tsx-mode))
+        ;; This sets tslint unconditionally for all lsp clients which is wrong
+        ;; Must be set for respective modes only, see go layer for examples.
+        ('eslint (flycheck-add-mode 'javascript-eslint 'tsx-mode))
+        (_ (message
+            "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
+
 (defun cats-javascript/post-init-flycheck ()
   (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
   (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
   (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
   (add-hook 'cats/eslint-executable-hook
      'cats//esilnt-set-eslint-executable)
-  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile))
+  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
+
+  (spacemacs/enable-flycheck 'tsx-mode)
+
+  (with-eval-after-load 'flycheck
+    ;; try some CSS-in-JS linting magic
+    (flycheck-add-mode 'css-stylelint 'typescript-mode)
+    (flycheck-add-mode 'css-stylelint 'tsx-mode))
+
+  (pcase typescript-backend
+    ('tide (cats-javascript/set-tide-linter))
+    ('lsp (cats-javascript/set-lsp-linter)))
+  (spacemacs/add-to-hooks #'spacemacs//typescript-setup-checkers
+    '(tsx-mode-hook)
+    t)
+  )
 
 
 ;; js-doc

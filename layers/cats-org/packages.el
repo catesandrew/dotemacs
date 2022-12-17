@@ -124,9 +124,7 @@ Regards,
 (defun cats-org/init-org-pandoc-import ()
   (use-package org-pandoc-import
     :after org
-    :defer t
-    :init
-    (progn)))
+    :defer t))
 
 
 ;; ox-roam
@@ -770,9 +768,7 @@ Regards,
          )
       )
       )
-    :config
-    (progn
-      )))
+    ))
 
 
 ;; org-mac-link
@@ -797,9 +793,7 @@ This will use the command `open' with the message URL."
 
 (defun cats-org/init-ox-md ()
   (use-package ox-md
-    :defer t
-    :init (progn)
-    :config (progn)))
+    :defer t))
 
 
 ;; ox-beamer
@@ -808,9 +802,7 @@ This will use the command `open' with the message URL."
 
 (defun cats-org/init-ox-beamer ()
   (use-package ox-beamer
-    :defer t
-    :init (progn)
-    :config (progn)))
+    :defer t))
 
 
 ;; ox-bibtex
@@ -819,9 +811,7 @@ This will use the command `open' with the message URL."
 
 (defun cats-org/init-ox-bibtex ()
   (use-package ox-bibtex
-    :defer t
-    :init (progn)
-    :config (progn)))
+    :defer t))
 
 
 ;; ox-latex
@@ -834,9 +824,7 @@ This will use the command `open' with the message URL."
     :init
     (progn
       ;; LaTeX compiler to use.
-      (setq org-latex-compiler "latexmk"))
-    :config
-    (progn)))
+      (setq org-latex-compiler "latexmk"))))
 
 
 ;; ox
@@ -857,22 +845,17 @@ This will use the command `open' with the message URL."
       ;; Set Background Color of Source Blocks for Export.This was taken from
       ;; [[http://emacs.stackexchange.com/questions/3374/][here]].
       (add-hook 'org-export-before-processing-hook 'cats//org-inline-css-hook)
-      )
-    :config (progn)))
+      )))
 
 
 ;; org-present
 (defun cats-org/pre-init-org-present ()
-  (spacemacs|use-package-add-hook org-present
-    :post-init
-    ()))
+  (spacemacs|use-package-add-hook org-present))
 
 
 ;; org-pomodoro
 (defun cats-org/pre-init-org-pomodoro ()
-  (spacemacs|use-package-add-hook org-pomodoro
-    :post-init
-    ()))
+  (spacemacs|use-package-add-hook org-pomodoro))
 
 
 ;; org-ehtml
@@ -955,9 +938,6 @@ This will use the command `open' with the message URL."
     (progn
       (setq org-ascii-headline-spacing (quote (1 . 1)))
       (setq org-ascii-links-to-notes nil)
-      )
-    :config
-    (progn
       )))
 
 
@@ -1069,11 +1049,7 @@ This will use the command `open' with the message URL."
 ;; org-caldav
 (defun cats-org/init-org-caldav ()
   (use-package org-caldav
-    :defer t
-    :config
-    (progn)
-    :init
-    (progn)))
+    :defer t))
 
 
 ;; org-projectile
@@ -1929,10 +1905,7 @@ This will use the command `open' with the message URL."
            ("HARD" . (:foreground "OrangeRed" :weight bold))
            ("BONUS" . (:foreground "GoldenRod" :weight bold))
            ("noexport" . (:foreground "LimeGreen" :weight bold))))
-      )
-    :config
-    (progn)
-    ))
+      )))
 
 
 ;; org-clock
@@ -1974,10 +1947,7 @@ This will use the command `open' with the message URL."
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         "CI" 'cats/punch-in
         "CO" 'cats/punch-out)
-      )
-    :config
-    (progn)
-    ))
+      )))
 
 
 ;; org-id
@@ -1987,10 +1957,7 @@ This will use the command `open' with the message URL."
     :init
     (progn
       (setq org-id-method 'uuidgen)
-      )
-    :config
-    (progn)
-    ))
+      )))
 
 
 ;; org-indent
@@ -2000,10 +1967,7 @@ This will use the command `open' with the message URL."
     :init
     (progn
       (setq org-indent-indentation-per-level 2)
-      )
-    :config
-    (progn)
-    ))
+      )))
 
 
 ;; org-list
@@ -2020,10 +1984,7 @@ This will use the command `open' with the message URL."
                                              ("*" . "-")
                                              ("1." . "-")
                                              ("1)" . "a)")))
-      )
-    :config
-    (progn)
-    ))
+      )))
 
 
 ;; org-src
@@ -2217,11 +2178,7 @@ This will use the command `open' with the message URL."
       ;; days. Note that even when shown for future days, the graph is always
       ;; relative to the current effective date.
       (setq org-habit-show-habits-only-for-today t)
-      )
-    :config
-    (progn
-      )
-    ))
+      )))
 
 
 ;; org-mobile
@@ -2235,11 +2192,7 @@ This will use the command `open' with the message URL."
           (concat cats//org-dir cats//org-mobile-dir)))
       (setq org-mobile-inbox-for-pull
         (expand-file-name
-          (concat org-mobile-directory cats//org-mobile-inbox-file))))
-    :config
-    (progn
-      )
-    ))
+          (concat org-mobile-directory cats//org-mobile-inbox-file))))))
 
 
 ;; helm-org
@@ -2249,23 +2202,12 @@ This will use the command `open' with the message URL."
     :init
     (progn
       (setq helm-org-headings-fontify t)
-      (setq helm-org-headings-max-depth 10)
-
-
-      )
-    :config
-    (progn
-      )
-    ))
+      (setq helm-org-headings-max-depth 10))))
 
 
 ;; ob
 (defun cats-org/pre-init-ob ()
-  (spacemacs|use-package-add-hook ob
-    :post-init
-    (progn)
-    :pre-init
-    (progn)))
+  (spacemacs|use-package-add-hook ob))
 
 
 ;; ob-ditta
@@ -2276,17 +2218,12 @@ This will use the command `open' with the message URL."
     (progn
       (let ((dir (configuration-layer/get-layer-local-dir 'cats-org)))
         (setq org-ditaa-jar-path (concat dir "ditta/ditaa0_9.jar")))
-      )
-    :config
-    (progn)
-    ))
+      )))
 
 
 ;; org-brain
 (defun cats-org/pre-init-org-brain ()
-  (uspacemacs|use-package-add-hook org-brain
-    :post-init
-    ()))
+  (uspacemacs|use-package-add-hook org-brain))
 
 
 ;; org-expiry

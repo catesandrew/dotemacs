@@ -3,19 +3,19 @@
 
 (defconst cats-vm-packages
   '(
-     docker-tramp
+     ;; docker-tramp
      exec-path-from-shell
      kubernetes
      ;; kubernetes-evil
-     kubernetes-tramp
+     ;; kubernetes-tramp
      popwin
      timonier
      ))
 
 
 ;; docker-tramp
-(defun cats-vm/pre-init-docker-tramp ()
-  (setq docker-tramp-use-names t))
+;; (defun cats-vm/pre-init-docker-tramp ()
+;;   (setq docker-tramp-use-names t))
 
 
 ;; exec-path-from-shell
@@ -131,18 +131,18 @@
 
 
 ;; kubernetes-tramp
-(defun cats-vm/init-kubernetes-tramp ()
-  (use-package kubernetes-tramp
-    :defer t
-    :init
-    (progn
-      (defvar spacemacs--kubernetes-tramp-loaded nil)
-      (defadvice kubernetes-tramp-term (before spacemacs//load-kubernetes activate)
-        "Lazy load kubernetes-tramp."
-        (unless spacemacs--kubernetes-tramp-loaded
-          (kubernetes-tramp-add-method)
-          (setq spacemacs--kubernetes-tramp-loaded t)))
-      (spacemacs/set-leader-keys "Kt" 'kubernetes-tramp-term))))
+;; (defun cats-vm/init-kubernetes-tramp ()
+;;   (use-package kubernetes-tramp
+;;     :defer t
+;;     :init
+;;     (progn
+;;       (defvar spacemacs--kubernetes-tramp-loaded nil)
+;;       (defadvice kubernetes-tramp-term (before spacemacs//load-kubernetes activate)
+;;         "Lazy load kubernetes-tramp."
+;;         (unless spacemacs--kubernetes-tramp-loaded
+;;           (kubernetes-tramp-add-method)
+;;           (setq spacemacs--kubernetes-tramp-loaded t)))
+;;       (spacemacs/set-leader-keys "Kt" 'kubernetes-tramp-term))))
 
 
 ;; kubernetes-evil

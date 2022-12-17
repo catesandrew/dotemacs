@@ -120,7 +120,7 @@ This function should only modify configuration layer settings."
                      spell-checking-enable-auto-dictionary nil)
      ;; Use original flycheck fringe bitmaps
      (syntax-checking :variables
-                      syntax-checking-use-original-bitmaps t
+                      syntax-checking-indication-symbol t
                       syntax-checking-enable-tooltips t)
      ;; Highlight changes in buffers
      ;; SPC g . transient state for navigating changes
