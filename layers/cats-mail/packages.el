@@ -357,8 +357,6 @@
         notmuch-archive-tags '("-inbox" "-unread"))
 
       ;; only unfold unread messages in thread by default
-      (add-hook 'notmuch-show-hook #'+notmuch-show-expand-only-unread-h))
-    :post-config
-    (progn)))
+      (add-hook 'notmuch-show-hook #'+notmuch-show-expand-only-unread-h))))
 
 ;;; packages.el ends here

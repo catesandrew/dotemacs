@@ -350,7 +350,7 @@ This function should only modify configuration layer settings."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
     '(
-       yasnippet-snippets
+       ;; yasnippet-snippets
        ;; M-x all-the-icons-install-fonts
        all-the-icons
        ng2-mode
