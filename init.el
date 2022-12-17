@@ -79,7 +79,8 @@ This function should only modify configuration layer settings."
      osx
      spacemacs-purpose
      spacemacs-evil
-     ;; better-defaults
+     better-defaults
+     graphql
      ;; extra-langs
 
      ;; Editing
@@ -205,6 +206,7 @@ This function should only modify configuration layer settings."
      ;; npm install -g typescript tslint typescript-formatter
      (typescript :variables
                  typescript-fmt-on-save t
+                 typescript-linter 'eslint
                  typescript-backend 'lsp
                  typescript-lsp-linter nil
                  typescript-fmt-tool 'typescript-formatter)
@@ -217,6 +219,29 @@ This function should only modify configuration layer settings."
                  javascript-lsp-linter nil
                  javascript-import-tool 'import-js)
      tern
+     ;; brew install tree-sitter
+     ;; git clone git@github.com:casouri/tree-sitter-module.git
+     ;; cd tree-sitter-module/
+     ;; ./batch.sh
+     ;; mkdir ~/.emacs.d/tree-sitter
+     ;; mv dist/* /Users/az6806/.emacs.d/tree-sitter/
+     ;;
+     ;; Make sure you have tree-sitter installed (I used brew install
+     ;; tree-sitter).Next, clone the Javascript grammar for tree-sitter from
+     ;; https://github.com/tree-sitter/tree-sitter-javascript and compile it
+     ;; with `cc -shared -fPIC -g -O2 -I src src/scanner.c src/parser.c -o
+     ;; ~/.emacs.d/tree-sitter/libtree-sitter-javascript.dylib`.
+     ;;
+     ;; Note that I output the resulting file into the `~/.emacs.d/tree-sitter`
+     ;; directory, which is where Emacs is looking for it on my local machine;
+     ;; see `treesit-extra-load-path` for details. With all of the above in
+     ;; place, run `js-ts-mode` again and you should be all set.
+     (tree-sitter :variables
+       tree-sitter-indent-enable nil
+       tree-sitter-syntax-highlight-enable t
+       tree-sitter-fold-enable t
+       spacemacs-tree-sitter-hl-black-list '(js2-mode rjsx-mode)
+       tree-sitter-fold-indicators-enable nil)
      ;; npm install -g import-js
      import-js
      ;; (tern
@@ -325,7 +350,7 @@ This function should only modify configuration layer settings."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
     '(
-       ;; yasnippet-snippets
+       yasnippet-snippets
        ;; M-x all-the-icons-install-fonts
        all-the-icons
        ng2-mode

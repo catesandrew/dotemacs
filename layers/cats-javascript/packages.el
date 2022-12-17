@@ -42,8 +42,44 @@
      xref-js2
      jest
      ;; npm-mode
+     web-mode
+     (tsi :location (recipe :fetcher github
+                           :repo "orzechowskid/tsi.el"))
+     (tsx-mode :location (recipe :fetcher github
+                           :repo "orzechowskid/tsx-mode.el"))
      ))
 
+
+;; web-mode
+(defun cats-javascript/post-init-web-mode ()
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
+
+
+;; tsi
+(defun cats-javascript/init-tsi ()
+  (use-package tsi
+    :ensure t
+    :defer t
+    :init
+    (progn)
+    :config))
+
+
+;; tsx-mode
+(defun cats-javascript/init-tsx-mode ()
+  (use-package tsx-mode
+    :ensure t
+    :requires (tsi)
+    :defer t
+    :init
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
+      )
+    :config
+    ))
+
+
+;; react-redux-yasnippets
 (defun cats-javascript/init-js-react-redux-yasnippets ()
   (use-package js-react-redux-yasnippets
     :ensure t
@@ -53,11 +89,15 @@
     (progn
       )))
 
+
+;;
 (defun cats-javascript/init-npm-mode ()
   (use-package npm-mode
     :ensure t
     :defer t))
 
+
+;;
 (defun cats-javascript/init-jest ()
   (use-package jest
     :ensure t
@@ -372,7 +412,7 @@
 ;;     '(rjsx-mode-local-vars-hook) t))
 
 
-
+;; import-js
 (defun cats-javascript/post-init-import-js ()
   (spacemacs|use-package-add-hook import-js
     :post-init

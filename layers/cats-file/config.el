@@ -30,6 +30,9 @@
     "bower_components"
     "node_modules"
     ".cache"
+    ".ccache"
+    "Pods"
+    ".log"
     "auto"
     ".vscode"
     ".sx"
@@ -193,6 +196,8 @@
     ;; "test.output"                          ; generic testing
     ;; "test_output"                          ; generic testing
     ".grunt"
+    "yarn.lock"
+    "Podfile.lock"
     ".lock-wscript"
     ))
 
