@@ -224,13 +224,7 @@ This function should only modify configuration layer settings."
      ;; cd tree-sitter-module/
      ;; ./batch.sh
      ;; mkdir ~/.emacs.d/tree-sitter
-     ;; mv dist/* /Users/az6806/.emacs.d/tree-sitter/
-     ;;
-     ;; Make sure you have tree-sitter installed (I used brew install
-     ;; tree-sitter).Next, clone the Javascript grammar for tree-sitter from
-     ;; https://github.com/tree-sitter/tree-sitter-javascript and compile it
-     ;; with `cc -shared -fPIC -g -O2 -I src src/scanner.c src/parser.c -o
-     ;; ~/.emacs.d/tree-sitter/libtree-sitter-javascript.dylib`.
+     ;; mv dist/* ~/.emacs.d/tree-sitter/
      ;;
      ;; Note that I output the resulting file into the `~/.emacs.d/tree-sitter`
      ;; directory, which is where Emacs is looking for it on my local machine;
