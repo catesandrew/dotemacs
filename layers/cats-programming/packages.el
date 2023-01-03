@@ -22,7 +22,6 @@
      ;;     :repo "realgud/realgud-node-inspect"))
      shut-up
      string-inflection
-     graphql-mode
      polymode
      hcl-mode
     ))
@@ -39,20 +38,6 @@
 (defun cats-programming/init-hcl-mode ()
   (use-package hcl-mode
     :mode "\\.nomad\\'"))
-
-(defun cats-programming/init-graphql-mode ()
-  (use-package graphql-mode
-    :defer t
-    :config
-    (progn
-      ;; prefixes
-      (spacemacs/declare-prefix-for-mode 'graphql-mode "mh" "documentation")
-      (spacemacs/declare-prefix-for-mode 'graphql-mode "mg" "goto")
-      ;; key bindings
-      (spacemacs/set-leader-keys-for-major-mode 'graphql-mode
-        "w" 'graphql-send-query))
-    )
-  )
 
 (defun cats-programming/init-polymode ()
   (use-package polymode
