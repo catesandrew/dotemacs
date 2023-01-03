@@ -114,13 +114,13 @@ If FRAME is nil, it defaults to the selected frame."
 (add-hook 'after-make-frame-functions 'cats//initialize-frame-uuid)
 
 (defun cats//initialize-frame-size ()
-  "For the height, subtract 52 pixels from the screen height (for panels,
+  "For the height, subtract 82 pixels from the screen height (for panels,
 menubars and what not), then divide by the height of a char to get the
 height we want. Use 140 char wide window for largeish displays and
 smaller 100 column windows for smaller displays."
   (when (display-graphic-p)
     (let* ((fwp (if (> (x-display-pixel-width) 1680) 140 100))
-            (fhp (/ (- (x-display-pixel-height) 52)
+            (fhp (/ (- (x-display-pixel-height) 82)
                    (frame-char-height))))
       (setq cats//frame-width fwp)
       (setq cats//frame-height fhp)
