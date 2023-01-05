@@ -2,7 +2,6 @@
 
 ;;; Commentary:
 
-;; npm i -g typescript javascript-typescript-langserver flow-language-server
 ;; npm i -g js-beautify
 ;; npm i -g tern
 

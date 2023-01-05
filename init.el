@@ -188,8 +188,23 @@ This function should only modify configuration layer settings."
      (haskell :variables haskell-enable-hindent-style "johan-tibell"
        haskell-enable-ghc-mod-support t
        haskell-completion-backend 'dante)
-     ;; npm i -g vscode-css-languageserver-bin
-     ;; npm install -g vscode-html-languageserver-bin
+
+     ;; npm i -g \
+     ;;   vscode-html-languageserver-bin \
+     ;;   bash-language-server \
+     ;;   dockerfile-language-server-nodejs \
+     ;;   flow-language-server \
+     ;;   javascript-typescript-langserver \
+     ;;   tslint \
+     ;;   typescript-formatter \
+     ;;   typescript-language-server \
+     ;;   typescript \
+     ;;   vscode-css-languageserver-bin \
+     ;;   vscode-json-languageserver-bin \
+     ;;   stylelint \
+     ;;   yaml-language-server
+     ;;   graphql-language-service-cli 
+     ;;   vim-language-server 
      (html :variables
            css-indent-offset 2
            web-fmt-tool 'web-beautify)
@@ -202,10 +217,8 @@ This function should only modify configuration layer settings."
           lsp-lens-enable t)
 
      ;; react layer uses the same backend defined in javascript layer.
-     ;; npm install -g eslint babel-eslint eslint-plugin-react
-     ;; npm install -g js-beautify prettier
+     ;; npm i -g eslint babel-eslint eslint-plugin-react js-beautify prettier
      react
-     ;; npm install -g typescript tslint typescript-formatter
      (typescript :variables
                  typescript-fmt-on-save t
                  typescript-linter 'eslint
@@ -246,7 +259,7 @@ This function should only modify configuration layer settings."
      ;;   tern-disable-tern-port-files nil)
      (json :variables js-indent-level 2)
      ;; new layer web-beautify extracted from javascript layer
-     ;; npm install -g js-beautify
+     ;; npm i -g js-beautify
      web-beautify
      bibtex
      (latex :variables latex-enable-auto-fill t
@@ -257,6 +270,7 @@ This function should only modify configuration layer settings."
                        ;; latex-nofill-env (append latex-nofill-env '("puml"))
                        )
      markdown
+     ;; pip install python-language-server
      python
      php
      swift
@@ -264,10 +278,12 @@ This function should only modify configuration layer settings."
        unicode-fonts-enable-ligatures t
        unicode-fonts-force-multi-color-on-mac t)
      octave
+     ;; gem install solargraph bundler
      (ruby :variables
         ruby-enable-enh-ruby-mode t
         ruby-test-runner 'rspec
         ruby-version-manager 'rbenv)
+     ;; go install github.com/sourcegraph/go-langserver
      go
      slack
      (rust :variables
