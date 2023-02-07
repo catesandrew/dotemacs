@@ -124,7 +124,7 @@ This function should only modify configuration layer settings."
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      colors
      emoji
-     (typography :variables typography-enable-typographic-editing t)
+     (typography :variables typography-enable-typographic-editing nil)
      ;; Evil setup
      evil-commentary
      ;; Syntax and spell checking
@@ -216,8 +216,8 @@ This function should only modify configuration layer settings."
      ;;   vscode-json-languageserver-bin \
      ;;   stylelint \
      ;;   yaml-language-server
-     ;;   graphql-language-service-cli 
-     ;;   vim-language-server 
+     ;;   graphql-language-service-cli
+     ;;   vim-language-server
      (html :variables
            css-indent-offset 2
            web-fmt-tool 'web-beautify)
