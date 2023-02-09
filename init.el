@@ -259,11 +259,11 @@ This function should only modify configuration layer settings."
      ;; see `treesit-extra-load-path` for details. With all of the above in
      ;; place, run `js-ts-mode` again and you should be all set.
      (tree-sitter :variables
-       tree-sitter-indent-enable nil
+       tree-sitter-indent-enable t
        tree-sitter-syntax-highlight-enable t
        tree-sitter-fold-enable t
        spacemacs-tree-sitter-hl-black-list '(js2-mode rjsx-mode)
-       tree-sitter-fold-indicators-enable nil)
+       tree-sitter-fold-indicators-enable t)
      ;; npm install -g import-js
      import-js
      ;; (tern
@@ -1102,6 +1102,7 @@ before packages are loaded."
 
     (setq-default c-basic-offset 2)
     (setq-default tab-width 2)
+    (setq-default standard-indent 2)
     (cats//locate-name)
     (cats//locate-email)
     (cats//locate-find)

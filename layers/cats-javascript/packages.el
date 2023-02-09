@@ -41,17 +41,21 @@
      xref-js2
      jest
      ;; npm-mode
-     (tsi :location (recipe :fetcher github
-                           :repo "orzechowskid/tsi.el"))
+     ;; (tsi :location (recipe :fetcher github
+     ;;                       :repo "orzechowskid/tsi.el"))
+     (css-in-js-mode :location (recipe :fetcher github
+                                 :branch "emacs29"
+                                 :repo "orzechowskid/tree-sitter-css-in-js"))
      (tsx-mode :location (recipe :fetcher github
+                           :branch "emacs29"
                            :repo "orzechowskid/tsx-mode.el"))
      (flymake-stylelint :location (recipe :fetcher github
                                     :repo "orzechowskid/flymake-stylelint"))
-
      add-node-modules-path
      emmet-mode
      smartparens
      yasnippet
+     typescript-mode
      ))
 
 
@@ -62,6 +66,14 @@
   (lambda () (setq auto-mode-alist (delete '("\\.tsx\\'" . tsx-ts-mode) auto-mode-alist))))
 
 
+;; typescript-mode
+(defun cats-javascript/pre-init-typescript-mode ()
+  (spacemacs|use-package-add-hook typescript-mode
+    :post-init
+    (progn
+      (setq typescript-indent-level 2))))
+
+
 ;; flymake-stylelint
 (defun cats-javascript/init-flymake-stylelint ()
   (use-package flymake-stylelint
@@ -69,8 +81,18 @@
 
 
 ;; tsi
-(defun cats-javascript/init-tsi ()
-  (use-package tsi
+;; (defun cats-javascript/init-tsi ()
+;;   (use-package tsi
+;;     :ensure t
+;;     :init
+;;     (progn
+;;       (setq tsi-css-indent-offset 2)
+;;       (setq tsi-typescript-indent-offset 2))))
+
+
+;; css-in-js-mode
+(defun cats-javascript/init-css-in-js-mode ()
+  (use-package css-in-js-mode
     :ensure t))
 
 
@@ -78,11 +100,19 @@
 (defun cats-javascript/init-tsx-mode ()
   (use-package tsx-mode
     :ensure t
-    :requires (tsi)
+    ;; :requires (css-in-js-mode)
     ;; :after org
     :mode "\\.tsx\\'"
-    :interpreter "tsx"
-    ;; :init (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
+    ;; :interpreter "tsx"
+    :init
+    (progn
+      ;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
+      (setq tsi-css-indent-offset 2)
+      (setq tsi-typescript-indent-offset 2)
+      (setq typescript-ts-mode-indent-offset 2))
+    :config
+    (progn
+      (add-to-list 'lsp--formatting-indent-alist '(tsx-mode . typescript-ts-mode-indent-offset)))
     ))
 
 
@@ -93,8 +123,7 @@
     :init
     (progn)
     :config
-    (progn
-      )))
+    (progn)))
 
 
 ;;

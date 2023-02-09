@@ -378,7 +378,7 @@
     ;; ".idx"                      ; latex
     ;; ".log"                      ; database
     ;; ".out"                      ; latex
-    ;; ".map"                      ; various
+    ".map"                      ; various
     ;; ".ln"                       ; ms-windows
     ".7z"
     ".ai"
