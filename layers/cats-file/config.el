@@ -16,7 +16,7 @@
   '(
     ".coverage"                            ; python
     ".git"                                 ; git
-     ".gradle"                             ; gradle
+    ".gradle"                              ; gradle
     ".circleci"                            ; circle ci
     ".nyc_output"                          ; nyc
     ".hg"                                  ; mercurial
@@ -31,12 +31,13 @@
     "node_modules"
     ".cache"
     ".ccache"
-    "Pods"
+    "Pods"                              ; cocoapods directory
     ".log"
     "auto"
     ".vscode"
     ".sx"
     "elpa"
+    ".yarn"                             ; yarn cache
     ))
 
 ;; List of exact filenames to ignore. These are not regular expressions, but
@@ -223,7 +224,8 @@
     ;; ".acr"                      ; latex
     ;; ".alg"                      ; latex
     ;; ".ap_"                      ; android
-    ;; ".apk"                      ; android
+    ".apk"                      ; android
+    ".apb"                      ; android
     "_archive"                  ; emacs org-mode
     ;; ".asv"                      ; matlab
     "-autoloads.el"             ; emacs package.el
@@ -281,6 +283,7 @@
     ;; ".ilk"                      ; visualstudio
     ;; ".iml"                      ; intellij
     ;; ".ind"                      ; latex
+    ".ipa"                      ; iOS
     ;; ".ipr"                      ; intellij
     ;; ".ist"                      ; latex
     ;; ".iws"                      ; intellij

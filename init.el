@@ -263,7 +263,7 @@ This function should only modify configuration layer settings."
        tree-sitter-syntax-highlight-enable t
        tree-sitter-fold-enable t
        spacemacs-tree-sitter-hl-black-list '(js2-mode rjsx-mode)
-       tree-sitter-fold-indicators-enable t)
+       tree-sitter-fold-indicators-enable nil)
      ;; npm install -g import-js
      import-js
      ;; (tern
