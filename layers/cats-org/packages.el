@@ -489,8 +489,6 @@ Regards,
           )
         )
       )
-    :post-config
-    (progn)
     )
   )
 
@@ -976,9 +974,7 @@ This will use the command `open' with the message URL."
               async subtreep visible-only body-only ext-plist (lambda () (text-mode))))
           (setq org-startup-align-all-tables t)))
       )
-    :post-config
-    (progn
-      ))
+    )
   )
 
 
@@ -1505,16 +1501,13 @@ This will use the command `open' with the message URL."
              :filename "tickets-status-changed-but-not-in-sprint-week2")
            ))
       )
-    :post-config
-    (progn
-      )))
+    )
+  )
 
 
 ;; org
 (defun cats-org/pre-init-org ()
   (spacemacs|use-package-add-hook org
-    :pre-config
-    (progn)
     :post-config
     (progn
       ;; enable easy-templates `<s TAB'
