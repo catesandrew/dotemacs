@@ -9,7 +9,7 @@
 (defconst cats-langs-packages
   '(
      exec-path-from-shell
-     haskell-mode
+     ;; haskell-mode
      org
      feature-mode
      ;; thrift
@@ -71,17 +71,17 @@
   "Initialize the haskell mode."
   (setq-local rebox-style-loop '(725)))
 
-(defun cats-langs/pre-init-haskell-mode ()
-  (spacemacs|use-package-add-hook haskell-mode
-    :pre-init
-    (progn
-      ;; (with-eval-after-load 'rebox2
-      ;;   (setq-local rrebox-language-character-alist
-      ;;     (append rebox-language-character-alist
-      ;;       '(7 . "-"))))
-      ;; (add-hook 'haskell-mode-hook 'cats//init-haskell)
-      )
-    :post-config
-    (rebox-register-all-templates)))
+;; (defun cats-langs/pre-init-haskell-mode ()
+;;   (spacemacs|use-package-add-hook haskell-mode
+;;     :pre-init
+;;     (progn
+;;       ;; (with-eval-after-load 'rebox2
+;;       ;;   (setq-local rrebox-language-character-alist
+;;       ;;     (append rebox-language-character-alist
+;;       ;;       '(7 . "-"))))
+;;       ;; (add-hook 'haskell-mode-hook 'cats//init-haskell)
+;;       )
+;;     :post-config
+;;     (rebox-register-all-templates)))
 
 ;;; packages.el ends here
