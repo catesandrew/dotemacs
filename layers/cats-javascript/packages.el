@@ -46,9 +46,8 @@
      (css-in-js-mode :location (recipe :fetcher github
                                  :branch "emacs29"
                                  :repo "orzechowskid/tree-sitter-css-in-js"))
-     (tsx-mode :location (recipe :fetcher github
-                           :branch "emacs29"
-                           :repo "orzechowskid/tsx-mode.el"))
+     (tsx-mode :location (recipe :fetcher file
+                           :path "~/.spacemacs.d/tsx-mode.el"))
      (flymake-stylelint :location (recipe :fetcher github
                                     :repo "orzechowskid/flymake-stylelint"))
      add-node-modules-path
@@ -112,7 +111,8 @@
       (setq typescript-ts-mode-indent-offset 2))
     :config
     (progn
-      (add-to-list 'lsp--formatting-indent-alist '(tsx-mode . typescript-ts-mode-indent-offset)))
+      ;; (add-to-list 'lsp--formatting-indent-alist '(tsx-mode . typescript-ts-mode-indent-offset))
+      )
     ))
 
 
