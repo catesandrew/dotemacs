@@ -226,8 +226,11 @@ This function should only modify configuration layer settings."
      (lsp :variables
           lsp-ui-doc-enable nil
           lsp-ui-sideline-enable nil
-          lsp-modeline-diagnostics-enable nil
-          lsp-lens-enable t)
+          lsp-modeline-diagnostics-enable t
+          lsp-modeline-diagnostics-scope :file
+          lsp-headerline-breadcrumb-enable t
+          lsp-navigation :simple
+          lsp-lens-enable nil)
 
      ;; react layer uses the same backend defined in javascript layer.
      ;; npm i -g eslint babel-eslint eslint-plugin-react js-beautify prettier
