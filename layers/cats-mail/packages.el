@@ -11,7 +11,7 @@
      ;; (mu4e :location site)
      slack
      persp-mode
-     notmuch
+     (notmuch :location built-in)
      ;; mu4e-views
      ;; (markdown-mime :location local)
      ))
