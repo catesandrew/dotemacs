@@ -1133,7 +1133,7 @@ This will use the command `open' with the message URL."
       (setq org-agenda-skip-deadline-if-done t))
     :pre-config
     (progn
-      (cats//set-org-agenda-file-regexps cats//org-agenda-file-regexp-list t)
+      ;; (cats//set-org-agenda-file-regexps cats//org-agenda-file-regexp-list t)
       (cats//set-org-agenda-files cats//org-agenda-list))
     :post-config
     (progn
