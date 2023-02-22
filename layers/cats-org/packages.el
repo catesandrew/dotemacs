@@ -10,6 +10,7 @@
   '(
      autoinsert
      helm-bibtex
+     ol-notmuch
      ;; company                            ;; defined in spacemacs org
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org
@@ -84,6 +85,11 @@
 ;; sudo -H pip install jupyter
 ;; or, brew install jupyter
 
+
+;; ol-notmuch
+(defun cats-org/init-ol-notmuch ()
+  (use-package ol-notmuch
+    :ensure t))
 
 
 ;; org-msg
