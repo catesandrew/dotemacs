@@ -17,6 +17,7 @@
      (recentf :location built-in)
      (recentf-ext :location local)
      (simple :location built-in)
+     lsp-mode
      ;; zel
      ))
 
@@ -120,6 +121,19 @@ Try the repeated popping up to 10 times."
   "Switching to file buffer considers it as most recent file."
   (use-package recentf-ext
     :after recentf))
+
+
+;; lsp-mode
+(defun cats-file/pre-init-lsp-mode ()
+  (when (configuration-layer/package-usedp 'ignoramus)
+    (spacemacs|use-package-add-hook lsp-mode
+      :post-init
+      (progn
+        (setq lsp-file-watch-threshold 2000))
+      :pre-config
+      (with-eval-after-load 'ignoramus
+        (add-to-list 'lsp-file-watch-ignored-directories ignoramus-boring-dir-regexp)
+        (add-to-list 'lsp-file-watch-ignored-files ignoramus-boring-file-regexp)))))
 
 
 ;; projectile
