@@ -261,12 +261,7 @@ This function should only modify configuration layer settings."
      ;; directory, which is where Emacs is looking for it on my local machine;
      ;; see `treesit-extra-load-path` for details. With all of the above in
      ;; place, run `js-ts-mode` again and you should be all set.
-     (tree-sitter :variables
-       tree-sitter-indent-enable t
-       tree-sitter-syntax-highlight-enable t
-       tree-sitter-fold-enable t
-       spacemacs-tree-sitter-hl-black-list '(js2-mode rjsx-mode)
-       tree-sitter-fold-indicators-enable nil)
+     ;; included with emacs29
      ;; npm install -g import-js
      import-js
      ;; (tern
