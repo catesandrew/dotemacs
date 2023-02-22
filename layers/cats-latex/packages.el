@@ -8,12 +8,12 @@
 
 (defconst cats-latex-packages
   '(
-     auctex
+     (auctex :location built-in)           ;; defined in spacemacs org
      (auctex-skim :location local)
      bibtex
      (latex-pretty-symbols :location local)
-     org
-     typo
+     (org :location built-in)           ;; defined in spacemacs org
+     (typo :location built-in)
      ))
 
 
@@ -45,7 +45,7 @@
         TeX-engine 'xetex)
 
       (add-hook 'LaTeX-mode-hook
-        '(lambda ()
+        (lambda ()
            (setq TeX-view-program-selection
              '((output-dvi "skim-viewer")
                 (output-pdf "skim-viewer")
