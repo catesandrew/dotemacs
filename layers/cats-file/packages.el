@@ -131,9 +131,11 @@ Try the repeated popping up to 10 times."
       (progn
         (setq lsp-file-watch-threshold 2000))
       :pre-config
-      (with-eval-after-load 'ignoramus
-        (add-to-list 'lsp-file-watch-ignored-directories ignoramus-boring-dir-regexp)
-        (add-to-list 'lsp-file-watch-ignored-files ignoramus-boring-file-regexp)))))
+      (progn
+        (add-hook 'hack-local-variables-hook (lambda () (when (derived-mode-p 'prog-mode) (lsp))))
+        (with-eval-after-load 'ignoramus
+          (add-to-list 'lsp-file-watch-ignored-directories ignoramus-boring-dir-regexp)
+          (add-to-list 'lsp-file-watch-ignored-files ignoramus-boring-file-regexp))))))
 
 
 ;; projectile

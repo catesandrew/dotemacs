@@ -98,6 +98,8 @@
 (defun cats/prog-mode-defaults ()
   (company-mode)
 
+  (add-hook 'hack-local-variables-hook (lambda () (when (derived-mode-p 'prog-mode) (lsp))))
+
   "Default coding hook, useful with any programming language."
   (when cats/prog-mode-spell-checking
     (spacemacs/toggle-spelling-checking-off)

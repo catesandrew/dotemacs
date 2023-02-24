@@ -229,6 +229,7 @@ This function should only modify configuration layer settings."
           lsp-modeline-diagnostics-enable t
           lsp-modeline-diagnostics-scope :file
           lsp-headerline-breadcrumb-enable t
+          lsp-headerline-breadcrumb-segments '(file symbols)
           lsp-navigation :simple
           lsp-lens-enable nil)
 
@@ -282,7 +283,14 @@ This function should only modify configuration layer settings."
                        )
      markdown
      ;; pip install python-language-server
-     python
+     (python :variables
+       ;; NOTE: These can also be .dir-local/project specific.
+       python-test-runner 'pytest
+       python-backend 'lsp
+       python-lsp-server 'pylsp
+       python-formatter 'black
+       python-format-on-save nil
+       :packages (not live-py-mode))
      php
      swift
      (unicode-fonts :variables
@@ -335,6 +343,12 @@ This function should only modify configuration layer settings."
      (mu4e :variables
        mu4e-enable-mode-line t
        mu4e-org-compose-support t)
+     (c-c++ :variables
+       c-c++-backend 'lsp-clangd
+       ;; company-c-headers-path-user '("../include" "./include" "." "../../include"
+       ;;                               "../inc" "../../inc")
+       c-c++-enable-clang-support t
+       c-c++-default-mode-for-headers 'c++-mode)
      notmuch
      ;; My personal layers
      cats
@@ -921,6 +935,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; Don't nag me compile!
   (setq compilation-ask-about-save nil)
+  (setq delete-by-moving-to-trash nil)
 
   (setq abbrev-file-name
         (expand-file-name (concat spacemacs-cache-directory "abbrev_defs")))
@@ -979,6 +994,8 @@ before packages are loaded."
 
  (add-to-list 'latex-nofill-env 'code)
  (add-to-list 'latex-nofill-env 'puml)
+
+  (add-to-list 'treesit-extra-load-path (f-canonical "~/.emacs.d/tree-sitter"))
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.
