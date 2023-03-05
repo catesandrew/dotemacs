@@ -38,6 +38,7 @@
     ".sx"
     "elpa"
     ".yarn"                             ; yarn cache
+    "__fixtures__"
     ))
 
 ;; List of exact filenames to ignore. These are not regular expressions, but

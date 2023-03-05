@@ -104,12 +104,12 @@ This function should only modify configuration layer settings."
      (auto-completion :variables
                       auto-completion-complete-with-key-sequence '"jk"
                       ;; Auto-complete less aggressively
-                      ;; auto-completion-idle-delay 0.5
+                      auto-completion-idle-delay 0.5
                       ;; Set to 0.0 for optimal results with lsp mode
-                      auto-completion-idle-delay 0.0
-                      ;; auto-completion-minimum-prefix-length 2
+                      ;; auto-completion-idle-delay 0.0
+                      auto-completion-minimum-prefix-length 2
                       ;; Set to 1 for optimal results with lsp mode.
-                      auto-completion-minimum-prefix-length 1
+                      ;; auto-completion-minimum-prefix-length 1
                       auto-completion-complete-with-key-sequence-delay 0.2
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-help-tooltip 'manual
@@ -220,18 +220,16 @@ This function should only modify configuration layer settings."
      ;;   vim-language-server
      (html :variables
            css-indent-offset 2
-           web-fmt-tool 'web-beautify)
+           web-fmt-tool 'web-beautify
+           css-enable-lsp t
+           less-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
      ipython-notebook
      tide
      (lsp :variables
-          lsp-ui-doc-enable nil
-          lsp-ui-sideline-enable nil
-          lsp-modeline-diagnostics-enable t
-          lsp-modeline-diagnostics-scope :file
-          lsp-headerline-breadcrumb-enable t
-          lsp-headerline-breadcrumb-segments '(file symbols)
-          lsp-navigation :simple
-          lsp-lens-enable nil)
+          lsp-use-lsp-ui t
+          lsp-lens-enable t)
 
      ;; react layer uses the same backend defined in javascript layer.
      ;; npm i -g eslint babel-eslint eslint-plugin-react js-beautify prettier
