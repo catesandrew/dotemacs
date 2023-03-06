@@ -24,6 +24,71 @@
      string-inflection
      polymode
      hcl-mode
+     treesit-auto
+     code-review
+     lsp-mode
+     (combobulate :location
+       (recipe :fetcher github
+         :repo "mickeynp/combobulate"))
+    ))
+
+
+;; treesit
+(defun cats-programming/init-treesit-auto ()
+  (use-package treesit-auto
+    :ensure t
+    :config
+    (global-treesit-auto-mode)))
+
+
+;; lsp-mode
+(defun cats-programming/pre-init-lsp-mode ()
+  (spacemacs|use-package-add-hook lsp-mode
+    :post-init
+    (progn
+      (dolist (mode '(shell-script-mode
+                       python-mode
+                       ruby-mode
+                       sass-mode
+                       scss-mode
+                       rust-mode
+                       perl-mode
+                       swift-mode
+                       shell-script-mode
+                       typescript-mode
+                       js-mode
+                       zig-mode
+                       go-mode
+                       go-ts-mode
+                       python-ts-mode
+                       tsx-ts-mode
+                       tsx-mode))
+        (add-hook 'hack-local-variables-hook (lambda () (lsp)))
+        ))
+    ))
+
+;; (add-hook mode 'lsp-mode)
+
+
+
+
+;; combobulate
+(defun cats-programming/init-combobulate ()
+  (use-package combobulate
+    :ensure t
+    :hook ((python-ts-mode . combobulate-mode)
+            (js-ts-mode . combobulate-mode)
+            (css-ts-mode . combobulate-mode)
+            (yaml-ts-mode . combobulate-mode)
+            (typescript-ts-mode . combobulate-mode)
+            (tsx-mode . combobulate-mode)
+            (js2-mode . combobulate-mode)
+            (tsx-ts-mode . combobulate-mode))
+    ;;(prog-mode . combobulate-mode)
+    :init
+    (progn
+      (setq combobulate-js-ts-enable-auto-close-tag nil)
+      )
     ))
 
 
@@ -39,6 +104,43 @@
   (use-package hcl-mode
     :mode "\\.nomad\\'"))
 
+
+;; code-review
+(defun cats-programming/init-code-review ()
+  (use-package code-review
+    :after (magit forge)
+    :init
+    (with-eval-after-load 'evil-collection-magit
+      ;; From Doom Emacs
+      (dolist (binding evil-collection-magit-mode-map-bindings)
+        (pcase-let* ((`(,states _ ,evil-binding ,fn) binding))
+          (dolist (state states)
+            (evil-collection-define-key state 'code-review-mode-map evil-binding fn))))
+      (evil-set-initial-state 'code-review-mode evil-default-state))
+    :config
+    (progn
+      (evil-make-overriding-map code-review-mode-map evil-default-state)
+      (setq code-review-auth-login-marker 'forge)
+      (add-hook 'code-review-mode-hook
+        (lambda ()
+          ;; include *Code-Review* buffer into current workspace
+          (persp-add-buffer (current-buffer))))
+      ;; From Doom Emacs
+      (defun magit/start-code-review (arg)
+        (interactive "P")
+        (call-interactively
+          (if (or arg (not (featurep 'forge)))
+            #'code-review-start
+            #'code-review-forge-pr-at-point)))
+
+      (transient-append-suffix 'magit-merge "i"
+        '("y" "Review pull request" magit/start-code-review))
+      (with-eval-after-load 'forge
+        (transient-append-suffix 'forge-dispatch "c u"
+          '("c r" "Review pull request" magit/start-code-review))))))
+
+
+;; polymode
 (defun cats-programming/init-polymode ()
   (use-package polymode
     :commands (poly-js2-mode poly-rjsx-mode)
