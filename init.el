@@ -245,7 +245,7 @@ This function should only modify configuration layer settings."
                  ;; Repl to be configured by the layer, `skewer' for browser
                  ;; based, `nodejs' for server based development.
                  javascript-repl 'nodejs
-                 javascript-backend nil
+                 javascript-backend 'lsp
                  javascript-lsp-linter nil
                  javascript-import-tool 'import-js)
      tern
@@ -1012,9 +1012,6 @@ before packages are loaded."
   ;; don't create backup~ files
   (setq backup-by-copying t)
   (setq create-lockfiles nil)
-
-  ;; https://github.com/emacs-lsp/lsp-mode/issues/3173
-  (setq lsp-completion-provider :none)
 
   ;; Indicate empty lines at the end of a buffer in the fringe, but require a
   ;; final new line
