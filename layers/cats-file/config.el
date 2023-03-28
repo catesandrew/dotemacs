@@ -209,6 +209,7 @@
 ;; fully-qualified pathname."
 (defvar ignoramus/file-basename-beginnings
   '(
+    ".env"
     ".#"                                ; emacs
     ;; "core."                             ; unix
     "._"                                ; thumbnails
