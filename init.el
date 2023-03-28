@@ -155,8 +155,11 @@ This function should only modify configuration layer settings."
      restclient
      copy-as-format
      dash
-     (terraform :variables terraform-auto-format-on-save t)
-     lua
+     (terraform :variables
+       terraform-backend 'lsp
+       terraform-auto-format-on-save t)
+     (lua :variables
+       lua-backend 'lsp)
      ;; (clojure :variables clojure-enable-linters '(clj-kondo joker))
      (clojure :variables
               clojure-toplevel-inside-comment-form t
@@ -174,17 +177,20 @@ This function should only modify configuration layer settings."
      (groovy :variables
        groovy-backend 'company-groovy)
      (java :variables
-       java-backend 'meghanada)
+       java-backend 'lsp)
+     (kotlin :variables
+       kotlin-backend 'lsp)
      windows-scripts
      vagrant
      ;; Programming and markup languages
      ansible
      csv
      (cmake :variables
-       cmake-backend 'company-cmake
+       cmake-backend 'lsp
        cmake-enable-cmake-ide-support t)
      neotree
-     docker
+     (docker :variables
+       docker-dockerfile-backend 'lsp)
      rebox
      ;; Text-based file manager with preview
      (ranger :variables
@@ -228,8 +234,13 @@ This function should only modify configuration layer settings."
      ipython-notebook
      tide
      (lsp :variables
-          lsp-use-lsp-ui t
-          lsp-lens-enable t)
+       lsp-ui-doc-enable nil
+       ;; lsp-ui-doc-include-signature nil
+       lsp-ui-sideline-enable nil
+       ;; lsp-ui-sideline-show-symbol nil
+       lsp-use-lsp-ui nil
+       ;; lsp-use-upstream-bindings nil
+       lsp-lens-enable t)
 
      ;; react layer uses the same backend defined in javascript layer.
      ;; npm i -g eslint babel-eslint eslint-plugin-react js-beautify prettier
@@ -267,18 +278,22 @@ This function should only modify configuration layer settings."
      ;;   ;; do not use no-port-file under emacs, it'll mess things up when you
      ;;   ;; are editing multiple files in the same project
      ;;   tern-disable-tern-port-files nil)
-     (json :variables js-indent-level 2)
+     (json :variables
+       js-indent-level 2
+       json-backend 'lsp)
      ;; new layer web-beautify extracted from javascript layer
      ;; npm i -g js-beautify
      web-beautify
      bibtex
-     (latex :variables latex-enable-auto-fill t
-                       latex-build-command "latexmk-osx"
-                       latex-enable-magic nil
-                       latex-enable-folding t
-                       latex-refresh-preview t
-                       ;; latex-nofill-env (append latex-nofill-env '("puml"))
-                       )
+     (latex :variables
+       latex-enable-auto-fill t
+       latex-build-command "latexmk-osx"
+       latex-enable-magic nil
+       latex-enable-folding t
+       latex-refresh-preview t
+       latex-backend 'lsp
+       ;; latex-nofill-env (append latex-nofill-env '("puml"))
+       )
      markdown
      ;; pip install python-language-server
      (python :variables
@@ -289,7 +304,8 @@ This function should only modify configuration layer settings."
        python-formatter 'black
        python-format-on-save nil
        :packages (not live-py-mode))
-     php
+     (php :variables
+       php-backend 'lsp)
      swift
      (unicode-fonts :variables
        unicode-fonts-enable-ligatures t
@@ -297,20 +313,29 @@ This function should only modify configuration layer settings."
      octave
      ;; gem install solargraph bundler
      (ruby :variables
+        ruby-backend 'lsp
         ruby-enable-enh-ruby-mode t
         ruby-test-runner 'rspec
         ruby-version-manager 'rbenv)
      ;; go install github.com/sourcegraph/go-langserver
-     go
+     (go :variables
+       go-backend 'lsp)
      slack
      (rust :variables
-           ;; Enable auto-completion for Rust
-           rust-enable-racer t)
-     shell-scripts
-     (sql :variables sql-capitalize-keywords t)
+       rust-backend 'lsp
+       ;; Enable auto-completion for Rust
+       rust-enable-racer t)
+     (shell-scripts :variables
+       shell-scripts-backend 'lsp)
+     (sql :variables
+       sql-capitalize-keywords t
+       sql-backend 'lsp)
      vimscript
      xclipboard
-     yaml
+     ;; npm i -g yaml-language-server js-yaml
+     ;; pip3 install yamllint
+     (yaml :variables
+       yaml-enable-lsp t)
      ;; Applications
      (org :variables
           org-enable-roam-support t
