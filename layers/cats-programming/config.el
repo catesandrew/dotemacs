@@ -366,4 +366,6 @@
     pretty-symbols/pragmatapro))
 
 
+(defvar cats/saved-javascript-backend nil)
+
 ;;; config.el ends here

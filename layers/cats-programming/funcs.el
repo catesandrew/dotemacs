@@ -193,4 +193,51 @@
     (end-of-line-nomark)
     (beginning-of-line-mark)))
 
+
+;; lsp
+
+(defun cats/disable-lsp-temporarily ()
+  "Disable lsp in current buffer if it was enabled.  Also set a buffer local
+variable for later use by `cats/reenable-lsp' to re-enable lsp."
+  (when lsp-mode
+    (lsp-disconnect) ; disable lsp
+    (setq-local cats//lsp-disabled t)))
+
+(defun cats/reenable-lsp ()
+  "If current buffer was disabled by `cats/disable-lsp-temporarily' as indicated
+by `cats//lsp-disabled' buffer local variable, then enable lsp in current buffer."
+    (when (and (bound-and-true-p cats//lsp-disabled) (not lsp-mode))
+      (lsp)
+      (setq-local cats//lsp-disabled nil)))
+
+(defun cats/turn-off-lsp ()
+  "Disable lsp on all existing buffers as well new buffers to be created.  Thus
+lsp will be disabled for all buffers until `cats/turn-on-lsp' is called later on."
+  (interactive)
+
+  ;; prevent spacemacs from enabling lsp by calling lsp-deferred
+  (setq cats/saved-javascript-backend javascript-backend)
+  (message "javascript-backend was %s" javascript-backend)
+  (setq javascript-backend nil)
+
+  ;; Remove advice added by lsp
+  (advice-remove 'set-visited-file-name #'lsp--on-set-visited-file-name)
+
+  ;; Disable lsp in all buffers that have it enabled.  Also note which buffers
+  ;; are disabled so that we can re-enable them later on.
+  (mode-local-map-file-buffers #'cats/disable-lsp-temporarily)
+
+  ;; Don't know the exact syntax of this variable.  It must be a list.
+  ;; So I tried adding "/tmp" which seem to get the job done.
+  (setq lsp-enabled-clients '("/tmp")))
+
+(defun cats/turn-on-lsp ()
+  "Re-enable lsp which was disabled by prior call of `cats/turn-off-lsp'.
+Lsp is re-enabled on all existing buffers if it was disabled earlier."
+  (interactive)
+  (setq javascript-backend cats/saved-javascript-backend)
+  (advice-add 'set-visited-file-name :around #'lsp--on-set-visited-file-name)
+  (setq lsp-enabled-clients nil)
+  (mode-local-map-file-buffers #'cats/reenable-lsp))
+
 ;;; funcs.el ends here

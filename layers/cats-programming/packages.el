@@ -52,6 +52,11 @@
       ;; use `evil-matchit' instead
       (setq lsp-enable-folding nil)
 
+      ;; https://github.com/emacs-lsp/lsp-mode/issues/3173
+      (setq lsp-completion-provider :none)
+      (setq lsp-completion-show-detail nil)
+      (setq lsp-completion-show-kind nil)
+
       ;; no real time syntax check
       (setq lsp-diagnostic-package :none)
 
@@ -75,6 +80,8 @@
 
       ;; don't ping LSP lanaguage server too frequently
       (defvar lsp-on-touch-time 0)
+
+      (setq lsp-ui-sideline-enable nil)
     )
     :post-init
     (progn
@@ -84,6 +91,8 @@
 
       ;; https://github.com/emacs-lsp/lsp-mode/issues/3173
       (setq lsp-completion-provider :none)
+      (setq lsp-completion-show-detail nil)
+      (setq lsp-completion-show-kind nil)
 
       ;; (dolist (hook '(
       ;;                  c++-mode-hook
