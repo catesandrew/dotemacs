@@ -23,6 +23,7 @@
     ".idea"                                ; various
     "build"                                ; various
     "Build"                                ; various
+     "dist"                                ; various
     ".cask"
     ".vagrant"
     "lib-cov"
@@ -37,6 +38,9 @@
     ".vscode"
     ".sx"
     "elpa"
+    ".github"                           ; github
+    ".launchdarkly"                     ; launch darkly
+    ".expo"                             ; expo
     ".yarn"                             ; yarn cache
     "__fixtures__"
     ))
@@ -89,7 +93,11 @@
     ;; ".org-id-locations"                    ; emacs org-mode
     ;; ".pc"                                  ; quilt
     ;; ".project"                             ; eclipse
-    ;; ".projectile"                          ; emacs projectile
+    ".projectile"                          ; emacs projectile
+    ".npmrc"                               ; npmrc
+    ".npmignore"                           ; npm ignore
+    ".textlintrc"                          ; textlint
+    ".ldignore"                            ; launch darkly ignore
     ;; ".prove"                               ; perl
     ;; ".puppet-bak"                          ; puppet
     ".quickurls"                           ; emacs quickurl
@@ -199,6 +207,7 @@
     ;; "test_output"                          ; generic testing
     ".grunt"
     "yarn.lock"
+    "Gemfile.lock"
     "Podfile.lock"
     ".lock-wscript"
     ))
@@ -214,6 +223,14 @@
     ;; "core."                             ; unix
     "._"                                ; thumbnails
     ;; "_cgo_export."                      ; go
+    ".yarnrc"                      ; yarn berry
+    ".watchmanconfig"              ; watchman
+    ".versionrc"                   ; standard-version
+    ".stylelintrc"                 ; stylelint
+    ".renovaterc"                  ; renovate
+    ".lintstagedrc"
+    "."
+    "."
     ))
 
 ;; List of file endings to ignore. These are not regular expressions, but
