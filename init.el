@@ -147,8 +147,11 @@ This function should only modify configuration layer settings."
      ;; opens Magit git client full screen (q restores previous layout)
      ;; refine hunk 'all highlights characters changed on each line
      (git :variables
-          git-magit-status-fullscreen t
-          magit-diff-refine-hunk 'all)
+       git-magit-status-fullscreen t
+       git-enable-magit-delta-plugin t
+       git-enable-magit-gitflow-plugin nil
+       git-enable-magit-todos-plugin t
+       magit-diff-refine-hunk 'all)
 
      ;; github
      ;; Development tools
@@ -238,7 +241,7 @@ This function should only modify configuration layer settings."
        ;; lsp-ui-doc-include-signature nil
        lsp-ui-sideline-enable nil
        ;; lsp-ui-sideline-show-symbol nil
-       lsp-use-lsp-ui nil
+       ;; lsp-use-lsp-ui t
        ;; lsp-use-upstream-bindings nil
        lsp-lens-enable t)
 
@@ -336,9 +339,14 @@ This function should only modify configuration layer settings."
      ;; pip3 install yamllint
      (yaml :variables
        yaml-enable-lsp t)
+
+     openai
      ;; Applications
      (org :variables
           org-enable-roam-support t
+          org-enable-roam-ui t
+          org-enable-roam-protocol t
+          org-enable-valign t
           org-enable-org-journal-support t
           org-enable-bootstrap-support t
           org-enable-github-support t
@@ -453,6 +461,11 @@ This function should only modify configuration layer settings."
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
+
+  (setq openai-key (getenv "OPENAI_API_KEY"))
+  ;; not one of ['system', 'assistant', 'user', 'function']
+  (setq openai-user "user")
+  ;; (setq openai--show-log t)
 
   (setq locale-coding-system    'utf-8)    ; pretty
   (set-terminal-coding-system   'utf-8)    ; pretty
@@ -1015,9 +1028,14 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
- (add-to-list 'latex-nofill-env 'code)
- (add-to-list 'latex-nofill-env 'puml)
+  (setq magit-repository-directories
+    '(("/usr/local/work/uie" . 2)
+       ("/usr/local/work/api" . 2)
+       ("/usr/local/work/devops" . 2)
+       ("/usr/local/work/lmp" . 2)))
 
+  (add-to-list 'latex-nofill-env 'code)
+  (add-to-list 'latex-nofill-env 'puml)
   (add-to-list 'treesit-extra-load-path (f-canonical "~/.emacs.d/tree-sitter"))
 
   ;; Opt out from the startup message in the echo area by simply disabling this
@@ -1026,6 +1044,21 @@ before packages are loaded."
 
   ;; termina-her to use iterm2
   (setq terminal-here-mac-terminal-command 'iterm2)
+
+  (setq treesit-load-name-override-list
+    '(
+       (js "libtree-sitter-js" "tree_sitter_javascript")
+       (js2 "libtree-sitter-js2" "tree_sitter_javascript")
+       (ts "libtree-sitter-ts" "tree_sitter_typescript")))
+
+  ;; (setq major-mode-remap-alist
+  ;;   '((yaml-mode . yaml-ts-mode)
+  ;;      (bash-mode . bash-ts-mode)
+  ;;      (js2-mode . js-ts-mode)
+  ;;      (typescript-mode . typescript-ts-mode)
+  ;;      (json-mode . json-ts-mode)
+  ;;      (css-mode . css-ts-mode)
+  ;;      (python-mode . python-ts-mode)))
 
   ;; (push "^\\*[^\\*]+\\*$" spacemacs-useless-buffers-regexp)
   ;; (push "\\*scratch\\*" spacemacs-useful-buffers-regexp)
@@ -1156,6 +1189,7 @@ before packages are loaded."
     (when cats-enable-edit-server
       (unless cats-edit-server-start-run
         (edit-server-start)
+        (require 'org-protocol)
         (setq cats-edit-server-start-run t)))
     (add-to-list 'auto-mode-alist '("\\.env\\..*\\'" . dotenv-mode))))
 
