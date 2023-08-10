@@ -213,6 +213,18 @@ Otherwise the reversed output of function `yas-trimmed-comment-start' is returne
 
 ;; magit-repos
 
+(defun cats//git-link--parse-remote (orig-fun &rest args)
+  (let* ((remote-info (apply orig-fun args))
+          (host (car remote-info))
+          (path (car (cdr remote-info))))
+    ;; (message "Host: `%s'" host)
+    ;; (message "Path: `%s'" path)
+
+    (when (string= "acates.github.com" host)
+      (setq host "github.com"))
+    (list host path))
+  )
+
 (defun cats/open-in-git-link (&optional _button)
   "Open the github project page for the repository at point."
   (interactive)

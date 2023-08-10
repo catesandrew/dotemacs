@@ -36,6 +36,7 @@
      focus-autosave-mode
      gh
      ;; git-commit
+     git-link
      (grep :location built-in)
      hardhat
      helm
@@ -70,6 +71,21 @@
   "Prevent annoying 'Active processes exist' query when you quit Emacs."
   (cl-letf (((symbol-function #'process-list) (lambda ())))
     ad-do-it))
+
+
+;; git-link
+(defun cats/pre-init-git-link ()
+  (spacemacs|use-package-add-hook git-link
+    :post-init
+    (progn
+      (eval-after-load 'git-link
+        '(progn
+           (advice-add 'git-link--parse-remote :around #'cats//git-link--parse-remote)
+           ;; (add-to-list 'git-link-remote-alist
+           ;;   '("acates\\.github\\.com" git-link-github))
+           ;; (add-to-list 'git-link-commit-remote-alist
+           ;;   '("acates\\.github\\.com" git-link-commit-github))
+           )))))
 
 
 ;; window-purpose
