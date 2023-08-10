@@ -543,12 +543,17 @@ This is similar to `org-journal-date-prefix' but offers more flexibility."
 (defun cats//org-roam-template-head (&optional tag)
   (unless tag
     (setq extension ""))
-  (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIAS:\n#+ROAM_TAGS: " tag "\n\n"))
+  (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIASES:\n#+FILETAGS: " tag "\n\n"))
 
-(defun cats//org-roam-template-ref-head (&optional tag)
+(defun cats//org-roam-md-template-head (&optional tag)
   (unless tag
     (setq extension ""))
-  (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIAS:\n#+ROAM_TAGS: " tag "\n#+ROAM_KEY: ${ref}\n - source :: ${ref}\n\n"))
+  (concat "---\nTITLE: ${title}\nID: %<%Y-%m-%dT%H%M%S>\nDATE_CREATED: %<%Y-%m-%d>\nROAM_ALIASES:\nFILETAGS: " tag "\n---\n"))
+
+(defun cats//org-roam-template-ref-head ()
+  (unless tag
+    (setq extension ""))
+  (concat "#+TITLE: ${title}\n#+DATE_CREATED: %<%Y-%m-%d>\n#+ROAM_ALIASES:\n#+ROAM_REFS: ${ref}\n\n"))
 
 (defun cats//random-alnum ()
   (let* ((alnum "abcdefghijklmnopqrstuvwxyz0123456789")

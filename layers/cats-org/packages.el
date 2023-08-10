@@ -139,11 +139,15 @@ Regards,
     :post-init
     (progn
       (setq
+        org-roam-file-extensions '("org" "md")
         org-roam-v2-ack t
-        org-roam-directory cats//org-roam-dir
-        org-roam-dailies-directory cats//org-roam-dailies-dir
-        org-roam-db-location (concat cats//org-dir "refs/org-roam.db")
-        org-roam-index-file (concat cats//org-roam-dir "index.org")
+        ;; Note that the `file-truename` function is only necessary when you use
+        ;; symbolic link to `org-roam-directory`. Org-roam won't automatically
+        ;; resolve symbolic link to the directory.
+        org-roam-directory (file-truename cats//org-roam-dir)
+        org-roam-dailies-directory (file-truename cats//org-roam-dailies-dir)
+        org-roam-db-location (file-truename (concat cats//org-dir "refs/org-roam.db"))
+        org-roam-index-file (file-truename (concat cats//org-roam-dir "index.org"))
         org-roam-verbose nil
         ;; appends a  `º` to each Roam link.
         org-roam-link-title-format "%sº"
@@ -195,247 +199,279 @@ Regards,
       (setq org-roam-dailies-capture-templates
         '(
            ;; default
-           ("d" "default" entry #'org-roam-capture--get-point
+           ("d" "default" entry
              "* %?"
-             :file-name "daily/%<%Y-%m-%d>"
-             :head "#+title: %<%Y-%m-%d>")
+             :target (file+head "daily/%<%Y-%m-%d>.org"
+                       "#+title: %<%Y-%m-%d>\n"))
 
-           ("j" "journal entry" plain (function cats//org-journal-find-location)
+           ("j" "journal entry" plain
              "* %(format-time-string org-journal-time-format)%\n^{Title}\n%i%?"
-             :immediate-finish t
-             :file-name "daily/%<%Y-%m-%d>"
-             :head "#+TITLE: %<%Y-%m-%d>")
+             :target (file+head "daily/%<%Y-%m-%d>"
+                       "#+TITLE: %<%Y-%m-%d>\n"))
+           ))
+
+      (setq org-roam-capture-ref-templates
+        '(
+           ;; default
+           ("r" "ref" plain
+             "\n* ${title}\n#+created: %U\n\n** Item\n#+BEGIN_QUOTE\n%(replace-regexp-in-string \"^\" \" \" \"${body}\")\n#+END_QUOTE\n"
+             :target (file+head "%<%Y%m%d>-${slug}.org" ,(cats//org-roam-template-ref-head))
+             :unnarrowed t)
+
+           ("s" "Stock Notes" plain
+             "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nURL: ${ref}\nYear: %^{Year}\n\n* Summary\n\n** Item\n#+BEGIN_QUOTE\n%(replace-regexp-in-string \"^\" \" \" \"${body}\")\n#+END_QUOTE\n%?"
+             :target (file+head "stocks/notes/%<%Y%m%d>-${slug}.org" ,(cats//org-roam-template-head ":stocks:"))
+             :unnarrowed t)
+
            ))
 
       (setq org-roam-capture-templates
         `(
            ;; bug fixes
-           ("b" "bug fixes" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:lead:
-:jira:
-:jira+:
-:END:
+;;            ("b" "bug fixes" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :lead:
+;; :jira:
+;; :jira+:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "\"Bug Fixes\"")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "\"Bug Fixes\"")
+;;              :unnarrowed t)
 
            ;; business
-           ("B" "business" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("B" "business" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "Business")
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "Business")
+;;              :unnarrowed t)
+
+           ("s" "Stock Notes" plain
+             "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nURL: ${url}\nYear: %^{Year}\n\n* Summary\n\n%?"
+             :target (file+head "stocks/notes/%<%Y%m%d>-${slug}.org" ,(cats//org-roam-template-head ":stocks:"))
+             :unnarrowed t)
+
+           ("S" "Stock Journal" plain
+             "\n* Summary\n\n%?"
+             :target (file+head "stocks/journal/%<%Y%m%d>-${slug}.org" ,(cats//org-roam-template-head ":stocks:"))
              :unnarrowed t)
 
            ;; default
-           ("d" "default" plain (function org-roam--capture-get-point)
-             "* Notes
-
-%?"
-             :file-name "${slug}" ;; "%<%Y%m%d%H%M%S>-${slug}"
-             :head ,(cats//org-roam-template-head "Inbox")
+           ("d" "default" plain "%?"
+             :target (file+head "%<%Y%m%d>-${slug}.org" ,(cats//org-roam-template-head ""))
              :unnarrowed t)
+
+           ;; ("m" "Markdown" plain "%?"
+           ;;   :target (file+head "md/%<%Y%m%d>-${slug}.md" ,(org-roam-md-template-head ""))
+           ;;   :unnarrowed t)
+
+;;            ("d" "default" plain (function org-roam--capture-get-point)
+;;              "%?"
+;;              :file-name "${slug}" ;; "%<%Y%m%d%H%M%S>-${slug}"
+;;              :head ,(cats//org-roam-template-head "Inbox")
+;;              :unnarrowed t)
 
            ;; done
-           ("D" "done" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("D" "done" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "Done")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "Done")
+;;              :unnarrowed t)
 
            ;; feature
-           ("f" "feature" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:lead:
-:jira:
-:jira+:
-:END:
+;;            ("f" "feature" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :lead:
+;; :jira:
+;; :jira+:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "Features")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "Features")
+;;              :unnarrowed t)
 
            ;; general
-           ("g" "general" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("g" "general" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "General")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "General")
+;;              :unnarrowed t)
 
            ;; issue
-           ("i" "issue" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:lead:
-:jira:
-:jira+:
-:END:
+;;            ("i" "issue" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :lead:
+;; :jira:
+;; :jira+:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "Issues")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "Issues")
+;;              :unnarrowed t)
 
            ;; interviews
-           ("I" "interviews" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("I" "interviews" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "Interviews")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "Interviews")
+;;              :unnarrowed t)
 
            ;; log
-           ("L" "log" plain (function org-roam--capture-get-point)
-             "%?"
-             :file-name "log/%<%Y-%m-%d-%H%M>-${slug}"
-             :head ,(cats//org-roam-template-head "log")
-             :unnarrowed t)
+           ;; ("L" "log" plain (function org-roam--capture-get-point)
+           ;;   "%?"
+           ;;   :file-name "log/%<%Y-%m-%d-%H%M>-${slug}"
+           ;;   :head ,(cats//org-roam-template-head "log")
+           ;;   :unnarrowed t)
 
            ;; product develpment
-           ("p" "project" entry (function org-roam--capture-get-point)
-             "* ${title}%?
-  :PROPERTIES:
-  :FOR_EXPORT_COLUMNS:  %50ITEM %8Effort(Estimate){:}
-  :COLUMNS:  %50ITEM %8Effort(Estimate){:} %8LEAD(Lead) %5CLOCKSUM(Clocked) %10TODO(State)
-  :ID:       %(cats//org-roam-filename \"${title}\")
-  :EXPORT_TITLE: ${title}
-  :EXPORT_OPTIONS: toc:nil
-  :LEAD:
-  :LEAD_ALL: agrandle sbranch jweimer kwhite ajames gmorales acates
-  :EPIC:
-  :FEATURE-FLAG:
-  :FEATURE-FLAG+:
-  :COMPLETE-DATE:
-  :END:
-** Resources
-** Tasks
-*** First task
-    :PROPERTIES:
-    :Effort:   01:00
-    :END:
-    - Simple task
-** Notes
-** Estimates
-#+BEGIN: columnview :hlines 2 :vlines t :id \"%(cats//org-roam-filename \"${title}\")\" :skip-empty-rows t
+;;            ("p" "project" entry (function org-roam--capture-get-point)
+;;              "* ${title}%?
+;;   :PROPERTIES:
+;;   :FOR_EXPORT_COLUMNS:  %50ITEM %8Effort(Estimate){:}
+;;   :COLUMNS:  %50ITEM %8Effort(Estimate){:} %8LEAD(Lead) %5CLOCKSUM(Clocked) %10TODO(State)
+;;   :ID:       %(cats//org-roam-filename \"${title}\")
+;;   :EXPORT_TITLE: ${title}
+;;   :EXPORT_OPTIONS: toc:nil
+;;   :LEAD:
+;;   :LEAD_ALL: agrandle sbranch jweimer kwhite ajames gmorales acates
+;;   :EPIC:
+;;   :FEATURE-FLAG:
+;;   :FEATURE-FLAG+:
+;;   :COMPLETE-DATE:
+;;   :END:
+;; ** Resources
+;; ** Tasks
+;; *** First task
+;;     :PROPERTIES:
+;;     :Effort:   01:00
+;;     :END:
+;;     - Simple task
+;; ** Notes
+;; ** Estimates
+;; #+BEGIN: columnview :hlines 2 :vlines t :id \"%(cats//org-roam-filename \"${title}\")\" :skip-empty-rows t
 
-#+END:
+;; #+END:
 
-"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "\"Product Development\"")
-             :unnarrowed t)
+;; "
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "\"Product Development\"")
+;;              :unnarrowed t)
 
            ;; backlop - ready
-           ("r" "backlog - ready" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("r" "backlog - ready" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "\"Backlog - Ready\"")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "\"Backlog - Ready\"")
+;;              :unnarrowed t)
 
            ;; releases
-           ("R" "releases" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("R" "releases" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "Releases")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "Releases")
+;;              :unnarrowed t)
 
            ;; current sprint
-           ("S" "sprint - current" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("S" "sprint - current" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "\"Current Sprint\"")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "\"Current Sprint\"")
+;;              :unnarrowed t)
 
            ;; past sprints
-           ("P" "sprints - past" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("P" "sprints - past" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "\"Past Sprints\"")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "\"Past Sprints\"")
+;;              :unnarrowed t)
 
            ;; backlop - wip
-           ("w" "backlog - wip" entry (function org-roam--capture-get-point)
-             ":PROPERTIES:
-:END:
+;;            ("w" "backlog - wip" entry (function org-roam--capture-get-point)
+;;              ":PROPERTIES:
+;; :END:
 
-* Resources
-* Notes
+;; * Resources
+;; * Notes
 
-%?"
-             :file-name "${slug}"
-             :head ,(cats//org-roam-template-head "\"Backlog - WIP\"")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "${slug}"
+;;              :head ,(cats//org-roam-template-head "\"Backlog - WIP\"")
+;;              :unnarrowed t)
 
            ;; capture template to grab websites. Requires org-roam protocol.
-           ("W" "website" entry (function org-roam--capture-get-point)
-             "* Resources
-* Notes
+;;            ("W" "website" entry (function org-roam--capture-get-point)
+;;              "* Resources
+;; * Notes
 
-%?"
-             :file-name "websites/${slug}"
-             :head ,(cats//org-roam-template-ref-head "website")
-             :unnarrowed t)
+;; %?"
+;;              :file-name "websites/${slug}"
+;;              :head ,(cats//org-roam-template-ref-head "website")
+;;              :unnarrowed t)
 
 
            ))
+
+      (org-roam-db-autosync-mode)
       )))
 
 
@@ -447,7 +483,7 @@ Regards,
 ;;   Zotero
 ;; * `helm-bibtex` allows for any of the keys in a `.bib` file to be used in a
 ;;   template, and an overly expressive one is more useful
-;; * The `ROAM_KEY` is defined to ensure that cite backlinks work correctly
+;; * The `ROAM_REFS` is defined to ensure that cite backlinks work correctly
 ;;   with `org-roam`
 ;; * As I prefer to have one notes file per `pdf`, I have only configured
 ;;   the `bibtex-completion-notes-template-multiple-files` variable
@@ -474,7 +510,7 @@ Regards,
         bibtex-completion-pdf-field "file"
         bibtex-completion-notes-template-multiple-files (concat
           "#+TITLE: ${title}\n"
-          "#+ROAM_KEY: cite:${=key=}\n"
+          "#+ROAM_REFS: cite:${=key=}\n"
           "* TODO Notes\n"
           ":PROPERTIES:\n"
           ":Custom_ID: ${=key=}\n"
@@ -509,7 +545,7 @@ Regards,
         '(("r" "ref" plain (function org-roam-capture--get-point)
             ""
             :file-name "${slug}"
-            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_REFS: ${ref}
 
 - tags ::
 - keywords :: ${keywords}
