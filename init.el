@@ -122,7 +122,9 @@ This function should only modify configuration layer settings."
                       markdown
                       git)
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
-     colors
+     (colors :variables
+       colors-enable-nyan-cat-progress-barprogress-bar (display-graphic-p)
+       colors-colorize-identifiers 'variables)
      emoji
      (typography :variables typography-enable-typographic-editing nil)
      ;; Evil setup
@@ -425,7 +427,7 @@ This function should only modify configuration layer settings."
        ;; yasnippet-snippets
        ;; M-x all-the-icons-install-fonts
        all-the-icons
-       ng2-mode
+       ;; ng2-mode
        ;; elcord ;; discord
        ;; graphql-mode
        ;; eslint-fix

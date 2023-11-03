@@ -10,7 +10,7 @@
   '(
      autoinsert
      helm-bibtex
-     ol-notmuch
+     ;; ol-notmuch
      ;; company                            ;; defined in spacemacs org
      ;; company-emoji                      ;; defined in spacemacs org
      ;; emoji-cheat-sheet-plus             ;; defined in spacemacs org

@@ -110,6 +110,9 @@
     ;; add buffer-local indicator for whether prog-mode-hook has run.
     (set (make-local-variable 'my-pmh-ran) t)
 
+    ;; disable electric mode
+    (cats/disable-electric-indent-mode)
+
     ;; Jump to bug references from code
     (bug-reference-prog-mode)
 
@@ -133,9 +136,13 @@
         (with-syntax-table table
           ad-do-it)))
 
-    (spacemacs/toggle-rainbow-identifier-off)
-    (spacemacs/toggle-color-identifiers-mode-on)
-    (spacemacs/toggle-color-identifiers-mode-off)
+    (if (fboundp 'rainbow-identifier-mode)
+      (spacemacs/toggle-rainbow-identifier-off))
+
+    (if (fboundp 'color-identifiers-mode)
+      (spacemacs/toggle-color-identifiers-mode-on)
+      (spacemacs/toggle-color-identifiers-mode-off))
+
     ;; crashes when opening package.json
     ;; (unless (bound-and-true-p rainbow-mode)
     ;;   (rainbow-mode))

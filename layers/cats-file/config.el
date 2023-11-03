@@ -43,6 +43,7 @@
     ".expo"                             ; expo
     ".yarn"                             ; yarn cache
     "__fixtures__"
+    ".docusaurus"                       ; docusaurus
     ))
 
 ;; List of exact filenames to ignore. These are not regular expressions, but
@@ -229,8 +230,6 @@
     ".stylelintrc"                 ; stylelint
     ".renovaterc"                  ; renovate
     ".lintstagedrc"
-    "."
-    "."
     ))
 
 ;; List of file endings to ignore. These are not regular expressions, but

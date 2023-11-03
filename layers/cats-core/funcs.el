@@ -113,15 +113,20 @@ If FRAME is nil, it defaults to the selected frame."
   (set-frame-parameter frame 'cats//frame-name (uuidgen-4)))
 (add-hook 'after-make-frame-functions 'cats//initialize-frame-uuid)
 
+;; (/ (- (nth 3 (assq 'geometry (car (display-monitor-attributes-list)))) 82) (frame-char-height))  -> 187
+;; (/ (- (x-display-pixel-height) 82) (frame-char-height))  -> 155
+;; (nth 4 (assq 'geometry (car (display-monitor-attributes-list)))) 3840
+;; (x-display-pixel-height) -> 3200
 (defun cats//initialize-frame-size ()
   "For the height, subtract 82 pixels from the screen height (for panels,
 menubars and what not), then divide by the height of a char to get the
 height we want. Use 140 char wide window for largeish displays and
 smaller 100 column windows for smaller displays."
   (when (display-graphic-p)
-    (let* ((fwp (if (> (x-display-pixel-width) 1680) 140 100))
-            (fhp (/ (- (x-display-pixel-height) 82)
-                   (frame-char-height))))
+    (let* ((pmh (nth 4 (assq 'geometry (car (display-monitor-attributes-list)))))
+            (pmw (nth 3 (assq 'geometry (car (display-monitor-attributes-list)))))
+            (fwp (if (> (x-display-pixel-width) 1680) 140 100))
+            (fhp (/ (- pmh 42) (frame-char-height))))
       (setq cats//frame-width fwp)
       (setq cats//frame-height fhp)
       (add-to-list 'default-frame-alist `(height . ,fhp))
