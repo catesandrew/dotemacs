@@ -25,11 +25,11 @@
      polymode
      hcl-mode
      ;; treesit-auto
-     code-review
+     ;; code-review
      lsp-mode
-     (combobulate :location
-       (recipe :fetcher github
-         :repo "mickeynp/combobulate"))
+     ;; (combobulate :location
+     ;;   (recipe :fetcher github
+     ;;     :repo "mickeynp/combobulate"))
     ))
 
 
@@ -176,38 +176,39 @@
 
 
 ;; code-review
-(defun cats-programming/init-code-review ()
-  (use-package code-review
-    :after (magit forge)
-    :init
-    (with-eval-after-load 'evil-collection-magit
-      ;; From Doom Emacs
-      (dolist (binding evil-collection-magit-mode-map-bindings)
-        (pcase-let* ((`(,states _ ,evil-binding ,fn) binding))
-          (dolist (state states)
-            (evil-collection-define-key state 'code-review-mode-map evil-binding fn))))
-      (evil-set-initial-state 'code-review-mode evil-default-state))
-    :config
-    (progn
-      (evil-make-overriding-map code-review-mode-map evil-default-state)
-      (setq code-review-auth-login-marker 'forge)
-      (add-hook 'code-review-mode-hook
-        (lambda ()
-          ;; include *Code-Review* buffer into current workspace
-          (persp-add-buffer (current-buffer))))
-      ;; From Doom Emacs
-      (defun magit/start-code-review (arg)
-        (interactive "P")
-        (call-interactively
-          (if (or arg (not (featurep 'forge)))
-            #'code-review-start
-            #'code-review-forge-pr-at-point)))
+;; https://github.com/wandersoncferreira/code-review/issues/245
+;; (defun cats-programming/init-code-review ()
+;;   (use-package code-review
+;;     :after (magit forge)
+;;     :init
+;;     (with-eval-after-load 'evil-collection-magit
+;;       ;; From Doom Emacs
+;;       (dolist (binding evil-collection-magit-mode-map-bindings)
+;;         (pcase-let* ((`(,states _ ,evil-binding ,fn) binding))
+;;           (dolist (state states)
+;;             (evil-collection-define-key state 'code-review-mode-map evil-binding fn))))
+;;       (evil-set-initial-state 'code-review-mode evil-default-state))
+;;     :config
+;;     (progn
+;;       (evil-make-overriding-map code-review-mode-map evil-default-state)
+;;       (setq code-review-auth-login-marker 'forge)
+;;       (add-hook 'code-review-mode-hook
+;;         (lambda ()
+;;           ;; include *Code-Review* buffer into current workspace
+;;           (persp-add-buffer (current-buffer))))
+;;       ;; From Doom Emacs
+;;       (defun magit/start-code-review (arg)
+;;         (interactive "P")
+;;         (call-interactively
+;;           (if (or arg (not (featurep 'forge)))
+;;             #'code-review-start
+;;             #'code-review-forge-pr-at-point)))
 
-      (transient-append-suffix 'magit-merge "i"
-        '("y" "Review pull request" magit/start-code-review))
-      (with-eval-after-load 'forge
-        (transient-append-suffix 'forge-dispatch "c u"
-          '("c r" "Review pull request" magit/start-code-review))))))
+;;       (transient-append-suffix 'magit-merge "i"
+;;         '("y" "Review pull request" magit/start-code-review))
+;;       (with-eval-after-load 'forge
+;;         (transient-append-suffix 'forge-dispatch "c u"
+;;           '("c r" "Review pull request" magit/start-code-review))))))
 
 
 ;; polymode

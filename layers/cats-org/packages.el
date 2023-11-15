@@ -1096,7 +1096,7 @@ This will use the command `open' with the message URL."
       ;; Use <LEADER po> to go to project TODOs
       (setq org-confirm-elisp-link-function nil)
       ;; <LEADER aop> invokes with org-projectile/capture
-      (setq org-projectile-capture-template
+      (setq org-project-capture-capture-template
         (format "%s%s" "* TODO %?" cats//org-properties-string)))
     :post-config
     (progn

@@ -1,0 +1,11 @@
+# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: admonitions danger
+# group: admonitions
+# key: danger
+# type: snippet
+# --
+:::danger[${1:title}]
+
+$0
+
+:::

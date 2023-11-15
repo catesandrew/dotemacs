@@ -122,9 +122,7 @@ This function should only modify configuration layer settings."
                       markdown
                       git)
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
-     (colors :variables
-       colors-enable-nyan-cat-progress-barprogress-bar (display-graphic-p)
-       colors-colorize-identifiers 'variables)
+     colors
      emoji
      (typography :variables typography-enable-typographic-editing nil)
      ;; Evil setup

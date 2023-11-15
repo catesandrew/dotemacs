@@ -1,0 +1,9 @@
+# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: disable rule
+# group: eslint
+# key: eslintdr
+# type: snippet
+# --
+/* eslint-disable ${1:no-console} */
+$0
+/* eslint-enable ${2:no-console} */

@@ -1,0 +1,11 @@
+# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: admonitions tip
+# group: admonitions
+# key: tip
+# type: snippet
+# --
+:::tip[${1:title}]
+
+$0
+
+:::
