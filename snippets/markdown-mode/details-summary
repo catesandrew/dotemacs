@@ -1,0 +1,12 @@
+# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
+# name: docusaurus details summary
+# group: docusaurus
+# key: details
+# type: snippet
+# --
+<details>
+<summary>${1:title}</summary>
+
+$0
+
+</details>

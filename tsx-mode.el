@@ -6,7 +6,9 @@
 
 ;; URL: https://github.com/orzechowskid/tsx-mode.el
 
-;; Package-Requires: ((emacs "29.0") (corfu "0.33") (coverlay "3.0.2") (css-in-js-mode "1.0.0") (origami "1.0"))
+;; Package-Requires: ((emacs "29.0") (corfu "0.33") (coverlay "3.0.2") (origami "1.0"))
+
+;; Old Package-Requires: ((emacs "29.0") (corfu "0.33") (coverlay "3.0.2") (css-in-js-mode "1.0.0") (origami "1.0"))
 
 ;;; Commentary:
 
@@ -21,7 +23,7 @@
 (require 'typescript-ts-mode)
 
 (require 'coverlay)
-(require 'css-in-js-mode)
+;; (require 'css-in-js-mode)
 ;; origami depends on some now-deprecated cl functions and there's not much we
 ;; can do about that
 (let ((byte-compile-warnings '((not cl-functions))))
@@ -365,10 +367,10 @@ mode has been enabled."
     (tsx-mode--debug "configuring corfu")
     (corfu-mode t)
     (corfu-popupinfo-mode t))
-  (when tsx-mode-use-css-in-js
-    (tsx-mode--debug "configuring css-in-js-mode")
-    (css-in-js-mode-fetch-shared-library)
-    (css-in-js-mode t))
+  ;;(when tsx-mode-use-css-in-js
+  ;;  (tsx-mode--debug "configuring css-in-js-mode")
+  ;;  (css-in-js-mode-fetch-shared-library)
+  ;;  (css-in-js-mode t))
   (when tsx-mode-use-lsp
     (add-hook
      'eglot-managed-mode-hook
@@ -396,4 +398,3 @@ mode has been enabled."
 
 (provide 'tsx-mode)
 ;;; tsx-mode.el ends here
-

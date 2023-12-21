@@ -306,8 +306,6 @@
     :defer t
     :init
     (progn
-      ;; (setq prettify-symbol-categories '(lambda relational logical))
-      (setq prettify-symbols-unprettify-at-point 'right)
       (spacemacs|add-toggle prettify-symbols-mode
         :status prettify-symbols-mode
         :on (progn

@@ -42,14 +42,6 @@
 
 
 ;; prettify, font-lock
-
-(defun cats/highlight-TODO-words ()
-  "Highlight keywords in comments."
-  (interactive)
-  (font-lock-add-keywords
-   nil '(("\\<\\(\\(FIX\\(ME\\)?\\|BUG\\|CHECK\\|DONE\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\)\\>:?\\)"
-          1 font-lock-warning-face t))))
-
 (defun cats/prettify-symbols-auto ()
   "Prettify symbol list by `major-mode'."
   (interactive)
@@ -148,7 +140,6 @@
     ;;   (rainbow-mode))
 
     (spacemacs/toggle-auto-fill-comments-mode-on)
-    ;; (cats/highlight-TODO-words)
 
     ;; Since paredit and other modes automatically insert final characters like
     ;; semi-colons and parenthesis, what I really want is to hit return from the
