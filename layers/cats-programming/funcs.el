@@ -46,46 +46,68 @@
   "Prettify symbol list by `major-mode'."
   (interactive)
   (cond
-   ;; lisp
-   ((member major-mode
-            '(emacs-lisp-mode
-             lisp-mode))
-    (cats/pretty-symbols pretty-symbols/elisp))
-   ;; javascript
-   ((member major-mode
-            '(js2-mode
-              js-mode
-              js-jsx-mode
-              js2-jsx-mode
-              rjsx-mode
-              javascript-mode))
-    (cats/pretty-symbols pretty-symbols/js2-width))
+    ;; lisp
+    ((member major-mode
+       '(emacs-lisp-mode
+          lisp-mode))
+      (cats/pretty-symbols pretty-symbols/elisp))
+    ;; javascript
+    ((member major-mode
+       '(js2-mode
+          js-mode
+          js-jsx-mode
+          js2-jsx-mode
+          rjsx-mode
+          tsx-mode
+          tsx-ts-mode
+          javascript-mode))
+     (dolist (alias (cats//pragmatapro-prettify-symbols-alist pretty-symbols/js2))
+       (push alias prettify-symbols-alist)))
    (t
     ;; default
     (cats/pretty-symbols pretty-symbols/prog))))
 
 
 ;; personal prog-mode defaults
-(defun add-pragmatapro-prettify-symbols-alist ()
-  (dolist (alias pragmatapro-prettify-symbols-alist)
+(defun cats//pragmatapro-prettify-symbols-alist (list)
+  "The pragmatapro prettify symbols alist LIST."
+  (mapcar (lambda (s)
+            `(,(car s)
+               .
+               ,(vconcat
+                  (apply 'vconcat
+                    (make-list
+                      (- (length (car s)) 1)
+                      (vector (decode-char 'ucs #X0020) '(Br . Bl))))
+                  (vector (decode-char 'ucs (cadr s))))))
+    list))
+
+(defun cats//add-pragmatapro-prettify-symbols-alist ()
+  ;; (setq prettify-symbols-alist (cats//pragmatapro-prettify-symbols-alist pretty-symbols/pragmatapro))
+  (dolist (alias (cats//pragmatapro-prettify-symbols-alist pretty-symbols/pragmatapro))
     (push alias prettify-symbols-alist)))
 
 ;; enable prettified symbols on comments
-(defun setup-compose-predicate ()
+(defun cats//setup-compose-predicate ()
   (setq prettify-symbols-compose-predicate
-    (defun my-prettify-symbols-default-compose-p (start end _match)
-      "Same as `prettify-symbols-default-compose-p', except compose symbols in comments as well."
-      (let* ((syntaxes-beg (if (memq (char-syntax (char-after start)) '(?w ?_))
-                             '(?w ?_) '(?. ?\\)))
-              (syntaxes-end (if (memq (char-syntax (char-before end)) '(?w ?_))
-                              '(?w ?_) '(?. ?\\))))
-        (not (or (memq (char-syntax (or (char-before start) ?\s)) syntaxes-beg)
-               (memq (char-syntax (or (char-after end) ?\s)) syntaxes-end)
-               (nth 3 (syntax-ppss))))))))
+        (defun my-prettify-symbols-default-compose-p (start end _match)
+          "Same as `prettify-symbols-default-compose-p', except compose symbols in comments as well."
+          (let* ((syntaxes-beg (if (memq (char-syntax (char-after start)) '(?w ?_))
+                                   '(?w ?_) '(?. ?\\)))
+                 (syntaxes-end (if (memq (char-syntax (char-before end)) '(?w ?_))
+                                   '(?w ?_) '(?. ?\\))))
+            (not (or (memq (char-syntax (or (char-before start) ?\s)) syntaxes-beg)
+                     (memq (char-syntax (or (char-after end) ?\s)) syntaxes-end)
+                     (nth 3 (syntax-ppss))))))))
 
-(defun pragmatapro-prettify ()
-  (add-pragmatapro-prettify-symbols-alist)
-  (setup-compose-predicate))
+(defun cats//pragmatapro-prettify ()
+  (cats//add-pragmatapro-prettify-symbols-alist)
+  (cats//setup-compose-predicate))
+
+(defvar-local cats/color-identifiers:colorize-behavior nil
+  "For internal use. Stores the element of
+`color-identifiers:modes-alist' that is relevant to the current
+major mode")
 
 (defun cats/prog-mode-defaults ()
   (company-mode)
@@ -148,10 +170,25 @@
     ;; (global-set-key (kbd "M-RET") 'cats/newline-for-code)
 
     ;; prettify and enable locally
-    (pragmatapro-prettify)
+    (cats//pragmatapro-prettify)
     (cats/prettify-symbols-auto)
     (spacemacs/toggle-prettify-symbols-mode-on)
     ))
+
+(defun cats-markup/init-handlebars-mode ()
+  (use-package handlebars-mode
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (add-hook 'cats/project-hook
+        'cats//locate-handlebars-from-projectile)
+
+      (with-eval-after-load 'flycheck
+        (add-hook 'cats/handlebars-executable-hook
+          'cats//hbs-set-handlebars-executable)))
+    :mode (("\\.hbs$" . handlebars-mode)
+            ("\\.handlebars$" . handlebars-mode))))
 
 
 ;; string inflection
