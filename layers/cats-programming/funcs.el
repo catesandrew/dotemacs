@@ -153,9 +153,15 @@ major mode")
     (if (fboundp 'rainbow-identifier-mode)
       (spacemacs/toggle-rainbow-identifier-off))
 
-    (if (fboundp 'color-identifiers-mode)
-      (spacemacs/toggle-color-identifiers-mode-on)
-      (spacemacs/toggle-color-identifiers-mode-off))
+    (with-eval-after-load 'color-identifiers-mode
+      (if color-identifiers-mode
+        (progn
+          (setq cats/color-identifiers:colorize-behavior
+            (assoc major-mode color-identifiers:modes-alist))
+          (unless (not cats/color-identifiers:colorize-behavior)
+            (progn
+              (spacemacs/toggle-color-identifiers-mode-on)
+              (spacemacs/toggle-color-identifiers-mode-off))))))
 
     ;; crashes when opening package.json
     ;; (unless (bound-and-true-p rainbow-mode)
