@@ -44,7 +44,11 @@
     ".yarn"                             ; yarn cache
     "__fixtures__"
     ".docusaurus"                       ; docusaurus
-    ))
+    ".nx"
+    ".backstage"
+    "tf"                                ; terraform
+    "assets"
+  ))
 
 ;; List of exact filenames to ignore. These are not regular expressions, but
 ;; literal strings which exactly match a file or directory name to ignore.
@@ -211,7 +215,29 @@
     "Gemfile.lock"
     "Podfile.lock"
     ".lock-wscript"
-    ))
+    ".browserslistrc"                  ; browsers list
+    ".czrc"
+    ".dockerignore"
+    ".editorconfig"
+    ".gitattributes"
+    ".gitignore"
+    ".go-version"
+    ".nxignore"
+    ".stylelintignore"
+    ".yo-rc.json"
+    "CONTRIBUTING.md"
+    "LICENSE.md"
+    "README.md"
+    "SECURITY.md"
+    "CHANGELOG.md"
+    "bunfig.toml"
+    "nodemon.json"
+    "jsdoc.json"
+    "jsdoc-to-mdx.json"
+    "jsconfig.json"
+    "lerna.json"
+    "docker-compose.yml"
+   ))
 
 ;; List of file beginnings to ignore. These are not regular expressions, but
 ;; literal strings which occur at the beginnings of file or directory names
@@ -219,17 +245,29 @@
 ;; fully-qualified pathname."
 (defvar ignoramus/file-basename-beginnings
   '(
-    ".env"
-    ".#"                                ; emacs
-    ;; "core."                             ; unix
-    "._"                                ; thumbnails
-    ;; "_cgo_export."                      ; go
-    ".yarnrc"                      ; yarn berry
-    ".watchmanconfig"              ; watchman
-    ".versionrc"                   ; standard-version
-    ".stylelintrc"                 ; stylelint
-    ".renovaterc"                  ; renovate
-    ".lintstagedrc"
+     ".env"
+     ".#"                                ; emacs
+     ;; "core."                             ; unix
+     "._"                                ; thumbnails
+     ;; "_cgo_export."                      ; go
+     ".yarnrc"                      ; yarn berry
+     ".watchmanconfig"              ; watchman
+     ".versionrc"                   ; standard-version
+     ".stylelintrc"                 ; stylelint
+     ".renovaterc"                  ; renovate
+     ".lintstagedrc"
+     ".lighthouserc"
+     ".syncpackrc"
+     ".eslintrc"
+     ".commitlintrc"
+     "jest.config"
+     "jest.setup"
+     "babel.config"
+     "svgo.config"
+     "postcss.config"
+     "wdio.conf"
+     ;; "webpack.config"
+     "Dockerfile"
     ))
 
 ;; List of file endings to ignore. These are not regular expressions, but

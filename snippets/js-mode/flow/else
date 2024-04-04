@@ -1,9 +1,0 @@
-# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: else
-# group: flow
-# key: else
-# expand-env: ((yas-also-auto-indent-first-line t))
-# type: snippet
-# --
-else
-  $0

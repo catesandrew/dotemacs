@@ -4,6 +4,6 @@
 # key: tha
 # binding: direct-keybinding
 # --
-.then(function (${1:result}) {
+.then((${1:result}) => {
   return ${false}
 })

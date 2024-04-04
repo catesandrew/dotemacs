@@ -152,17 +152,30 @@
   (spacemacs|use-package-add-hook smartparens
     :post-config
     (sp-with-modes '(web-mode)
-      (sp-local-pair "<% " " %>")
-      (sp-local-pair "{ " " }")
-      (sp-local-pair "<%= "  " %>")
-      (sp-local-pair "<%# "  " %>")
-      (sp-local-pair "<%$ "  " %>")
-      (sp-local-pair "<%@ "  " %>")
-      (sp-local-pair "<%: "  " %>")
-      (sp-local-pair "{{ "  " }}")
-      (sp-local-pair "{% "  " %}")
-      (sp-local-pair "{%- "  " %}")
-      (sp-local-pair "{# "  " #}"))))
+      (sp-local-pair "%" "%"
+        :unless '(sp-in-string-p)
+        :post-handlers '(((lambda (&rest _ignored)
+                            (just-one-space)
+                            (save-excursion (insert " ")))
+                           "SPC" "=" "-")))
+      (sp-local-tag "%" "<% "  " %>")
+      (sp-local-tag "=" "<%= " " %>")
+      (sp-local-tag "-" "<%- " " %>")
+      ;; (sp-local-pair "<% " " %>")
+      ;; (sp-local-pair "{ " " }")
+      ;; (sp-local-pair "<%= "  " %>")
+      ;; (sp-local-pair "<%- "  " %>")
+      ;; (sp-local-pair "<%# "  " %>")
+      ;; (sp-local-pair "<%$ "  " %>")
+      ;; (sp-local-pair "<%@ "  " %>")
+      ;; (sp-local-pair "<%: "  " %>")
+      ;; (sp-local-pair "{{ "  " }}")
+      ;; (sp-local-pair "{% "  " %}")
+      ;; (sp-local-pair "{%- "  " %}")
+      ;; (sp-local-pair "{# "  " #}")
+      )
+    )
+  )
 
 (defun cats-web/post-init-smartparens ()
   (spacemacs/add-to-hooks
@@ -186,14 +199,53 @@
       (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
       (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
 
-      (setq web-mode-enable-auto-pairing nil
-            web-mode-markup-indent-offset 2
-            web-mode-code-indent-offset 2
-            web-mode-sql-indent-offset 2
-            web-mode-css-indent-offset 2
-            web-mode-attr-indent-offset 2
-            web-mode-style-padding 2
-            web-mode-script-padding 2))))
+      ;; (setq web-mode-enable-auto-pairing nil)
+      (setq web-mode-markup-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-sql-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-attr-indent-offset 2
+        web-mode-style-padding 2
+        web-mode-script-padding 2)
+
+
+      ;; <%_ secrets.forEach(({name, description, required}) => { _%>
+      ;; <%- name %>:
+      ;;   description: '<%- description %>'
+      ;;   required: <%- required %>
+      ;; <%_ }) _%>
+
+      (setq web-mode-extra-snippets
+        '(("erb" . (("if" . "<%_ if (|) { _%>\n\n<%_ } _%>")))
+           ("yaml" . (("if" . "<%_ if (|) { _%>\n\n<%_ } _%>")))
+           ("ejs" . (("fe" . "<%_ [].forEach((|) => { _%>\n\n<%_ }) _%>")))
+           ("ejs" . (("if" . "<%_ if (|) { _%>\n\n<%_ } _%>")))))
+
+      (setq web-mode-extra-auto-pairs
+        '(("erb"  . (("beg" "end")))
+           ("ejs"  . (("<%-" "%>")))
+           ("ejs"  . (("<%=" "%>")))
+           ("ejs"  . (("<%" "%>")))
+           ("md"  . (("<%-" "%>")))
+           ("md"  . (("<%=" "%>")))
+           ("md"  . (("<%" "%>")))))
+
+      (setq web-mode-engines-alist
+        '(("ejs"  . "\\.ejs\\.js[x]?\\'")
+           ("ejs" . "\\.ejs\\.json\\'")
+           ("ejs"  . "\\.ejs\\.md\\'")
+           ("ejs"  . "\\.ejs\\.yml\\'")
+           ))
+
+      (setq web-mode-content-types-alist
+        '(("json" . "/some/path/.*\\.api\\'")
+           ("jsx"  . "\\.ejs.\\.jsx\\'")
+           ("javascript"  . "\\.ejs\\.js\\'")
+           ("json"  . "\\.ejs\\.json\\'")
+           ("markdown"  . "\\.ejs\\.md\\'")
+           ("yaml"  . "\\.ejs\\.yml\\'")))
+
+      )))
 
 
 ;; yasnippet

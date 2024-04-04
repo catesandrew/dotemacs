@@ -16,6 +16,7 @@
 
 ;; For emacs 25
 (when (>= emacs-major-version 25)
+  ;; (setq inhibit-compacting-font-caches t)
   (setq prettify-symbols-unprettify-at-point 'right))
 
 (defvar cats/prog-mode-hook nil

@@ -1,8 +1,0 @@
-# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: if (predicate) statement
-# group: flow
-# key: if
-# type: snippet
-# --
-if (${1:condition})
-  $0

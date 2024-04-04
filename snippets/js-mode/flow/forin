@@ -4,9 +4,9 @@
 # key: forin
 # type: snippet
 # --
-for (var ${1:key} in ${2:source}) {
+for (let ${1:key} in ${2:source}) {
   if ({}.hasOwnProperty.call($2, $1)) {
-    var ${3:val} = $2[$1]
+    const ${3:val} = $2[$1]
     ${0}
   }
 }

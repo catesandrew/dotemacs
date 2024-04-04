@@ -44,10 +44,11 @@
      ;; (tsi :location (recipe :fetcher github
      ;;                       :repo "orzechowskid/tsi.el"))
      (css-in-js-mode :location (recipe :fetcher github
-                                 :branch "emacs29"
+                                 :branch "main"
                                  :repo "orzechowskid/tree-sitter-css-in-js"))
-     (tsx-mode :location (recipe :fetcher file
-                           :path "~/.spacemacs.d/tsx-mode.el"))
+     (tsx-mode :location (recipe :fetcher github
+                           :branch "main"
+                           :repo "orzechowskid/tsx-mode.el"))
      (flymake-stylelint :location (recipe :fetcher github
                                     :repo "orzechowskid/flymake-stylelint"))
      add-node-modules-path
@@ -98,11 +99,8 @@
 ;; tsx-mode
 (defun cats-javascript/init-tsx-mode ()
   (use-package tsx-mode
-    :ensure t
-    ;; :requires (css-in-js-mode)
-    ;; :after org
-    :mode "\\.tsx\\'"
-    ;; :interpreter "tsx"
+    :defer t
+    :mode (("\\.ts[x]?\\'"  . tsx-mode))
     :init
     (progn
       ;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))

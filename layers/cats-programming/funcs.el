@@ -52,17 +52,17 @@
           lisp-mode))
       (cats/pretty-symbols pretty-symbols/elisp))
     ;; javascript
-    ((member major-mode
-       '(js2-mode
-          js-mode
-          js-jsx-mode
-          js2-jsx-mode
-          rjsx-mode
-          tsx-mode
-          tsx-ts-mode
-          javascript-mode))
-     (dolist (alias (cats//pragmatapro-prettify-symbols-alist pretty-symbols/js2))
-       (push alias prettify-symbols-alist)))
+    ;; ((member major-mode
+    ;;    '(js2-mode
+    ;;       js-mode
+    ;;       js-jsx-mode
+    ;;       js2-jsx-mode
+    ;;       rjsx-mode
+    ;;       tsx-mode
+    ;;       tsx-ts-mode
+    ;;       javascript-mode))
+    ;;  (dolist (alias (cats//prepend-pragmatapro-prettify-symbols-alist pretty-symbols/js2))
+    ;;    (push alias prettify-symbols-alist)))
    (t
     ;; default
     (cats/pretty-symbols pretty-symbols/prog))))
@@ -82,8 +82,14 @@
                   (vector (decode-char 'ucs (cadr s))))))
     list))
 
+(defun cats//prepend-pragmatapro-prettify-symbols-alist (list)
+  (mapcar (lambda (s)
+            `(,(car s)
+               .
+               ,(vector (decode-char 'ucs (cadr s)))))
+    list))
+
 (defun cats//add-pragmatapro-prettify-symbols-alist ()
-  ;; (setq prettify-symbols-alist (cats//pragmatapro-prettify-symbols-alist pretty-symbols/pragmatapro))
   (dolist (alias (cats//pragmatapro-prettify-symbols-alist pretty-symbols/pragmatapro))
     (push alias prettify-symbols-alist)))
 
