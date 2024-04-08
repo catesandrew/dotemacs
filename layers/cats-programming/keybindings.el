@@ -7,5 +7,6 @@
 ;;; Code:
 
 (spacemacs/declare-prefix "oc" "string inflection")
+(spacemacs/declare-prefix "ot" "toggles")
 
 ;;; keybindings.el ends here

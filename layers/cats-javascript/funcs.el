@@ -482,6 +482,14 @@
 (add-hook 'cats/javascript-mode-hook 'cats/javascript-mode-defaults)
 
 
+;; typescript mode defaults
+(defun cats/typescript-mode-defaults ()
+  "Default typescript hook."
+  (company-mode))
+
+(add-hook 'cats/typescript-mode-hook 'cats/typescript-mode-defaults)
+
+
 ;; indium
 (defun cats/indium-start-node-repl ()
   "Attach a browser to Emacs and start a indium REPL."
@@ -558,7 +566,7 @@
 ;; import-js
 (defun cats/run-import-js ()
   (interactive)
-  (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
+  (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode js2-mode js2-jsx-mode rjsx-mode))
     (add-to-list (intern (format "spacemacs-jump-handlers-%S" mode))
       ;; '(import-js-goto :async t)
       'import-js-goto))
@@ -566,7 +574,7 @@
 
 (defun cats/kill-import-js ()
   (interactive)
-  (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
+  (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode js2-mode js2-jsx-mode rjsx-mode))
     (let ((handlers (intern (format "spacemacs-jump-handlers-%S" mode))))
       (when (member 'import-js-goto (eval handlers))
         (setf (symbol-value handlers) (remove 'import-js-goto (eval handlers))))))

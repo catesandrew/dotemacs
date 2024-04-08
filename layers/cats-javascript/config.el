@@ -7,11 +7,15 @@
 ;;; Code:
 
 (spacemacs|define-jump-handlers js2-jsx-mode)
-
-;; (spacemacs|define-jump-handlers rjsx-mode)
+(spacemacs|define-jump-handlers jtsx-jsx-mode)
+(spacemacs|define-jump-handlers jtsx-tsx-mode)
+(spacemacs|define-jump-handlers jtsx-typescript-mode)
 
 (defvar cats/javascript-mode-hook nil
   "Hooks run when javascipt type mode is fired.")
+
+(defvar cats/typescript-mode-hook nil
+  "Hooks run when typescript type mode is fired.")
 
 (defvar cats/javascript-yasnippets-toggle-semicolon nil
   "Whether snippets should insert semicolons as appropriate.")

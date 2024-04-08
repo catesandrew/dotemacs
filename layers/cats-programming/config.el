@@ -25,6 +25,15 @@
 (defvar cats/prog-mode-spell-checking t
   "Enable `prog-mode' spell checking.")
 
+(defvar cats/global-treesit-fold t
+  "Enable `treesit-fold-mode' globally.")
+
+(defvar cats/global-treesit-fold-indicators t
+  "Enable `treesit-fold-indicators-mode' globally.")
+
+(defvar cats/global-treesit-auto t
+  "Enable `treesit-auto-mode' globally.")
+
 (defvar cats/prog-syntax-table
   (let ((table (make-syntax-table prog-mode-syntax-table)))
     ;; dash "-" is now a word character in programming mode
@@ -345,4 +354,5 @@
   "Symbols for PragmataPro.")
 
 (defvar cats/saved-javascript-backend nil)
+
 ;;; config.el ends here

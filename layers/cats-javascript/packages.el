@@ -56,14 +56,185 @@
      smartparens
      yasnippet
      typescript-mode
+     (skerrick :location (recipe :fetcher github
+                           :repo "anonimitoraf/skerrick"))
+     (atomic-chrome :location (recipe :fetcher github
+                                :repo "karimaziev/atomic-chrome"))
+
+     jtsx ;; Extends Emacs JSX/TSX built-in support
      ))
 
 
+;; here to get tsx-mode working
 (add-hook 'configuration-layer-post-load-hook
-  (lambda () (setq auto-mode-alist (delete '("\\.tsx\\'" . typescript-tsx-mode) auto-mode-alist))))
+  (defun cats//layer-hook ()
+    (setq auto-mode-alist (delete '("\\.tsx\\'" . typescript-tsx-mode) auto-mode-alist))
+    (setq auto-mode-alist (delete '("\\.tsx\\'" . tsx-ts-mode) auto-mode-alist))))
 
-(add-hook 'configuration-layer-post-load-hook
-  (lambda () (setq auto-mode-alist (delete '("\\.tsx\\'" . tsx-ts-mode) auto-mode-alist))))
+
+;; jtsx
+;; https://github.com/llemaitre19/jtsx
+
+;; - `jtsx-jsx-mode` is fully compatible with pure JS files, ithas some rare conflicts with TS files.
+;; It is thus recommanded to use
+;; - `jtsx-typescript-mode` (based on typescript-ts-mode) for plain TS files.
+
+;; `jtsx-jsx-mode` to JSX and JS files
+;; `jtsx-tsx-mode` to TSX files
+;; `jtsx-typescript-mode` to TS files
+
+;; bind jtsx functions to the same shortcuts for jtsx-jsx-mode and jtsx-tsx-mode
+;; set indention offsets for JSX/JS and TSX/TS modes (use base mode variables)
+;; customize jtsx behaviour through provided variables
+;; enable hideshow minor mode for code folding
+(defun cats-javascript/init-jtsx ()
+  (use-package jtsx
+    :ensure t
+    :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
+            ("\\.tsx\\'" . jtsx-tsx-mode)
+            ("\\.ts\\'" . jtsx-typescript-mode))
+    :hook ((jtsx-jsx-mode . hs-minor-mode)
+            (jtsx-tsx-mode . hs-minor-mode)
+            (jtsx-typescript-mode . hs-minor-mode))
+    :init
+    (add-to-list 'auto-mode-alist '("\\.jshintrc$" . jtsx-jsx-mode))
+    (add-to-list 'auto-mode-alist '("\\.eslintrc$" . jtsx-jsx-mode))
+    (add-to-list 'auto-mode-alist '("\\.mjs\\'" . jtsx-jsx-mode))
+    (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . jtsx-jsx-mode))
+
+    (dolist (hook '(jtsx-jsx-mode))
+      (add-hook hook (lambda () (run-hooks #'cats/javascript-mode-hook))))
+
+    (dolist (hook '(jtsx-tsx-mode jtsx-typescript-mode))
+      (add-hook hook (lambda () (run-hooks #'cats/typescript-mode-hook))))
+
+    ;; Optional customizations
+    (setq typescript-ts-mode-indent-offset 2)
+    (setq jtsx-switch-indent-offset 0)
+    (setq jtsx-indent-statement-block-regarding-standalone-parent nil)
+    (setq jtsx-jsx-element-move-allow-step-out t)
+    (setq jtsx-enable-jsx-electric-closing-element t)
+    (setq jtsx-enable-electric-open-newline-between-jsx-element-tags t)
+    (setq jtsx-enable-jsx-element-tags-auto-sync nil)
+    (setq jtsx-enable-all-syntax-highlighting-features t)
+    :config
+    ;; todo bind to evil keys spacemacs
+    ;; (defun jtsx-bind-keys-to-mode-map (mode-map)
+    ;;   "Bind keys to MODE-MAP."
+    ;;   (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
+    ;;   (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
+    ;;   (define-key mode-map (kbd "C-c j c") 'jtsx-jump-jsx-closing-tag)
+    ;;   (define-key mode-map (kbd "C-c j r") 'jtsx-rename-jsx-element)
+    ;;   (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
+    ;;   (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
+    ;;   (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
+    ;;   (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
+    ;;   (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
+    ;;   (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
+    ;;   (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
+    ;;   (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
+    ;;   (define-key mode-map (kbd "C-c j d") 'jtsx-delete-jsx-node))
+
+    ;; (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
+    ;;   (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
+
+    ;; (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
+    ;;   (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
+
+    ;; (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
+    ;; (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
+    )
+  )
+
+;; atomic-chrome
+
+;; codepen.io
+;; stackblitz.com
+;; jsfiddle.net
+;; leetcode.com
+;; hackerrank.com
+;; repl.it
+;; glitch.com
+;; plnkr.co
+;; codesandbox.io
+(defun cats-javascript/init-atomic-chrome ()
+  (use-package atomic-chrome
+    :commands (atomic-chrome-start-server)
+    :defines atomic-chrome-create-file-strategy
+    :config
+    ;; (setq-default atomic-chrome-default-major-mode 'markdown-mode)
+    (setq atomic-chrome-create-file-strategy '((temp-directory)))
+    (setq-default atomic-chrome-extension-type-list '(atomic-chrome))
+    (setq-default atomic-chrome-buffer-open-style 'frame)
+    (setq-default atomic-chrome-auto-remove-file t)
+    (setq-default atomic-chrome-url-major-mode-alist
+      '(("ramdajs.com" . js-ts-mode)
+         ("github.com" . gfm-mode)
+         ("gitlab.com" . gfm-mode)
+         ("leetcode.com" . typescript-ts-mode)
+         ("codesandbox.io" . js-ts-mode)
+         ("typescriptlang.org" . typescript-ts-mode)
+         ("jsfiddle.net" . js-ts-mode)
+         ("w3schools.com" . js-ts-mode)))
+    (setq atomic-chrome-create-file-strategy
+      '(("~/code/leetcode" :url ("leetcode.com"))
+         ("~/code/leetcode/js/" :url ("leetcode.com") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/codepen" :url ("codepen.io"))
+         ("~/code/codepen/js/" :url ("codepen.io") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/stackblitz" :url ("stackblitz.com"))
+         ("~/code/stackblitz/js/" :url ("stackblitz.com") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/jsfiddle" :url ("jsfiddle.net"))
+         ("~/code/jsfiddle/js/" :url ("jsfiddle.net") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/hackerrank" :url ("hackerrank.com"))
+         ("~/code/hackerrank/js/" :url ("hackerrank.com") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/repl" :url ("repl.it"))
+         ("~/code/repl/js/" :url ("repl.it") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/glitch" :url ("glitch.com"))
+         ("~/code/glitch/js/" :url ("glitch.com") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/plnkr" :url ("plnkr.co"))
+         ("~/code/plnkr/js/" :url ("plnkr.co") :extension ("js" "ts" "tsx" "jsx"))
+         ("~/code/medium" :url ("medium.com"))))
+
+    ;; (add-to-list 'atomic-chrome-create-file-strategy
+    ;;   '("~/repos/ts-scratch/src/" :extension
+    ;;      ("js" "ts" "tsx" "jsx" "cjs" "mjs")))
+    )
+  )
+
+
+;; skerrick-mode
+(defun cats-javascript/init-skerrick ()
+  (use-package skerrick
+    :defer t
+    :commands (skerrick-start-server)
+    :config
+    ;; Needs to be run on the very first install of skerrick. Or when you want to upgrade.
+    ;; npm install -g skerrick
+    ;; (unless (equal (shell-command-to-string "type skerrick") "skerrick not found\n")
+    ;;   (skerrick-install-or-upgrade-server-binary))
+    (defun cats//skerrick-eval ()
+      (interactive)
+      (if (use-region-p)
+        (skerrick-eval-region)
+        (beginning-of-line)
+        (set-mark-command nil)
+        (end-of-line)
+        (skerrick-eval-region)
+        (pop-mark)))
+
+    (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
+      (bind-key "C-x C-e" 'cats//skerrick-eval 'spacemacs-jtsx-jsx-mode-map))
+
+    (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
+      (bind-key "C-x C-e" 'cats//skerrick-eval 'spacemacs-jtsx-tsx-mode-map))
+
+    (defun jtsx-bind-keys-to-jtsx-typescript-mode-map ()
+      (bind-key "C-x C-e" 'cats//skerrick-eval 'spacemacs-jtsx-typescript-mode-map))
+
+    (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
+    (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
+    (add-hook 'jtsx-typescript-mode-hook 'jtsx-bind-keys-to-jtsx-typescript-mode-map)
+    ))
 
 
 ;; typescript-mode
@@ -100,10 +271,8 @@
 (defun cats-javascript/init-tsx-mode ()
   (use-package tsx-mode
     :defer t
-    :mode (("\\.ts[x]?\\'"  . tsx-mode))
     :init
     (progn
-      ;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
       (setq tsi-css-indent-offset 2)
       (setq tsi-typescript-indent-offset 2)
       (setq typescript-ts-mode-indent-offset 2))
@@ -139,8 +308,7 @@
     :init
     (progn
       (add-hook 'jest-mode-hook #'compilation-minor-mode)
-
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mt" "jest")
         (spacemacs/set-leader-keys-for-major-mode mode
           "tj" 'jest
@@ -213,7 +381,7 @@
       (rebox-register-template 247 248 '("/**"
                                         " * box123456"
                                           " */"))
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode tsx-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
           "rdq" 'cats/js-doc-reflow)))))
 
@@ -267,6 +435,9 @@
         :off (indium-interaction-mode -1)
         :documentation "Indium interactive mode."
         :evil-leader-for-mode
+        (jtsx-jsx-mode . "Ti")
+        (jtsx-tsx-mode . "Ti")
+        (jtsx-typescript-mode . "Ti")
         (js2-mode . "Ti")
         (rjsx-mode . "Ti")
         (js2-jsx-mode . "Ti")
@@ -275,7 +446,7 @@
       (push "\\*JS REPL\\*" spacemacs-useful-buffers-regexp)
       (push "\\*node process\\*" spacemacs-useless-buffers-regexp)
       (spacemacs|hide-lighter indium-repl-mode)
-      (dolist (mode '(indium-repl-mode rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(indium-repl-mode jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mu" "indium")
         (spacemacs/set-leader-keys-for-major-mode mode
           "u'" 'cats/indium-start-node-repl
@@ -373,6 +544,9 @@
         :off (tide-mode -1)
         :documentation "Tide mode."
         :evil-leader-for-mode
+        (jtsx-jsx-mode . "Ti")
+        (jtsx-tsx-mode . "Ti")
+        (jtsx-typescript-mode . "Ti")
         (js2-mode . "Tt")
         (rjsx-mode . "Tt")
         (js2-jsx-mode . "Tt"))
@@ -386,6 +560,9 @@
         :off (tide-hl-identifier-mode -1)
         :documentation "Tide identifier mode."
         :evil-leader-for-mode
+        (jtsx-jsx-mode . "Ti")
+        (jtsx-tsx-mode . "Ti")
+        (jtsx-typescript-mode . "Ti")
         (js2-mode . "Th")
         (rjsx-mode . "Th")
         (js2-jsx-mode . "Th"))
@@ -460,7 +637,7 @@
   (spacemacs|use-package-add-hook import-js
     :post-init
     (progn
-      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
           "I" 'import-js-import)
 
@@ -498,7 +675,7 @@
       (add-hook 'cats/eslint-executable-hook
         'cats//esilnt-set-eslint-fix-executable)
 
-      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode js2-mode js2-jsx-mode rjsx-mode))
         (add-hook mode 'cats//eslint-fix-hook)))))
 
 
@@ -525,7 +702,7 @@
       (spacemacs/register-repl 'babel-repl 'babel-repl "babel")
       (push "\\*babel-shell\\*" spacemacs-useful-buffers-regexp)
       (spacemacs|hide-lighter babel-shell-mode)
-      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mb" "babel")
         (spacemacs/set-leader-keys-for-major-mode mode
           "b'" 'babel-start-repl
@@ -561,7 +738,21 @@
 (defun cats-javascript/post-init-company ()
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-company
     '(tsx-mode-local-vars-hook))
-  (spacemacs|add-company-backends :backends company-capf :modes js2-mode)
+  (spacemacs|add-company-backends
+    :backends company-capf
+    :modes js2-mode)
+
+  (spacemacs|add-company-backends
+    :backends company-capf
+    :modes jtsx-jsx-mode)
+
+  (spacemacs|add-company-backends
+    :backends company-capf
+    :modes jtsx-tsx-mode)
+
+  (spacemacs|add-company-backends
+    :backends company-capf
+    :modes jtsx-typescript-mode)
 
   (spacemacs|add-company-backends
     :backends company-capf
@@ -572,7 +763,10 @@
 
 ;; add-node-modules-path
 (defun cats-javascript/post-init-add-node-modules-path ()
-  (spacemacs/add-to-hooks #'add-node-modules-path '(tsx-mode-hook)))
+  (spacemacs/add-to-hooks #'add-node-modules-path '(tsx-mode-hook
+                                                     jtsx-jsx-mode-hook
+                                                     jtsx-tsx-mode-hook
+                                                     jtsx-typescript-mode-hook)))
 
 
 ;; emmet-mode
@@ -582,11 +776,18 @@
 
 ;; smartparens
 (defun cats-javascript/post-init-smartparens ()
-  (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(tsx-mode-hook)))
+  (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(tsx-mode-hook
+                                                               jtsx-jsx-mode-hook
+                                                               jtsx-tsx-mode-hook
+                                                               jtsx-typescript-mode-hook)))
+
 
 ;; yasnippet
 (defun cats-javascript/post-init-yasnippet ()
-  (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(tsx-mode-hook)))
+  (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(tsx-mode-hook
+                                                                    jtsx-jsx-mode-hook
+                                                                    jtsx-tsx-mode-hook
+                                                                    jtsx-typescript-mode-hook)))
 
 
 ;; flycheck
@@ -594,20 +795,35 @@
   (with-eval-after-load 'flycheck
     ;; try some CSS-in-JS linting magic
     (flycheck-add-mode 'css-stylelint 'typescript-mode)
-    (flycheck-add-mode 'css-stylelint 'tsx-mode)))
+    (flycheck-add-mode 'css-stylelint 'tsx-mode)
+    (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
+    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)
+    (flycheck-add-mode 'css-stylelint 'jtsx-typescript-mode)
+
+    ))
 
 (defun cats-javascript/set-tide-linter ()
   (with-eval-after-load 'tide
     (with-eval-after-load 'flycheck
       (pcase typescript-linter
-        ('tslint (flycheck-add-mode 'typescript-tide 'tsx-mode)
-                 (flycheck-add-mode 'typescript-tslint 'tsx-mode))
-        ('eslint (flycheck-add-mode 'javascript-eslint 'tsx-mode)
-                 (add-to-list 'flycheck-disabled-checkers 'typescript-tslint)
-                 (flycheck-disable-checker 'typescript-tslint)
-                 (flycheck-add-mode 'tsx-tide 'tsx-mode)
-                 (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
-                 (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
+        ('tslint
+          (flycheck-add-mode 'typescript-tide 'tsx-mode)
+          (flycheck-add-mode 'typescript-tslint 'tsx-mode)
+          (flycheck-add-mode 'typescript-tslint 'jtsx-tsx-mode)
+          (flycheck-add-mode 'typescript-tslint 'jtsx-typescript-mode))
+        ('eslint
+          (flycheck-add-mode 'javascript-eslint 'tsx-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-typescript-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
+          (add-to-list 'flycheck-disabled-checkers 'typescript-tslint)
+          (flycheck-disable-checker 'typescript-tslint)
+          (flycheck-add-mode 'tsx-tide 'tsx-mode)
+          (flycheck-add-mode 'tsx-tide 'jtsx-typescript-mode)
+          (flycheck-add-mode 'tsx-tide 'jtsx-tsx-mode)
+          (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
+          (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
         (_ (message
             "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
 
@@ -615,33 +831,52 @@
   (with-eval-after-load 'lsp-ui
     (with-eval-after-load 'flycheck
       (pcase typescript-linter
-        ('tslint (flycheck-add-mode 'typescript-tslint 'tsx-mode))
+        ('tslint
+          (flycheck-add-mode 'typescript-tslint 'tsx-mode)
+          (flycheck-add-mode 'typescript-tslint 'jtsx-tsx-mode)
+          (flycheck-add-mode 'typescript-tslint 'jtsx-typescript-mode)
+          )
         ;; This sets tslint unconditionally for all lsp clients which is wrong
         ;; Must be set for respective modes only, see go layer for examples.
-        ('eslint (flycheck-add-mode 'javascript-eslint 'tsx-mode))
+        ('eslint
+          (flycheck-add-mode 'javascript-eslint 'tsx-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
+          (flycheck-add-mode 'javascript-eslint 'jtsx-typescript-mode)
+          )
         (_ (message
-            "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
+             "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
 
 (defun cats-javascript/post-init-flycheck ()
   (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
   (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
   (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
   (add-hook 'cats/eslint-executable-hook
-     'cats//esilnt-set-eslint-executable)
+    'cats//esilnt-set-eslint-executable)
   (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
 
   (spacemacs/enable-flycheck 'tsx-mode)
+  (spacemacs/enable-flycheck 'jtsx-jsx-mode)
+  (spacemacs/enable-flycheck 'jtsx-tsx-mode)
+  (spacemacs/enable-flycheck 'jtsx-typescript-mode)
 
   (with-eval-after-load 'flycheck
     ;; try some CSS-in-JS linting magic
     (flycheck-add-mode 'css-stylelint 'typescript-mode)
-    (flycheck-add-mode 'css-stylelint 'tsx-mode))
+    (flycheck-add-mode 'css-stylelint 'tsx-mode)
+    (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
+    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)
+    (flycheck-add-mode 'css-stylelint 'jtsx-typescript-mode)
+    )
 
   (pcase typescript-backend
     ('tide (cats-javascript/set-tide-linter))
     ('lsp (cats-javascript/set-lsp-linter)))
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-checkers
-    '(tsx-mode-hook)
+    '(tsx-mode-hook
+       jtsx-jsx-mode-hook
+       jtsx-tsx-mode-hook
+       jtsx-typescript-mode-hook)
     t)
   )
 
@@ -665,11 +900,10 @@
               " * @license %l\n"
               js-doc-bottom-line))
 
-      (dolist (hook '(rjsx-mode-hook
-                      js2-jsx-mode-hook))
+      (dolist (hook '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode-hook js2-jsx-mode-hook))
         (add-hook hook 'spacemacs/js-doc-require))
 
-      (dolist (mode '(js2-mode js2-jsx-mode rjsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode js2-mode js2-jsx-mode rjsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mrd" "jsdoc")
         (spacemacs/js-doc-set-key-bindings mode)))))
 
@@ -682,11 +916,6 @@
       (dolist (hook '(js2-jsx-mode-hook
                       js2-mode-hook))
         (add-hook hook (lambda () (run-hooks #'cats/javascript-mode-hook))))
-
-      (add-to-list 'auto-mode-alist '("\\.jshintrc$" . js2-mode))
-      (add-to-list 'auto-mode-alist '("\\.eslintrc$" . js2-mode))
-      (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
-      (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
 
       (spacemacs|add-toggle js2-highlight-unused-variables-mode
         :status js2-highlight-unused-variables-mode
@@ -751,9 +980,9 @@
 
 ;; json-mode
 (defun cats-javascript/post-init-json-mode ()
-  (add-to-list 'auto-mode-alist '("\\.tern-config\\'" . json-mode))
-  (add-to-list 'auto-mode-alist '("\\.jscsrc$" . json-mode))
-  (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-mode)))
+  (add-to-list 'auto-mode-alist '("\\.tern-config\\'" . json-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.jscsrc$" . json-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-ts-mode)))
 
 
 ;; json-reformat
@@ -765,7 +994,7 @@
       (setq json-reformat:indent-width 2)
       (setq json-reformat:pretty-string? t)
 
-      (dolist (mode '(json-mode))
+      (dolist (mode '(json-ts-mode json-mode))
         (spacemacs/declare-prefix-for-mode mode "mr" "reformat")
         (spacemacs/set-leader-keys-for-major-mode mode
           "rr" 'json-reformat-region)))))
@@ -790,7 +1019,7 @@
     :defer t
     :init
     (progn
-      (dolist (mode '(rjsx-mode js2-mode js2-jsx-mode))
+      (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/declare-prefix-for-mode mode "mm" "mocha")
         (spacemacs/set-leader-keys-for-major-mode mode
           "mp" 'mocha-test-project
@@ -886,8 +1115,7 @@
     (spacemacs|use-package-add-hook skewer-mode
       :post-init
       (progn
-        (dolist (hook '(rjsx-mode-hook
-                         js2-jsx-mode-hook))
+        (dolist (hook '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode-hook js2-jsx-mode-hook))
           (add-hook hook 'skewer-mode))
         (add-hook 'cats/phantomjs-executable-hook
           'cats//skewer-set-phantomjs-executable)
@@ -914,9 +1142,7 @@
     :disabled t
     :init
     (progn
-      (dolist (hook '(rjsx-mode-hook
-                       js2-mode-hook
-                       js2-jsx-mode-hook))
+      (dolist (hook '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode-hook js2-mode-hook js2-jsx-mode-hook))
         (add-hook hook 'tj-mode)))))
 
 
@@ -938,11 +1164,9 @@
           "jl" 'xref-resume-last-search
           "jb" 'xref-pop-marker-stack))
 
-      (dolist (hook '(rjsx-mode-hook
-                      js2-jsx-mode-hook
-                      js2-mode-hook))
+      (dolist (hook '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode rjsx-mode-hook js2-jsx-mode-hook js2-mode-hook))
         (add-hook hook
-           (lambda ()
-             (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))))))
+          (lambda ()
+            (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))))))
 
 ;;; packages.el ends here

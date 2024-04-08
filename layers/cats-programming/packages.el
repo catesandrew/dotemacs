@@ -15,30 +15,203 @@
      ;; helm-fontawesome
      logview
      (prog-mode :location built-in)
-     ;; realgud
-     ;; (realgud-node-inspect :location
-     ;;   (recipe
-     ;;     :fetcher github
-     ;;     :repo "realgud/realgud-node-inspect"))
      shut-up
      string-inflection
      polymode
      hcl-mode
-     ;; treesit-auto
-     ;; code-review
+     (treesit :location built-in)
+     treesit-auto
      lsp-mode
-     ;; (combobulate :location
+
+     (cats-combobulate-mode :location local)
+     (combobulate :location
+       (recipe :fetcher github
+         :repo "mickeynp/combobulate"))
+     ;; (ts-fold :location
      ;;   (recipe :fetcher github
-     ;;     :repo "mickeynp/combobulate"))
-    ))
+     ;;     :repo "emacs-tree-sitter/ts-fold"))
+     (treesit-fold :location
+       (recipe :fetcher github
+         :repo "abougouffa/treesit-fold"))
+     ))
 
 
 ;; treesit
+(defun cats-programming/init-treesit ()
+  (use-package treesit
+    :config
+    ))
+
+
+;; cats-combobulate-mode
+(defun cats-programming/init-cats-combobulate-mode ()
+  (use-package cats-combobulate-mode
+    :disabled t
+    ))
+
+
+;; treesit-fold
+(defun cats-programming/init-treesit-fold ()
+  (use-package treesit-fold
+    :commands (global-treesit-fold-mode treesit-fold-mode)
+    :init
+    (spacemacs|add-toggle ts-fold
+      :mode treesit-fold-mode
+      :on (treesit-fold-mode)
+      :off (treesit-fold-mode -1)
+      :documentation "TreeSit Fold."
+      :evil-leader "otf")
+    (spacemacs|add-toggle global-ts-fold
+      :mode global-treesit-fold-mode
+      :status treesit-fold-mode
+      :on (global-treesit-fold-mode)
+      :off (global-treesit-fold-mode -1)
+      :documentation "TreeSit Fold globally."
+      :evil-leader "ot C-f")
+    (when cats/global-treesit-fold
+      (global-treesit-fold-mode))
+    (spacemacs|add-toggle ts-fold-indicators
+      :mode treesit-fold-indicators-mode
+      :on (treesit-fold-indicators-mode)
+      :off (treesit-fold-indicators-mode -1)
+      :documentation "TreeSit Fold Indicators."
+      :evil-leader "oti")
+    (spacemacs|add-toggle global-ts-fold-indicators
+      :mode global-treesit-fold-indicators-mode
+      :status treesit-fold-indicators-mode
+      :on (global-treesit-fold-indicators-mode)
+      :off (global-treesit-fold-indicators-mode -1)
+      :documentation "TreeSit Fold Indicators globally."
+      :evil-leader "ot C-i")
+    (when cats/global-treesit-fold-indicators
+      (global-treesit-fold-indicators-mode))
+    :config
+    (add-to-list 'treesit-fold-range-alist
+      `(jtsx-jsx-mode . ,(treesit-fold-parsers-javascript)))
+    (add-to-list 'treesit-fold-range-alist
+      `(jtsx-tsx-mode . ,(treesit-fold-parsers-typescript)))
+    (add-to-list 'treesit-fold-range-alist
+      `(jtsx-typescript-mode . ,(treesit-fold-parsers-typescript)))
+
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(tsx-mode . treesit-fold-summary-javadoc))
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(jtsx-jsx-mode . treesit-fold-summary-javadoc))
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(jtsx-tsx-mode . treesit-fold-summary-javadoc))
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(jtsx-typescript-mode . treesit-fold-summary-javadoc))
+    )
+  )
+
+
+;; treesit-auto
 (defun cats-programming/init-treesit-auto ()
   (use-package treesit-auto
-    :ensure t
+    :commands (global-treesit-auto-mode treesit-auto-mode)
+    :init
+    (spacemacs|add-toggle ts-auto
+      :status treesit-auto-mode
+      :on (treesit-auto-mode)
+      :off (treesit-auto-mode -1)
+      :documentation "TreeSit Auto."
+      :evil-leader "ota")
+    (spacemacs|add-toggle global-ts-auto
+      :mode global-treesit-auto-mode
+      :status treesit-auto-mode
+      :on (global-treesit-auto-mode)
+      :off (global-treesit-auto-mode -1)
+      :documentation "TreeSit Auto globally."
+      :evil-leader "ot C-a")
+    (when cats/global-treesit-auto
+      (global-treesit-auto-mode))
     :config
-    (global-treesit-auto-mode)))
+    ;; https://github.com/renzmann/treesit-auto/blob/main/treesit-auto.el
+    (setq treesit-auto-recipe-list
+      (delete
+        (make-treesit-auto-recipe
+          :lang 'javascript
+          :ts-mode 'js-ts-mode
+          :remap '(js-mode javascript-mode js2-mode)
+          :url "https://github.com/tree-sitter/tree-sitter-javascript"
+          :revision "master"
+          :source-dir "src"
+          :ext "\\.js\\'") treesit-auto-recipe-list))
+    (setq treesit-auto-recipe-list
+      (delete
+        (make-treesit-auto-recipe
+          :lang 'tsx
+          :ts-mode 'tsx-ts-mode
+          :remap '(typescript-tsx-mode)
+          :requires 'typescript
+          :url "https://github.com/tree-sitter/tree-sitter-typescript"
+          :revision "master"
+          :source-dir "tsx/src"
+          :ext "\\.tsx\\'") treesit-auto-recipe-list))
+    (setq treesit-auto-recipe-list
+      (delete
+        (make-treesit-auto-recipe
+          :lang 'typescript
+          :ts-mode 'typescript-ts-mode
+          :remap 'typescript-mode
+          :requires 'tsx
+          :url "https://github.com/tree-sitter/tree-sitter-typescript"
+          :revision "master"
+          :source-dir "typescript/src"
+          :ext "\\.ts\\'") treesit-auto-recipe-list))
+
+    ;; ts-mode was js-ts-mode, now its jtsx-jsx-mode
+    (add-to-list 'treesit-auto-recipe-list
+      (make-treesit-auto-recipe
+        :lang 'javascript
+        :ts-mode 'jtsx-jsx-mode
+        :remap '(js2-mode js-mode javascript-mode)
+        :url "https://github.com/tree-sitter/tree-sitter-javascript"
+        :revision "master"
+        :source-dir "src"
+        :ext "\\.jsx?\\'"))
+
+    ;; ts-mode was tsx-ts-mode, now its jtsx-tsx-mode
+    (add-to-list 'treesit-auto-recipe-list
+      (make-treesit-auto-recipe
+        :lang 'tsx
+        :ts-mode 'jtsx-tsx-mode
+        :remap '(typescript-tsx-mode)
+        :requires 'typescript
+        :url "https://github.com/tree-sitter/tree-sitter-typescript"
+        :revision "master"
+        :source-dir "tsx/src"
+        :ext "\\.tsx\\'"))
+
+    ;; ts-mode was typescript-ts-mode, now its jtsx-typescript-mode
+    (add-to-list 'treesit-auto-recipe-list
+      (make-treesit-auto-recipe
+        :lang 'typescript
+        :ts-mode 'jtsx-typescript-mode
+        :remap 'typescript-mode
+        :requires 'tsx
+        :url "https://github.com/tree-sitter/tree-sitter-typescript"
+        :revision "master"
+        :source-dir "typescript/src"
+        :ext "\\.ts\\'"))
+
+    ;; (treesit-auto-add-to-auto-mode-alist 'all)
+
+    (setq treesit-auto-install t)
+    (dolist (grammar
+              '((css "https://github.com/tree-sitter/tree-sitter-css")
+                 (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+                 (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+                 (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+                 (python "https://github.com/tree-sitter/tree-sitter-python")
+                 (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+      (add-to-list 'treesit-language-source-alist grammar)
+      ;; Only install `grammar' if we don't already have it installed. However,
+      ;; if you want to *update* a grammar then this obviously prevents that
+      ;; from happening.
+      (unless (treesit-language-available-p (car grammar))
+        (treesit-install-language-grammar (car grammar))))
+    ))
 
 
 ;; lsp-mode
@@ -145,19 +318,104 @@
 ;; combobulate
 (defun cats-programming/init-combobulate ()
   (use-package combobulate
+    :disabled t
     :ensure t
-    :hook ((python-ts-mode . combobulate-mode)
-            (js-ts-mode . combobulate-mode)
-            (css-ts-mode . combobulate-mode)
-            (yaml-ts-mode . combobulate-mode)
-            (typescript-ts-mode . combobulate-mode)
-            (tsx-mode . combobulate-mode)
-            (js2-mode . combobulate-mode)
-            (tsx-ts-mode . combobulate-mode))
+    :hook ((bash-ts-mode-hook . combobulate-mode)
+            (c++-ts-mode-hook . combobulate-mode)
+            (c-ts-mode-hook . combobulate-mode)
+            (cmake-ts-mode-hook . combobulate-mode)
+            (csharp-ts-mode-hook . combobulate-mode)
+            (css-ts-mode-hook . combobulate-mode)
+            (dockerfile-ts-mode-hook . combobulate-mode)
+            (go-mod-ts-mode-hook . combobulate-mode)
+            (go-ts-mode-hook . combobulate-mode)
+            (java-ts-mode-hook . combobulate-mode)
+            (js-ts-mode-hook . combobulate-mode)
+            (json-ts-mode-hook . combobulate-mode)
+            (python-ts-mode-hook . combobulate-mode)
+            (ruby-ts-mode-hook . combobulate-mode)
+            (rust-ts-mode-hook . combobulate-mode)
+            (toml-ts-mode-hook . combobulate-mode)
+            (tsx-ts-mode-hook . combobulate-mode)
+            (typescript-ts-mode-hook . combobulate-mode)
+            (typescript-ts-mode-hook . combobulate-mode)
+            (yaml-ts-mode-hook . combobulate-mode)
+            (yaml-ts-mode-hook . combobulate-mode))
     ;;(prog-mode . combobulate-mode)
     :init
     (progn
-      (setq combobulate-js-ts-enable-auto-close-tag nil)
+      ;; Optional, but recommended. Tree-sitter enabled major modes are distinct
+      ;; from their ordinary counterparts.
+      ;;
+      ;; You can remap major modes with `major-mode-remap-alist'. Note that this
+      ;; does *not* extend to hooks! Make sure you migrate them also.
+      (dolist (mapping '((bash-mode . bash-ts-mode)
+                          (c++-mode . c++-ts-mode)
+                          (c-mode . c-ts-mode)
+                          (cmake-mode . cmake-ts-mode)
+                          (csharp-mode . csharp-ts-mode)
+                          (css-mode . css-ts-mode)
+                          (dockerfile-mode . dockerfile-ts-mode)
+                          (go-mod-mode . go-mod-ts-mode)
+                          (go-mode . go-ts-mode)
+                          (java-mode . java-ts-mode)
+                          (js-mode . js-ts-mode)
+                          (json-mode . json-ts-mode)
+                          (python-mode . python-js-mode)
+                          (ruby-mode . ruby-ts-mode)
+                          (rust-mode . rust-ts-mode)
+                          (toml-mode . toml-ts-mode)
+                          (tsx-mode . tsx-ts-mode)
+                          (typescript-mode . tsx-ts-mode)
+                          (yaml-mode . yaml-ts-mode)
+                          ))
+        (add-to-list 'major-mode-remap-alist mapping))
+      ;; (setq combobulate-js-ts-enable-auto-close-tag nil)
+
+      (setq combobulate-flash-node nil)
+
+      (evil-define-key 'normal cats-combobulate-mode-map
+        (kbd "+") 'combobulate-mark-node-dwim
+        (kbd "{") 'combobulate-navigate-beginning-of-defun
+        (kbd "}") 'combobulate-navigate-end-of-defun
+        (kbd "(") 'combobulate-navigate-up-list-maybe
+        (kbd ")") 'combobulate-navigate-down
+        (kbd "B") 'combobulate-navigate-logical-previous
+        (kbd "C-j") 'combobulate-navigate-next
+        (kbd "C-k") 'combobulate-navigate-previous
+        (kbd "E") 'combobulate-navigate-logical-next
+        (kbd "W") 'combobulate-navigate-forward
+        (kbd "C-S-j") 'combobulate-drag-down
+        (kbd "C-S-k") 'combobulate-drag-up
+        (kbd "C-k") 'combobulate-navigate-previous)
+
+      (evil-define-key 'visual cats-combobulate-mode-map
+        (kbd "+") 'combobulate-mark-node-dwim
+        (kbd "{") 'combobulate-navigate-beginning-of-defun
+        (kbd "}") 'combobulate-navigate-end-of-defun
+        (kbd "(") 'combobulate-navigate-up-list-maybe
+        (kbd ")") 'combobulate-navigate-down
+        (kbd "B") 'combobulate-navigate-logical-previous
+        (kbd "C-j") 'combobulate-navigate-next
+        (kbd "C-k") 'combobulate-navigate-previous
+        (kbd "E") 'combobulate-navigate-logical-next
+        (kbd "W") 'combobulate-navigate-forward
+        (kbd "C-S-j") 'combobulate-drag-down
+        (kbd "C-S-k") 'combobulate-drag-up
+        (kbd "C-k") 'combobulate-navigate-previous)
+
+      ;; (general-define-key
+      ;;   :keymaps '(cats-combobulate-mode-map)
+      ;;   :states '(normal visual)
+      ;;   ;; :prefix mpereira/leader
+      ;;   "r" #'combobulate-splice-up
+      ;;   "m" #'combobulate-mark-node-dwim
+      ;;   "R" #'combobulate-vanish-node
+      ;;   "k" #'combobulate-kill-node-dwim
+      ;;   "(" #'combobulate-envelop-tsx-ts-mode-wrap-parentheses
+      ;;   "<" #'combobulate-envelop-tsx-ts-mode-tag
+      ;;   "{" #'combobulate-envelop-tsx-ts-mode-expression
+      ;;   "c" #'combobulate-clone-node-dwim)
       )
     ))
 
@@ -175,43 +433,13 @@
     :mode "\\.nomad\\'"))
 
 
-;; code-review
-;; https://github.com/wandersoncferreira/code-review/issues/245
-;; (defun cats-programming/init-code-review ()
-;;   (use-package code-review
-;;     :after (magit forge)
-;;     :init
-;;     (with-eval-after-load 'evil-collection-magit
-;;       ;; From Doom Emacs
-;;       (dolist (binding evil-collection-magit-mode-map-bindings)
-;;         (pcase-let* ((`(,states _ ,evil-binding ,fn) binding))
-;;           (dolist (state states)
-;;             (evil-collection-define-key state 'code-review-mode-map evil-binding fn))))
-;;       (evil-set-initial-state 'code-review-mode evil-default-state))
-;;     :config
-;;     (progn
-;;       (evil-make-overriding-map code-review-mode-map evil-default-state)
-;;       (setq code-review-auth-login-marker 'forge)
-;;       (add-hook 'code-review-mode-hook
-;;         (lambda ()
-;;           ;; include *Code-Review* buffer into current workspace
-;;           (persp-add-buffer (current-buffer))))
-;;       ;; From Doom Emacs
-;;       (defun magit/start-code-review (arg)
-;;         (interactive "P")
-;;         (call-interactively
-;;           (if (or arg (not (featurep 'forge)))
-;;             #'code-review-start
-;;             #'code-review-forge-pr-at-point)))
-
-;;       (transient-append-suffix 'magit-merge "i"
-;;         '("y" "Review pull request" magit/start-code-review))
-;;       (with-eval-after-load 'forge
-;;         (transient-append-suffix 'forge-dispatch "c u"
-;;           '("c r" "Review pull request" magit/start-code-review))))))
-
-
 ;; polymode
+(defun cats-programming/init-helm-fontawesome ()
+  (use-package fontawesome
+    :disabled t
+    :ensure t
+    :commands (helm-fontawesome)))
+
 (defun cats-programming/init-polymode ()
   (use-package polymode
     :commands (poly-js2-mode poly-rjsx-mode)
@@ -285,19 +513,6 @@
     :disabled t
     :ensure t
     :commands (helm-fontawesome)))
-
-
-;; realgud-node-inspect
-(defun cats-programming/init-realgud-node-inspect ()
-  (use-package realgud-node-inspect
-    :disabled t
-    :after (realgud)
-    :init
-    (progn
-      (let ((default-directory (configuration-layer/get-elpa-package-install-directory 'realgud-node-inspect)))
-        (compile (format "EMACSLOADPATH=:%s:%s ./autogen.sh" (file-name-directory (locate-library "test-simple.elc")) (file-name-directory (locate-library "realgud.el"))))))
-    :config
-    (progn)))
 
 
 ;; realgud

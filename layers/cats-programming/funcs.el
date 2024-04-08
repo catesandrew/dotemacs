@@ -60,6 +60,9 @@
     ;;       rjsx-mode
     ;;       tsx-mode
     ;;       tsx-ts-mode
+    ;;       jtsx-jsx-mode
+    ;;       jtsx-tsx-mode
+    ;;       jtsx-typescript-mode
     ;;       javascript-mode))
     ;;  (dolist (alias (cats//prepend-pragmatapro-prettify-symbols-alist pretty-symbols/js2))
     ;;    (push alias prettify-symbols-alist)))
