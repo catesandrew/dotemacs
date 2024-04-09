@@ -195,7 +195,7 @@
         :source-dir "typescript/src"
         :ext "\\.ts\\'"))
 
-    ;; (treesit-auto-add-to-auto-mode-alist 'all)
+    (treesit-auto-add-to-auto-mode-alist 'all)
 
     (setq treesit-auto-install t)
     (dolist (grammar
@@ -267,52 +267,55 @@
       (setq lsp-completion-show-detail nil)
       (setq lsp-completion-show-kind nil)
 
-      ;; (dolist (hook '(
-      ;;                  c++-mode-hook
-      ;;                  c-mode-hook
-      ;;                  cc-mode-hook
-      ;;                  css-mode-hook
-      ;;                  go-mode-hook
-      ;;                  go-ts-mode-hook
-      ;;                  html-mode-hook
-      ;;                  inf-ruby-mode-hook
-      ;;                  java-mode-hook
-      ;;                  javascript-mode-hook
-      ;;                  jquery-mode-hook
-      ;;                  js-mode-hook
-      ;;                  js2-jsx-mode-hook
-      ;;                  js2-mode-hook
-      ;;                  js3-mode-hook
-      ;;                  jsp-mode-hook
-      ;;                  jsx-mode-hook
-      ;;                  latex-mode-hook
-      ;;                  less-css-mode-hook
-      ;;                  markdown-mode-hook
-      ;;                  perl-mode-hook
-      ;;                  php-mode-hook
-      ;;                  python-mode-hook
-      ;;                  react-mode-hook
-      ;;                  rjsx-mode-hook
-      ;;                  ruby-mode-hook
-      ;;                  rust-mode-hook
-      ;;                  sass-mode-hook
-      ;;                  scss-mode-hook
-      ;;                  shell-script-mode-hook
-      ;;                  swift-mode-hook
-      ;;                  shell-script-mode-hook
-      ;;                  tsx-mode-hook
-      ;;                  typescript-mode-hook
-      ;;                  typescript-tsx-mode-hook
-      ;;                  web-mode-hook
-      ;;                  xah-css-mode-hook
-      ;;                  yaml-mode-hook
-      ;;                  ))
-      ;;   (add-hook hook #'lsp-deferred)
-      ;; )
+      ;; (dolist
+      ;;   (hook
+      ;;     '(
+      ;;        c++-mode-hook
+      ;;        c-mode-hook
+      ;;        cc-mode-hook
+      ;;        css-mode-hook
+      ;;        go-mode-hook
+      ;;        go-ts-mode-hook
+      ;;        html-mode-hook
+      ;;        inf-ruby-mode-hook
+      ;;        java-mode-hook
+      ;;        javascript-mode-hook
+      ;;        jquery-mode-hook
+      ;;        js-mode-hook
+      ;;        js2-jsx-mode-hook
+      ;;        js2-mode-hook
+      ;;        js3-mode-hook
+      ;;        jsp-mode-hook
+      ;;        jsx-mode-hook
+      ;;        latex-mode-hook
+      ;;        less-css-mode-hook
+      ;;        markdown-mode-hook
+      ;;        perl-mode-hook
+      ;;        php-mode-hook
+      ;;        python-mode-hook
+      ;;        react-mode-hook
+      ;;        rjsx-mode-hook
+      ;;        ruby-mode-hook
+      ;;        rust-mode-hook
+      ;;        sass-mode-hook
+      ;;        scss-mode-hook
+      ;;        shell-script-mode-hook
+      ;;        swift-mode-hook
+      ;;        shell-script-mode-hook
+      ;;        tsx-mode-hook
+      ;;        typescript-mode-hook
+      ;;        typescript-tsx-mode-hook
+      ;;        web-mode-hook
+      ;;        xah-css-mode-hook
+      ;;        yaml-mode-hook
+      ;;        jtsx-jsx-mode
+      ;;        jtsx-tsx-mode
+      ;;        jtsx-typescript-mode
+      ;;        ))
+      ;;   (add-hook hook #'lsp-deferred))
     )
   )
 )
-
 
 
 ;; combobulate

@@ -117,6 +117,18 @@
     (setq jtsx-enable-electric-open-newline-between-jsx-element-tags t)
     (setq jtsx-enable-jsx-element-tags-auto-sync nil)
     (setq jtsx-enable-all-syntax-highlighting-features t)
+    (with-eval-after-load 'color-identifiers-mode
+      (add-to-list
+        'color-identifiers:modes-alist
+        `(jtsx-jsx-mode . (,color-identifiers:re-not-inside-class-access
+                            "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
+                            (nil font-lock-variable-name-face js2-function-param))))
+      (dolist (maj-mode '(jtsx-tsx-mode jtsx-typescript-mode tsx-mode))
+        (add-to-list
+          'color-identifiers:modes-alist
+          `(,maj-mode . (""
+                          "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
+                          (nil font-lock-variable-name-face tree-sitter-hl-face:variable))))))
     :config
     ;; todo bind to evil keys spacemacs
     ;; (defun jtsx-bind-keys-to-mode-map (mode-map)
@@ -620,12 +632,7 @@
 ;; eldoc
 (defun cats-javascript/post-init-eldoc ()
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-eldoc
-    '(typescript-mode-local-vars-hook
-       typescript-tsx-mode-local-vars-hook) t)
-
-  ;; (spacemacs/add-to-hooks #'cats//rjsx-setup-eldoc
-  ;;   '(rjsx-mode-local-vars-hook) t)
-  )
+    '(jtsx-jsx-mode-local-vars-hook jtsx-tsx-mode-local-vars-hook jtsx-typescript-mode-local-vars-hook) t))
 
 
 ;; import-js
@@ -771,6 +778,9 @@
 
 ;; emmet-mode
 (defun cats-javascript/post-init-emmet-mode ()
+  (add-hook 'jtsx-jsx-mode-hook #'spacemacs/typescript-emmet-mode)
+  (add-hook 'jtsx-tsx-mode-hook #'spacemacs/typescript-emmet-mode)
+  (add-hook 'jtsx-typescript-mode-hook #'spacemacs/typescript-emmet-mode)
   (add-hook 'tsx-mode-hook #'spacemacs/typescript-emmet-mode))
 
 
