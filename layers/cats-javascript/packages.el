@@ -282,6 +282,7 @@
 ;; tsx-mode
 (defun cats-javascript/init-tsx-mode ()
   (use-package tsx-mode
+    :disabled t
     :defer t
     :init
     (progn
