@@ -46,9 +46,9 @@
      (css-in-js-mode :location (recipe :fetcher github
                                  :branch "main"
                                  :repo "orzechowskid/tree-sitter-css-in-js"))
-     (tsx-mode :location (recipe :fetcher github
-                           :branch "main"
-                           :repo "orzechowskid/tsx-mode.el"))
+     ;; (tsx-mode :location (recipe :fetcher github
+     ;;                       :branch "main"
+     ;;                       :repo "orzechowskid/tsx-mode.el"))
      (flymake-stylelint :location (recipe :fetcher github
                                     :repo "orzechowskid/flymake-stylelint"))
      add-node-modules-path
@@ -280,20 +280,19 @@
 
 
 ;; tsx-mode
-(defun cats-javascript/init-tsx-mode ()
-  (use-package tsx-mode
-    :disabled t
-    :defer t
-    :init
-    (progn
-      (setq tsi-css-indent-offset 2)
-      (setq tsi-typescript-indent-offset 2)
-      (setq typescript-ts-mode-indent-offset 2))
-    :config
-    (progn
-      ;; (add-to-list 'lsp--formatting-indent-alist '(tsx-mode . typescript-ts-mode-indent-offset))
-      )
-    ))
+;; (defun cats-javascript/init-tsx-mode ()
+;;   (use-package tsx-mode
+;;     :defer t
+;;     :init
+;;     (progn
+;;       (setq tsi-css-indent-offset 2)
+;;       (setq tsi-typescript-indent-offset 2)
+;;       (setq typescript-ts-mode-indent-offset 2))
+;;     :config
+;;     (progn
+;;       ;; (add-to-list 'lsp--formatting-indent-alist '(tsx-mode . typescript-ts-mode-indent-offset))
+;;       )
+;;     ))
 
 
 ;; react-redux-yasnippets
