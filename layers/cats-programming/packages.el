@@ -125,6 +125,31 @@
       :evil-leader "ot C-a")
     (when cats/global-treesit-auto
       (global-treesit-auto-mode))
+    (with-eval-after-load 'color-identifiers-mode
+      (dolist (maj-mode '(html-ts-mode))
+        (add-to-list
+          'color-identifiers:modes-alist
+          `(,maj-mode . ("</?!?"
+                          "\\_</?!?\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
+                          (nil font-lock-function-name-face)))))
+      (add-to-list
+        'color-identifiers:modes-alist
+        `(ruby-ts-mode . (,color-identifiers:re-not-inside-class-access
+                        "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
+                        (nil tree-sitter-hl-face:variable))))
+
+      (add-to-list
+        'color-identifiers:modes-alist
+        `(sql-ts-mode . (,color-identifiers:re-not-inside-class-access "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)" (nil))))
+
+      (add-to-list
+        'color-identifiers:modes-alist
+        `(go-ts-mode . (,color-identifiers:re-not-inside-class-access
+                      "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
+                      (nil font-lock-variable-name-face tree-sitter-hl-face:variable))))
+
+
+      )
     :config
     ;; https://github.com/renzmann/treesit-auto/blob/main/treesit-auto.el
     (setq treesit-auto-recipe-list
