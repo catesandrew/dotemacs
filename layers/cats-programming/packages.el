@@ -86,23 +86,7 @@
     (when cats/global-treesit-fold-indicators
       (global-treesit-fold-indicators-mode))
     :config
-    (add-to-list 'treesit-fold-range-alist
-      `(jtsx-jsx-mode . ,(treesit-fold-parsers-javascript)))
-    (add-to-list 'treesit-fold-range-alist
-      `(jtsx-tsx-mode . ,(treesit-fold-parsers-typescript)))
-    (add-to-list 'treesit-fold-range-alist
-      `(jtsx-typescript-mode . ,(treesit-fold-parsers-typescript)))
-
-    (add-to-list 'treesit-fold-summary-parsers-alist
-      '(tsx-mode . treesit-fold-summary-javadoc))
-    (add-to-list 'treesit-fold-summary-parsers-alist
-      '(jtsx-jsx-mode . treesit-fold-summary-javadoc))
-    (add-to-list 'treesit-fold-summary-parsers-alist
-      '(jtsx-tsx-mode . treesit-fold-summary-javadoc))
-    (add-to-list 'treesit-fold-summary-parsers-alist
-      '(jtsx-typescript-mode . treesit-fold-summary-javadoc))
-    )
-  )
+    (progn)))
 
 
 ;; treesit-auto
@@ -146,10 +130,7 @@
         'color-identifiers:modes-alist
         `(go-ts-mode . (,color-identifiers:re-not-inside-class-access
                       "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
-                      (nil font-lock-variable-name-face tree-sitter-hl-face:variable))))
-
-
-      )
+                      (nil font-lock-variable-name-face tree-sitter-hl-face:variable)))))
     :config
     ;; https://github.com/renzmann/treesit-auto/blob/main/treesit-auto.el
     (setq treesit-auto-recipe-list
@@ -251,9 +232,9 @@
       (setq lsp-enable-folding nil)
 
       ;; https://github.com/emacs-lsp/lsp-mode/issues/3173
-      (setq lsp-completion-provider :none)
-      (setq lsp-completion-show-detail nil)
-      (setq lsp-completion-show-kind nil)
+      ;; (setq lsp-completion-provider :none)
+      ;; (setq lsp-completion-show-detail nil)
+      ;; (setq lsp-completion-show-kind nil)
 
       ;; no real time syntax check
       (setq lsp-diagnostic-package :none)

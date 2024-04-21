@@ -6,6 +6,51 @@
 
 ;;; Code:
 
+
+;; backend
+
+(defun cats//typescript-setup-backend ()
+  (pcase typescript-backend
+    ('tide (cats//set-tide-linter))
+    ('lsp (cats//set-lsp-linter))))
+
+(defun cats//set-tide-linter ()
+  (pcase typescript-linter
+    ('tslint
+      (flycheck-add-mode 'typescript-tide 'tsx-mode)
+      (flycheck-add-mode 'typescript-tslint 'tsx-mode)
+      (flycheck-add-mode 'typescript-tide 'jtsx-tsx-mode)
+      (flycheck-add-mode 'typescript-tslint 'jtsx-tsx-mode)
+      (flycheck-add-mode 'typescript-tide 'jtsx-typescript-mode)
+      (flycheck-add-mode 'typescript-tslint 'jtsx-typescript-mode))
+    ('eslint
+      (flycheck-add-mode 'javascript-eslint 'tsx-mode)
+      (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
+      (flycheck-add-mode 'javascript-eslint 'jtsx-typescript-mode)
+
+      (flycheck-add-mode 'tsx-tide 'jtsx-tsx-mode)
+      (flycheck-add-mode 'tsx-tide 'tsx-mode)
+
+      (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
+      (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
+    (_ (message
+         "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))
+
+(defun cats//set-lsp-linter ()
+  (pcase typescript-linter
+    ('tslint
+      (flycheck-add-mode 'typescript-tslint 'tsx-mode)
+      (flycheck-add-mode 'typescript-tslint 'jtsx-typescript-mode)
+      (flycheck-add-mode 'typescript-tslint 'jtsx-tsx-mode))
+    ;; This sets tslint unconditionally for all lsp clients which is wrong
+    ;; Must be set for respective modes only, see go layer for examples.
+    ('eslint
+      (flycheck-add-mode 'javascript-eslint 'tsx-mode)
+      (flycheck-add-mode 'javascript-eslint 'jtsx-typescript-mode)
+      (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
+      (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode))
+    (_ (message
+         "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))
 
 
 ;; funcs

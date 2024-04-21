@@ -14,6 +14,7 @@
      babel-repl
      coffee-mode
      company
+     dap-mode
      eldoc
      (eslint-fix :location local)
      exec-path-from-shell
@@ -32,9 +33,11 @@
      org
      popwin
      rebox2
+     prettier-js
      ;; rjsx-mode
      skewer-mode
-     ;; tern
+     tern
+     web-beautify
      ;; tide
      (tj-mode :location (recipe :fetcher github
                           :repo "purcell/tj-mode"))
@@ -62,6 +65,9 @@
                                 :repo "karimaziev/atomic-chrome"))
 
      jtsx ;; Extends Emacs JSX/TSX built-in support
+     (treesit-fold :location
+       (recipe :fetcher github
+         :repo "abougouffa/treesit-fold"))
      ))
 
 
@@ -108,6 +114,13 @@
     (dolist (hook '(jtsx-tsx-mode jtsx-typescript-mode))
       (add-hook hook (lambda () (run-hooks #'cats/typescript-mode-hook))))
 
+    (add-hook 'jtsx-jsx-mode-local-vars-hook #'spacemacs//javascript-setup-backend)
+    (add-hook 'jtsx-jsx-mode-local-vars-hook #'spacemacs//javascript-setup-next-error-fn)
+    ;; safe values for backend to be used in directory file variables
+    ;; (dolist (value '(lsp tern tide))
+    ;;   (add-to-list 'safe-local-variable-values
+    ;;                (cons 'javascript-backend value)))
+
     ;; Optional customizations
     (setq typescript-ts-mode-indent-offset 2)
     (setq jtsx-switch-indent-offset 0)
@@ -130,6 +143,13 @@
                           "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
                           (nil font-lock-variable-name-face tree-sitter-hl-face:variable))))))
     :config
+    (when javascript-fmt-on-save
+      (add-hook 'jtsx-jsx-mode-local-vars-hook 'spacemacs/javascript-fmt-before-save-hook))
+
+    (when typescript-fmt-on-save
+      (add-hook 'jtsx-jsx-mode-local-vars-hook #'spacemacs/typescript-fmt-before-save-hook)
+      (add-hook 'jtsx-typescript-mode-local-vars-hook #'spacemacs/typescript-fmt-before-save-hook))
+
     ;; todo bind to evil keys spacemacs
     ;; (defun jtsx-bind-keys-to-mode-map (mode-map)
     ;;   "Bind keys to MODE-MAP."
@@ -157,6 +177,26 @@
     ;; (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
     )
   )
+
+(defun cats-javascript/pre-init-treesit-fold ()
+  (spacemacs|use-package-add-hook treesit-fold
+    :post-config
+    (add-to-list 'treesit-fold-range-alist
+      `(jtsx-jsx-mode . ,(treesit-fold-parsers-javascript)))
+    (add-to-list 'treesit-fold-range-alist
+      `(jtsx-tsx-mode . ,(treesit-fold-parsers-typescript)))
+    (add-to-list 'treesit-fold-range-alist
+      `(jtsx-typescript-mode . ,(treesit-fold-parsers-typescript)))
+
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(tsx-mode . treesit-fold-summary-javadoc))
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(jtsx-jsx-mode . treesit-fold-summary-javadoc))
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(jtsx-tsx-mode . treesit-fold-summary-javadoc))
+    (add-to-list 'treesit-fold-summary-parsers-alist
+      '(jtsx-typescript-mode . treesit-fold-summary-javadoc))))
+
 
 ;; atomic-chrome
 
@@ -391,8 +431,8 @@
       ;; Adding 600 replaces `?' by `%', for TeX and PostScript.
       ;; js-doc style
       (rebox-register-template 247 248 '("/**"
-                                        " * box123456"
-                                          " */"))
+                                         " * box123456"
+                                         " */"))
       (dolist (mode '(jtsx-jsx-mode jtsx-tsx-mode jtsx-typescript-mode tsx-mode rjsx-mode js2-mode js2-jsx-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
           "rdq" 'cats/js-doc-reflow)))))
@@ -632,13 +672,22 @@
 ;; eldoc
 (defun cats-javascript/post-init-eldoc ()
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-eldoc
-    '(jtsx-jsx-mode-local-vars-hook jtsx-tsx-mode-local-vars-hook jtsx-typescript-mode-local-vars-hook) t))
+    '(jtsx-tsx-mode-local-vars-hook
+      jtsx-typescript-mode-local-vars-hook) t)
+
+  (spacemacs/add-to-hooks #'spacemacs//javascript-setup-eldoc
+    '(jtsx-jsx-mode-local-vars-hook) t)
+  )
 
 
 ;; import-js
 (defun cats-javascript/pre-init-import-js ()
   (when (eq javascript-import-tool 'import-js)
-    (add-to-list 'spacemacs--import-js-modes (cons 'tsx-mode 'tsx-mode-hook))))
+    (add-to-list 'spacemacs--import-js-modes (cons 'tsx-mode 'tsx-mode-hook))
+    (add-to-list 'spacemacs--import-js-modes (cons 'jtsx-tsx-mode 'jtsx-tsx-mode-hook))
+    (add-to-list 'spacemacs--import-js-modes (cons 'jtsx-jsx-mode 'jtsx-jsx-mode-hook))
+    (add-to-list 'spacemacs--import-js-modes (cons 'jtsx-typescript-mode 'jtsx-typescript-mode-hook))
+    ))
 
 (defun cats-javascript/post-init-import-js ()
   (spacemacs|use-package-add-hook import-js
@@ -744,7 +793,13 @@
 ;; company
 (defun cats-javascript/post-init-company ()
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-company
-    '(tsx-mode-local-vars-hook))
+    '(jtsx-tsx-mode-local-vars-hook
+      jtsx-typescript-mode-local-vars-hook
+      tsx-mode-local-vars-hook))
+
+  (spacemacs/add-to-hooks #'spacemacs//javascript-setup-company
+    '(jtsx-jsx-mode-local-vars-hook))
+
   (spacemacs|add-company-backends
     :backends company-capf
     :modes js2-mode)
@@ -768,17 +823,24 @@
     indium-repl-mode))
 
 
+;; dap-mode
+(defun cats-javascript/pre-init-dap-mode ()
+  (when (eq javascript-backend 'lsp)
+    (add-to-list 'spacemacs--dap-supported-modes 'jtsx-jsx-mode))
+  (add-hook 'jtsx-jsx-mode-local-vars-hook #'spacemacs//javascript-setup-dap))
+
+
 ;; add-node-modules-path
 (defun cats-javascript/post-init-add-node-modules-path ()
   (spacemacs/add-to-hooks #'add-node-modules-path '(tsx-mode-hook
-                                                     jtsx-jsx-mode-hook
-                                                     jtsx-tsx-mode-hook
-                                                     jtsx-typescript-mode-hook)))
+                                                    jtsx-jsx-mode-hook
+                                                    jtsx-tsx-mode-hook
+                                                    jtsx-typescript-mode-hook)))
 
 
 ;; emmet-mode
 (defun cats-javascript/post-init-emmet-mode ()
-  (add-hook 'jtsx-jsx-mode-hook #'spacemacs/typescript-emmet-mode)
+  (add-hook 'jtsx-jsx-mode-hook #'spacemacs/javascript-emmet-mode)
   (add-hook 'jtsx-tsx-mode-hook #'spacemacs/typescript-emmet-mode)
   (add-hook 'jtsx-typescript-mode-hook #'spacemacs/typescript-emmet-mode)
   (add-hook 'tsx-mode-hook #'spacemacs/typescript-emmet-mode))
@@ -787,75 +849,25 @@
 ;; smartparens
 (defun cats-javascript/post-init-smartparens ()
   (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(tsx-mode-hook
-                                                               jtsx-jsx-mode-hook
-                                                               jtsx-tsx-mode-hook
-                                                               jtsx-typescript-mode-hook)))
+                                                              jtsx-jsx-mode-hook
+                                                              jtsx-tsx-mode-hook
+                                                              jtsx-typescript-mode-hook)))
 
 
 ;; yasnippet
 (defun cats-javascript/post-init-yasnippet ()
   (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(tsx-mode-hook
-                                                                    jtsx-jsx-mode-hook
-                                                                    jtsx-tsx-mode-hook
-                                                                    jtsx-typescript-mode-hook)))
+                                                                   jtsx-jsx-mode-hook
+                                                                   jtsx-typescript-mode-hook)))
 
 
 ;; flycheck
 (defun cats-javascript/setup-tsx-mode ()
   (with-eval-after-load 'flycheck
     ;; try some CSS-in-JS linting magic
-    (flycheck-add-mode 'css-stylelint 'typescript-mode)
     (flycheck-add-mode 'css-stylelint 'tsx-mode)
     (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
-    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)
-    (flycheck-add-mode 'css-stylelint 'jtsx-typescript-mode)
-
-    ))
-
-(defun cats-javascript/set-tide-linter ()
-  (with-eval-after-load 'tide
-    (with-eval-after-load 'flycheck
-      (pcase typescript-linter
-        ('tslint
-          (flycheck-add-mode 'typescript-tide 'tsx-mode)
-          (flycheck-add-mode 'typescript-tslint 'tsx-mode)
-          (flycheck-add-mode 'typescript-tslint 'jtsx-tsx-mode)
-          (flycheck-add-mode 'typescript-tslint 'jtsx-typescript-mode))
-        ('eslint
-          (flycheck-add-mode 'javascript-eslint 'tsx-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-typescript-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
-          (add-to-list 'flycheck-disabled-checkers 'typescript-tslint)
-          (flycheck-disable-checker 'typescript-tslint)
-          (flycheck-add-mode 'tsx-tide 'tsx-mode)
-          (flycheck-add-mode 'tsx-tide 'jtsx-typescript-mode)
-          (flycheck-add-mode 'tsx-tide 'jtsx-tsx-mode)
-          (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
-          (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
-        (_ (message
-            "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
-
-(defun cats-javascript/set-lsp-linter ()
-  (with-eval-after-load 'lsp-ui
-    (with-eval-after-load 'flycheck
-      (pcase typescript-linter
-        ('tslint
-          (flycheck-add-mode 'typescript-tslint 'tsx-mode)
-          (flycheck-add-mode 'typescript-tslint 'jtsx-tsx-mode)
-          (flycheck-add-mode 'typescript-tslint 'jtsx-typescript-mode)
-          )
-        ;; This sets tslint unconditionally for all lsp clients which is wrong
-        ;; Must be set for respective modes only, see go layer for examples.
-        ('eslint
-          (flycheck-add-mode 'javascript-eslint 'tsx-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-jsx-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-tsx-mode)
-          (flycheck-add-mode 'javascript-eslint 'jtsx-typescript-mode)
-          )
-        (_ (message
-             "Invalid typescript-layer configuration, no such linter: %s" typescript-linter))))))
+    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)))
 
 (defun cats-javascript/post-init-flycheck ()
   (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
@@ -872,21 +884,24 @@
 
   (with-eval-after-load 'flycheck
     ;; try some CSS-in-JS linting magic
-    (flycheck-add-mode 'css-stylelint 'typescript-mode)
     (flycheck-add-mode 'css-stylelint 'tsx-mode)
     (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
-    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)
-    (flycheck-add-mode 'css-stylelint 'jtsx-typescript-mode)
-    )
+    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode))
 
-  (pcase typescript-backend
-    ('tide (cats-javascript/set-tide-linter))
-    ('lsp (cats-javascript/set-lsp-linter)))
+  (spacemacs/add-to-hooks #'spacemacs//javascript-setup-checkers
+    '(jtsx-jsx-mode-hook)
+    t)
+
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-checkers
     '(tsx-mode-hook
-       jtsx-jsx-mode-hook
-       jtsx-tsx-mode-hook
-       jtsx-typescript-mode-hook)
+      jtsx-tsx-mode-hook
+      jtsx-typescript-mode-hook)
+    t)
+
+  (spacemacs/add-to-hooks #'cats//typescript-setup-backend
+    '(tsx-mode-local-vars-hook
+      jtsx-typescript-mode-local-vars-hook
+      jtsx-tsx-mode-local-vars-hook)
     t)
   )
 
@@ -1136,6 +1151,9 @@
 
 
 ;; tern
+(defun cats-javascript/post-init-tern ()
+  (add-to-list 'tern--key-bindings-modes 'jtsx-jsx-mode))
+
 ;; (defun cats-javascript/pre-init-tern ()
 ;;   "Note this has moved into its own layer now."
 ;;   (spacemacs|use-package-add-hook tern
@@ -1178,5 +1196,21 @@
         (add-hook hook
           (lambda ()
             (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))))))
+
+
+;; prettier-js
+(defun cats-javascript/pre-init-prettier-js ()
+  (when (eq javascript-fmt-tool 'prettier)
+    (add-to-list 'spacemacs--prettier-modes 'jtsx-jsx-mode)
+    (add-to-list 'spacemacs--prettier-modes 'jtsx-tsx-mode)
+    (add-to-list 'spacemacs--prettier-modes 'jtsx-typescript-mode)
+    (add-to-list 'spacemacs--prettier-modes 'tsx-mode)))
+
+
+;; web-beautify
+(defun cats-javascript/pre-init-web-beautify ()
+  (when (eq javascript-fmt-tool 'web-beautify)
+    (add-to-list 'spacemacs--web-beautify-modes
+                 (cons 'jtsx-jsx-mode 'web-beautify-js))))
 
 ;;; packages.el ends here

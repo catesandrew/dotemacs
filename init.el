@@ -416,6 +416,7 @@ This function should only modify configuration layer settings."
        cats-vm
        cats-langs
        cats-mail
+       cats-angular
        ;; cats-private
        )
 
@@ -1043,7 +1044,7 @@ before packages are loaded."
   ;; ridiculously bizarre thing entirely.
   (fset 'display-startup-echo-area-message #'ignore)
 
-  ;; termina-her to use iterm2
+  ;; termina-here to use iterm2
   (setq terminal-here-mac-terminal-command 'iterm2)
 
   ;; (push "^\\*[^\\*]+\\*$" spacemacs-useless-buffers-regexp)
