@@ -244,13 +244,19 @@ This function should only modify configuration layer settings."
        ipython-notebook
        tide
        (lsp :variables
-         lsp-ui-doc-enable nil
-         ;; lsp-ui-doc-include-signature nil
-         lsp-ui-sideline-enable nil
-         ;; lsp-ui-sideline-show-symbol nil
-         ;; lsp-use-lsp-ui t
+         ;; Enable/disable lsp-ui-doc overlay
+         lsp-ui-doc-enable t
+         ;; When non-nil, type signature included in the lsp-ui-doc overlay
+         lsp-ui-doc-include-signature nil
+         ;; Enable/disable lsp-ui-sideline overlay
+         lsp-ui-sideline-enable t
+         ;; When non-nil, sideline includes symbol info (largely redundant for c modes)
+         lsp-ui-sideline-show-symbol nil
+         ;; When non-nil, use `lsp-ui' package.
+         lsp-use-lsp-ui t
          ;; lsp-use-upstream-bindings nil
-         lsp-lens-enable t)
+         lsp-lens-enable t
+         )
 
        ;; react layer uses the same backend defined in javascript layer.
        ;; npm i -g eslint babel-eslint eslint-plugin-react js-beautify prettier
