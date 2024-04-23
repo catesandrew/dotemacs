@@ -43,7 +43,42 @@
       (setq lsp-completion-show-kind t)
       ;; (setq lsp-enable-snippet t)
       ;; (setq lsp-enable-symbol-highlighting t)
-      ;; (setq lsp-ui-sideline-enable t)
+
+      ;; lsp-ui-sideline:
+      (setq
+        lsp-ui-sideline-enable t
+        lsp-ui-sideline-show-diagnostics t ;; show diagnostics messages in sideline
+        lsp-ui-sideline-show-hover t ;; show hover messages in sideline
+        lsp-ui-sideline-show-code-actions t ;; show code actions in sideline
+        )
+
+      ;; lsp-ui-peek
+      (setq
+        lsp-ui-peek-enable t ;; enable ‘lsp-ui-peek’
+        lsp-ui-peek-show-directory t ;; show the directory of files
+        )
+
+      ;; lsp-ui-doc
+      (setq
+        lsp-ui-doc-enable t ;; Enable lsp-ui-doc
+        ;; lsp-ui-doc-position Where to display the doc (top, bottom or at-point)
+        ;; lsp-ui-doc-side Where to display the doc (left or right)
+        ;; lsp-ui-doc-delay Number of seconds before showing the doc
+        lsp-ui-doc-show-with-cursor nil ;; When non-nil, move the cursor over a symbol to show the doc
+        lsp-ui-doc-show-with-mouse t ;; When non-nil, move the mouse pointer over a symbol to show the doc
+        )
+
+      ;; lsp-ui-imenu
+      (setq
+        lsp-ui-imenu-enable nil
+        ;; lsp-ui-imenu-kind-position place to show entries kind
+        ;; lsp-ui-imenu-buffer-position place to show the buffer window
+        ;; lsp-ui-imenu-window-width set window width
+        ;; lsp-ui-imenu-window-fix-width when non-nil, the window will not be resizable (eg. unaffected by balance-windows)
+        ;; lsp-ui-imenu--custom-mode-line-format mode line format
+        ;; lsp-ui-imenu-auto-refresh auto refresh when necessary
+        ;; lsp-ui-imenu-refresh-delay delay to refresh imenu
+        )
       )
 
     (with-eval-after-load 'color-identifiers-mode
@@ -128,8 +163,9 @@
     (add-to-list 'spacemacs--prettier-modes 'ng2-ts-mode)))
 
 (defun cats-angular/post-init-smartparens ()
-  (add-hook 'ng2-html-mode-hook #'spacemacs//deactivate-smartparens)
-  (add-hook 'ng2-ts-mode-hook #'spacemacs//activate-smartparens))
+  (spacemacs/add-to-hooks
+    #'spacemacs//activate-smartparens
+    '(ng2-html-mode-hook ng2-ts-mode-hook)))
 
 (defun cats-angular/post-init-tern ()
   (add-to-list 'tern--key-bindings-modes 'ng2-ts-mode))
