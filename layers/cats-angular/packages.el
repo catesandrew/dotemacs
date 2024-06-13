@@ -9,6 +9,7 @@
      (ng2-mode :location local)
      add-node-modules-path
      company
+     eldoc
      emmet-mode
      evil-matchit
      flycheck
@@ -31,7 +32,10 @@
     :defer t
     :commands (ng2-ts-mode ng2-html-mode)
     :init
-    (add-to-list 'auto-mode-alist '("\\.component.html\\'" . ng2-html-mode))
+    (cats/angular-safe-local-variables '(lsp tide))
+    (cats/angular-mode-init 'ng2-ts-mode-local-vars-hook)
+
+    (add-to-list 'auto-mode-alist '("\\.component.html\\" . ng2-html-mode))
     (add-to-list 'magic-mode-alist (cons #'cats//typescript-ng2-file-p 'ng2-ts-mode))
 
     (when html-enable-lsp
@@ -42,14 +46,15 @@
       (setq lsp-completion-show-detail t)
       (setq lsp-completion-show-kind t)
       ;; (setq lsp-enable-snippet t)
-      ;; (setq lsp-enable-symbol-highlighting t)
+      (setq lsp-enable-symbol-highlighting t)
+      (setq lsp-modeline-code-actions-enable t)
 
       ;; lsp-ui-sideline:
       (setq
         lsp-ui-sideline-enable t
         lsp-ui-sideline-show-diagnostics t ;; show diagnostics messages in sideline
         lsp-ui-sideline-show-hover t ;; show hover messages in sideline
-        lsp-ui-sideline-show-code-actions t ;; show code actions in sideline
+        lsp-ui-sideline-show-code-actions nil ;; show code actions in sideline
         )
 
       ;; lsp-ui-peek
@@ -70,7 +75,7 @@
 
       ;; lsp-ui-imenu
       (setq
-        lsp-ui-imenu-enable nil
+        lsp-ui-imenu-enable t
         ;; lsp-ui-imenu-kind-position place to show entries kind
         ;; lsp-ui-imenu-buffer-position place to show the buffer window
         ;; lsp-ui-imenu-window-width set window width
@@ -89,14 +94,8 @@
                           "\\_<\\([a-zA-Z_$]\\(?:\\s_\\|\\sw\\)*\\)"
                           (nil font-lock-variable-name-face tree-sitter-hl-face:variable))))))
 
-    ;; setup angular backend
-    (add-hook 'ng2-ts-mode-local-vars-hook #'cats//angular-setup-backend)
-    ;; setup fmt on save
-    (when typescript-fmt-on-save
-      (add-hook 'ng2-ts-mode-local-vars-hook #'cats//angular-fmt-before-save-hook))
-
-    ;; set the jtsx-typescript layers keymap as parent to the angular layers keymap
-    (set-keymap-parent spacemacs-ng2-ts-mode-map spacemacs-jtsx-typescript-mode-map)
+    ;; set the typescript layers keymap as parent to the ng2-ts layers keymap
+    (set-keymap-parent spacemacs-ng2-ts-mode-map spacemacs-typescript-mode-map)
 
     (spacemacs/set-leader-keys-for-major-mode 'ng2-ts-mode
       "c" 'ng2-open-counterpart)
@@ -104,12 +103,10 @@
       "c" 'ng2-open-counterpart)
 
     :config
-    (with-eval-after-load 'ng2-ts-mode
-      (define-key ng2-ts-mode-map (kbd "C-d") nil))))
+    (cats/angular-mode-config 'ng2-ts-mode)))
 
 
 ;; etc
-
 (defun cats-angular/pre-init-treesit-fold ()
   (spacemacs|use-package-add-hook treesit-fold
     :post-config
@@ -119,29 +116,67 @@
       '(ng2-ts-mode . treesit-fold-summary-javadoc))))
 
 (defun cats-angular/post-init-add-node-modules-path ()
-  (add-hook 'ng2-html-mode-hook #'add-node-modules-path)
-  (add-hook 'ng2-ts-mode-hook #'add-node-modules-path))
+  (spacemacs/add-to-hooks #'add-node-modules-path '(ng2-ts-mode-hook
+                                                    ng2-html-mode-hook)))
 
 (defun cats-angular/post-init-company ()
-  (add-hook 'ng2-ts-mode-local-vars-hook #'cats//angular-setup-company))
+  (spacemacs/add-to-hooks #'cats//angular-setup-company
+    '(ng2-ts-mode-local-vars-hook)))
+
+(defun cats-angular/post-init-eldoc ()
+  (spacemacs/add-to-hooks #'cats//angular-setup-eldoc
+                          '(ng2-ts-mode-local-vars-hook) t))
 
 (defun cats-angular/post-init-emmet-mode ()
-  (spacemacs/add-to-hooks 'emmet-mode '(ng2-html-mode-hook))
-  (add-hook 'ng2-ts-mode-hook 'cats/angular-emmet-mode))
+  (add-hook 'ng2-ts-mode-hook #'cats/angular-emmet-mode))
 
 (defun cats-angular/post-init-evil-matchit ()
   (evilmi-load-plugin-rules '(ng2-html-mode) '(simple template html))
+  (evilmi-load-plugin-rules '(ng2-ts-mode) '(simple javascript html))
+
   (add-hook 'ng2-html-mode-hook 'turn-on-evil-matchit-mode)
   (add-hook 'ng2-ts-mode-hook 'turn-on-evil-matchit-mode))
 
+(defun cats-angular/set-tide-linter ()
+  (pcase angular-linter
+    ('tslint (flycheck-add-mode 'typescript-tide 'ng2-ts-mode)
+             (flycheck-add-mode 'typescript-tslint 'ng2-ts-mode))
+    ('eslint (flycheck-add-mode 'javascript-eslint 'ng2-ts-mode)
+             (add-to-list 'flycheck-disabled-checkers 'typescript-tslint)
+             (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append))
+    (_ (message
+        "Invalid typescript-layer configuration, no such linter: %s" angular-linter))))
+
+(defun cats-angular/set-lsp-linter ()
+  (pcase angular-linter
+    ('tslint (flycheck-add-mode 'typescript-tslint 'ng2-ts-mode))
+    ;; This sets tslint unconditionally for all lsp clients which is wrong
+    ;; Must be set for respective modes only, see go layer for examples.
+    ('eslint (flycheck-add-mode 'javascript-eslint 'ng2-ts-mode))
+    (_ (message
+        "Invalid angular-layer configuration, no such linter: %s" angular-linter))))
+
+(defun cats-angular/set-linter ()
+  (pcase angular-backend
+    ('tide (cats-angular/set-tide-linter))
+    ('lsp (cats-angular/set-lsp-linter))))
+
 (defun cats-angular/post-init-flycheck ()
-  (with-eval-after-load 'flycheck
-    (dolist (checker '(javascript-eslint javascript-standard))
-      (flycheck-add-mode checker 'ng2-ts-mode)))
-  (dolist (mode '(ng2-ts-mode
-                  ng2-html-mode))
-    (spacemacs/enable-flycheck mode))
-  (add-hook 'ng2-ts-mode-hook #'spacemacs//typescript-setup-checkers 'append))
+  (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)
+  (add-hook 'cats/project-hook 'cats//locate-jshint-from-projectile)
+  (add-hook 'cats/project-hook 'cats//locate-jscs-from-projectile)
+  (add-hook 'cats/eslint-executable-hook 'cats//esilnt-set-eslint-executable)
+  (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
+
+  (spacemacs/enable-flycheck 'ng2-ts-mode)
+  (spacemacs/enable-flycheck 'ng2-html-mode)
+  (spacemacs/add-to-hooks #'cats//angular-setup-checkers
+    '(ng2-ts-mode-hook)
+    t)
+  (spacemacs/add-to-hooks #'cats-angular/set-linter
+    '(ng2-ts-mode-local-vars-hook)
+    t)
+  )
 
 (defun cats-angular/pre-init-import-js ()
   (when (eq javascript-import-tool 'import-js)
@@ -156,27 +191,22 @@
     (spacemacs/js-doc-set-key-bindings mode)))
 
 (defun cats-angular/pre-init-prettier-js ()
-  (when (eq web-fmt-tool 'prettier)
-    (dolist (mode '(ng2-html-mode))
-      (add-to-list 'spacemacs--prettier-modes mode)))
-  (when (eq typescript-fmt-tool 'prettier)
-    (add-to-list 'spacemacs--prettier-modes 'ng2-ts-mode)))
+  (when (eq angular-fmt-tool 'prettier)
+    (add-to-list 'spacemacs--prettier-modes 'ng2-ts-mode))
+  (when (eq angular-html-fmt-tool 'prettier)
+    (add-to-list 'spacemacs--prettier-modes 'ng2-html-mode)))
 
 (defun cats-angular/post-init-smartparens ()
-  (spacemacs/add-to-hooks
-    #'spacemacs//activate-smartparens
-    '(ng2-html-mode-hook ng2-ts-mode-hook)))
+  (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(ng2-ts-mode-hook
+                                                              ng2-html-mode-hook)))
 
 (defun cats-angular/post-init-tern ()
   (add-to-list 'tern--key-bindings-modes 'ng2-ts-mode))
 
 (defun cats-angular/pre-init-web-beautify ()
-  (when (eq web-fmt-tool 'web-beautify)
-    (add-to-list 'spacemacs--web-beautify-modes (cons 'ng2-html-mode 'web-beautify-html)))
+  (when (eq angular-html-fmt-tool 'web-beautify)
+    (add-to-list 'spacemacs--web-beautify-modes (cons 'ng2-html-mode 'web-beautify-html))))
 
-  (when (eq typescript-fmt-tool 'web-beautify)
-    (add-to-list 'spacemacs--web-beautify-modes
-                 (cons 'ng2-ts-mode 'web-beautify-js))))
-
-(defun cats-angular/post-init-yasnippet ()
-  (add-hook 'ng2-ts-mode-hook #'spacemacs//react-setup-yasnippet))
+(defun typescript/post-init-yasnippet ()
+  (spacemacs/add-to-hooks #'cats/angular-yasnippet-setup '(ng2-ts-mode-hook
+                                                           nt2-html-mode-hook)))

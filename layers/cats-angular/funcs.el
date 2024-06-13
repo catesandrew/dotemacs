@@ -10,14 +10,20 @@
 ;; Backend
 (defun cats//angular-setup-backend ()
   "Conditionally setup angular backend."
-  (pcase typescript-backend
+  (pcase angular-backend
     ('tide (spacemacs//tide-setup))
     ('lsp (cats//angular-setup-lsp))))
 
 (defun cats//angular-setup-company ()
   "Conditionally setup company based on backend."
-  (when (eq typescript-backend 'tide)
+  (when (eq angular-backend 'tide)
     (spacemacs//tide-setup-company 'ng2-ts-mode)))
+
+(defun cats//angular-setup-eldoc ()
+  "Conditionally setup eldoc based on backend."
+  (pcase angular-backend
+    ('tide (spacemacs//tide-setup-eldoc))
+    ('lsp (cats//angular-setup-lsp-eldoc))))
 
 
 ;; LSP
@@ -25,17 +31,20 @@
   "Setup lsp backend."
   (if (configuration-layer/layer-used-p 'lsp)
       (progn
-        (unless typescript-lsp-linter
+        (unless angular-lsp-linter
           (setq-local lsp-diagnostics-provider :none))
         (lsp-deferred))
     (message "`lsp' layer is not installed, please add `lsp' layer to your dotfile.")))
+
+(defun cats//angular-setup-lsp-eldoc ()
+  "Setup eldoc for LSP."
+  (eldoc-mode))
 
 
 ;; Emmet
 (defun cats/angular-emmet-mode ()
   "Activate `emmet-mode' and configure it for local buffer."
-  (emmet-mode)
-  (setq-local emmet-expand-jsx-className? t))
+  (emmet-mode))
 
 
 ;; Others
@@ -62,9 +71,43 @@
                       (nth 4 sexp))))))))
 
 
-(defun cats//angular-setup-yasnippet ()
-  (yas-activate-extra-mode 'ng2-ts-mode))
+(defun cats/angular-yasnippet-setup ()
+  (yas-activate-extra-mode 'js-mode))
 
 ;; Format
-(defun cats//angular-fmt-before-save-hook ()
-  (add-hook 'before-save-hook 'spacemacs/typescript-format t t))
+(defun cats/angular-fmt-before-save-hook ()
+  (add-hook 'before-save-hook 'cats/angular-format t t))
+
+(defun cats/angular-format ()
+  "Call formatting tool specified in `angular-fmt-tool'."
+  (interactive)
+  (call-interactively
+    (pcase angular-fmt-tool
+      ('typescript-formatter 'spacemacs/typescript-tsfmt-format-buffer)
+      ('tide 'tide-format)
+      ('prettier 'prettier-js)
+      (_ (user-error
+           "%s isn't a valid typescript formatter. Possible values are 'tide, 'typescript-formatter or 'prettier"
+           angular-fmt-tool)))))
+
+(defun cats//angular-setup-checkers ()
+  (when-let* ((found (executable-find "eslint_d")))
+    (setq-local flycheck-javascript-eslint-executable found)))
+
+(defun cats/angular-mode-init (hook)
+  (add-hook hook 'cats//angular-setup-backend)
+  (when angular-fmt-on-save
+    (add-hook hook 'cats/angular-fmt-before-save-hook)))
+
+(defun cats/angular-safe-local-variables (values)
+  ;; safe values for backend to be used in directory file variables
+  (dolist (value values)
+    (add-to-list 'safe-local-variable-values
+                 (cons 'angular-backend value))))
+
+(defun cats/angular-mode-config (mode)
+  (pcase angular-backend
+    ('lsp (spacemacs/set-leader-keys-for-major-mode mode
+            "==" 'cats/angular-format))
+    ('tide (spacemacs/set-leader-keys-for-major-mode mode
+             "=" 'cats/angular-format))))

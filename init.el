@@ -219,21 +219,33 @@ This function should only modify configuration layer settings."
          haskell-completion-backend 'dante)
 
        ;; npm i -g \
-       ;;   vscode-html-languageserver-bin \
+       ;;   @angular/language-server \
+       ;;   @angular/language-service \
+       ;;   @mdx-js/language-server \
+       ;;   awk-language-server \
        ;;   bash-language-server \
+       ;;   cssmodules-language-server \
        ;;   dockerfile-language-server-nodejs \
+       ;;   emmet-ls \
        ;;   flow-language-server \
+       ;;   graphql-language-service-cli \
        ;;   javascript-typescript-langserver \
+       ;;   some-sass-language-server \
+       ;;   stylelint \
+       ;;   svelte-language-server \
        ;;   tslint \
+       ;;   typescript \
        ;;   typescript-formatter \
        ;;   typescript-language-server \
-       ;;   typescript \
+       ;;   unified-language-server \
+       ;;   vim-language-server \
+       ;;   vscode-html-languageserver-bin \
        ;;   vscode-css-languageserver-bin \
+       ;;   vscode-json-languageserver \
        ;;   vscode-json-languageserver-bin \
-       ;;   stylelint \
+       ;;   vscode-json-languageservice \
+       ;;   vscode-langservers-extracted \
        ;;   yaml-language-server
-       ;;   graphql-language-service-cli
-       ;;   vim-language-server
        (html :variables
          css-indent-offset 2
          web-fmt-tool 'web-beautify
@@ -247,11 +259,11 @@ This function should only modify configuration layer settings."
          ;; Enable/disable lsp-ui-doc overlay
          lsp-ui-doc-enable t
          ;; When non-nil, type signature included in the lsp-ui-doc overlay
-         lsp-ui-doc-include-signature nil
+         lsp-ui-doc-include-signature t
          ;; Enable/disable lsp-ui-sideline overlay
          lsp-ui-sideline-enable t
          ;; When non-nil, sideline includes symbol info (largely redundant for c modes)
-         lsp-ui-sideline-show-symbol nil
+         lsp-ui-sideline-show-symbol t
          ;; When non-nil, use `lsp-ui' package.
          lsp-use-lsp-ui t
          ;; lsp-use-upstream-bindings nil
@@ -422,7 +434,13 @@ This function should only modify configuration layer settings."
        cats-vm
        cats-langs
        cats-mail
-       cats-angular
+       (cats-angular :variables
+         angular-fmt-on-save nil
+         angular-linter 'eslint
+         angular-backend 'lsp
+         angular-lsp-linter nil
+         angular-fmt-tool 'prettier
+         angular-html-fmt-tool nil)
        ;; cats-private
        )
 

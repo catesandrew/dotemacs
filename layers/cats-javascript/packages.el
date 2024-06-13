@@ -683,7 +683,6 @@
 ;; import-js
 (defun cats-javascript/pre-init-import-js ()
   (when (eq javascript-import-tool 'import-js)
-    (add-to-list 'spacemacs--import-js-modes (cons 'tsx-mode 'tsx-mode-hook))
     (add-to-list 'spacemacs--import-js-modes (cons 'jtsx-tsx-mode 'jtsx-tsx-mode-hook))
     (add-to-list 'spacemacs--import-js-modes (cons 'jtsx-jsx-mode 'jtsx-jsx-mode-hook))
     (add-to-list 'spacemacs--import-js-modes (cons 'jtsx-typescript-mode 'jtsx-typescript-mode-hook))
@@ -794,8 +793,7 @@
 (defun cats-javascript/post-init-company ()
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-company
     '(jtsx-tsx-mode-local-vars-hook
-      jtsx-typescript-mode-local-vars-hook
-      tsx-mode-local-vars-hook))
+      jtsx-typescript-mode-local-vars-hook))
 
   (spacemacs/add-to-hooks #'spacemacs//javascript-setup-company
     '(jtsx-jsx-mode-local-vars-hook))
@@ -832,8 +830,7 @@
 
 ;; add-node-modules-path
 (defun cats-javascript/post-init-add-node-modules-path ()
-  (spacemacs/add-to-hooks #'add-node-modules-path '(tsx-mode-hook
-                                                    jtsx-jsx-mode-hook
+  (spacemacs/add-to-hooks #'add-node-modules-path '(jtsx-jsx-mode-hook
                                                     jtsx-tsx-mode-hook
                                                     jtsx-typescript-mode-hook)))
 
@@ -842,22 +839,19 @@
 (defun cats-javascript/post-init-emmet-mode ()
   (add-hook 'jtsx-jsx-mode-hook #'spacemacs/javascript-emmet-mode)
   (add-hook 'jtsx-tsx-mode-hook #'spacemacs/typescript-emmet-mode)
-  (add-hook 'jtsx-typescript-mode-hook #'spacemacs/typescript-emmet-mode)
-  (add-hook 'tsx-mode-hook #'spacemacs/typescript-emmet-mode))
+  (add-hook 'jtsx-typescript-mode-hook #'spacemacs/typescript-emmet-mode))
 
 
 ;; smartparens
 (defun cats-javascript/post-init-smartparens ()
-  (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(tsx-mode-hook
-                                                              jtsx-jsx-mode-hook
+  (spacemacs/add-to-hooks #'spacemacs//activate-smartparens '(jtsx-jsx-mode-hook
                                                               jtsx-tsx-mode-hook
                                                               jtsx-typescript-mode-hook)))
 
 
 ;; yasnippet
 (defun cats-javascript/post-init-yasnippet ()
-  (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(tsx-mode-hook
-                                                                   jtsx-jsx-mode-hook
+  (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(jtsx-jsx-mode-hook
                                                                    jtsx-typescript-mode-hook)))
 
 
@@ -865,7 +859,6 @@
 (defun cats-javascript/setup-tsx-mode ()
   (with-eval-after-load 'flycheck
     ;; try some CSS-in-JS linting magic
-    (flycheck-add-mode 'css-stylelint 'tsx-mode)
     (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
     (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)))
 
@@ -877,14 +870,12 @@
     'cats//esilnt-set-eslint-executable)
   (add-hook 'cats/project-hook 'cats//locate-eslint-from-projectile)
 
-  (spacemacs/enable-flycheck 'tsx-mode)
   (spacemacs/enable-flycheck 'jtsx-jsx-mode)
   (spacemacs/enable-flycheck 'jtsx-tsx-mode)
   (spacemacs/enable-flycheck 'jtsx-typescript-mode)
 
   (with-eval-after-load 'flycheck
     ;; try some CSS-in-JS linting magic
-    (flycheck-add-mode 'css-stylelint 'tsx-mode)
     (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
     (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode))
 
@@ -893,14 +884,12 @@
     t)
 
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-checkers
-    '(tsx-mode-hook
-      jtsx-tsx-mode-hook
+    '(jtsx-tsx-mode-hook
       jtsx-typescript-mode-hook)
     t)
 
   (spacemacs/add-to-hooks #'cats//typescript-setup-backend
-    '(tsx-mode-local-vars-hook
-      jtsx-typescript-mode-local-vars-hook
+    '(jtsx-typescript-mode-local-vars-hook
       jtsx-tsx-mode-local-vars-hook)
     t)
   )
@@ -1203,8 +1192,7 @@
   (when (eq javascript-fmt-tool 'prettier)
     (add-to-list 'spacemacs--prettier-modes 'jtsx-jsx-mode)
     (add-to-list 'spacemacs--prettier-modes 'jtsx-tsx-mode)
-    (add-to-list 'spacemacs--prettier-modes 'jtsx-typescript-mode)
-    (add-to-list 'spacemacs--prettier-modes 'tsx-mode)))
+    (add-to-list 'spacemacs--prettier-modes 'jtsx-typescript-mode)))
 
 
 ;; web-beautify

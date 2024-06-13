@@ -22,6 +22,7 @@
      (treesit :location built-in)
      treesit-auto
      lsp-mode
+     (lsp-origami :requires lsp-mode)
 
      (cats-combobulate-mode :location local)
      (combobulate :location
@@ -225,6 +226,8 @@
   (spacemacs|use-package-add-hook lsp-mode
     :post-config
     (progn
+      (setq lsp-eslint-server-command '("eslint-lsp" "--stdio"))
+
       ;; enable log only for debug
       (setq lsp-log-io nil)
 
@@ -320,6 +323,13 @@
       ;;        ))
       ;;   (add-hook hook #'lsp-deferred))
     )
+  )
+)
+
+(defun cats-programming/pre-init-lsp-origami ()
+  (spacemacs|use-package-add-hook lsp-origami
+    :post-init
+    (remove-hook 'lsp-after-open-hook #'lsp-origami-try-enable)
   )
 )
 
