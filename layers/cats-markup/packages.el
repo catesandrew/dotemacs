@@ -22,8 +22,8 @@
   (spacemacs|use-package-add-hook markdown-mode
     :pre-init
     (progn
-      (add-to-list 'auto-mode-alist '("\\.markdown$" . markdown-mode))
-      (add-to-list 'auto-mode-alist '("\\.apib$" . markdown-mode)))
+      (add-to-list 'auto-mode-alist '("\\.markdown$\\'" . markdown-mode))
+      (add-to-list 'auto-mode-alist '("\\.apib$\\'" . markdown-mode)))
     :post-config
     (progn
       ;; http://www.tychoish.com/posts/imenu-for-markdown-and-writing/
@@ -122,7 +122,7 @@
   (use-package mustache-mode
     :ensure t
     :defer t
-    :mode (("\\.mustache$" . mustache-mode))))
+    :mode (("\\.mustache$\\'" . mustache-mode))))
 
 
 ;; handlebars
@@ -133,13 +133,13 @@
     :init
     (progn
       (add-hook 'cats/project-hook
-         'cats//locate-handlebars-from-projectile)
+        'cats//locate-handlebars-from-projectile)
 
       (with-eval-after-load 'flycheck
         (add-hook 'cats/handlebars-executable-hook
-           'cats//hbs-set-handlebars-executable)))
-    :mode (("\\.hbs$" . handlebars-mode)
-           ("\\.handlebars$" . handlebars-mode))))
+          'cats//hbs-set-handlebars-executable)))
+    :mode (("\\.hbs$\\'" . handlebars-mode)
+            ("\\.handlebars$\\'" . handlebars-mode))))
 
 
 ;; jira-markup

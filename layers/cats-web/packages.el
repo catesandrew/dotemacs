@@ -191,7 +191,7 @@
   (spacemacs|use-package-add-hook web-mode
     :post-init
     (progn
-      (add-to-list 'auto-mode-alist '("\\.mjml$" . web-mode)))
+      (add-to-list 'auto-mode-alist '("\\.mjml$\\'" . web-mode)))
     :post-config
     (progn
       ;; use 2 space indent also for element’s attributes,

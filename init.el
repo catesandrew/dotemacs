@@ -252,7 +252,7 @@ This function should only modify configuration layer settings."
          css-enable-lsp t
          less-enable-lsp t
          scss-enable-lsp t
-         html-enable-lsp t)
+         html-enable-lsp nil)
        ipython-notebook
        tide
        (lsp :variables
@@ -405,7 +405,7 @@ This function should only modify configuration layer settings."
          ;;                               "../inc" "../../inc")
          c-c++-enable-clang-support t
          c-c++-default-mode-for-headers 'c++-mode)
-       notmuch
+       ;; notmuch
        ;; My personal layers
        cats
        cats-core
@@ -433,7 +433,7 @@ This function should only modify configuration layer settings."
        cats-grammar
        cats-vm
        cats-langs
-       cats-mail
+       ;; cats-mail
        (cats-angular :variables
          angular-fmt-on-save nil
          angular-linter 'eslint

@@ -4,4 +4,4 @@
 
 ;;; Code:
 
-(configuration-layer/declare-layer-dependencies '(html cats-programming cats-javascript))
+(configuration-layer/declare-layer-dependencies '(cats-web cats-programming cats-javascript))

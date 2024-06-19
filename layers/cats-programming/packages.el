@@ -22,7 +22,7 @@
      (treesit :location built-in)
      treesit-auto
      lsp-mode
-     (lsp-origami :requires lsp-mode)
+     (lsp-origami)
 
      (cats-combobulate-mode :location local)
      (combobulate :location

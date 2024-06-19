@@ -202,8 +202,8 @@ major mode")
       (with-eval-after-load 'flycheck
         (add-hook 'cats/handlebars-executable-hook
           'cats//hbs-set-handlebars-executable)))
-    :mode (("\\.hbs$" . handlebars-mode)
-            ("\\.handlebars$" . handlebars-mode))))
+    :mode (("\\.hbs$\\'" . handlebars-mode)
+            ("\\.handlebars$\\'" . handlebars-mode))))
 
 
 ;; string inflection

@@ -103,8 +103,8 @@
             (jtsx-tsx-mode . hs-minor-mode)
             (jtsx-typescript-mode . hs-minor-mode))
     :init
-    (add-to-list 'auto-mode-alist '("\\.jshintrc$" . jtsx-jsx-mode))
-    (add-to-list 'auto-mode-alist '("\\.eslintrc$" . jtsx-jsx-mode))
+    (add-to-list 'auto-mode-alist '("\\.jshintrc$\\'" . jtsx-jsx-mode))
+    (add-to-list 'auto-mode-alist '("\\.eslintrc$\\'" . jtsx-jsx-mode))
     (add-to-list 'auto-mode-alist '("\\.mjs\\'" . jtsx-jsx-mode))
     (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . jtsx-jsx-mode))
 
@@ -995,7 +995,7 @@
 ;; json-mode
 (defun cats-javascript/post-init-json-mode ()
   (add-to-list 'auto-mode-alist '("\\.tern-config\\'" . json-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.jscsrc$" . json-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.jscsrc$\\'" . json-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-ts-mode)))
 
 

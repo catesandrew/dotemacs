@@ -125,8 +125,8 @@
 ;; conf-mode
 (defun cats/post-init-conf-mode ()
   (add-hook 'conf-mode-hook 'cats/conf-mode-local)
-  (add-to-list 'auto-mode-alist '("\\.envrc$" . conf-mode))
-  (add-to-list 'auto-mode-alist '("\\.env$" . conf-mode)))
+  (add-to-list 'auto-mode-alist '("\\.envrc$\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\.env$\\'" . conf-mode)))
 
 
 ;; which-key
@@ -284,7 +284,7 @@
 (defun cats/pre-init-editorconfig ()
   "EditorConfig plugin for emacs."
   (spacemacs|use-package-add-hook editorconfig
-    :post-init (add-to-list 'auto-mode-alist '("\\.editorconfig" . conf-unix-mode))))
+    :post-init (add-to-list 'auto-mode-alist '("\\.editorconfig\\'" . conf-unix-mode))))
 
 (defun cats/init-visual-fill-column ()
   "Emacs mode for wrapping function `visual-line-mode' buffers at `fill-column'."
@@ -741,7 +741,7 @@ Install mudraw with brew install mupdf-tools"))))))
       "osts" 'sx-tab-starred)
     :config
     (spacemacs/add-to-hook 'sx-compose-mode-hook
-                           '(visual-line-mode turn-off-auto-fill))
+      '(visual-line-mode turn-off-auto-fill))
 
     (defun cats/sx-cleanup-whitespace-before-send ()
       "Cleanup whitespace before sending a question."
@@ -749,7 +749,7 @@ Install mudraw with brew install mupdf-tools"))))))
       t)
 
     (add-hook 'sx-compose-mode-before-send-hook
-              'cats/sx-cleanup-whitespace-before-send)))
+      'cats/sx-cleanup-whitespace-before-send)))
 
 
 ;; hardhat

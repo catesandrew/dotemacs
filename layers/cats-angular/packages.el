@@ -35,11 +35,19 @@
     (cats/angular-safe-local-variables '(lsp tide))
     (cats/angular-mode-init 'ng2-ts-mode-local-vars-hook)
 
-    (add-to-list 'auto-mode-alist '("\\.component.html\\" . ng2-html-mode))
+    ;; Check if .html is in auto-mode-alist and remove it if it is
+    (setq auto-mode-alist
+      (remove (assoc "\\.html\\'" auto-mode-alist) auto-mode-alist))
+    ;; Re-add the general .html pattern to auto-mode-alist for web-mode
+    (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+    ;; Add *.component.html to auto-mode-alist
+    (add-to-list 'auto-mode-alist '("\\.component\\.html\\'" . ng2-html-mode))
+
     (add-to-list 'magic-mode-alist (cons #'cats//typescript-ng2-file-p 'ng2-ts-mode))
 
-    (when html-enable-lsp
-      (add-hook 'ng2-html-mode-hook #'spacemacs//setup-lsp-for-html-buffer t))
+    ;; todo configure this better later
+    ;; (when angular-html-enable-lsp
+    ;;   (add-hook 'ng2-html-mode-hook #'spacemacs//setup-lsp-for-html-buffer t))
 
     (with-eval-after-load 'lsp-mode
       (setq lsp-completion-provider :capf)
@@ -207,6 +215,6 @@
   (when (eq angular-html-fmt-tool 'web-beautify)
     (add-to-list 'spacemacs--web-beautify-modes (cons 'ng2-html-mode 'web-beautify-html))))
 
-(defun typescript/post-init-yasnippet ()
+(defun cats-angular/post-init-yasnippet ()
   (spacemacs/add-to-hooks #'cats/angular-yasnippet-setup '(ng2-ts-mode-hook
                                                            nt2-html-mode-hook)))
