@@ -221,6 +221,7 @@
     (setq-default atomic-chrome-auto-remove-file t)
     (setq-default atomic-chrome-url-major-mode-alist
       '(("ramdajs.com" . js-ts-mode)
+         ("coderpad.io" . js-ts-mode)
          ("github.com" . gfm-mode)
          ("gitlab.com" . gfm-mode)
          ("leetcode.com" . typescript-ts-mode)

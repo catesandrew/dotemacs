@@ -1,9 +1,0 @@
-# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: _forEach
-# group: lodash
-# key: _forEach
-# type: snippet
-# --
-_.forEach(${1:data}, function (${2:x}) {
-  $0
-})

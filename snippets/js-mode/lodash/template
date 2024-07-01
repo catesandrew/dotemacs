@@ -1,7 +1,0 @@
-# -*- coding: utf-8; mode: snippet; require-final-newline: nil -*-
-# name: _template
-# group: lodash
-# key: _template
-# type: snippet
-# --
-$0_.template(${1:string}, ${2:options})
