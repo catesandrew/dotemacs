@@ -274,11 +274,11 @@ This function should only modify configuration layer settings."
        ;; npm i -g eslint babel-eslint eslint-plugin-react js-beautify prettier
        react
        (typescript :variables
-         typescript-fmt-on-save t
+         typescript-fmt-on-save nil
          typescript-linter 'eslint
          typescript-backend 'lsp
          typescript-lsp-linter nil
-         typescript-fmt-tool 'typescript-formatter)
+         typescript-fmt-tool 'prettier)
        (javascript :variables
          javascript-fmt-tool 'web-beautify
          ;; Repl to be configured by the layer, `skewer' for browser
@@ -365,6 +365,7 @@ This function should only modify configuration layer settings."
        (yaml :variables
          yaml-enable-lsp t)
 
+       bm
        openai
        ;; Applications
        (org :variables
@@ -991,7 +992,8 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env)
+  (setq spacemacs--spacemacs-env-loaded t)
+  (load-env-vars spacemacs-env-vars-file)
   )
 
 (defun dotspacemacs/user-init ()
