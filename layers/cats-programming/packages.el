@@ -18,6 +18,7 @@
      shut-up
      string-inflection
      polymode
+     sdlang-mode
      hcl-mode
      (treesit :location built-in)
      treesit-auto
@@ -800,5 +801,10 @@
     :init
     (progn
       (define-key evil-normal-state-map "gR" 'evil-operator-string-inflection))))
+
+
+;; sdlang-mode
+(defun cats-programming/init-sdlang-mode ()
+  (use-package sdlang-mode :defer t))
 
 ;;; packages.el ends here
