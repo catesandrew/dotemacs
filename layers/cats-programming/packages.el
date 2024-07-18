@@ -227,7 +227,7 @@
   (spacemacs|use-package-add-hook lsp-mode
     :post-config
     (progn
-      (setq lsp-eslint-server-command '("eslint-lsp" "--stdio"))
+      (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
 
       ;; enable log only for debug
       (setq lsp-log-io nil)
@@ -248,9 +248,9 @@
       ;; handle yasnippet by myself
       (setq lsp-enable-snippet nil)
 
-      ;; ;; use `company-ctags' only.
-      ;; ;; Please note `company-lsp' is automatically enabled if installed
-      ;; (setq lsp-enable-completion-at-point nil)
+      ;; use `company-ctags' only.
+      ;; Please note `company-lsp' is automatically enabled if installed
+      ;; (setq lsp-completion-enable nil)
 
       ;; turn off for better performance
       (setq lsp-enable-symbol-highlighting nil)
@@ -270,59 +270,63 @@
     (progn
       ;; @see https://github.com/emacs-lsp/lsp-mode/pull/1498 and code related to auto configure.
       ;; Require clients could be slow, I only load ones which I'm interested
-      (setq lsp-client-packages '(lsp-angular lsp-ansible lsp-bash lsp-cmake lsp-css lsp-d lsp-dart lsp-docker lsp-dockerfile lsp-emmet lsp-eslint lsp-go lsp-graphql lsp-grammarly lsp-java lsp-javascript lsp-json lsp-kotlin lsp-latex lsp-ltex lsp-lua lsp-markdown lsp-marksman lsp-nginx lsp-nix lsp-magik lsp-ocaml lsp-perl lsp-php lsp-pyls lsp-pylsp lsp-pyright lsp-python-ms lsp-purescript lsp-r lsp-racket lsp-remark lsp-rust lsp-solargraph lsp-tailwindcss lsp-tex lsp-terraform lsp-toml lsp-vhdl lsp-vimscript lsp-xml lsp-yaml lsp-ruby-syntax-tree lsp-sqls lsp-svelte lsp-steep))
+      (setq lsp-client-packages
+        '(lsp-angular
+           lsp-ansible
+           lsp-bash
+           lsp-cmake
+           lsp-css
+           lsp-d
+           lsp-dart
+           lsp-docker
+           lsp-dockerfile
+           lsp-emmet
+           lsp-eslint
+           lsp-go
+           lsp-graphql
+           lsp-grammarly
+           lsp-java
+           lsp-javascript
+           lsp-json
+           lsp-kotlin
+           lsp-latex
+           lsp-ltex
+           lsp-lua
+           lsp-markdown
+           lsp-marksman
+           lsp-nginx
+           lsp-nix
+           lsp-magik
+           lsp-ocaml
+           lsp-perl
+           lsp-php
+           lsp-pyls
+           lsp-pylsp
+           lsp-pyright
+           lsp-python-ms
+           lsp-purescript
+           lsp-r
+           lsp-racket
+           lsp-remark
+           lsp-rust
+           lsp-solargraph
+           lsp-tailwindcss
+           lsp-tex
+           lsp-terraform
+           lsp-toml
+           lsp-vhdl
+           lsp-vimscript
+           lsp-xml
+           lsp-yaml
+           lsp-ruby-syntax-tree
+           lsp-sqls
+           lsp-svelte
+           lsp-steep))
 
       ;; https://github.com/emacs-lsp/lsp-mode/issues/3173
-      (setq lsp-completion-provider :none)
-      (setq lsp-completion-show-detail nil)
-      (setq lsp-completion-show-kind nil)
-
-      ;; (dolist
-      ;;   (hook
-      ;;     '(
-      ;;        c++-mode-hook
-      ;;        c-mode-hook
-      ;;        cc-mode-hook
-      ;;        css-mode-hook
-      ;;        go-mode-hook
-      ;;        go-ts-mode-hook
-      ;;        html-mode-hook
-      ;;        inf-ruby-mode-hook
-      ;;        java-mode-hook
-      ;;        javascript-mode-hook
-      ;;        jquery-mode-hook
-      ;;        js-mode-hook
-      ;;        js2-jsx-mode-hook
-      ;;        js2-mode-hook
-      ;;        js3-mode-hook
-      ;;        jsp-mode-hook
-      ;;        jsx-mode-hook
-      ;;        latex-mode-hook
-      ;;        less-css-mode-hook
-      ;;        markdown-mode-hook
-      ;;        perl-mode-hook
-      ;;        php-mode-hook
-      ;;        python-mode-hook
-      ;;        react-mode-hook
-      ;;        rjsx-mode-hook
-      ;;        ruby-mode-hook
-      ;;        rust-mode-hook
-      ;;        sass-mode-hook
-      ;;        scss-mode-hook
-      ;;        shell-script-mode-hook
-      ;;        swift-mode-hook
-      ;;        shell-script-mode-hook
-      ;;        tsx-mode-hook
-      ;;        typescript-mode-hook
-      ;;        typescript-tsx-mode-hook
-      ;;        web-mode-hook
-      ;;        xah-css-mode-hook
-      ;;        yaml-mode-hook
-      ;;        jtsx-jsx-mode
-      ;;        jtsx-tsx-mode
-      ;;        jtsx-typescript-mode
-      ;;        ))
-      ;;   (add-hook hook #'lsp-deferred))
+      ;; (setq lsp-completion-provider :none)
+      ;; (setq lsp-completion-show-detail nil)
+      ;; (setq lsp-completion-show-kind nil)
     )
   )
 )
