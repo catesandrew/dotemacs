@@ -261,9 +261,9 @@ This function should only modify configuration layer settings."
          ;; When non-nil, type signature included in the lsp-ui-doc overlay
          lsp-ui-doc-include-signature t
          ;; Enable/disable lsp-ui-sideline overlay
-         lsp-ui-sideline-enable t
+         lsp-ui-sideline-enable nil
          ;; When non-nil, sideline includes symbol info (largely redundant for c modes)
-         lsp-ui-sideline-show-symbol t
+         lsp-ui-sideline-show-symbol nil
          ;; When non-nil, use `lsp-ui' package.
          lsp-use-lsp-ui t
          ;; lsp-use-upstream-bindings nil

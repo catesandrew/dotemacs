@@ -51,7 +51,7 @@
            (setq imenu-generic-expression markdown-imenu-generic-expression)))
 
       (when (eq system-type 'darwin)
-        (setq markdown-open-command "mark"))
+        (setq markdown-open-command "marked2"))
 
       (spacemacs/set-leader-keys-for-major-mode 'markdown-mode
         "oh" 'cats/post-header

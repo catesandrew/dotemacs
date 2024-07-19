@@ -59,9 +59,9 @@
 
       ;; lsp-ui-sideline:
       (setq
-        lsp-ui-sideline-enable t
-        lsp-ui-sideline-show-diagnostics t ;; show diagnostics messages in sideline
-        lsp-ui-sideline-show-hover t ;; show hover messages in sideline
+        lsp-ui-sideline-enable nil
+        lsp-ui-sideline-show-diagnostics nil ;; show diagnostics messages in sideline
+        lsp-ui-sideline-show-hover nil ;; show hover messages in sideline
         lsp-ui-sideline-show-code-actions nil ;; show code actions in sideline
         )
 
