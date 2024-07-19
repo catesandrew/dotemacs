@@ -60,7 +60,7 @@
 (defun cats//typescript-ng2-file-p ()
   "Enable ng2-ts mode by using magic-mode-alist."
   (when buffer-file-name
-    (and (member (cats/last-two-extensions buffer-file-name) '("config.ts" "component.ts" "service.ts" "pipe.ts" "directive.ts" "guard.ts" "module.ts"))
+    (and (member (cats/last-two-extensions buffer-file-name) '("config.ts" "component.ts" "service.ts" "pipe.ts" "directive.ts" "guard.ts" "module.ts" "routes.ts" "const.ts"))
          (re-search-forward "\\(\\( from \\|require(\\)[\"']@angular\\)"
                             magic-mode-regexp-match-limit t)
          (save-excursion
