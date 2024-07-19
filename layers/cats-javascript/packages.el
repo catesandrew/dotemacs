@@ -838,7 +838,6 @@
 
 ;; emmet-mode
 (defun cats-javascript/post-init-emmet-mode ()
-  (add-hook 'jtsx-jsx-mode-hook #'spacemacs/javascript-emmet-mode)
   (add-hook 'jtsx-tsx-mode-hook #'spacemacs/typescript-emmet-mode)
   (add-hook 'jtsx-typescript-mode-hook #'spacemacs/typescript-emmet-mode))
 
