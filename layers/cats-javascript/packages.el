@@ -674,11 +674,7 @@
 (defun cats-javascript/post-init-eldoc ()
   (spacemacs/add-to-hooks #'spacemacs//typescript-setup-eldoc
     '(jtsx-tsx-mode-local-vars-hook
-      jtsx-typescript-mode-local-vars-hook) t)
-
-  (spacemacs/add-to-hooks #'spacemacs//javascript-setup-eldoc
-    '(jtsx-jsx-mode-local-vars-hook) t)
-  )
+       jtsx-typescript-mode-local-vars-hook) t))
 
 
 ;; import-js
