@@ -48,6 +48,9 @@
     ".backstage"
     "tf"                                ; terraform
     "assets"
+    ".angular"
+    ".next"
+    "out-tsc"
   ))
 
 ;; List of exact filenames to ignore. These are not regular expressions, but
@@ -237,6 +240,15 @@
     "jsconfig.json"
     "lerna.json"
     "docker-compose.yml"
+    ".snyk"
+    ".angulardoc.json"
+    ".browserslistrc"
+    ".htmllintrc"
+    ".npmrc"
+    ".prettierignore"
+    ".prettierrc"
+    ".sass-lint-auto-fix.yml"
+    ".sass-lint.yml"
    ))
 
 ;; List of file beginnings to ignore. These are not regular expressions, but
