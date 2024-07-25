@@ -25,10 +25,10 @@
 (defvar cats/prog-mode-spell-checking t
   "Enable `prog-mode' spell checking.")
 
-(defvar cats/global-treesit-fold t
+(defvar cats/global-treesit-fold nil
   "Enable `treesit-fold-mode' globally.")
 
-(defvar cats/global-treesit-fold-indicators t
+(defvar cats/global-treesit-fold-indicators nil
   "Enable `treesit-fold-indicators-mode' globally.")
 
 (defvar cats/global-treesit-auto t
