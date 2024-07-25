@@ -249,6 +249,7 @@
     ".prettierrc"
     ".sass-lint-auto-fix.yml"
     ".sass-lint.yml"
+    "tsconfig.tsbuildinfo"
    ))
 
 ;; List of file beginnings to ignore. These are not regular expressions, but
