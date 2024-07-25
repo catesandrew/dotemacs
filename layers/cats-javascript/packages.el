@@ -870,11 +870,6 @@
   (spacemacs/enable-flycheck 'jtsx-tsx-mode)
   (spacemacs/enable-flycheck 'jtsx-typescript-mode)
 
-  (with-eval-after-load 'flycheck
-    ;; try some CSS-in-JS linting magic
-    (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
-    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode))
-
   (spacemacs/add-to-hooks #'spacemacs//javascript-setup-checkers
     '(jtsx-jsx-mode-hook)
     t)
