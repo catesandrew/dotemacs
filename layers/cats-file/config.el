@@ -7,51 +7,54 @@
 ;; Don't kill the important buffers
 (defvar buffer/do-not-kill-buffer-names
   '("*scratch*"
-    "*Messages*"
-    "*Require Times*")
+     "*Messages*"
+     "*Require Times*")
   "Names of buffers that should not be killed.")
 
 
 (defvar ignoramus/directory-basename-exact-names
   '(
-    ".coverage"                            ; python
-    ".git"                                 ; git
-    ".gradle"                              ; gradle
-    ".circleci"                            ; circle ci
-    ".nyc_output"                          ; nyc
-    ".hg"                                  ; mercurial
-    ".idea"                                ; various
-    "build"                                ; various
-    "Build"                                ; various
+     ".coverage"                            ; python
+     ".git"                                 ; git
+     ".gradle"                              ; gradle
+     ".circleci"                            ; circle ci
+     ".nyc_output"                          ; nyc
+     ".hg"                                  ; mercurial
+     ".idea"                                ; various
+     "build"                                ; various
+     "Build"                                ; various
      "dist"                                ; various
-    ".cask"
-    ".vagrant"
-    "lib-cov"
-    "coverage"
-    "bower_components"
-    "node_modules"
-    ".cache"
-    ".ccache"
-    "Pods"                              ; cocoapods directory
-    ".log"
-    "auto"
-    ".vscode"
-    ".sx"
-    "elpa"
-    ".github"                           ; github
-    ".launchdarkly"                     ; launch darkly
-    ".expo"                             ; expo
-    ".yarn"                             ; yarn cache
-    "__fixtures__"
-    ".docusaurus"                       ; docusaurus
-    ".nx"
-    ".backstage"
-    "tf"                                ; terraform
-    "assets"
-    ".angular"
-    ".next"
-    "out-tsc"
-  ))
+     ".cask"
+     ".vagrant"
+     "lib-cov"
+     "coverage"
+     "bower_components"
+     "node_modules"
+     ".cache"
+     ".ccache"
+     "Pods"                              ; cocoapods directory
+     ".log"
+     "auto"
+     ".vscode"
+     ".sx"
+     "elpa"
+     ".github"                           ; github
+     ".launchdarkly"                     ; launch darkly
+     ".expo"                             ; expo
+     ".yarn"                             ; yarn cache
+     "__fixtures__"
+     ".docusaurus"                       ; docusaurus
+     ".nx"
+     ".backstage"
+     "tf"                                ; terraform
+     "assets"
+     ".angular"
+     ".next"
+     "out-tsc"
+     ".parcel-cache"
+     ".codesandbox"
+     ".circleci"
+     ))
 
 ;; List of exact filenames to ignore. These are not regular expressions, but
 ;; literal strings which exactly match a file or directory name to ignore.
