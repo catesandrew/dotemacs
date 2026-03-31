@@ -1,0 +1,504 @@
+// Generated from Spacemacs major-mode leader bindings in this repo.
+// Grouped by Emacs major mode. Map each command to a VSCode command ID and then
+// move the entries into vspacecode.bindingOverrides with appropriate conditions.
+// __mode_var__ indicates bindings declared inside loops with a mode variable.
+{
+  "__mode_var__": [
+    {
+      "keys": "=.=",
+      "name": "cats/angular-format",
+      "type": "command",
+      "command": "emacs.cats/angular-format"
+    },
+    {
+      "keys": "=",
+      "name": "cats/angular-format",
+      "type": "command",
+      "command": "emacs.cats/angular-format"
+    },
+    {
+      "keys": "m.r.d",
+      "name": "jsdoc",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "m.t",
+      "name": "jest",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "t.j",
+      "name": "jest",
+      "type": "command",
+      "command": "emacs.jest"
+    },
+    {
+      "keys": "t.p",
+      "name": "jest-last-failed",
+      "type": "command",
+      "command": "emacs.jest-last-failed"
+    },
+    {
+      "keys": "t.l",
+      "name": "jest-function",
+      "type": "command",
+      "command": "emacs.jest-function"
+    },
+    {
+      "keys": "t.L",
+      "name": "jest-function-dwim",
+      "type": "command",
+      "command": "emacs.jest-function-dwim"
+    },
+    {
+      "keys": "t.f",
+      "name": "jest-file",
+      "type": "command",
+      "command": "emacs.jest-file"
+    },
+    {
+      "keys": "t.F",
+      "name": "jest-file-dwim",
+      "type": "command",
+      "command": "emacs.jest-file-dwim"
+    },
+    {
+      "keys": "t.r",
+      "name": "jest-repeat",
+      "type": "command",
+      "command": "emacs.jest-repeat"
+    },
+    {
+      "keys": "r.d.q",
+      "name": "cats/js-doc-reflow",
+      "type": "command",
+      "command": "emacs.cats/js-doc-reflow"
+    },
+    {
+      "keys": "I",
+      "name": "import-js-import",
+      "type": "command",
+      "command": "emacs.import-js-import"
+    },
+    {
+      "keys": "m.o",
+      "name": "js-import",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.i",
+      "name": "import-js-import",
+      "type": "command",
+      "command": "emacs.import-js-import"
+    },
+    {
+      "keys": "o.f",
+      "name": "import-js-fix",
+      "type": "command",
+      "command": "emacs.import-js-fix"
+    },
+    {
+      "keys": "o.g",
+      "name": "import-js-goto",
+      "type": "command",
+      "command": "emacs.import-js-goto"
+    },
+    {
+      "keys": "o.s",
+      "name": "cats/run-import-js",
+      "type": "command",
+      "command": "emacs.cats/run-import-js"
+    },
+    {
+      "keys": "o.k",
+      "name": "cats/kill-import-js",
+      "type": "command",
+      "command": "emacs.cats/kill-import-js"
+    },
+    {
+      "keys": "m.b",
+      "name": "babel",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "b.'",
+      "name": "babel-start-repl",
+      "type": "command",
+      "command": "emacs.babel-start-repl"
+    },
+    {
+      "keys": "b.a",
+      "name": "babel-send-region-or-buffer",
+      "type": "command",
+      "command": "emacs.babel-send-region-or-buffer"
+    },
+    {
+      "keys": "b.r",
+      "name": "babel-send-region",
+      "type": "command",
+      "command": "emacs.babel-send-region"
+    },
+    {
+      "keys": "b.b",
+      "name": "babel-send-buffer",
+      "type": "command",
+      "command": "emacs.babel-send-buffer"
+    },
+    {
+      "keys": "b.p",
+      "name": "babel-send-paragraph",
+      "type": "command",
+      "command": "emacs.babel-send-paragraph"
+    },
+    {
+      "keys": "b.d",
+      "name": "babel-send-dwim",
+      "type": "command",
+      "command": "emacs.babel-send-dwim"
+    },
+    {
+      "keys": "m.r.d",
+      "name": "jsdoc",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "m.r",
+      "name": "reformat",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "r.r",
+      "name": "json-reformat-region",
+      "type": "command",
+      "command": "emacs.json-reformat-region"
+    },
+    {
+      "keys": "m.m",
+      "name": "mocha",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "m.p",
+      "name": "mocha-test-project",
+      "type": "command",
+      "command": "emacs.mocha-test-project"
+    },
+    {
+      "keys": "m.P",
+      "name": "mocha-debug-project",
+      "type": "command",
+      "command": "emacs.mocha-debug-project"
+    },
+    {
+      "keys": "m.f",
+      "name": "mocha-test-file",
+      "type": "command",
+      "command": "emacs.mocha-test-file"
+    },
+    {
+      "keys": "m.F",
+      "name": "mocha-debug-file",
+      "type": "command",
+      "command": "emacs.mocha-debug-file"
+    },
+    {
+      "keys": "m.p",
+      "name": "mocha-test-at-point",
+      "type": "command",
+      "command": "emacs.mocha-test-at-point"
+    },
+    {
+      "keys": "m.j",
+      "name": "jump/join/split",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "j.g",
+      "name": "xref-find-definitions",
+      "type": "command",
+      "command": "emacs.xref-find-definitions"
+    },
+    {
+      "keys": "j.r",
+      "name": "xref-find-references",
+      "type": "command",
+      "command": "emacs.xref-find-references"
+    },
+    {
+      "keys": "j.l",
+      "name": "xref-resume-last-search",
+      "type": "command",
+      "command": "emacs.xref-resume-last-search"
+    },
+    {
+      "keys": "j.b",
+      "name": "xref-pop-marker-stack",
+      "type": "command",
+      "command": "emacs.xref-pop-marker-stack"
+    },
+    {
+      "keys": "g.h",
+      "name": "helm-css-scss",
+      "type": "command",
+      "command": "emacs.helm-css-scss"
+    },
+    {
+      "keys": "f",
+      "name": "cats/repolist-fetch",
+      "type": "command",
+      "command": "emacs.cats/repolist-fetch"
+    },
+    {
+      "keys": "F",
+      "name": "cats/repolist-fetch-async",
+      "type": "command",
+      "command": "emacs.cats/repolist-fetch-async"
+    },
+    {
+      "keys": "p",
+      "name": "cats/open-in-projectile",
+      "type": "command",
+      "command": "emacs.cats/open-in-projectile"
+    },
+    {
+      "keys": "l",
+      "name": "cats/open-in-git-link",
+      "type": "command",
+      "command": "emacs.cats/open-in-git-link"
+    },
+    {
+      "keys": "r",
+      "name": "cats/repolist-pull-ff-only",
+      "type": "command",
+      "command": "emacs.cats/repolist-pull-ff-only"
+    },
+    {
+      "keys": "c",
+      "name": "cats/magit-repolist-call-command",
+      "type": "command",
+      "command": "emacs.cats/magit-repolist-call-command"
+    }
+  ],
+  "message-mode": [
+    {
+      "keys": "e.m",
+      "name": "markdown-mime-htmlize",
+      "type": "command",
+      "command": "emacs.markdown-mime-htmlize"
+    }
+  ],
+  "markdown-mode": [
+    {
+      "keys": "e.m",
+      "name": "markdown-mime-org-buffer-htmlize",
+      "type": "command",
+      "command": "emacs.markdown-mime-org-buffer-htmlize"
+    }
+  ],
+  "org-msg-edit-mode": [
+    {
+      "keys": "c",
+      "name": "org-ctrl-c-ctrl-c",
+      "type": "command",
+      "command": "emacs.org-ctrl-c-ctrl-c"
+    },
+    {
+      "keys": "k",
+      "name": "message-kill-buffer",
+      "type": "command",
+      "command": "emacs.message-kill-buffer"
+    },
+    {
+      "keys": "a",
+      "name": "message-kill-buffer",
+      "type": "command",
+      "command": "emacs.message-kill-buffer"
+    },
+    {
+      "keys": "s",
+      "name": "message-dont-send",
+      "type": "command",
+      "command": "emacs.message-dont-send"
+    },
+    {
+      "keys": "f",
+      "name": "org-msg-attach",
+      "type": "command",
+      "command": "emacs.org-msg-attach"
+    },
+    {
+      "keys": "p",
+      "name": "org-msg-preview",
+      "type": "command",
+      "command": "emacs.org-msg-preview"
+    }
+  ],
+  "org-mode": [
+    {
+      "keys": "r.m",
+      "name": "org-roam-jump-to-index",
+      "type": "command",
+      "command": "emacs.org-roam-jump-to-index"
+    },
+    {
+      "keys": [
+        "r",
+        "d",
+        "."
+      ],
+      "name": "spacemacs/org-roam-transient-state/body",
+      "type": "command",
+      "command": "emacs.spacemacs/org-roam-transient-state/body"
+    }
+  ],
+  "log-view-mode": [
+    {
+      "keys": "q",
+      "name": "quit-window",
+      "type": "command",
+      "command": "emacs.quit-window"
+    },
+    {
+      "keys": "m",
+      "name": "log-view-toggle-mark-entry",
+      "type": "command",
+      "command": "emacs.log-view-toggle-mark-entry"
+    },
+    {
+      "keys": "c",
+      "name": "log-view-modify-change-comment",
+      "type": "command",
+      "command": "emacs.log-view-modify-change-comment"
+    },
+    {
+      "keys": "d",
+      "name": "log-view-diff",
+      "type": "command",
+      "command": "emacs.log-view-diff"
+    },
+    {
+      "keys": "=",
+      "name": "log-view-diff",
+      "type": "command",
+      "command": "emacs.log-view-diff"
+    },
+    {
+      "keys": "D",
+      "name": "log-view-diff-changeset",
+      "type": "command",
+      "command": "emacs.log-view-diff-changeset"
+    },
+    {
+      "keys": "a",
+      "name": "log-view-annotate-version",
+      "type": "command",
+      "command": "emacs.log-view-annotate-version"
+    },
+    {
+      "keys": "F",
+      "name": "log-view-find-revision",
+      "type": "command",
+      "command": "emacs.log-view-find-revision"
+    },
+    {
+      "keys": "g.j",
+      "name": "log-view-msg-next",
+      "type": "command",
+      "command": "emacs.log-view-msg-next"
+    },
+    {
+      "keys": "g.k",
+      "name": "log-view-msg-prev",
+      "type": "command",
+      "command": "emacs.log-view-msg-prev"
+    },
+    {
+      "keys": "]",
+      "name": "log-view-msg-next",
+      "type": "command",
+      "command": "emacs.log-view-msg-next"
+    },
+    {
+      "keys": "[",
+      "name": "log-view-msg-prev",
+      "type": "command",
+      "command": "emacs.log-view-msg-prev"
+    }
+  ],
+  "compilation-mode": [
+    {
+      "keys": "?",
+      "name": "describe-mode",
+      "type": "command",
+      "command": "emacs.describe-mode"
+    },
+    {
+      "keys": "RET",
+      "name": "compile-goto-error",
+      "type": "command",
+      "command": "emacs.compile-goto-error"
+    },
+    {
+      "keys": "S-RET",
+      "name": "compilation-display-error",
+      "type": "command",
+      "command": "emacs.compilation-display-error"
+    },
+    {
+      "keys": "C-o",
+      "name": "compilation-display-error",
+      "type": "command",
+      "command": "emacs.compilation-display-error"
+    },
+    {
+      "keys": "C-j",
+      "name": "compilation-next-error",
+      "type": "command",
+      "command": "emacs.compilation-next-error"
+    },
+    {
+      "keys": "C-j",
+      "name": "cats/next-error",
+      "type": "command",
+      "command": "emacs.cats/next-error"
+    },
+    {
+      "keys": "C-k",
+      "name": "compilation-previous-error",
+      "type": "command",
+      "command": "emacs.compilation-previous-error"
+    },
+    {
+      "keys": "C-k",
+      "name": "cats/previous-error",
+      "type": "command",
+      "command": "emacs.cats/previous-error"
+    },
+    {
+      "keys": "[",
+      "name": "compilation-previous-file",
+      "type": "command",
+      "command": "emacs.compilation-previous-file"
+    },
+    {
+      "keys": "]",
+      "name": "compilation-next-file",
+      "type": "command",
+      "command": "emacs.compilation-next-file"
+    },
+    {
+      "keys": "r",
+      "name": "recompile",
+      "type": "command",
+      "command": "emacs.recompile"
+    }
+  ]
+}

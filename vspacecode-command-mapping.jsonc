@@ -1,0 +1,793 @@
+// Best-effort mapping from emacs.* commands to VS Code command IDs.
+// Review and replace placeholders as needed.
+{
+  "commandMapping": 
+  [
+    {
+      "emacs": "emacs.babel-send-buffer",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.babel-send-dwim",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.babel-send-paragraph",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.babel-send-region",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.babel-send-region-or-buffer",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.babel-start-repl",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.buf-move-down",
+      "vscode": "workbench.action.moveEditorDownInGroup",
+      "confidence": "medium",
+      "note": "Move editor within group"
+    },
+    {
+      "emacs": "emacs.buf-move-left",
+      "vscode": "workbench.action.moveEditorLeftInGroup",
+      "confidence": "medium",
+      "note": "Move editor within group"
+    },
+    {
+      "emacs": "emacs.buf-move-right",
+      "vscode": "workbench.action.moveEditorRightInGroup",
+      "confidence": "medium",
+      "note": "Move editor within group"
+    },
+    {
+      "emacs": "emacs.buf-move-up",
+      "vscode": "workbench.action.moveEditorUpInGroup",
+      "confidence": "medium",
+      "note": "Move editor within group"
+    },
+    {
+      "emacs": "emacs.cats/angular-format",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/browse-feature-url",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/copy-filename-as-kill",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/delete-file-and-buffer",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/find-user-init-file-other-window",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/insert-current-date",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/insert-page-break-line",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/insert-relative-file-name",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/js-doc-reflow",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/kill-import-js",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/launch-dwim",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/magit-repolist-call-command",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/neotree-find",
+      "vscode": "workbench.view.explorer",
+      "confidence": "low",
+      "note": "Show Explorer (closest to neotree find)"
+    },
+    {
+      "emacs": "emacs.cats/next-error",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/open-compilation-window",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/open-in-git-link",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/open-in-intellij",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/open-in-projectile",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/org-find-emacs",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/org-find-notes",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/org-find-private",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/org-find-work",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/org-find-workhours",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/previous-error",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/recompile-packages",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/rename-file-and-buffer",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/repolist-fetch",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/repolist-fetch-async",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/repolist-pull-ff-only",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.cats/run-import-js",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.compilation-display-error",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.compilation-next-error",
+      "vscode": "editor.action.marker.next",
+      "confidence": "low",
+      "note": "Next problem"
+    },
+    {
+      "emacs": "emacs.compilation-next-file",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.compilation-previous-error",
+      "vscode": "editor.action.marker.prev",
+      "confidence": "low",
+      "note": "Previous problem"
+    },
+    {
+      "emacs": "emacs.compilation-previous-file",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.compile-goto-error",
+      "vscode": "editor.action.marker.next",
+      "confidence": "low",
+      "note": "Next problem"
+    },
+    {
+      "emacs": "emacs.describe-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.eval-expression",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.flyspell-goto-previous-error",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.helm-css-scss",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.helm-projectile-git-ls-files",
+      "vscode": "workbench.action.quickOpen",
+      "confidence": "medium",
+      "note": "Quick open files"
+    },
+    {
+      "emacs": "emacs.import-js-fix",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.import-js-goto",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.import-js-import",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.ispell-word-then-abbrev",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.jest",
+      "vscode": "jest.run",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.jest-file",
+      "vscode": "jest.runFile",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.jest-file-dwim",
+      "vscode": "jest.runFile",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.jest-function",
+      "vscode": "jest.runTest",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.jest-function-dwim",
+      "vscode": "jest.runTest",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.jest-last-failed",
+      "vscode": "jest.runLastFailure",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.jest-repeat",
+      "vscode": "jest.run",
+      "confidence": "low",
+      "note": "Jest extension command"
+    },
+    {
+      "emacs": "emacs.json-reformat-region",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.kill-compilation",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.langtool-check",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.langtool-check-done",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.langtool-correct-buffer",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.langtool-show-message-at-point",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.list-environment",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-annotate-version",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-diff",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-diff-changeset",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-find-revision",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-modify-change-comment",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-msg-next",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-msg-prev",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.log-view-toggle-mark-entry",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.map1",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.markdown-mime-htmlize",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.markdown-mime-org-buffer-htmlize",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.message-dont-send",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.message-kill-buffer",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.mocha-debug-file",
+      "vscode": "extension.mochaTest.fileDebug",
+      "confidence": "low",
+      "note": "Mocha extension command"
+    },
+    {
+      "emacs": "emacs.mocha-debug-project",
+      "vscode": "extension.mochaTest.projectDebug",
+      "confidence": "low",
+      "note": "Mocha extension command"
+    },
+    {
+      "emacs": "emacs.mocha-test-at-point",
+      "vscode": "extension.mochaTest.atCursor",
+      "confidence": "low",
+      "note": "Mocha extension command"
+    },
+    {
+      "emacs": "emacs.mocha-test-file",
+      "vscode": "extension.mochaTest.file",
+      "confidence": "low",
+      "note": "Mocha extension command"
+    },
+    {
+      "emacs": "emacs.mocha-test-project",
+      "vscode": "extension.mochaTest.project",
+      "confidence": "low",
+      "note": "Mocha extension command"
+    },
+    {
+      "emacs": "emacs.neotree-hide",
+      "vscode": "workbench.action.closeSidebar",
+      "confidence": "low",
+      "note": "Hide sidebar"
+    },
+    {
+      "emacs": "emacs.neotree-show",
+      "vscode": "workbench.view.explorer",
+      "confidence": "medium",
+      "note": "Show Explorer"
+    },
+    {
+      "emacs": "emacs.org-ctrl-c-ctrl-c",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.org-msg-attach",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.org-msg-preview",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.org-projectile-helm-template-or-project",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.org-roam-jump-to-index",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.pop-to-mark-command",
+      "vscode": "workbench.action.navigateBack",
+      "confidence": "medium",
+      "note": "Back navigation"
+    },
+    {
+      "emacs": "emacs.quit-window",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.recompile",
+      "vscode": "workbench.action.tasks.reRunTask",
+      "confidence": "low",
+      "note": "Re-run last task"
+    },
+    {
+      "emacs": "emacs.set-input-method",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/org-roam-transient-state/body",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-auto-fill-comments-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-beacon",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-disable-mouse-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-encourage-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-global-disable-mouse-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-global-hungry-delete",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-global-prettify-symbols-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-global-ts-auto",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-global-ts-fold",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-global-ts-fold-indicators",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-goto-address-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-prettify-symbols-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-ts-auto",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-ts-fold",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-ts-fold-indicators",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-writegood-mode",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.spacemacs/toggle-writeroom",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.sx-ask",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.sx-search",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.sx-tab-all-questions",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.sx-tab-starred",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.sx-tab-unanswered",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.sx-tab-unanswered-my-tags",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.toggle-input-method",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.unpop-to-mark-command",
+      "vscode": "workbench.action.navigateForward",
+      "confidence": "medium",
+      "note": "Forward navigation"
+    },
+    {
+      "emacs": "emacs.whitespace-cleanup",
+      "vscode": "editor.action.trimTrailingWhitespace",
+      "confidence": "medium",
+      "note": "Trim trailing whitespace"
+    },
+    {
+      "emacs": "emacs.writegood-grade-level",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.writegood-reading-ease",
+      "vscode": null,
+      "confidence": "unknown",
+      "note": "No obvious VS Code command; map manually."
+    },
+    {
+      "emacs": "emacs.xref-find-definitions",
+      "vscode": "editor.action.revealDefinition",
+      "confidence": "high",
+      "note": "Go to definition"
+    },
+    {
+      "emacs": "emacs.xref-find-references",
+      "vscode": "editor.action.referenceSearch.trigger",
+      "confidence": "high",
+      "note": "Find references"
+    },
+    {
+      "emacs": "emacs.xref-pop-marker-stack",
+      "vscode": "workbench.action.navigateBack",
+      "confidence": "medium",
+      "note": "Back navigation"
+    },
+    {
+      "emacs": "emacs.xref-resume-last-search",
+      "vscode": "editor.action.referenceSearch.trigger",
+      "confidence": "low",
+      "note": "Re-run reference search"
+    }
+  ]
+}

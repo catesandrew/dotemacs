@@ -85,6 +85,7 @@ This function should only modify configuration layer settings."
        osx
        spacemacs-purpose
        spacemacs-evil
+       spacemacs-visual
        better-defaults
        graphql
        ;; extra-langs
@@ -912,8 +913,8 @@ It should only modify the values of Spacemacs settings."
 
     ;; List of search tool executable names. Spacemacs uses the first installed
     ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
-    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-    dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+    ;; (default '("rg" "ag" "ack" "grep"))
+    dotspacemacs-search-tools '("rg" "ag" "ack" "grep")
 
     ;; Format specification for setting the frame title.
     ;; %a - the `abbreviated-file-name', or `buffer-name'
@@ -1201,9 +1202,15 @@ before packages are loaded."
      (cats//kickoff-project-hook (selected-frame))
      (when cats-enable-edit-server
        (unless cats-edit-server-start-run
-         (edit-server-start)
-         (require 'org-protocol)
-         (setq cats-edit-server-start-run t)))
+         (condition-case err
+             (progn
+               (edit-server-start)
+               (require 'org-protocol)
+               (setq cats-edit-server-start-run t))
+           (file-error
+            (unless (string-match-p "Address already in use"
+                                    (error-message-string err))
+              (signal (car err) (cdr err)))))))
 
      (when (display-graphic-p)
        (when cats-enable-atomic-chrome-server

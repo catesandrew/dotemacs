@@ -15,6 +15,7 @@
 ;; which require an initialization must be listed explicitly in the list.
 (defconst cats-packages
   '(
+     (ansi-colors :location built-in)
      (autoinsert :location built-in)
      beacon
      (calendar :location built-in)
@@ -71,6 +72,12 @@
   "Prevent annoying 'Active processes exist' query when you quit Emacs."
   (cl-letf (((symbol-function #'process-list) (lambda ())))
     ad-do-it))
+
+
+;; ansi-colors
+(defun cats/post-init-ansi-colors ()
+  (add-to-list 'auto-mode-alist '("\\.log\\'" . ansi-colors-buffer))
+  (add-to-list 'auto-mode-alist '("\\.log.txt\\'" . ansi-colors-buffer)))
 
 
 ;; git-link
@@ -178,80 +185,80 @@
       (setq browse-url-browser-function 'browse-url-generic)
       (setq engine/browser-function 'browse-url-generic)
       (setq browse-url-generic-program (cond
-                                        ((spacemacs/system-is-mac)
-                                         "open")
-                                        ((spacemacs/system-is-linux)
-                                         (executable-find "firefox"))))
+                                         ((spacemacs/system-is-mac)
+                                           "open")
+                                         ((spacemacs/system-is-linux)
+                                           (executable-find "firefox"))))
       (setq search-engine-alist
-            '((amazon
-               :name "Amazon"
-               :keybinding "a"
-               :browser 'browse-url-generic
-               :url "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%%3Daps&field-keywords=%s")
-              (bing
-               :browser 'eww-browse-url
-               :keybinding "b"
-               :name "Bing"
-               :url "http://www.bing.com/search?q=%s")
-              (duck-duck-go
-               :name "Duck Duck Go"
-               :keybinding "d"
-               :browser 'browse-url-generic
-               :url "https://duckduckgo.com/?q=%s")
-              (google
-               :keybinding "g"
-               :browser 'browse-url-generic
-               :name "Google"
-               :url "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
-              (google-images
-               :name "Google Images"
-               :keybinding "i"
-               :browser 'browse-url-generic
-               :url "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
-              (github
-               :browser 'eww-browse-url
-               :keybinding "G"
-               :name "Github"
-               :url "https://github.com/search?ref=simplesearch&q=%s")
-              (google-maps
-               :keybinding "m"
-               :browser 'browse-url-generic
-               :name "Google Maps"
-               :url "http://maps.google.com/maps?q=%s")
-              (twitter
-               :name "Twitter"
-               :keybinding "t"
-               :browser 'browse-url-generic
-               :url "https://twitter.com/search?q=%s")
-              (project-gutenberg
-               :name "Project Gutenberg"
-               :keybinding "p"
-               :browser 'browse-url-generic
-               :url "http://www.gutenberg.org/ebooks/search.html/?format=html&default_prefix=all&sort_order=&query=%s")
-              (youtube
-               :keybinding "y"
-               :browser 'browse-url-generic
-               :name "YouTube"
-               :url "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
-              (stack-overflow
-               :name "Stack Overflow"
-               :keybinding "o"
-               :browser 'browse-url-generic
-               :url "https://stackoverflow.com/search?q=%s")
-              (tex-stack-exchange
-               :name "TeX Stack Exchange"
-               :browser 'browse-url-generic
-               :keybinding "x"
-               :url "https://tex.stackexchange.com/search?q=%s")
-              (wikipedia
-               :browser 'eww-browse-url
-               :keybinding "w"
-               :name "Wikipedia"
-               :url "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
-              (wolfram-alpha
-               :name "Wolfram Alpha"
-               :browser 'browse-url-generic
-               :url "http://www.wolframalpha.com/input/?i=%s")))
+        '((amazon
+            :name "Amazon"
+            :keybinding "a"
+            :browser 'browse-url-generic
+            :url "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%%3Daps&field-keywords=%s")
+           (bing
+             :browser 'eww-browse-url
+             :keybinding "b"
+             :name "Bing"
+             :url "http://www.bing.com/search?q=%s")
+           (duck-duck-go
+             :name "Duck Duck Go"
+             :keybinding "d"
+             :browser 'browse-url-generic
+             :url "https://duckduckgo.com/?q=%s")
+           (google
+             :keybinding "g"
+             :browser 'browse-url-generic
+             :name "Google"
+             :url "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
+           (google-images
+             :name "Google Images"
+             :keybinding "i"
+             :browser 'browse-url-generic
+             :url "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
+           (github
+             :browser 'eww-browse-url
+             :keybinding "G"
+             :name "Github"
+             :url "https://github.com/search?ref=simplesearch&q=%s")
+           (google-maps
+             :keybinding "m"
+             :browser 'browse-url-generic
+             :name "Google Maps"
+             :url "http://maps.google.com/maps?q=%s")
+           (twitter
+             :name "Twitter"
+             :keybinding "t"
+             :browser 'browse-url-generic
+             :url "https://twitter.com/search?q=%s")
+           (project-gutenberg
+             :name "Project Gutenberg"
+             :keybinding "p"
+             :browser 'browse-url-generic
+             :url "http://www.gutenberg.org/ebooks/search.html/?format=html&default_prefix=all&sort_order=&query=%s")
+           (youtube
+             :keybinding "y"
+             :browser 'browse-url-generic
+             :name "YouTube"
+             :url "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
+           (stack-overflow
+             :name "Stack Overflow"
+             :keybinding "o"
+             :browser 'browse-url-generic
+             :url "https://stackoverflow.com/search?q=%s")
+           (tex-stack-exchange
+             :name "TeX Stack Exchange"
+             :browser 'browse-url-generic
+             :keybinding "x"
+             :url "https://tex.stackexchange.com/search?q=%s")
+           (wikipedia
+             :browser 'eww-browse-url
+             :keybinding "w"
+             :name "Wikipedia"
+             :url "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
+           (wolfram-alpha
+             :name "Wolfram Alpha"
+             :browser 'browse-url-generic
+             :url "http://www.wolframalpha.com/input/?i=%s")))
       (dolist (engine search-engine-alist)
         (let ((func (intern (format "engine/search-%S" (car engine)))))
           (autoload func "engine-mode" nil 'interactive))))
@@ -260,9 +267,9 @@
       (engine/set-keymap-prefix (kbd "C-c /"))
       (dolist (engine search-engine-alist)
         (let* ((cur-engine (car engine))
-               (engine-url (plist-get (cdr engine) :url))
-               (engine-keybinding (plist-get (cdr engine) :keybinding))
-               (engine-browser (plist-get (cdr engine) :browser)))
+                (engine-url (plist-get (cdr engine) :url))
+                (engine-keybinding (plist-get (cdr engine) :keybinding))
+                (engine-browser (plist-get (cdr engine) :browser)))
           (eval `(defengine ,cur-engine ,engine-url :keybinding ,engine-keybinding :browser ,engine-browser))))
       )))
 
@@ -295,11 +302,11 @@
     (progn
       (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
       (if (configuration-layer/package-usedp 'zoom-frm)
-          (with-eval-after-load 'zoom-frm
-            (advice-add 'zoom-in/out :after
-                        #'visual-fill-column-adjust))
+        (with-eval-after-load 'zoom-frm
+          (advice-add 'zoom-in/out :after
+            #'visual-fill-column-adjust))
         (advice-add 'text-scale-adjust :after
-                    #'visual-fill-column-adjust)))))
+          #'visual-fill-column-adjust)))))
 
 (defun cats/init-delsel ()
   "Delete the selection instead of insert."
@@ -528,16 +535,16 @@
     (progn
       (defadvice flycheck-mode (around flycheck-turn-on-maybe activate)
         (unless
-            (or
-             buffer-read-only
-             (hardhat-buffer-included-p (current-buffer))
-             (cats//current-buffer-remote-p))
+          (or
+            buffer-read-only
+            (hardhat-buffer-included-p (current-buffer))
+            (cats//current-buffer-remote-p))
           ad-do-it))
       (setq flycheck-textlint-config "~/.config/textlint/textlintrc.json")
       ;; (ad-activate 'flycheck-mode)
 
       (add-hook 'cats/tidy-executable-hook
-         'cats//set-tidy-executable)
+        'cats//set-tidy-executable)
       (setq flycheck-global-modes t))))
 
 
@@ -617,14 +624,14 @@
       (setq magit-revision-show-gravatars t)
       ;; For annotated tags prepare message with commit messages since last tag.
       (add-hook 'git-commit-mode-hook
-         (lambda()
-           (when (equal "TAG_EDITMSG" (buffer-name))
-             (progn
-               (insert (shell-command-to-string "git log --pretty=format:\"* %s\" `git rev-list --tags --max-count=1`..HEAD" ))
-               (newline)
-               (goto-char (point-min))
-               (newline)
-               (goto-char (point-min)))))))))
+        (lambda()
+          (when (equal "TAG_EDITMSG" (buffer-name))
+            (progn
+              (insert (shell-command-to-string "git log --pretty=format:\"* %s\" `git rev-list --tags --max-count=1`..HEAD" ))
+              (newline)
+              (goto-char (point-min))
+              (newline)
+              (goto-char (point-min)))))))))
 
 
 ;; man
@@ -682,38 +689,38 @@
       (setq doc-view-resolution 300)
 
       (defun cats/doc-view-mutool-draw-1 (pdf png page callback
-                                                   &optional resolution)
+                                           &optional resolution)
         (doc-view-start-process
-         "pdf->png" "mutool"
-         `("draw"
-           ,(concat "-o" png)
-           ,(format "-r%d" (round (or resolution doc-view-resolution)))
-           ,pdf
-           ,@(if page `(,(format "%d" page))))
-         callback))
+          "pdf->png" "mutool"
+          `("draw"
+             ,(concat "-o" png)
+             ,(format "-r%d" (round (or resolution doc-view-resolution)))
+             ,pdf
+             ,@(if page `(,(format "%d" page))))
+          callback))
 
       (if (fboundp 'doc-view-multiplex-conversion)
-          ;; Emacs MAC port multiplexes for high-res support
-          (defun cats/doc-view-mutool-draw (pdf png page callback)
-            (doc-view-multiplex-conversion
-             #'cats/doc-view-mutool-draw-1 pdf png page callback))
+        ;; Emacs MAC port multiplexes for high-res support
+        (defun cats/doc-view-mutool-draw (pdf png page callback)
+          (doc-view-multiplex-conversion
+            #'cats/doc-view-mutool-draw-1 pdf png page callback))
         ;; On standard Emacs, just use the normal conversion process
         (defalias 'cats/doc-view-mutool-draw
           'cats/doc-view-mutool-draw-1))
 
       ;; Warn if Doc View falls back to Ghostscript for rendering
       (if (executable-find "mutool")
-          (setq doc-view-pdf->png-converter-function
-                #'cats/doc-view-mutool-draw)
+        (setq doc-view-pdf->png-converter-function
+          #'cats/doc-view-mutool-draw)
         (unless (eq doc-view-pdf->png-converter-function
-                    'doc-view-pdf->png-converter-mupdf)
+                  'doc-view-pdf->png-converter-mupdf)
           (warn "Doc View is not using mupdf.
 Install mudraw with brew install mupdf-tools"))))))
 
 (defun cats/post-init-paradox ()
   "Make the spinner fancy and don't star packages automatically."
   (setq paradox-spinner-type 'moon
-        paradox-automatically-star nil))
+    paradox-automatically-star nil))
 
 (defun cats/pre-init-dired ()
   "Dired configuration."
@@ -721,10 +728,10 @@ Install mudraw with brew install mupdf-tools"))))))
     :pre-config
     (progn
       (setq dired-auto-revert-buffer t    ; Revert on re-visiting
-            ;; Inhibit prompts for simple recursive operations
-            dired-recursive-copies 'always
-            ;; Auto-copy to other Dired split window
-            dired-dwim-target t))))
+        ;; Inhibit prompts for simple recursive operations
+        dired-recursive-copies 'always
+        ;; Auto-copy to other Dired split window
+        dired-dwim-target t))))
 
 (defun cats/init-sx ()
   (use-package sx
@@ -773,13 +780,13 @@ Install mudraw with brew install mupdf-tools"))))))
     :init
     (progn
       (setq tramp-ssh-controlmaster-options
-            (concat
-             "-o ControlPath=~/.ssh/conn-%%r@%%h:%%p"))
+        (concat
+          "-o ControlPath=~/.ssh/conn-%%r@%%h:%%p"))
       (setq tramp-default-method "ssh"
-            vc-ignore-dir-regexp
-            (format "\\(%s\\)\\|\\(%s\\)"
-                    vc-ignore-dir-regexp
-                    tramp-file-name-regexp)))
+        vc-ignore-dir-regexp
+        (format "\\(%s\\)\\|\\(%s\\)"
+          vc-ignore-dir-regexp
+          tramp-file-name-regexp)))
     :config
     ;; Store auto-save files locally
     (setq tramp-auto-save-directory (concat spacemacs-cache-directory "tramp-auto-save"))))
@@ -797,7 +804,7 @@ Install mudraw with brew install mupdf-tools"))))))
     (define-key grep-mode-map (kbd "C-<return>") 'rgrep-goto-file-and-close-rgrep)
     (grep-compute-defaults)
     (when-let* ((gnu-xargs (and (eq system-type 'darwin)
-                                (executable-find "gxargs"))))
+                             (executable-find "gxargs"))))
       (setq xargs-program gnu-xargs))))
 
 
@@ -904,17 +911,17 @@ Install mudraw with brew install mupdf-tools"))))))
     :defer t
     :init
     (setq display-time-world-time-format "%H:%M %Z, %d. %b"
-          display-time-world-list
-          '(("Europe/Berlin"    "Berlin")
-            ("Europe/London"    "London")
-            ("Europe/Istanbul"  "Istanbul")
-            ("America/Winnipeg" "Winnipeg (CA)")
-            ("America/New_York" "New York (USA)")
-            ("Asia/Tokyo"       "Tokyo (JP)")))))
+      display-time-world-list
+      '(("Europe/Berlin"    "Berlin")
+         ("Europe/London"    "London")
+         ("Europe/Istanbul"  "Istanbul")
+         ("America/Winnipeg" "Winnipeg (CA)")
+         ("America/New_York" "New York (USA)")
+         ("Asia/Tokyo"       "Tokyo (JP)")))))
 
 
 ;; disable-mouse
-(defun cats/init-disable-mouse ()
+(defun cats/post-init-disable-mouse ()
   "http://endlessparentheses.com/disable-mouse-only-inside-emacs.html"
   (use-package disable-mouse
     :defer t
@@ -986,7 +993,7 @@ which is pretty awesome with: (helm-mode 1)"
       ;; brew tap homebrew/dupes
       ;; brew install homebrew/dupes/grep
       (when-let* ((gnu-grep (and (eq system-type 'darwin)
-                                 (executable-find "ggrep"))))
+                              (executable-find "ggrep"))))
         (setq helm-grep-default gnu-grep)
         (setq helm-grep-default-command (concat gnu-grep " --color=never -a -d skip %e -n%cH -e %p %f"))
         (setq helm-grep-default-recurse-command (concat gnu-grep " --color=never -a -d recurse %e -n%cH -e %p %f")))
@@ -1017,15 +1024,15 @@ which is pretty awesome with: (helm-mode 1)"
       ;; https://github.com/syl20bnr/spacemacs/issues/1544
       ;; Vim users are used to CtrlP plugin.
       (setq helm-for-files-preferred-list '(helm-source-buffers-list
-                                            helm-source-buffer-not-found
-                                            helm-source-ls-git
-                                            helm-source-ls-git-buffers
-                                            helm-source-projectile-projects
-                                            helm-source-projectile-files-list
-                                            helm-source-recentf
-                                            helm-source-bookmarks
-                                            helm-source-file-cache
-                                            helm-source-files-in-current-dir))
+                                             helm-source-buffer-not-found
+                                             helm-source-ls-git
+                                             helm-source-ls-git-buffers
+                                             helm-source-projectile-projects
+                                             helm-source-projectile-files-list
+                                             helm-source-recentf
+                                             helm-source-bookmarks
+                                             helm-source-file-cache
+                                             helm-source-files-in-current-dir))
 
       ;; evil-mode (normal/visual) binds `C-p' to `evil-paste-pop' also `M-y'.
       ;; evil-mode (insert) binds `C-p' to `evil-complete-previous'.
@@ -1042,10 +1049,10 @@ which is pretty awesome with: (helm-mode 1)"
 
 ;; helm-ls-git
 (defun cats/pre-init-helm-ls-git ()
- (spacemacs|use-package-add-hook helm-ls-git
-   :post-init
-   (progn
-     (setq helm-ls-git-show-abs-or-relative 'relative))))
+  (spacemacs|use-package-add-hook helm-ls-git
+    :post-init
+    (progn
+      (setq helm-ls-git-show-abs-or-relative 'relative))))
 
 
 ;; encourage-mode

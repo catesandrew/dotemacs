@@ -12,5 +12,5 @@
 (require 'ox-jira)
 (require 'ox-html)
 
-(require 'cl)
+(require 'cl-lib)
 (setq org-export-async-debug nil)

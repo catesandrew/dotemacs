@@ -11,6 +11,36 @@
 (require 'find-func)
 
 
+;; ansi-colors
+(defun ansi-colors-buffer ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max) t)))
+
+(defun ansi-colors-region ()
+  "Color the ANSI escape sequences in the acitve region.
+Sequences start with an escape \033 (typically shown as \"^[\")
+and end with \"m\", e.g. this is two sequences
+  ^[[46;1mTEXT^[[0m
+where the first sequence says to diplay TEXT as bold with
+a cyan background and the second sequence turns it off.
+
+This strips the ANSI escape sequences and if the buffer is saved,
+the sequences will be lost."
+  (interactive)
+  (if (not (region-active-p))
+    (message "ansi-color-region: region is not active"))
+  (if buffer-read-only
+    ;; read-only buffers may be pointing a read-only file system, so don't mark the buffer as
+    ;; modified. If the buffer where to become modified, a warning will be generated when emacs
+    ;; tries to autosave.
+    (let ((inhibit-read-only t)
+           (modified (buffer-modified-p)))
+      (ansi-color-apply-on-region (region-beginning) (region-end) t)
+      (set-buffer-modified-p modified))
+    (ansi-color-apply-on-region (region-beginning) (region-end) t)))
+
+
 ;; macros
 ;; https://github.com/hlissner/doom-emacs/blob/develop/core/core-lib.el
 (defmacro delq! (elt list &optional fetcher)
@@ -52,7 +82,7 @@ Otherwise insert the date as Mar 04, 2014."
 (defun empty-string-p (string)
   "Return true if the string is empty or nil. Expects string."
   (or (null string)
-      (zerop (length (string-trim string)))))
+    (zerop (length (string-trim string)))))
 
 ;; grep
 (defun rgrep-quit-window ()
@@ -84,10 +114,10 @@ Otherwise insert the date as Mar 04, 2014."
     (interactive "sAccount name: ")
     (when (executable-find "security")
       (chomp
-       (shell-command-to-string
-        (concat
-         "security find-generic-password -wa "
-         account-name))))))
+        (shell-command-to-string
+          (concat
+            "security find-generic-password -wa "
+            account-name))))))
 
 
 ;; helm
@@ -117,13 +147,13 @@ Otherwise insert the date as Mar 04, 2014."
 (defun cats/helm-ls-git-ls ()
   (when (not (helm-ls-git-not-inside-git-repo))
     (unless (and helm-source-ls-git
-                 helm-source-ls-git-buffers)
+              helm-source-ls-git-buffers)
       (setq helm-source-ls-git (helm-make-source "Git files" 'helm-ls-git-source
                                  :fuzzy-match helm-ls-git-fuzzy-match)
-            helm-source-ls-git-buffers (helm-make-source "Buffers in project" 'helm-source-buffers
-                                         :header-name #'helm-ls-git-header-name
-                                         :buffer-list (lambda () (helm-browse-project-get-buffers
-                                                             (helm-ls-git-root-dir))))))))
+        helm-source-ls-git-buffers (helm-make-source "Buffers in project" 'helm-source-buffers
+                                     :header-name #'helm-ls-git-header-name
+                                     :buffer-list (lambda () (helm-browse-project-get-buffers
+                                                               (helm-ls-git-root-dir))))))))
 
 
 ;; flycheck
@@ -159,10 +189,10 @@ Otherwise insert the date as Mar 04, 2014."
   "Is the current buffer remote?"
   ;; (file-remote-p buffer-file-name 'method)
   (-any? 'file-remote-p
-         (remove nil (list
-                      buffer-file-name
-                      list-buffers-directory
-                      default-directory))))
+    (remove nil (list
+                  buffer-file-name
+                  list-buffers-directory
+                  default-directory))))
 
 
 
@@ -172,13 +202,13 @@ Otherwise insert the date as Mar 04, 2014."
 (defun yas-s-trim-left (s)
   "Remove whitespace at the beginning of S."
   (if (string-match "\\`[ \t\n\r]+" s)
-      (replace-match "" t t s)
+    (replace-match "" t t s)
     s))
 
 (defun yas-s-trim-right (s)
   "Remove whitespace at the end of S."
   (if (string-match "[ \t\n\r]+\\'" s)
-      (replace-match "" t t s)
+    (replace-match "" t t s)
     s))
 
 (defun yas-s-trim (s)
@@ -188,8 +218,8 @@ Otherwise insert the date as Mar 04, 2014."
 (defun yas-string-reverse (str)
   "Reverse a string STR manually to be compatible with emacs versions < 25."
   (apply #'string
-         (reverse
-          (string-to-list str))))
+    (reverse
+      (string-to-list str))))
 
 (defun yas-trimmed-comment-start ()
   "This function returns `comment-start' trimmed by whitespaces."
@@ -199,7 +229,7 @@ Otherwise insert the date as Mar 04, 2014."
   "This function returns `comment-end' trimmed by whitespaces if `comment-end' is not empty.
 Otherwise the reversed output of function `yas-trimmed-comment-start' is returned."
   (if (eq (length comment-end) 0)
-      (yas-string-reverse (yas-trimmed-comment-start))
+    (yas-string-reverse (yas-trimmed-comment-start))
     (yas-s-trim comment-end)))
 
 
@@ -276,12 +306,12 @@ Fetching is done synchronously."
   (interactive)
   (run-hooks 'magit-credential-hook)
   (let* ((repos (magit-list-repos))
-         (l (length repos))
-         (i 0))
+          (l (length repos))
+          (i 0))
     (dolist (repo repos)
       (let* ((default-directory (file-name-as-directory repo))
-             (msg (format "(%s/%s) Fetching in %s..."
-                          (cl-incf i) l default-directory)))
+              (msg (format "(%s/%s) Fetching in %s..."
+                     (cl-incf i) l default-directory)))
         (message msg)
         (magit-run-git "remote" "update" (magit-fetch-arguments))
         (message (concat msg "done")))))

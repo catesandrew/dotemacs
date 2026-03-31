@@ -105,7 +105,8 @@
 (defun cats-web/post-init-flycheck ()
   (with-eval-after-load 'flycheck
     (dolist (checker '(css-csslint css-stylelint))
-      (flycheck-add-mode checker 'xah-css-mode)))
+      (when (flycheck-valid-checker-p checker)
+        (flycheck-add-mode checker 'xah-css-mode))))
   (dolist (mode '(xah-css-mode))
     (spacemacs/enable-flycheck mode)))
 

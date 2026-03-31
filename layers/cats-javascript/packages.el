@@ -852,11 +852,11 @@
 
 
 ;; flycheck
-(defun cats-javascript/setup-tsx-mode ()
-  (with-eval-after-load 'flycheck
-    ;; try some CSS-in-JS linting magic
-    (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
-    (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)))
+;; (defun cats-javascript/setup-tsx-mode ()
+;;   (with-eval-after-load 'flycheck
+;;     ;; try some CSS-in-JS linting magic
+;;     (flycheck-add-mode 'css-stylelint 'jtsx-jsx-mode)
+;;     (flycheck-add-mode 'css-stylelint 'jtsx-tsx-mode)))
 
 (defun cats-javascript/post-init-flycheck ()
   (add-hook 'cats/project-hook 'cats//locate-node-from-projectile)

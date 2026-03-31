@@ -99,7 +99,7 @@ If FRAME is nil, it defaults to the selected frame."
           (dotfile-setting (cons dotspacemacs-active-transparency
                               dotspacemacs-inactive-transparency)))
       (unless (equal alpha dotfile-setting)
-        (spacemacs/enable-transparency frame dotfile-setting)))))
+        (set-frame-parameter frame 'alpha dotfile-setting)))))
 
 (defun cats//initialize-frame-transparency ()
   "Transparent frame title bar."

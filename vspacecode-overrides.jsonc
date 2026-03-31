@@ -1,0 +1,593 @@
+// Generated from Spacemacs leader bindings in this repo.
+// Commands are placeholders (prefixed with emacs.) and should be mapped to VSCode command IDs.
+{
+  "vspacecode.bindingOverrides":   [
+    {
+      "keys": "b.k",
+      "name": "map1",
+      "type": "command",
+      "command": "emacs.map1"
+    },
+    {
+      "keys": "b.m",
+      "name": "move(buffer)",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "b.m.h",
+      "name": "buf-move-left",
+      "type": "command",
+      "command": "emacs.buf-move-left"
+    },
+    {
+      "keys": "b.m.j",
+      "name": "buf-move-down",
+      "type": "command",
+      "command": "emacs.buf-move-down"
+    },
+    {
+      "keys": "b.m.k",
+      "name": "buf-move-up",
+      "type": "command",
+      "command": "emacs.buf-move-up"
+    },
+    {
+      "keys": "b.m.l",
+      "name": "buf-move-right",
+      "type": "command",
+      "command": "emacs.buf-move-right"
+    },
+    {
+      "keys": "t.o.p",
+      "name": "prettify-symbols-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-prettify-symbols-mode"
+    },
+    {
+      "keys": "t.o.C-p",
+      "name": "global-prettify-symbols-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-global-prettify-symbols-mode"
+    },
+    {
+      "keys": "t.o.a",
+      "name": "goto-address-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-goto-address-mode"
+    },
+    {
+      "keys": "o.f",
+      "name": "files",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.R",
+      "name": "cats/recompile-packages",
+      "type": "command",
+      "command": "emacs.cats/recompile-packages"
+    },
+    {
+      "keys": "o.f.d",
+      "name": "cats/delete-file-and-buffer",
+      "type": "command",
+      "command": "emacs.cats/delete-file-and-buffer"
+    },
+    {
+      "keys": "o.f.f",
+      "name": "cats/insert-relative-file-name",
+      "type": "command",
+      "command": "emacs.cats/insert-relative-file-name"
+    },
+    {
+      "keys": "o.f.D",
+      "name": "cats/launch-dwim",
+      "type": "command",
+      "command": "emacs.cats/launch-dwim"
+    },
+    {
+      "keys": "o.f.r",
+      "name": "cats/rename-file-and-buffer",
+      "type": "command",
+      "command": "emacs.cats/rename-file-and-buffer"
+    },
+    {
+      "keys": "o.f.u",
+      "name": "cats/find-user-init-file-other-window",
+      "type": "command",
+      "command": "emacs.cats/find-user-init-file-other-window"
+    },
+    {
+      "keys": "o.f.g",
+      "name": "cats/browse-feature-url",
+      "type": "command",
+      "command": "emacs.cats/browse-feature-url"
+    },
+    {
+      "keys": "o.f.i",
+      "name": "cats/open-in-intellij",
+      "type": "command",
+      "command": "emacs.cats/open-in-intellij"
+    },
+    {
+      "keys": "o.f.y",
+      "name": "cats/copy-filename-as-kill",
+      "type": "command",
+      "command": "emacs.cats/copy-filename-as-kill"
+    },
+    {
+      "keys": "j.p",
+      "name": "pop-to-mark-command",
+      "type": "command",
+      "command": "emacs.pop-to-mark-command"
+    },
+    {
+      "keys": "j.P",
+      "name": "unpop-to-mark-command",
+      "type": "command",
+      "command": "emacs.unpop-to-mark-command"
+    },
+    {
+      "keys": "f./",
+      "name": "neotree find",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "f./",
+      "name": "cats/neotree-find",
+      "type": "command",
+      "command": "emacs.cats/neotree-find"
+    },
+    {
+      "keys": "f.n",
+      "name": "neotree-show",
+      "type": "command",
+      "command": "emacs.neotree-show"
+    },
+    {
+      "keys": "f.N",
+      "name": "neotree-hide",
+      "type": "command",
+      "command": "emacs.neotree-hide"
+    },
+    {
+      "keys": "o.g",
+      "name": "grammar",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.S",
+      "name": "spelling",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "t.o.g",
+      "name": "writegood-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-writegood-mode"
+    },
+    {
+      "keys": "o.g.b",
+      "name": "writegood-grade-level",
+      "type": "command",
+      "command": "emacs.writegood-grade-level"
+    },
+    {
+      "keys": "o.g.d",
+      "name": "writegood-reading-ease",
+      "type": "command",
+      "command": "emacs.writegood-reading-ease"
+    },
+    {
+      "keys": "o.g.w",
+      "name": "langtool-check",
+      "type": "command",
+      "command": "emacs.langtool-check"
+    },
+    {
+      "keys": "o.g.W",
+      "name": "langtool-check-done",
+      "type": "command",
+      "command": "emacs.langtool-check-done"
+    },
+    {
+      "keys": "o.g.p",
+      "name": "langtool-show-message-at-point",
+      "type": "command",
+      "command": "emacs.langtool-show-message-at-point"
+    },
+    {
+      "keys": "o.g.b",
+      "name": "langtool-correct-buffer",
+      "type": "command",
+      "command": "emacs.langtool-correct-buffer"
+    },
+    {
+      "keys": "S.i",
+      "name": "ispell-word-then-abbrev",
+      "type": "command",
+      "command": "emacs.ispell-word-then-abbrev"
+    },
+    {
+      "keys": "S.p",
+      "name": "flyspell-goto-previous-error",
+      "type": "command",
+      "command": "emacs.flyspell-goto-previous-error"
+    },
+    {
+      "keys": "o.S.i",
+      "name": "ispell-word-then-abbrev",
+      "type": "command",
+      "command": "emacs.ispell-word-then-abbrev"
+    },
+    {
+      "keys": "o.S.p",
+      "name": "flyspell-goto-previous-error",
+      "type": "command",
+      "command": "emacs.flyspell-goto-previous-error"
+    },
+    {
+      "keys": "o.j",
+      "name": "jump/join/split",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.o",
+      "name": "org",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.o.e",
+      "name": "cats/org-find-emacs",
+      "type": "command",
+      "command": "emacs.cats/org-find-emacs"
+    },
+    {
+      "keys": "o.o.n",
+      "name": "cats/org-find-notes",
+      "type": "command",
+      "command": "emacs.cats/org-find-notes"
+    },
+    {
+      "keys": "o.o.p",
+      "name": "cats/org-find-private",
+      "type": "command",
+      "command": "emacs.cats/org-find-private"
+    },
+    {
+      "keys": "o.o.w",
+      "name": "cats/org-find-work",
+      "type": "command",
+      "command": "emacs.cats/org-find-work"
+    },
+    {
+      "keys": "o.o.W",
+      "name": "cats/org-find-workhours",
+      "type": "command",
+      "command": "emacs.cats/org-find-workhours"
+    },
+    {
+      "keys": "a.o.r.m",
+      "name": "org-roam-jump-to-index",
+      "type": "command",
+      "command": "emacs.org-roam-jump-to-index"
+    },
+    {
+      "keys": [
+        "a",
+        "o",
+        "r",
+        "."
+      ],
+      "name": "spacemacs/org-roam-transient-state/body",
+      "type": "command",
+      "command": "emacs.spacemacs/org-roam-transient-state/body"
+    },
+    {
+      "keys": "p.O",
+      "name": "org-projectile-helm-template-or-project",
+      "type": "command",
+      "command": "emacs.org-projectile-helm-template-or-project"
+    },
+    {
+      "keys": "o.c",
+      "name": "string inflection",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.t",
+      "name": "toggles",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.t.f",
+      "name": "ts-fold",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-ts-fold"
+    },
+    {
+      "keys": "o.t.C-f",
+      "name": "global-ts-fold",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-global-ts-fold"
+    },
+    {
+      "keys": "o.t.i",
+      "name": "ts-fold-indicators",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-ts-fold-indicators"
+    },
+    {
+      "keys": "o.t.TAB",
+      "name": "global-ts-fold-indicators",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-global-ts-fold-indicators"
+    },
+    {
+      "keys": "o.t.a",
+      "name": "ts-auto",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-ts-auto"
+    },
+    {
+      "keys": "o.t.C-a",
+      "name": "global-ts-auto",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-global-ts-auto"
+    },
+    {
+      "keys": "t.o.c",
+      "name": "auto-fill-comments-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-auto-fill-comments-mode"
+    },
+    {
+      "keys": "x.i.a",
+      "name": "auto",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i._",
+      "name": "emacs_lisp",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i.u",
+      "name": "emacs_lisp",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i.C",
+      "name": "EmacsLisp",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i.c",
+      "name": "emacsLisp",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i.U",
+      "name": "EMACS_LISP",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i.k",
+      "name": "emacs-lisp",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "x.i.-",
+      "name": "emacs-lisp",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "K",
+      "name": "Kubernetes",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "m.T",
+      "name": "toggles",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "t.o",
+      "name": "personal",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o",
+      "name": "personal",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.e",
+      "name": "eval",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.i",
+      "name": "insert",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.x",
+      "name": "text",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.h",
+      "name": "help",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.e.e",
+      "name": "eval-expression",
+      "type": "command",
+      "command": "emacs.eval-expression"
+    },
+    {
+      "keys": "o.i.d",
+      "name": "cats/insert-current-date",
+      "type": "command",
+      "command": "emacs.cats/insert-current-date"
+    },
+    {
+      "keys": "o.i.p",
+      "name": "cats/insert-page-break-line",
+      "type": "command",
+      "command": "emacs.cats/insert-page-break-line"
+    },
+    {
+      "keys": "t.o.i",
+      "name": "toggle-input-method",
+      "type": "command",
+      "command": "emacs.toggle-input-method"
+    },
+    {
+      "keys": "o.x.i",
+      "name": "set-input-method",
+      "type": "command",
+      "command": "emacs.set-input-method"
+    },
+    {
+      "keys": "c.o",
+      "name": "cats/open-compilation-window",
+      "type": "command",
+      "command": "emacs.cats/open-compilation-window"
+    },
+    {
+      "keys": "c.k",
+      "name": "kill-compilation",
+      "type": "command",
+      "command": "emacs.kill-compilation"
+    },
+    {
+      "keys": "x.d.W",
+      "name": "whitespace-cleanup",
+      "type": "command",
+      "command": "emacs.whitespace-cleanup"
+    },
+    {
+      "keys": "t.C-d",
+      "name": "global-hungry-delete",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-global-hungry-delete"
+    },
+    {
+      "keys": "t.o.b",
+      "name": "beacon",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-beacon"
+    },
+    {
+      "keys": "t.o.w",
+      "name": "writeroom",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-writeroom"
+    },
+    {
+      "keys": "o.E",
+      "name": "list-environment",
+      "type": "command",
+      "command": "emacs.list-environment"
+    },
+    {
+      "keys": "o.s",
+      "name": "sx",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.s.t",
+      "name": "sx-tabs",
+      "type": "bindings",
+      "bindings": []
+    },
+    {
+      "keys": "o.s.a",
+      "name": "sx-ask",
+      "type": "command",
+      "command": "emacs.sx-ask"
+    },
+    {
+      "keys": "o.s.s",
+      "name": "sx-search",
+      "type": "command",
+      "command": "emacs.sx-search"
+    },
+    {
+      "keys": "o.s.t.a",
+      "name": "sx-tab-all-questions",
+      "type": "command",
+      "command": "emacs.sx-tab-all-questions"
+    },
+    {
+      "keys": "o.s.t.t",
+      "name": "sx-tab-unanswered-my-tags",
+      "type": "command",
+      "command": "emacs.sx-tab-unanswered-my-tags"
+    },
+    {
+      "keys": "o.s.t.u",
+      "name": "sx-tab-unanswered",
+      "type": "command",
+      "command": "emacs.sx-tab-unanswered"
+    },
+    {
+      "keys": "o.s.t.s",
+      "name": "sx-tab-starred",
+      "type": "command",
+      "command": "emacs.sx-tab-starred"
+    },
+    {
+      "keys": "t.o.m",
+      "name": "disable-mouse-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-disable-mouse-mode"
+    },
+    {
+      "keys": "t.o.RET",
+      "name": "global-disable-mouse-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-global-disable-mouse-mode"
+    },
+    {
+      "keys": "p.e",
+      "name": "helm-projectile-git-ls-files",
+      "type": "command",
+      "command": "emacs.helm-projectile-git-ls-files"
+    },
+    {
+      "keys": "t.o.e",
+      "name": "encourage-mode",
+      "type": "command",
+      "command": "emacs.spacemacs/toggle-encourage-mode"
+    }
+  ]
+}

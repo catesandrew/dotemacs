@@ -100,7 +100,7 @@
 ;;; Code:
 
 (defvar recentf-ext-version "$Id: recentf-ext.el,v 1.4 2013/01/30 21:47:11 rubikitch Exp $")
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 (defgroup recentf-ext nil
   "recentf-ext"
   :group 'emacs)
