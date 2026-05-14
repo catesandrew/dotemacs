@@ -994,8 +994,7 @@ default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
   (setq spacemacs--spacemacs-env-loaded t)
-  (load-env-vars spacemacs-env-vars-file)
-  )
+  (spacemacs/load-spacemacs-env))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -1012,12 +1011,29 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
     (expand-file-name (concat spacemacs-cache-directory "abbrev_defs")))
   (setq spacemacs-auto-save-directory
     (expand-file-name (concat spacemacs-cache-directory "auto-save/")))
+  ;; GNU ELPA and Nongnu are intermittently unreachable on this network, while
+  ;; the SJTU mirrors are consistently reachable.
+  (setq configuration-layer-elpa-archives
+        `(("melpa"    . "https://melpa.org/packages/")
+          ("gnu"      . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/gnu/")
+          ("nongnu"   . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/nongnu/")
+          ("spacelpa" . ,(concat configuration-layer-stable-elpa-archive "/packages/"))))
 
   ;; Force GPG to not use an external tool for pin entry. That is particularly
   ;; useful if you don’t want the default GPG Agent pin entry tool to start,
   ;; particularly if you want Emacs to handle the pin entry for you.
   ;; (setf epa-pinentry-mode 'loopback)
   (setenv "GPG_AGENT_INFO" nil)
+  (let ((zscaler-ca-file (expand-file-name "~/.config/certs/zscaler-root-ca.pem")))
+    (when (file-readable-p zscaler-ca-file)
+      (setenv "SSL_CERT_FILE" zscaler-ca-file)
+      (setenv "GIT_SSL_CAINFO" zscaler-ca-file)
+      (setq gnutls-trustfiles
+            (delete-dups
+             (append (list zscaler-ca-file)
+                     (when (boundp 'gnutls-trustfiles)
+                       gnutls-trustfiles)
+                     '("/etc/ssl/cert.pem"))))))
   ;; reset other shell vars
   (setenv "PS1" "\\h:\\W \\$ ")
   (setenv "TERM_PROGRAM" "")

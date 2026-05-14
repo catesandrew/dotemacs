@@ -8,9 +8,7 @@
   '(
     css-eldoc
     css-mode
-     (css-sort-buffer :location (recipe
-                                  :fetcher wiki
-                                  css-sort-buffer))
+     (css-sort-buffer :location local)
      (css-sort :location (recipe
                            :fetcher github
                            :repo "diiq/css-sort.el"))

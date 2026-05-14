@@ -1420,8 +1420,16 @@ This will use the command `open' with the message URL."
     :post-init
     (progn
       (setq jiralib-url "https://happymoneyinc.atlassian.net")
-      (defconst jiralib-token
+
+      (defun cats//jiralib-token-from-pass ()
         `("Cookie" . ,(concat "cloud.session.token=" (password-store-get "work/jira-session-token"))))
+
+      (defun cats//ensure-jiralib-token (&rest _)
+        (unless jiralib-token
+          (setq jiralib-token (cats//jiralib-token-from-pass))))
+
+      (unless (advice-member-p #'cats//ensure-jiralib-token 'jiralib-call)
+        (advice-add 'jiralib-call :before #'cats//ensure-jiralib-token))
 
       (setq org-jira-working-dir cats//org-jira-dir
         org-jira-deadline-duedate-sync-p nil
