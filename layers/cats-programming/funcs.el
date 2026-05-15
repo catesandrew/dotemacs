@@ -154,10 +154,11 @@ major mode")
     ;;   (visual-fill-column-mode--disable))
 
     ;; (set-syntax-table cats/prog-syntax-table)
-    (defadvice evil-inner-word (around bars-as-word activate)
-      (let ((table cats/prog-syntax-table))
-        (with-syntax-table table
-          ad-do-it)))
+    (advice-add 'evil-inner-word :around
+      (lambda (orig-fun &rest args)
+        (let ((table cats/prog-syntax-table))
+          (with-syntax-table table
+            (apply orig-fun args)))))
 
     (if (fboundp 'rainbow-identifier-mode)
       (spacemacs/toggle-rainbow-identifier-off))

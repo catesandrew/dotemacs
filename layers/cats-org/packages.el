@@ -1331,20 +1331,23 @@ This will use the command `open' with the message URL."
                ,recently-created)
              nil nil)))
 
-      (defadvice org-agenda-list (around opened-org-agenda-list-around activate)
-        (cats//opened-org-agenda-files)
-        ad-do-it
-        (cats//kill-org-agenda-files))
+      (advice-add 'org-agenda-list :around
+        (lambda (orig-fun &rest args)
+          (cats//opened-org-agenda-files)
+          (apply orig-fun args)
+          (cats//kill-org-agenda-files)))
 
-      (defadvice org-search-view (around org-search-view-around activate)
-        (cats//opened-org-agenda-files)
-        ad-do-it
-        (cats//kill-org-agenda-files))
+      (advice-add 'org-search-view :around
+        (lambda (orig-fun &rest args)
+          (cats//opened-org-agenda-files)
+          (apply orig-fun args)
+          (cats//kill-org-agenda-files)))
 
-      (defadvice org-tags-view (around org-tags-view-around activate)
-        (cats//opened-org-agenda-files)
-        ad-do-it
-        (cats//kill-org-agenda-files))
+      (advice-add 'org-tags-view :around
+        (lambda (orig-fun &rest args)
+          (cats//opened-org-agenda-files)
+          (apply orig-fun args)
+          (cats//kill-org-agenda-files)))
 
       (org-super-agenda-mode))))
 

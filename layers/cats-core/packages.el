@@ -92,14 +92,14 @@
             auto-revert-mode-text " ♻"
             auto-revert-tail-mode-text " ♻~")
 
-      (defadvice auto-revert-mode (around auto-revert-turn-on-maybe)
-        (unless
-            (or
-             buffer-read-only
-             (hardhat-buffer-included-p (current-buffer))
-             (cats//current-buffer-remote-p))
-          ad-do-it))
-      (ad-activate 'auto-revert-mode))))
+      (advice-add 'auto-revert-mode :around
+        (lambda (orig-fun &rest args)
+          (unless
+              (or
+               buffer-read-only
+               (hardhat-buffer-included-p (current-buffer))
+               (cats//current-buffer-remote-p))
+            (apply orig-fun args)))))))
 
 
 ;; buffer-move
@@ -128,29 +128,30 @@
       (when cats/projectile-require-project-root
         (setq projectile-require-project-root t))
 
-      (defadvice winum-select-window-by-number (after cats/winum-select-window-by-number (&optional arg))
-        (let* ((n (cond
-                   ((integerp arg) arg)
-                   (arg (winum-get-number))
-                   ((called-interactively-p 'any)
-                    (let ((user-input-str (read-from-minibuffer "Window: ")))
-                      (if (not (string-match-p "[+-]?[0-9]+\.*" user-input-str))
-                          (winum-get-number)
-                        (string-to-number user-input-str))))
-                   (t (winum-get-number))))
-               (w (winum-get-window-by-number (abs n))))
+      (advice-add 'winum-select-window-by-number :after
+        (lambda (&optional arg)
+          (let* ((n (cond
+                     ((integerp arg) arg)
+                     (arg (winum-get-number))
+                     ((called-interactively-p 'any)
+                      (let ((user-input-str (read-from-minibuffer "Window: ")))
+                        (if (not (string-match-p "[+-]?[0-9]+\.*" user-input-str))
+                            (winum-get-number)
+                          (string-to-number user-input-str))))
+                     (t (winum-get-number))))
+                 (w (winum-get-window-by-number (abs n))))
+            (when (and w (and (buffer-file-name) (> n 0)))
+              (cats/find-file-hook-to-project)))))
 
-          (when (and w (and (buffer-file-name) (> n 0)))
+      (advice-add 'spacemacs/alternate-buffer :after
+        (lambda (&rest _args)
+          (when (buffer-file-name)
             (cats/find-file-hook-to-project))))
-      (ad-activate 'winum-select-window-by-number)
 
-      (defadvice spacemacs/alternate-buffer (after cats/spacemacs/alternate-buffer activate)
-        (when (buffer-file-name)
-          (cats/find-file-hook-to-project)))
-
-      (defadvice spacemacs/alternate-window (after cats/spacemacs/alternate-window activate)
-        (when (buffer-file-name)
-          (cats/find-file-hook-to-project)))
+      (advice-add 'spacemacs/alternate-window :after
+        (lambda (&rest _args)
+          (when (buffer-file-name)
+            (cats/find-file-hook-to-project))))
 
       (add-hook 'projectile-after-switch-project-hook
         (lambda ()
@@ -183,17 +184,20 @@
             (set-frame-parameter frame
               'cats//projectile-switching-project-by-name nil))))
 
-      (defadvice switch-to-buffer (after cats/switch-to-buffer activate)
-        (when (buffer-file-name)
-          (cats/find-file-hook-to-project)))
+      (advice-add 'switch-to-buffer :after
+        (lambda (&rest _args)
+          (when (buffer-file-name)
+            (cats/find-file-hook-to-project))))
 
-      (defadvice switch-to-prev-buffer (after cats/switch-to-prev-buffer activate)
-        (when (buffer-file-name)
-          (cats/find-file-hook-to-project)))
+      (advice-add 'switch-to-prev-buffer :after
+        (lambda (&rest _args)
+          (when (buffer-file-name)
+            (cats/find-file-hook-to-project))))
 
-      (defadvice switch-to-next-buffer (after cats/switch-to-next-buffer activate)
-        (when (buffer-file-name)
-          (cats/find-file-hook-to-project)))
+      (advice-add 'switch-to-next-buffer :after
+        (lambda (&rest _args)
+          (when (buffer-file-name)
+            (cats/find-file-hook-to-project))))
 
       (add-hook 'projectile-find-file-hook
          (lambda ()
@@ -373,18 +377,18 @@
 ;; to "C-c C-j". Or bind char-mode ESC to "C-c C-x"?
 (defun cats-core/pre-init-term ()
   ;; kill buffer after terminal is exited
-  (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
-    (if (memq (process-status proc) '(signal exit))
-        (let ((buffer (process-buffer proc)))
-          ad-do-it
-          (kill-buffer buffer))
-      ad-do-it))
-  (ad-activate 'term-sentinel)
+  (advice-add 'term-sentinel :around
+    (lambda (orig-fun proc msg)
+      (if (memq (process-status proc) '(signal exit))
+          (let ((buffer (process-buffer proc)))
+            (funcall orig-fun proc msg)
+            (kill-buffer buffer))
+        (funcall orig-fun proc msg))))
 
   ;; force usage of bash, do not ask me
-  (defadvice ansi-term (before force-bash)
-    (interactive (list shell-default-term-shell)))
-  (ad-activate 'ansi-term))
+  (advice-add 'ansi-term :before
+    (lambda (&rest _args)
+      (interactive (list shell-default-term-shell)))))
 
 (defun cats-core/post-init-term ()
   (evil-set-initial-state 'term-mode 'insert)

@@ -620,10 +620,11 @@
         (rjsx-mode . "Th")
         (js2-jsx-mode . "Th"))
 
-      (defadvice tide-mode (after check-flycheck-tide-eslint-checkers activate)
-        (if (bound-and-true-p tide-mode)
-            (tide-flycheck-setup)
-          (tide-flycheck-teardown))))))
+      (advice-add 'tide-mode :after
+        (lambda (&rest _args)
+          (if (bound-and-true-p tide-mode)
+              (tide-flycheck-setup)
+            (tide-flycheck-teardown))))))
 
 
 ;; rjsx

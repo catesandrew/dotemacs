@@ -68,10 +68,11 @@
 
 ;; kill annoying are you sure you want to quit messages
 (require 'cl-lib)
-(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
-  "Prevent annoying 'Active processes exist' query when you quit Emacs."
-  (cl-letf (((symbol-function #'process-list) (lambda ())))
-    ad-do-it))
+(advice-add 'save-buffers-kill-emacs :around
+  (lambda (orig-fun &rest args)
+    "Prevent annoying 'Active processes exist' query when you quit Emacs."
+    (cl-letf (((symbol-function #'process-list) (lambda ())))
+      (apply orig-fun args))))
 
 
 ;; ansi-colors
@@ -110,7 +111,6 @@
       (assoc-delete-all "*compilation*" popwin:special-display-config)
       (setq cats//purpose-x-compilation-conf
         (purpose-conf
-          "compilation"
           :mode-purposes '((compilation-mode . compile))))
       (purpose-set-extension-configuration
         :compilation cats//purpose-x-compilation-conf))))
@@ -533,13 +533,14 @@
   (spacemacs|use-package-add-hook flycheck
     :post-init
     (progn
-      (defadvice flycheck-mode (around flycheck-turn-on-maybe activate)
-        (unless
-          (or
-            buffer-read-only
-            (hardhat-buffer-included-p (current-buffer))
-            (cats//current-buffer-remote-p))
-          ad-do-it))
+      (advice-add 'flycheck-mode :around
+        (lambda (orig-fun &rest args)
+          (unless
+            (or
+              buffer-read-only
+              (hardhat-buffer-included-p (current-buffer))
+              (cats//current-buffer-remote-p))
+            (apply orig-fun args))))
       (setq flycheck-textlint-config "~/.config/textlint/textlintrc.json")
       ;; (ad-activate 'flycheck-mode)
 
