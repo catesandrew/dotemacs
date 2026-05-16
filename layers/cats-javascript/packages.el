@@ -624,7 +624,7 @@
         (lambda (&rest _args)
           (if (bound-and-true-p tide-mode)
               (tide-flycheck-setup)
-            (tide-flycheck-teardown))))))
+            (tide-flycheck-teardown)))))))
 
 
 ;; rjsx
