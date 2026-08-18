@@ -1,4 +1,4 @@
-;;; funcs.el --- cats-markdown: Functions
+;;; funcs.el --- cats-markdown: Functions -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

@@ -1,4 +1,4 @@
-;;; packages.el --- kubernetes Layer packages File for Spacemacs
+;;; packages.el --- kubernetes Layer packages File for Spacemacs -*- lexical-binding: t; -*-
 ;;; License: GPLv3
 
 (defconst cats-vm-packages

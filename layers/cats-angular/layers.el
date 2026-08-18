@@ -1,4 +1,4 @@
-;;; layers.el --- cats-angular: Layers
+;;; layers.el --- cats-angular: Layers -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

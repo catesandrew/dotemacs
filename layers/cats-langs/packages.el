@@ -1,4 +1,4 @@
-;;; packages.el --- cats-misc-langs: Layer packages
+;;; packages.el --- cats-misc-langs: Layer packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

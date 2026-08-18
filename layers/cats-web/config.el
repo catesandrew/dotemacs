@@ -1,4 +1,4 @@
-;;; config.el --- cats-web: Configuration
+;;; config.el --- cats-web: Configuration -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

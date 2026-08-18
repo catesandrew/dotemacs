@@ -1,4 +1,4 @@
-;;; funcs.el --- cats-web: Funcs
+;;; funcs.el --- cats-web: Funcs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

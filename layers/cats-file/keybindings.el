@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (spacemacs/declare-prefix "of" "files")
 
 ;; File bindings

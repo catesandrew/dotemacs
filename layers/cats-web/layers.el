@@ -1,4 +1,4 @@
-;;; layers.el --- cats-web: Layers
+;;; layers.el --- cats-web: Layers -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

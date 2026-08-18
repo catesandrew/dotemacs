@@ -1,4 +1,4 @@
-;;; packages.el --- cats: Programming
+;;; packages.el --- cats: Programming -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

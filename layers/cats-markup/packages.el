@@ -1,4 +1,4 @@
-;;; packages.el --- cats-markdown: Packages
+;;; packages.el --- cats-markdown: Packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

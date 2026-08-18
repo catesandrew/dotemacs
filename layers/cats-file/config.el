@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; Assert the byte compiler that dired functions are defined, because we never
 ;; call them for non-dired buffers, so we can be sure that dired is always
 ;; loaded first.

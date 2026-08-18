@@ -1,4 +1,4 @@
-;;; funcs.el --- Grammar Layer functions File for Spacemacs
+;;; funcs.el --- Grammar Layer functions File for Spacemacs -*- lexical-binding: t; -*-
 
 (defun cats-grammar/add-writegood-hook (hook)
   "Add `writespell-mode' to the given HOOK, if

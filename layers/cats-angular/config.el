@@ -1,4 +1,4 @@
-;;; config.el --- angular layer config
+;;; config.el --- angular layer config -*- lexical-binding: t; -*-
 
 (defvar angular-fmt-on-save nil
   "Run formatter on buffer save.")

@@ -1,4 +1,4 @@
-;;; layers.el --- cats-javascript: Layers
+;;; layers.el --- cats-javascript: Layers -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

@@ -1,4 +1,4 @@
-;;; funcs.el --- Clojure Layer functions File for Spacemacs
+;;; funcs.el --- Clojure Layer functions File for Spacemacs -*- lexical-binding: t; -*-
 
 ;;
 ;; Evaluate code when it is contained in a (comment (,,,))

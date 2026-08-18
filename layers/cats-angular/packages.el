@@ -1,4 +1,4 @@
-;;; packages.el --- cats-angular: Layer packages
+;;; packages.el --- cats-angular: Layer packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

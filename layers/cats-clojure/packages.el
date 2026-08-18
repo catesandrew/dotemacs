@@ -1,4 +1,4 @@
-;;; Clojure Layer packages File for Spacemacs
+;;; Clojure Layer packages File for Spacemacs -*- lexical-binding: t; -*-
 
 (setq cats-clojure-packages
   '(

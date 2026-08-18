@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (defun cats/executable-find (command directory)
   "Search for COMMAND in DIRECTORY and return the absolute file name.
 Return nil if COMMAND is not found anywhere in DIRECTORY."

@@ -1,4 +1,4 @@
-;;; config.el --- Grammar Layer configuration File for Spacemacs
+;;; config.el --- Grammar Layer configuration File for Spacemacs -*- lexical-binding: t; -*-
 
 (defvar grammar-checking-enable-by-default t
   "Enable grammar checking by default.")

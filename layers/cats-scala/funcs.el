@@ -1,4 +1,4 @@
-;;; funcs.el --- cats-scala: Functions
+;;; funcs.el --- cats-scala: Functions -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

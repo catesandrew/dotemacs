@@ -1,4 +1,4 @@
-;;; packages.el --- cats: org
+;;; packages.el --- cats: org -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

@@ -1,4 +1,4 @@
-;;; funcs.el --- cats: Programming
+;;; funcs.el --- cats: Programming -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

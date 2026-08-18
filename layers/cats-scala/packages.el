@@ -1,4 +1,4 @@
-;;; packages.el --- cats-scala: Layer packages
+;;; packages.el --- cats-scala: Layer packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

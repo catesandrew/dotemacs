@@ -1,4 +1,4 @@
-;;; config.el --- cats: Programming
+;;; config.el --- cats: Programming -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

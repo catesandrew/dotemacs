@@ -1,4 +1,4 @@
-;;; funcs.el --- angular layer funcs
+;;; funcs.el --- angular layer funcs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

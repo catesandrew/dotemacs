@@ -1,4 +1,4 @@
-;;; keybindings.el --- cats-org: keybindings
+;;; keybindings.el --- cats-org: keybindings -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

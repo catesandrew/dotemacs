@@ -1,4 +1,4 @@
-;;; packages.el --- cats-lisp: Packages
+;;; packages.el --- cats-lisp: Packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

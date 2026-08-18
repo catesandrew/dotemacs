@@ -1,4 +1,4 @@
-;;; packages.el --- Grammar Layer packages File for Spacemacs
+;;; packages.el --- Grammar Layer packages File for Spacemacs -*- lexical-binding: t; -*-
 
 (setq cats-grammar-packages
   '(

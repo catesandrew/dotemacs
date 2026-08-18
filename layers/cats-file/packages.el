@@ -1,4 +1,4 @@
-;;; packages.el --- cats: File
+;;; packages.el --- cats: File -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

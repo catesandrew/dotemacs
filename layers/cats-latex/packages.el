@@ -1,4 +1,4 @@
-;;; packages.el --- cats-latex: Packages
+;;; packages.el --- cats-latex: Packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

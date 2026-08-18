@@ -1,4 +1,4 @@
-;;; config.el --- cats-core
+;;; config.el --- cats-core -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -295,5 +295,12 @@ line-mode. Conversely, going to insert state on the last
 commandline will automatically switch to char-mode. Warning: This
 feature is experimental."
   :type 'boolean)
+
+;; persp-mode's default (3) autosaves on every last-frame-delete, not just
+;; on Emacs shutdown. In this daemon setup that autosave errors ("Unknown
+;; terminal type") and its recovery path calls `make-frame' unguarded,
+;; which throws again and hangs the frame-close on an unanswerable
+;; kill-emacs-hook prompt. 1 restricts autosave to real shutdown only.
+(setq persp-auto-save-opt 1)
 
 ;;; config.el ends here

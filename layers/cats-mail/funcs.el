@@ -1,4 +1,4 @@
-;;; funcs.el --- cats-mail
+;;; funcs.el --- cats-mail -*- lexical-binding: t; -*-
 
 
 ;; mu4e

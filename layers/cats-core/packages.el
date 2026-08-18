@@ -1,4 +1,4 @@
-;;; packages.el --- cats: Core
+;;; packages.el --- cats: Core -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

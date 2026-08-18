@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (when (configuration-layer/package-usedp 'buffer-move)
   (let ((map1 (lookup-key spacemacs-default-map "bm")))
     (spacemacs/set-leader-keys "bk" map1))

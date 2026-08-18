@@ -1,4 +1,4 @@
-;;; keybindings.el --- Grammar keybindings
+;;; keybindings.el --- Grammar keybindings -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

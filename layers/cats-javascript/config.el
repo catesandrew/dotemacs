@@ -1,4 +1,4 @@
-;;; config.el --- cats-javascript: Configuration
+;;; config.el --- cats-javascript: Configuration -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 

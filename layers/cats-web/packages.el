@@ -1,4 +1,4 @@
-;;; packages.el --- cats-web: Packages
+;;; packages.el --- cats-web: Packages -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
