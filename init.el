@@ -1120,6 +1120,16 @@ before packages are loaded."
            :port 9229
            :cwd "${workspaceFolder}")))
 
+  ;; Inline diagnostics to fill the gap left by lsp-ui-sideline-enable nil.
+  ;; flycheck-inline (the old third-party package) is deprecated -- this is
+  ;; now built into Flycheck itself, just not yet in the installed version
+  ;; (20260320 here vs 20260818 on MELPA as of writing). No-ops until you
+  ;; run `SPC f e U' to upgrade flycheck; auto-activates after that.
+  (with-eval-after-load 'flycheck
+    (if (fboundp 'global-flycheck-annotate-mode)
+        (global-flycheck-annotate-mode)
+      (message "flycheck-annotate-mode needs a newer flycheck -- SPC f e U to upgrade, then restart.")))
+
   ;; company-statistics writes its cache with no lexical-binding cookie,
   ;; triggering a warning on load. Prepend one after every save.
   (with-eval-after-load 'company-statistics
