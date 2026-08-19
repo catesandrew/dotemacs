@@ -2,13 +2,17 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(defvar cats-enable-edit-server t
+;; Silence benign native-comp warnings (e.g. forward refs to
+;; not-yet-loaded packages like company from evil-escape).
+(setq native-comp-async-report-warnings-errors nil)
+
+(defvar cats-enable-edit-server nil
   "If non-nil, start an Emacs server if one is not already running.")
 
 (defvar cats-edit-server-start-run nil
   "Whether `edit-server-start' has been run")
 
-(defvar cats-enable-atomic-chrome-server t
+(defvar cats-enable-atomic-chrome-server nil
   "If non-nil, start an atomic chrome sever if one is not already running.")
 
 (defvar cats-atomic-chrome-server-start-run nil
@@ -169,8 +173,6 @@ This function should only modify configuration layer settings."
        (terraform :variables
          terraform-backend 'lsp
          terraform-auto-format-on-save t)
-       (lua :variables
-         lua-backend 'lsp)
        ;; (clojure :variables clojure-enable-linters '(clj-kondo joker))
        (clojure :variables
          clojure-toplevel-inside-comment-form t
@@ -184,21 +186,11 @@ This function should only modify configuration layer settings."
        ;; graphviz - open-source graph declaration system
        ;; Used to generated graphs of Clojure project dependencies
        graphviz
-       ;; gradle build --refresh-dependencies (from android)
-       (groovy :variables
-         groovy-backend 'company-groovy)
-       (java :variables
-         java-backend 'lsp)
-       (kotlin :variables
-         kotlin-backend 'lsp)
        windows-scripts
        vagrant
        ;; Programming and markup languages
        ansible
        csv
-       (cmake :variables
-         cmake-backend 'lsp
-         cmake-enable-cmake-ide-support t)
        neotree
        (docker :variables
          docker-dockerfile-backend 'lsp)
@@ -215,9 +207,6 @@ This function should only modify configuration layer settings."
        emacs-lisp
        common-lisp
        plantuml
-       (haskell :variables haskell-enable-hindent-style "johan-tibell"
-         haskell-enable-ghc-mod-support t
-         haskell-completion-backend 'dante)
 
        ;; npm i -g \
        ;;   @angular/language-server \
@@ -257,8 +246,11 @@ This function should only modify configuration layer settings."
        ipython-notebook
        tide
        (lsp :variables
-         ;; Enable/disable lsp-ui-doc overlay
+         ;; Doc popup only on explicit request (SPC-prefixed lsp-ui-doc command),
+         ;; not auto-triggered on idle/hover -- was causing drag while typing.
          lsp-ui-doc-enable t
+         lsp-ui-doc-show-with-cursor nil
+         lsp-ui-doc-show-with-mouse nil
          ;; When non-nil, type signature included in the lsp-ui-doc overlay
          lsp-ui-doc-include-signature t
          ;; Enable/disable lsp-ui-sideline overlay
@@ -268,7 +260,9 @@ This function should only modify configuration layer settings."
          ;; When non-nil, use `lsp-ui' package.
          lsp-use-lsp-ui t
          ;; lsp-use-upstream-bindings nil
-         lsp-lens-enable t
+         ;; Reference-count lenses recompute on every idle tick in large TS/JS
+         ;; files -- primary cause of "drag while typing" on this setup.
+         lsp-lens-enable nil
          )
 
        ;; react layer uses the same backend defined in javascript layer.
@@ -279,9 +273,16 @@ This function should only modify configuration layer settings."
          typescript-linter 'eslint
          typescript-backend 'lsp
          typescript-lsp-linter nil
-         typescript-fmt-tool 'prettier)
+         typescript-fmt-tool 'prettier
+         ;; ts-ls otherwise assumes one global TypeScript install; in a
+         ;; workspaces monorepo (doppio, uie) each package can carry its own
+         ;; typescript/plugins in node_modules -- this makes it use that.
+         lsp-clients-typescript-prefer-use-project-ts-server t)
        (javascript :variables
-         javascript-fmt-tool 'web-beautify
+         ;; Was web-beautify (js-beautify) while TS/Angular used the real
+         ;; prettier binary -- genuinely different formatter output per
+         ;; file type in the same project. Standardized on prettier.
+         javascript-fmt-tool 'prettier
          ;; Repl to be configured by the layer, `skewer' for browser
          ;; based, `nodejs' for server based development.
          javascript-repl 'nodejs
@@ -309,20 +310,14 @@ This function should only modify configuration layer settings."
        ;;   tern-disable-tern-port-files nil)
        (json :variables
          js-indent-level 2
-         json-backend 'lsp)
+         json-backend 'lsp
+         ;; Was web-beautify by default -- matches the rest of the JS/TS
+         ;; stack now that javascript-fmt-tool is also prettier.
+         json-fmt-tool 'prettier)
        ;; new layer web-beautify extracted from javascript layer
        ;; npm i -g js-beautify
        web-beautify
        bibtex
-       (latex :variables
-         latex-enable-auto-fill t
-         latex-build-command "latexmk-osx"
-         latex-enable-magic nil
-         latex-enable-folding t
-         latex-refresh-preview t
-         latex-backend 'lsp
-         ;; latex-nofill-env (append latex-nofill-env '("puml"))
-         )
        markdown
        ;; pip install python-language-server
        (python :variables
@@ -333,32 +328,14 @@ This function should only modify configuration layer settings."
          python-formatter 'black
          python-format-on-save nil
          :packages (not live-py-mode))
-       (php :variables
-         php-backend 'lsp)
        swift
        (unicode-fonts :variables
          unicode-fonts-enable-ligatures t
          unicode-fonts-force-multi-color-on-mac t)
        octave
-       ;; gem install solargraph bundler
-       (ruby :variables
-         ruby-backend 'lsp
-         ruby-enable-enh-ruby-mode t
-         ruby-test-runner 'rspec
-         ruby-version-manager 'rbenv)
-       ;; go install github.com/sourcegraph/go-langserver
-       (go :variables
-         go-backend 'lsp)
        slack
-       (rust :variables
-         rust-backend 'lsp
-         ;; Enable auto-completion for Rust
-         rust-enable-racer t)
        (shell-scripts :variables
          shell-scripts-backend 'lsp)
-       (sql :variables
-         sql-capitalize-keywords t
-         sql-backend 'lsp)
        vimscript
        xclipboard
        ;; npm i -g yaml-language-server js-yaml
@@ -369,20 +346,6 @@ This function should only modify configuration layer settings."
        bm
        openai
        ;; Applications
-       (org :variables
-         org-enable-roam-support t
-         org-enable-roam-ui t
-         org-enable-roam-protocol t
-         org-enable-valign t
-         org-enable-org-journal-support t
-         org-enable-bootstrap-support t
-         org-enable-github-support t
-         org-enable-hugo-support t
-         org-want-todo-bindings t
-         org-projectile-file "TODOs.org"
-         org-enable-reveal-js-support t)
-       (deft :variables
-         deft-zetteldeft t)
        (shell :variables
          shell-default-shell 'vterm
          shell-default-term-shell "/bin/bash"
@@ -399,14 +362,7 @@ This function should only modify configuration layer settings."
        templates
        pass
        (mu4e :variables
-         mu4e-enable-mode-line t
-         mu4e-org-compose-support t)
-       (c-c++ :variables
-         c-c++-backend 'lsp-clangd
-         ;; company-c-headers-path-user '("../include" "./include" "." "../../include"
-         ;;                               "../inc" "../../inc")
-         c-c++-enable-clang-support t
-         c-c++-default-mode-for-headers 'c++-mode)
+         mu4e-enable-mode-line t)
        ;; notmuch
        ;; My personal layers
        cats
@@ -419,17 +375,6 @@ This function should only modify configuration layer settings."
        cats-web
        cats-latex
        cats-markup
-       (cats-org :variables
-         org-enable-ox-support t
-         org-enable-ox-latex-support t
-         org-enable-ox-bibtex-support t
-         org-enable-ox-beamer-support t
-         org-enable-ox-md-support t
-         org-enable-ox-publish-support t
-         org-enable-ox-html-support t
-         org-enable-ox-ascii-support t
-         org-enable-ox-confluence-support t
-         org-enable-jira-support t)
        ;; cats-scala
        cats-xml
        cats-grammar
@@ -459,6 +404,21 @@ This function should only modify configuration layer settings."
        ;; yasnippet-snippets
        ;; M-x all-the-icons-install-fonts
        all-the-icons
+       ;; Adaptive GC threshold: raises gc-cons-threshold during normal
+       ;; editing and drops it during idle, instead of one fixed value.
+       gcmh
+       ;; True side-by-side hunk diffing from Magit (magit-delta is
+       ;; --color-only, unified diffs only -- can't do side-by-side).
+       vdiff
+       vdiff-magit
+       ;; Tree-sitter powered evil text objects (dif/vac/etc across any
+       ;; language with a grammar) instead of per-language evil-textobj-*.
+       evil-textobj-tree-sitter
+       ;; Structural editing (paredit/smartparens-style), evil-compatible.
+       puni
+       ;; Transient keyboard-driven menus for built-in modes (dired, calc,
+       ;; ibuffer, isearch, etc).
+       casual
        ;; ng2-mode
        ;; elcord ;; discord
        ;; graphql-mode
@@ -798,7 +758,7 @@ It should only modify the values of Spacemacs settings."
     ;; If non-nil a progress bar is displayed when spacemacs is loading. This
     ;; may increase the boot time on some systems and emacs builds, set it to
     ;; nil to boost the loading time. (default t)
-    dotspacemacs-loading-progress-bar t
+    dotspacemacs-loading-progress-bar nil
 
     ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
     ;; (Emacs 24.4+ only)
@@ -1007,6 +967,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq compilation-ask-about-save nil)
   (setq delete-by-moving-to-trash nil)
 
+  ;; Large JS/TS monorepos (doppio, uie) benefit from projectile's cache;
+  ;; must be set before cats-core/pre-init-projectile runs. Invalidate with
+  ;; `SPC p i' after large file adds/deletes.
+  (setq cats/projectile-enable-caching t)
+
   (setq abbrev-file-name
     (expand-file-name (concat spacemacs-cache-directory "abbrev_defs")))
   (setq spacemacs-auto-save-directory
@@ -1079,9 +1044,94 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (add-to-list 'latex-nofill-env 'code)
-  (add-to-list 'latex-nofill-env 'puml)
   (add-to-list 'treesit-extra-load-path (f-canonical "~/.emacs.d/tree-sitter"))
+
+  (require 'gcmh)
+  (gcmh-mode 1)
+
+  ;; Emacs's ediff default (`split-window-vertically') stacks the two
+  ;; buffers top/bottom despite the name -- force true left/right
+  ;; side-by-side instead.
+  (with-eval-after-load 'ediff
+    (setq ediff-split-window-function 'split-window-horizontally))
+
+  ;; magit-delta is --color-only (required so Magit can still map lines
+  ;; to hunks for staging) -- it can never render side-by-side. vdiff-magit
+  ;; gives a real side-by-side buffer diff straight from Magit instead.
+  (with-eval-after-load 'magit
+    (require 'vdiff-magit)
+    ;; `vdiff-magit' is itself a transient menu: dwim/stage/resolve/
+    ;; show-unstaged/show-staged/show-worktree/show-commit/diff-range/stash.
+    (spacemacs/set-leader-keys "gv" 'vdiff-magit))
+
+  ;; Structural editing everywhere in prog buffers; term-mode explicitly
+  ;; opted out per upstream's own recommended config.
+  (puni-global-mode)
+  (add-hook 'term-mode-hook #'puni-disable-puni-mode)
+
+  ;; Tree-sitter powered evil text objects: function/class/parameter,
+  ;; verified supported (via inherited ecma queries) for javascript-mode,
+  ;; typescript-mode, and typescript-tsx-mode.
+  (with-eval-after-load 'evil
+    (require 'evil-textobj-tree-sitter)
+    ;; typescript-tsx-mode is spacemacs's own derived mode for `.tsx' files;
+    ;; not in the package's default major-mode alist.
+    (add-to-list 'evil-textobj-tree-sitter-major-mode-language-alist
+                 '(typescript-tsx-mode . "tsx"))
+    (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+    (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+    (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
+    (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+    (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+    (define-key evil-inner-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.inner")))
+
+  ;; Transient menus for built-in modes (dired, calc, ibuffer, isearch, etc);
+  ;; casual-init wires up the default keybinding (`C-o') for every module.
+  (require 'casual)
+  (casual-init)
+
+  ;; dap-node was never required anywhere -- TS/TSX/Angular buffers had zero
+  ;; breakpoint debugging beyond dap-firefox/dap-chrome (browser-only JS).
+  ;; `SPC d d' (dap-debug) then offers these templates.
+  (with-eval-after-load 'dap-mode
+    (require 'dap-node)
+    ;; No-op if the debug adapter is already downloaded; only hits the
+    ;; network on first run.
+    (dap-node-setup)
+    ;; Keep `${workspaceFolder}' expansion consistent with the rest of this
+    ;; config, which is projectile-rooted everywhere else (default uses
+    ;; `project-current', a different root-detection heuristic).
+    (setq dap-variables-project-root-function #'projectile-project-root)
+    (dap-register-debug-template
+     "Node::Jest (current buffer)"
+     (list :type "node"
+           :request "launch"
+           :name "Node::Jest (current buffer)"
+           :program "${workspaceFolder}/node_modules/.bin/jest"
+           :args (list "--runInBand" "--no-coverage" "${fileBasenameNoExtension}")
+           :cwd "${workspaceFolder}"
+           :console "integratedTerminal"
+           :internalConsoleOptions "neverOpen"))
+    (dap-register-debug-template
+     "Node::Attach"
+     (list :type "node"
+           :request "attach"
+           :name "Node::Attach"
+           :port 9229
+           :cwd "${workspaceFolder}")))
+
+  ;; company-statistics writes its cache with no lexical-binding cookie,
+  ;; triggering a warning on load. Prepend one after every save.
+  (with-eval-after-load 'company-statistics
+    (advice-add 'company-statistics--save :after
+                (lambda (&rest _)
+                  (when (file-exists-p company-statistics-file)
+                    (with-temp-buffer
+                      (insert-file-contents-literally company-statistics-file)
+                      (goto-char (point-min))
+                      (insert ";;; -*- lexical-binding: nil; -*-\n")
+                      (let ((coding-system-for-write 'binary))
+                        (write-region nil nil company-statistics-file)))))))
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.

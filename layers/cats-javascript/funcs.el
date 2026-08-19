@@ -677,4 +677,46 @@
   (when cats/javascript-yasnippets-toggle-semicolon
     ";"))
 
+
+;; React Native: Metro bundler + device log viewer.
+;; These are project-level processes, not tied to any buffer/major-mode, so
+;; they're plain global commands rather than mode-local leader bindings.
+
+(defun cats/react-native-metro-start ()
+  "Start the Metro bundler for the current project in a named buffer."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (async-shell-command "npx react-native start" "*metro*")))
+
+(defun cats/react-native-metro-stop ()
+  "Kill the running Metro bundler process, if any."
+  (interactive)
+  (if-let ((proc (get-buffer-process "*metro*")))
+      (kill-process proc)
+    (message "No Metro process running")))
+
+(defun cats/react-native-log-ios ()
+  "Tail iOS device/simulator logs via the React Native CLI."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (async-shell-command "npx react-native log-ios" "*rn-log*")))
+
+(defun cats/react-native-log-android ()
+  "Tail Android device/emulator logs via the React Native CLI."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (async-shell-command "npx react-native log-android" "*rn-log*")))
+
+(defun cats/react-native-open-debugger ()
+  "Open React Native's built-in DevTools (Hermes/CDP) against the running
+Metro instance.
+
+dap-mode ships no React Native/Hermes/Metro debug adapter, so this is not a
+from-scratch DAP client -- it's the officially supported debugging path,
+which opens Chrome DevTools with breakpoints/console/network already wired
+up by React Native itself."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (async-shell-command "npx react-native open-debugger" "*rn-debugger*")))
+
 ;;; funcs.el ends here

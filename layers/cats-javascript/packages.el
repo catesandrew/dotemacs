@@ -315,9 +315,18 @@
 
 
 ;; css-in-js-mode
+;; Package was declared but never enabled anywhere (no :hook/:mode) -- styled
+;; components/CSS-in-JS were never actually highlighted despite this looking
+;; configured. jtsx-tsx-mode/jtsx-jsx-mode are the treesit-aware modes this
+;; package requires.
 (defun cats-javascript/init-css-in-js-mode ()
   (use-package css-in-js-mode
-    :ensure t))
+    :ensure t
+    :hook ((jtsx-tsx-mode jtsx-jsx-mode) . css-in-js-mode)
+    :init
+    ;; No-op if the shared library is already on disk; only hits the
+    ;; network on first run after adding this package.
+    (css-in-js-mode-fetch-shared-library)))
 
 
 ;; tsx-mode
@@ -820,10 +829,17 @@
 
 
 ;; dap-mode
+;; Was jtsx-jsx-mode only, so TS/TSX/Angular buffers had zero debugger
+;; support -- extend the same stock wiring (dap-firefox/dap-chrome) to them;
+;; dap-node itself is required globally in user-config.
 (defun cats-javascript/pre-init-dap-mode ()
   (when (eq javascript-backend 'lsp)
-    (add-to-list 'spacemacs--dap-supported-modes 'jtsx-jsx-mode))
-  (add-hook 'jtsx-jsx-mode-local-vars-hook #'spacemacs//javascript-setup-dap))
+    (add-to-list 'spacemacs--dap-supported-modes 'jtsx-jsx-mode)
+    (add-to-list 'spacemacs--dap-supported-modes 'jtsx-tsx-mode)
+    (add-to-list 'spacemacs--dap-supported-modes 'jtsx-typescript-mode))
+  (add-hook 'jtsx-jsx-mode-local-vars-hook #'spacemacs//javascript-setup-dap)
+  (add-hook 'jtsx-tsx-mode-local-vars-hook #'spacemacs//javascript-setup-dap)
+  (add-hook 'jtsx-typescript-mode-local-vars-hook #'spacemacs//javascript-setup-dap))
 
 
 ;; add-node-modules-path
@@ -1111,6 +1127,16 @@
     ;; babel
     (push '("*babel-shell*"                :dedicated t :position bottom
             :stick t        :noselect nil)
+          popwin:special-display-config)
+    ;; react-native
+    (push '("*metro*"                      :dedicated t :position bottom
+            :stick t        :noselect nil :height 0.4)
+          popwin:special-display-config)
+    (push '("*rn-log*"                     :dedicated t :position bottom
+            :stick t        :noselect nil :height 0.4)
+          popwin:special-display-config)
+    (push '("*rn-debugger*"                :dedicated t :position bottom
+            :noselect t)
           popwin:special-display-config)
     ))
 
