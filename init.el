@@ -152,8 +152,10 @@ This function should only modify configuration layer settings."
        ;; Highlight changes in buffers
        ;; SPC g . transient state for navigating changes
        (version-control :variables
-         version-control-diff-tool 'git-gutter+
-         ;; version-control-diff-tool 'diff-hl
+         ;; git-gutter+ is no longer a valid choice in this layer (dropped
+         ;; upstream); diff-hl is now the layer's own documented preferred
+         ;; choice.
+         version-control-diff-tool 'diff-hl
          version-control-global-margin t)
 
        ;; opens Magit git client full screen (q restores previous layout)
@@ -979,10 +981,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; GNU ELPA and Nongnu are intermittently unreachable on this network, while
   ;; the SJTU mirrors are consistently reachable.
   (setq configuration-layer-elpa-archives
-        `(("melpa"    . "https://melpa.org/packages/")
-          ("gnu"      . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/gnu/")
-          ("nongnu"   . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/nongnu/")
-          ("spacelpa" . ,(concat configuration-layer-stable-elpa-archive "/packages/"))))
+    `(("melpa"    . "https://melpa.org/packages/")
+       ("gnu"      . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/gnu/")
+       ("nongnu"   . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/nongnu/")
+       ("spacelpa" . ,(concat configuration-layer-stable-elpa-archive "/packages/"))))
 
   ;; Force GPG to not use an external tool for pin entry. That is particularly
   ;; useful if you don’t want the default GPG Agent pin entry tool to start,
@@ -994,11 +996,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
       (setenv "SSL_CERT_FILE" zscaler-ca-file)
       (setenv "GIT_SSL_CAINFO" zscaler-ca-file)
       (setq gnutls-trustfiles
-            (delete-dups
-             (append (list zscaler-ca-file)
-                     (when (boundp 'gnutls-trustfiles)
-                       gnutls-trustfiles)
-                     '("/etc/ssl/cert.pem"))))))
+        (delete-dups
+          (append (list zscaler-ca-file)
+            (when (boundp 'gnutls-trustfiles)
+              gnutls-trustfiles)
+            '("/etc/ssl/cert.pem"))))))
   ;; reset other shell vars
   (setenv "PS1" "\\h:\\W \\$ ")
   (setenv "TERM_PROGRAM" "")
@@ -1077,7 +1079,7 @@ before packages are loaded."
     ;; typescript-tsx-mode is spacemacs's own derived mode for `.tsx' files;
     ;; not in the package's default major-mode alist.
     (add-to-list 'evil-textobj-tree-sitter-major-mode-language-alist
-                 '(typescript-tsx-mode . "tsx"))
+      '(typescript-tsx-mode . "tsx"))
     (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
     (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
     (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
@@ -1103,22 +1105,22 @@ before packages are loaded."
     ;; `project-current', a different root-detection heuristic).
     (setq dap-variables-project-root-function #'projectile-project-root)
     (dap-register-debug-template
-     "Node::Jest (current buffer)"
-     (list :type "node"
-           :request "launch"
-           :name "Node::Jest (current buffer)"
-           :program "${workspaceFolder}/node_modules/.bin/jest"
-           :args (list "--runInBand" "--no-coverage" "${fileBasenameNoExtension}")
-           :cwd "${workspaceFolder}"
-           :console "integratedTerminal"
-           :internalConsoleOptions "neverOpen"))
+      "Node::Jest (current buffer)"
+      (list :type "node"
+        :request "launch"
+        :name "Node::Jest (current buffer)"
+        :program "${workspaceFolder}/node_modules/.bin/jest"
+        :args (list "--runInBand" "--no-coverage" "${fileBasenameNoExtension}")
+        :cwd "${workspaceFolder}"
+        :console "integratedTerminal"
+        :internalConsoleOptions "neverOpen"))
     (dap-register-debug-template
-     "Node::Attach"
-     (list :type "node"
-           :request "attach"
-           :name "Node::Attach"
-           :port 9229
-           :cwd "${workspaceFolder}")))
+      "Node::Attach"
+      (list :type "node"
+        :request "attach"
+        :name "Node::Attach"
+        :port 9229
+        :cwd "${workspaceFolder}")))
 
   ;; Inline diagnostics to fill the gap left by lsp-ui-sideline-enable nil.
   ;; flycheck-inline (the old third-party package) is deprecated -- this is
@@ -1127,21 +1129,21 @@ before packages are loaded."
   ;; run `SPC f e U' to upgrade flycheck; auto-activates after that.
   (with-eval-after-load 'flycheck
     (if (fboundp 'global-flycheck-annotate-mode)
-        (global-flycheck-annotate-mode)
+      (global-flycheck-annotate-mode)
       (message "flycheck-annotate-mode needs a newer flycheck -- SPC f e U to upgrade, then restart.")))
 
   ;; company-statistics writes its cache with no lexical-binding cookie,
   ;; triggering a warning on load. Prepend one after every save.
   (with-eval-after-load 'company-statistics
     (advice-add 'company-statistics--save :after
-                (lambda (&rest _)
-                  (when (file-exists-p company-statistics-file)
-                    (with-temp-buffer
-                      (insert-file-contents-literally company-statistics-file)
-                      (goto-char (point-min))
-                      (insert ";;; -*- lexical-binding: nil; -*-\n")
-                      (let ((coding-system-for-write 'binary))
-                        (write-region nil nil company-statistics-file)))))))
+      (lambda (&rest _)
+        (when (file-exists-p company-statistics-file)
+          (with-temp-buffer
+            (insert-file-contents-literally company-statistics-file)
+            (goto-char (point-min))
+            (insert ";;; -*- lexical-binding: nil; -*-\n")
+            (let ((coding-system-for-write 'binary))
+              (write-region nil nil company-statistics-file)))))))
 
   ;; Opt out from the startup message in the echo area by simply disabling this
   ;; ridiculously bizarre thing entirely.
@@ -1279,14 +1281,14 @@ before packages are loaded."
      (when cats-enable-edit-server
        (unless cats-edit-server-start-run
          (condition-case err
-             (progn
-               (edit-server-start)
-               (require 'org-protocol)
-               (setq cats-edit-server-start-run t))
+           (progn
+             (edit-server-start)
+             (require 'org-protocol)
+             (setq cats-edit-server-start-run t))
            (file-error
-            (unless (string-match-p "Address already in use"
-                                    (error-message-string err))
-              (signal (car err) (cdr err)))))))
+             (unless (string-match-p "Address already in use"
+                       (error-message-string err))
+               (signal (car err) (cdr err)))))))
 
      (when (display-graphic-p)
        (when cats-enable-atomic-chrome-server
